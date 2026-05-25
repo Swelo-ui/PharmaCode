@@ -7,6 +7,7 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbSchema, semesterCourseSchema } from "@/lib/schema";
 import { absUrl } from "@/lib/site";
+import { Lightbulb, Building2, FlaskConical, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Params {
     semSlug: string;
@@ -71,7 +72,7 @@ export default function SemesterPage({ params }: { params: Params }) {
     const next = SEMESTERS.find((s) => s.num === sem.num + 1);
 
     return (
-        <div className="mx-auto max-w-[960px] px-4 sm:px-6 py-6 sm:py-8">
+        <div className="mx-auto w-full max-w-[960px] px-5 sm:px-8 py-6 sm:py-8">
             <JsonLd
                 data={[breadcrumbSchema(breadcrumbs), semesterCourseSchema(sem)]}
             />
@@ -83,19 +84,20 @@ export default function SemesterPage({ params }: { params: Params }) {
                 FIX: break-all on URL code element
             ─────────────────────────────────────────────── */}
             <div
-                className="mb-7 rounded-[20px] border-2 px-4 py-4 sm:px-7 sm:py-6 mt-4"
+                className="mb-7 rounded-[20px] border-2 px-4 py-5 sm:px-7 sm:py-6 mt-4"
                 style={{ background: sem.bg, borderColor: `${sem.color}44` }}
             >
-                <div className="flex flex-wrap items-start sm:items-center justify-between gap-4">
-                    <div className="min-w-0 flex-1">
+                {/* Mobile: stacked column | Desktop: row */}
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="min-w-0">
                         <div className="mb-1.5 flex items-center gap-3">
                             <span
-                                className="flex h-[42px] w-[42px] sm:w-[46px] sm:h-[46px] items-center justify-center rounded-[13px] font-display text-[18px] sm:text-[20px] font-black text-white shrink-0"
+                                className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-[13px] font-display text-[18px] font-black text-white"
                                 style={{ background: sem.color }}
                             >
                                 {sem.num}
                             </span>
-                            <h1 className="font-display text-[22px] sm:text-[30px] font-black text-primary leading-tight">
+                            <h1 className="font-display text-[24px] sm:text-[30px] font-black text-primary leading-tight">
                                 Semester {sem.num}
                             </h1>
                         </div>
@@ -110,12 +112,12 @@ export default function SemesterPage({ params }: { params: Params }) {
                         </code>
                     </div>
 
-                    {/* Stats boxes */}
-                    <div className="flex flex-wrap gap-2 sm:gap-2.5">
+                    {/* Stats boxes — full width row on mobile */}
+                    <div className="flex gap-2 sm:gap-2.5 sm:shrink-0">
                         {stats.map(({ v, l }) => (
                             <div
                                 key={l}
-                                className="rounded-[11px] border bg-white px-3 sm:px-[18px] py-2 text-center"
+                                className="flex-1 sm:flex-none rounded-[11px] border bg-white px-3 sm:px-[18px] py-2 text-center"
                                 style={{ borderColor: `${sem.color}33` }}
                             >
                                 <div
@@ -133,7 +135,7 @@ export default function SemesterPage({ params }: { params: Params }) {
 
             {/* Tip banner */}
             <div className="mb-6 flex items-start gap-2.5 rounded-[10px] border border-[#FDE68A] bg-[#FFFBEB] px-3 sm:px-4 py-2.5">
-                <span className="text-[14px] shrink-0 mt-[1px]" aria-hidden>💡</span>
+                <Lightbulb size={15} strokeWidth={2} className="shrink-0 mt-[1px] text-[#92400E]" aria-hidden />
                 <span className="font-[DM_Sans] text-[12px] sm:text-[13px] text-[#92400E] leading-[1.5]">
                     Click any subject to expand all 5 units and access free PDF notes
                 </span>
@@ -181,8 +183,9 @@ export default function SemesterPage({ params }: { params: Params }) {
             {internships.length > 0 && (
                 <section className="mb-6">
                     <h2 className="mb-3.5 mt-6 flex items-center gap-2 font-display text-[18px] sm:text-[20px] font-extrabold text-primary">
-                        <span className="rounded-lg bg-[#FFF7ED] px-3.5 py-[3px] text-[12px] sm:text-[13px] text-[#92400E]">
-                            🏭 Internship (Mandatory)
+                        <span className="rounded-lg bg-[#FFF7ED] px-3.5 py-[3px] text-[12px] sm:text-[13px] text-[#92400E] inline-flex items-center gap-1.5">
+                            <Building2 size={13} strokeWidth={2} />
+                            Internship (Mandatory)
                         </span>
                     </h2>
                     {internships.map((s) => (
@@ -200,8 +203,9 @@ export default function SemesterPage({ params }: { params: Params }) {
             {research.length > 0 && (
                 <section className="mb-6">
                     <h2 className="mb-3.5 mt-6 flex items-center gap-2 font-display text-[18px] sm:text-[20px] font-extrabold text-primary">
-                        <span className="rounded-lg bg-[#FAF5FF] px-3.5 py-[3px] text-[12px] sm:text-[13px] text-[#581C87]">
-                            🔬 Research Project
+                        <span className="rounded-lg bg-[#FAF5FF] px-3.5 py-[3px] text-[12px] sm:text-[13px] text-[#581C87] inline-flex items-center gap-1.5">
+                            <FlaskConical size={13} strokeWidth={2} />
+                            Research Project
                         </span>
                     </h2>
                     {research.map((s) => (
@@ -220,14 +224,11 @@ export default function SemesterPage({ params }: { params: Params }) {
                 {prev ? (
                     <Link
                         href={`/syllabus/semester-${prev.num}/`}
-                        className="rounded-[10px] border-[1.5px] px-4 py-2.5 text-[13px] font-bold transition-all duration-150 hover:opacity-90"
-                        style={{
-                            borderColor: prev.color,
-                            background: prev.bg,
-                            color: prev.color,
-                        }}
+                        className="inline-flex items-center gap-1.5 rounded-[10px] border-[1.5px] px-4 py-2.5 text-[13px] font-bold transition-all duration-150 hover:opacity-90"
+                        style={{ borderColor: prev.color, background: prev.bg, color: prev.color }}
                     >
-                        ← Semester {prev.num}
+                        <ChevronLeft size={15} strokeWidth={2.5} />
+                        Semester {prev.num}
                     </Link>
                 ) : (
                     <span />
@@ -235,14 +236,11 @@ export default function SemesterPage({ params }: { params: Params }) {
                 {next ? (
                     <Link
                         href={`/syllabus/semester-${next.num}/`}
-                        className="rounded-[10px] border-[1.5px] px-4 py-2.5 text-[13px] font-bold transition-all duration-150 hover:opacity-90"
-                        style={{
-                            borderColor: next.color,
-                            background: next.bg,
-                            color: next.color,
-                        }}
+                        className="inline-flex items-center gap-1.5 rounded-[10px] border-[1.5px] px-4 py-2.5 text-[13px] font-bold transition-all duration-150 hover:opacity-90"
+                        style={{ borderColor: next.color, background: next.bg, color: next.color }}
                     >
-                        Semester {next.num} →
+                        Semester {next.num}
+                        <ChevronRight size={15} strokeWidth={2.5} />
                     </Link>
                 ) : (
                     <span />

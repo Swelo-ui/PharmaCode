@@ -112,7 +112,7 @@ export default function RootLayout({
             </head>
             <body className="font-sans min-h-screen bg-[#FAFBFF]">
                 <Navbar />
-                <main>{children}</main>
+                <main className="w-full mx-auto">{children}</main>
                 <Footer />
             </body>
         </html>

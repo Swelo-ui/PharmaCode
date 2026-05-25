@@ -3,6 +3,7 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
 import { absUrl } from "@/lib/site";
+import { PenLine, ArrowRight } from "lucide-react";
 
 export const metadata: Metadata = {
     title: "Pharmacy Study Tips, Syllabus Guides & Career Advice — Blog",
@@ -63,12 +64,13 @@ export default function BlogPage() {
     ];
 
     return (
-        <div className="mx-auto max-w-[960px] px-4 sm:px-6 py-8 sm:py-10">
+        <div className="mx-auto w-full max-w-[960px] px-5 sm:px-8 py-8 sm:py-10">
             <JsonLd data={breadcrumbSchema(breadcrumbs)} />
             <Breadcrumb items={breadcrumbs} />
 
-            <h1 className="mb-2 font-display text-[26px] sm:text-[32px] font-black text-primary leading-tight">
-                📝 PharmaCode Blog
+            <h1 className="mb-2 font-display text-[26px] sm:text-[32px] font-black text-primary leading-tight flex items-center gap-3">
+                <PenLine size={28} strokeWidth={2.5} className="text-secondary shrink-0" />
+                PharmaCode Blog
             </h1>
             <p className="mb-7 font-[DM_Sans] text-[13px] sm:text-[14px] text-[#6B7FA3]">
                 Study guides, career tips, syllabus analysis and more
@@ -103,10 +105,10 @@ export default function BlogPage() {
                                 <span className="text-[11px] sm:text-[12px] text-[#9CA3AF]">{p.date}</span>
                                 <button
                                     type="button"
-                                    className="rounded-lg border-[1.5px] bg-transparent px-3.5 py-1.5 text-[11px] sm:text-[12px] font-bold transition-all duration-150 hover:bg-[#F8FAFF]"
+                                    className="inline-flex items-center gap-1.5 rounded-lg border-[1.5px] bg-transparent px-3.5 py-1.5 text-[11px] sm:text-[12px] font-bold transition-all duration-150 hover:bg-[#F8FAFF]"
                                     style={{ borderColor: p.color, color: p.color }}
                                 >
-                                    Read →
+                                    Read <ArrowRight size={12} strokeWidth={2.5} />
                                 </button>
                             </div>
                         </div>

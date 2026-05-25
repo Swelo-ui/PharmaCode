@@ -5,6 +5,7 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
 import { absUrl } from "@/lib/site";
+import { Download, FileText, Star } from "lucide-react";
 
 export const metadata: Metadata = {
     title: "B.Pharm Notes PDF Free Download — All Semesters",
@@ -26,12 +27,13 @@ export default function NotesPage() {
     ];
 
     return (
-        <div className="mx-auto max-w-[960px] px-4 sm:px-6 py-8 sm:py-10">
+        <div className="mx-auto w-full max-w-[960px] px-5 sm:px-8 py-8 sm:py-10">
             <JsonLd data={breadcrumbSchema(breadcrumbs)} />
             <Breadcrumb items={breadcrumbs} />
 
-            <h1 className="mb-2 font-display text-[26px] sm:text-[32px] font-black text-primary leading-tight">
-                📥 B.Pharm Notes — Free Download
+            <h1 className="mb-2 font-display text-[26px] sm:text-[32px] font-black text-primary leading-tight flex items-center gap-3">
+                <Download size={28} strokeWidth={2.5} className="text-secondary shrink-0" />
+                B.Pharm Notes — Free Download
             </h1>
             <p className="mb-7 font-[DM_Sans] text-[13px] sm:text-[14px] text-[#6B7FA3]">
                 PCI NEP 2020 · All 8 Semesters · PDF format · No login required
@@ -56,8 +58,9 @@ export default function NotesPage() {
                                             Sem {sem.num}
                                         </span>
                                         {s.highlight && (
-                                            <span className="rounded-md bg-[#FEF9C3] px-2 py-[3px] text-[9px] sm:text-[10px] font-bold text-[#854D0E] whitespace-nowrap">
-                                                ★ KEY SUBJECT
+                                            <span className="inline-flex items-center gap-1 rounded-md bg-[#FEF9C3] px-2 py-[3px] text-[9px] sm:text-[10px] font-bold text-[#854D0E] whitespace-nowrap">
+                                                <Star size={9} strokeWidth={2.5} className="fill-[#854D0E]" />
+                                                KEY SUBJECT
                                             </span>
                                         )}
                                     </div>
@@ -80,15 +83,22 @@ export default function NotesPage() {
                                 <div className="space-y-2.5">
                                     {/* Stats row — handles wrapping cleanly */}
                                     <div className="flex flex-wrap items-center justify-between gap-1 text-[10px] sm:text-[11px] text-[#9CA3AF]">
-                                        <span>📄 PDF · ~2.4 MB · {s.units.length} Units</span>
-                                        <span className="whitespace-nowrap">↓ 1.4k downloads</span>
+                                        <span className="flex items-center gap-1">
+                                            <FileText size={11} strokeWidth={2} />
+                                            PDF · ~2.4 MB · {s.units.length} Units
+                                        </span>
+                                        <span className="whitespace-nowrap flex items-center gap-1">
+                                            <Download size={11} strokeWidth={2} />
+                                            1.4k downloads
+                                        </span>
                                     </div>
                                     <button
                                         type="button"
-                                        className="w-full rounded-[10px] py-2.5 text-[12px] font-bold text-white transition-all duration-150 hover:opacity-90 hover:shadow-sm active:scale-[0.98]"
+                                        className="flex w-full items-center justify-center gap-2 rounded-[10px] py-2.5 text-[12px] font-bold text-white transition-all duration-150 hover:opacity-90 hover:shadow-sm active:scale-[0.98]"
                                         style={{ background: sem.color }}
                                     >
-                                        📥 Download Free
+                                        <Download size={13} strokeWidth={2.5} />
+                                        Download Free
                                     </button>
                                 </div>
                             </article>

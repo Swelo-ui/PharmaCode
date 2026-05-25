@@ -1,9 +1,14 @@
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
 import { SEMESTERS, TOTAL_CREDITS, TOTAL_SUBJECTS } from "@/lib/syllabus";
 import { SemCard } from "@/components/SemCard";
 import { SITE, absUrl } from "@/lib/site";
+import {
+    Monitor, BookOpen, Download, Search, Building2, Target,
+    BookMarked, FileDown,
+} from "lucide-react";
 
 export const metadata: Metadata = {
     title: "B.Pharm Syllabus PCI NEP 2020 | Free Notes & Study Material",
@@ -18,37 +23,13 @@ export const metadata: Metadata = {
     },
 };
 
-const FEATURES: [string, string, string][] = [
-    [
-        "💻",
-        "Python & AI Built-In",
-        "Dedicated pages for BP101T, BP301T, BP604T, BP703T, BP801T — the new-age subjects",
-    ],
-    [
-        "📖",
-        "Unit-wise Breakdown",
-        "Every subject split into 5 units with topic lists — perfect for exam and class prep",
-    ],
-    [
-        "📥",
-        "100% Free Notes",
-        "PDF notes for all 8 semesters — no login, no paywall, always free",
-    ],
-    [
-        "🔍",
-        "SEO Optimized",
-        "Every subject has its own Google-indexed URL — find anything instantly",
-    ],
-    [
-        "🏭",
-        "Internship Guides",
-        "Dedicated pages for Semester 4 & 6 mandatory internships with report templates",
-    ],
-    [
-        "🎯",
-        "GPAT Ready",
-        "High-weightage topics marked — aligned with GPAT 2027 preparation strategy",
-    ],
+const FEATURES: [React.ElementType, string, string][] = [
+    [Monitor, "Python & AI Built-In", "Dedicated pages for BP101T, BP301T, BP604T, BP703T, BP801T — the new-age subjects"],
+    [BookOpen, "Unit-wise Breakdown", "Every subject split into 5 units with topic lists — perfect for exam and class prep"],
+    [Download, "100% Free Notes", "PDF notes for all 8 semesters — no login, no paywall, always free"],
+    [Search, "SEO Optimized", "Every subject has its own Google-indexed URL — find anything instantly"],
+    [Building2, "Internship Guides", "Dedicated pages for Semester 4 & 6 mandatory internships with report templates"],
+    [Target, "GPAT Ready", "High-weightage topics marked — aligned with GPAT 2027 preparation strategy"],
 ];
 
 export default function HomePage() {
@@ -56,11 +37,11 @@ export default function HomePage() {
         <>
             {/* HERO */}
             <section
-                className="relative overflow-hidden px-4 text-center"
+                className="relative overflow-hidden text-center"
                 style={{
                     background:
                         "linear-gradient(160deg, #0F1D5C 0%, #1A2B6B 40%, #2E4BAD 70%, #4C6EF5 100%)",
-                    padding: "clamp(56px, 10vw, 88px) 20px clamp(48px, 8vw, 72px)",
+                    padding: "clamp(56px, 10vw, 88px) clamp(20px, 5vw, 40px) clamp(48px, 8vw, 72px)",
                 }}
             >
                 <div
@@ -98,7 +79,7 @@ export default function HomePage() {
                             />
                         </div>
                     </div>
-                    
+
                     {/* H1 — Responsive text sizing */}
                     <h1 className="mb-3.5 font-display text-[28px] sm:text-[42px] md:text-[52px] font-black leading-[1.1] text-white">
                         B.Pharm Syllabus
@@ -108,7 +89,7 @@ export default function HomePage() {
                     <p className="mb-2.5 font-[DM_Sans] text-[14px] sm:text-[17px] text-[#C7D2FE]">
                         Complete unit-wise syllabus · Free notes · Python &amp; AI integrated
                     </p>
-                    
+
                     <div className="mb-6 sm:mb-9 mt-2.5 flex flex-wrap justify-center gap-2 sm:gap-3">
                         {(["Code", "Cure", "Care"] as const).map((w, i) => (
                             <span
@@ -129,13 +110,15 @@ export default function HomePage() {
                             href="/syllabus/"
                             className="flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 rounded-[12px] bg-white text-primary text-[14px] sm:text-[15px] font-bold font-[DM_Sans] transition-all duration-200 hover:shadow-lg hover:scale-[1.02]"
                         >
-                            📚 Explore Syllabus
+                            <BookMarked size={17} strokeWidth={2.5} />
+                            Explore Syllabus
                         </Link>
                         <Link
                             href="/notes/"
                             className="flex items-center justify-center gap-2 px-6 sm:px-7 py-3.5 rounded-[12px] bg-transparent text-white text-[14px] sm:text-[15px] font-semibold font-[DM_Sans] border-2 border-white/35 transition-all duration-200 hover:bg-white/10"
                         >
-                            📥 Free Notes
+                            <FileDown size={17} strokeWidth={2} />
+                            Free Notes
                         </Link>
                     </div>
 
@@ -159,7 +142,7 @@ export default function HomePage() {
             </section>
 
             {/* SEMESTER GRID */}
-            <section className="mx-auto max-w-[1080px] px-4 sm:px-6 py-12 sm:py-14">
+            <section className="mx-auto w-full max-w-[1080px] px-5 sm:px-8 py-12 sm:py-14">
                 <div className="mb-8 sm:mb-10 text-center">
                     <h2 className="mb-2.5 font-display text-[26px] sm:text-[34px] font-black text-primary">
                         All 8 Semesters
@@ -176,18 +159,20 @@ export default function HomePage() {
             </section>
 
             {/* FEATURES */}
-            <section className="bg-[#F0F4FF] px-4 sm:px-6 py-12 sm:py-14">
-                <div className="mx-auto max-w-[900px]">
+            <section className="bg-[#F0F4FF] px-5 sm:px-8 py-12 sm:py-14">
+                <div className="mx-auto w-full max-w-[900px]">
                     <h2 className="mb-8 text-center font-display text-[24px] sm:text-[28px] font-black text-primary">
                         Why PharmaCode?
                     </h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                        {FEATURES.map(([ic, t, d]) => (
+                        {FEATURES.map(([Icon, t, d]) => (
                             <div
                                 key={t}
                                 className="rounded-[16px] border border-[#DDE8FF] bg-white p-5 sm:p-[22px] transition-all duration-200 hover:shadow-md hover:-translate-y-0.5"
                             >
-                                <div className="mb-2.5 text-[24px] sm:text-[26px]">{ic}</div>
+                                <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-[10px] bg-[#EEF2FF]">
+                                    <Icon size={18} strokeWidth={2} className="text-secondary" />
+                                </div>
                                 <div className="mb-1.5 font-display text-[14px] sm:text-[15px] font-extrabold text-primary">
                                     {t}
                                 </div>

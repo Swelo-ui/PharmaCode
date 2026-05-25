@@ -5,12 +5,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { clsx } from "@/lib/format";
+import { Home, BookOpen, FileText, PenLine, Download } from "lucide-react";
 
 const NAV_ITEMS = [
-    { href: "/", label: "Home" },
-    { href: "/syllabus/", label: "Syllabus" },
-    { href: "/notes/", label: "Notes" },
-    { href: "/blog/", label: "Blog" },
+    { href: "/", label: "Home", icon: Home },
+    { href: "/syllabus/", label: "Syllabus", icon: BookOpen },
+    { href: "/notes/", label: "Notes", icon: FileText },
+    { href: "/blog/", label: "Blog", icon: PenLine },
 ];
 
 export function Navbar() {
@@ -97,9 +98,10 @@ export function Navbar() {
                     })}
                     <Link
                         href="/notes/"
-                        className="ml-1.5 rounded-[10px] bg-primary px-[16px] py-2 text-[13px] font-bold text-white hover:bg-[#16245A] hover:shadow-lg hover:scale-[1.02] transition-all duration-200"
+                        className="ml-1.5 flex items-center gap-1.5 rounded-[10px] bg-primary px-[16px] py-2 text-[13px] font-bold text-white hover:bg-[#16245A] hover:shadow-lg hover:scale-[1.02] transition-all duration-200"
                     >
-                        📥 Notes
+                        <Download size={14} strokeWidth={2.5} />
+                        Notes
                     </Link>
                 </div>
 
@@ -139,29 +141,27 @@ export function Navbar() {
                     {/* Drawer panel */}
                     <div className="fixed top-[62px] left-0 right-0 z-40 md:hidden bg-white border-b border-[#E0E8FF] shadow-xl drawer-enter">
                         <div className="max-w-[480px] mx-auto px-5 py-4 flex flex-col gap-1">
-                            {NAV_ITEMS.map((item) => (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    className={clsx(
-                                        "flex items-center gap-3 px-4 py-3 rounded-[12px] text-[15px] font-sans transition-all duration-150",
-                                        isActive(item.href)
-                                            ? "font-bold bg-[#EEF2FF] text-secondary"
-                                            : "font-medium text-primary hover:bg-[#F4F6FF]",
-                                    )}
-                                >
-                                    <span className="text-[18px]">
-                                        {item.href === "/" && "🏠"}
-                                        {item.href === "/syllabus/" && "📚"}
-                                        {item.href === "/notes/" && "📝"}
-                                        {item.href === "/blog/" && "✍️"}
-                                    </span>
-                                    {item.label}
-                                    {isActive(item.href) && (
-                                        <span className="ml-auto w-1.5 h-1.5 rounded-full bg-secondary" />
-                                    )}
-                                </Link>
-                            ))}
+                            {NAV_ITEMS.map((item) => {
+                                const Icon = item.icon;
+                                return (
+                                    <Link
+                                        key={item.href}
+                                        href={item.href}
+                                        className={clsx(
+                                            "flex items-center gap-3 px-4 py-3 rounded-[12px] text-[15px] font-sans transition-all duration-150",
+                                            isActive(item.href)
+                                                ? "font-bold bg-[#EEF2FF] text-secondary"
+                                                : "font-medium text-primary hover:bg-[#F4F6FF]",
+                                        )}
+                                    >
+                                        <Icon size={18} strokeWidth={2} />
+                                        {item.label}
+                                        {isActive(item.href) && (
+                                            <span className="ml-auto w-1.5 h-1.5 rounded-full bg-secondary" />
+                                        )}
+                                    </Link>
+                                );
+                            })}
 
                             {/* Mobile CTA */}
                             <Link
@@ -169,7 +169,8 @@ export function Navbar() {
                                 onClick={() => setMenuOpen(false)}
                                 className="mt-2 flex items-center justify-center gap-2 px-4 py-3 rounded-[12px] bg-primary text-white text-[14px] font-bold font-sans"
                             >
-                                📥 Download Free Notes
+                                <Download size={16} strokeWidth={2.5} />
+                                Download Free Notes
                             </Link>
                         </div>
                     </div>

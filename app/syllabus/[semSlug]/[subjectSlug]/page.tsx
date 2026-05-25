@@ -4,11 +4,9 @@ import Link from "next/link";
 import { SEMESTERS, TYPE_META, getSemester, getSubject } from "@/lib/syllabus";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { JsonLd } from "@/components/JsonLd";
-import {
-    breadcrumbSchema,
-    subjectCourseSchema,
-} from "@/lib/schema";
+import { breadcrumbSchema, subjectCourseSchema } from "@/lib/schema";
 import { absUrl } from "@/lib/site";
+import { Download, ChevronLeft, BookOpen, Star, Clock } from "lucide-react";
 
 interface Params {
     semSlug: string;
@@ -80,7 +78,7 @@ export default function SubjectPage({ params }: { params: Params }) {
     const semFromList = getSemester(sem.num)!;
 
     return (
-        <div className="mx-auto max-w-[860px] px-4 sm:px-6 py-6 sm:py-8">
+        <div className="mx-auto w-full max-w-[860px] px-5 sm:px-8 py-6 sm:py-8">
             <JsonLd
                 data={[breadcrumbSchema(breadcrumbs), subjectCourseSchema(sem, sub)]}
             />
@@ -114,8 +112,9 @@ export default function SubjectPage({ params }: { params: Params }) {
                         {tm.label}
                     </span>
                     {sub.highlight && (
-                        <span className="rounded-md bg-[#FEF3C7] px-2.5 py-[3px] text-[10px] sm:text-[11px] font-bold text-[#92400E]">
-                            ★ KEY SUBJECT
+                        <span className="inline-flex items-center gap-1 rounded-md bg-[#FEF3C7] px-2.5 py-[3px] text-[10px] sm:text-[11px] font-bold text-[#92400E]">
+                            <Star size={10} strokeWidth={2.5} className="fill-[#92400E]" />
+                            KEY SUBJECT
                         </span>
                     )}
                 </div>
@@ -132,17 +131,19 @@ export default function SubjectPage({ params }: { params: Params }) {
             <div className="mb-7 flex flex-col sm:flex-row gap-3">
                 <button
                     type="button"
-                    className="w-full sm:flex-1 py-3 px-5 rounded-[12px] text-[#ffffff] text-[14px] font-bold font-[DM_Sans] transition-all duration-150 hover:opacity-90 hover:shadow-md"
+                    className="flex w-full sm:flex-1 items-center justify-center gap-2 py-3 px-5 rounded-[12px] text-[#ffffff] text-[14px] font-bold font-[DM_Sans] transition-all duration-150 hover:opacity-90 hover:shadow-md"
                     style={{ background: sem.color }}
                 >
-                    📥 Download {sub.code} Notes PDF
+                    <Download size={16} strokeWidth={2.5} />
+                    Download {sub.code} Notes PDF
                 </button>
                 <Link
                     href={`/syllabus/semester-${sem.num}/`}
-                    className="w-full sm:w-auto text-center py-3 px-5 rounded-[12px] border-[1.5px] bg-white text-[14px] font-semibold font-[DM_Sans] transition-all duration-150 hover:bg-[#EEF2FF]"
+                    className="flex w-full sm:w-auto items-center justify-center gap-1.5 py-3 px-5 rounded-[12px] border-[1.5px] bg-white text-[14px] font-semibold font-[DM_Sans] transition-all duration-150 hover:bg-[#EEF2FF]"
                     style={{ borderColor: sem.color, color: sem.color }}
                 >
-                    ← All Sem {sem.num} Subjects
+                    <ChevronLeft size={16} strokeWidth={2.5} />
+                    All Sem {sem.num} Subjects
                 </Link>
             </div>
 
@@ -183,8 +184,9 @@ export default function SubjectPage({ params }: { params: Params }) {
 
             {/* Reference section */}
             <section className="mt-8 rounded-[14px] border border-[#E8EDFF] bg-[#F8FAFF] p-5">
-                <h3 className="mb-2 font-display text-[15px] sm:text-[16px] font-extrabold text-primary">
-                    📚 What&apos;s coming next on this page
+                <h3 className="mb-2 flex items-center gap-2 font-display text-[15px] sm:text-[16px] font-extrabold text-primary">
+                    <BookOpen size={16} strokeWidth={2.5} className="text-secondary" />
+                    What&apos;s coming next on this page
                 </h3>
                 <ul className="list-disc space-y-1.5 pl-5 font-[DM_Sans] text-[12px] sm:text-[13px] text-[#6B7FA3]">
                     <li>Reference textbooks and recommended reading list</li>

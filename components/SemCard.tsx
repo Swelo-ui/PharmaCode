@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Semester } from "@/lib/types";
+import { Star } from "lucide-react";
 
 interface SemCardProps {
     sem: Semester;
@@ -70,8 +71,9 @@ export function SemCard({ sem }: SemCardProps) {
             {highlights.length > 0 && (
                 <div className="mt-2.5 border-t border-[#E8EDFF] pt-2.5">
                     {highlights.map((s) => (
-                        <div key={s.code} className="mb-0.5 text-[11px] text-[#6B7FA3]">
-                            ★ {s.code}
+                        <div key={s.code} className="mb-0.5 flex items-center gap-1 text-[11px] text-[#6B7FA3]">
+                            <Star size={9} strokeWidth={2.5} className="fill-[#6B7FA3] shrink-0" />
+                            {s.code}
                         </div>
                     ))}
                 </div>

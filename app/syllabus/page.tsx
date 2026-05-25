@@ -31,7 +31,7 @@ export default function SyllabusPage() {
     ];
 
     return (
-        <div className="mx-auto max-w-[960px] px-4 sm:px-6 py-8 sm:py-10">
+        <div className="mx-auto w-full max-w-[960px] px-5 sm:px-8 py-8 sm:py-10">
             <JsonLd data={breadcrumbSchema(breadcrumbs)} />
             <Breadcrumb items={breadcrumbs} />
 
