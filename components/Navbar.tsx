@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { clsx } from "@/lib/format";
-import { Home, BookOpen, FileText, PenLine, Download } from "lucide-react";
+import { Home, BookOpen, FileText, PenLine, Download, X, Menu } from "lucide-react";
 
 const NAV_ITEMS = [
     { href: "/", label: "Home", icon: Home },
@@ -17,50 +17,51 @@ const NAV_ITEMS = [
 export function Navbar() {
     const pathname = usePathname() || "/";
     const [menuOpen, setMenuOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
 
-    /* Close drawer on route change */
+    /* Scroll shadow */
     useEffect(() => {
-        setMenuOpen(false);
-    }, [pathname]);
-
-    /* Close drawer on Escape key */
-    useEffect(() => {
-        const handler = (e: KeyboardEvent) => {
-            if (e.key === "Escape") setMenuOpen(false);
-        };
-        window.addEventListener("keydown", handler);
-        return () => window.removeEventListener("keydown", handler);
+        const onScroll = () => setScrolled(window.scrollY > 4);
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
-    /* Prevent body scroll when drawer is open */
+    /* Close drawer on route change */
+    useEffect(() => { setMenuOpen(false); }, [pathname]);
+
+    /* Escape key */
     useEffect(() => {
-        if (menuOpen) {
-            document.body.style.overflow = "hidden";
-        } else {
-            document.body.style.overflow = "";
-        }
-        return () => {
-            document.body.style.overflow = "";
-        };
+        const h = (e: KeyboardEvent) => { if (e.key === "Escape") setMenuOpen(false); };
+        window.addEventListener("keydown", h);
+        return () => window.removeEventListener("keydown", h);
+    }, []);
+
+    /* Lock body scroll */
+    useEffect(() => {
+        document.body.style.overflow = menuOpen ? "hidden" : "";
+        return () => { document.body.style.overflow = ""; };
     }, [menuOpen]);
 
-    const isActive = (href: string) => {
-        if (href === "/") return pathname === "/";
-        return pathname.startsWith(href);
-    };
+    const isActive = (href: string) =>
+        href === "/" ? pathname === "/" : pathname.startsWith(href);
 
     return (
         <>
-            {/* ── NAVBAR BAR ─────────────────────────────────────── */}
+            {/* ── NAV BAR ──────────────────────────────────────── */}
             <nav
-                className="sticky top-0 z-50 flex h-[62px] items-center justify-between border-b border-[#E0E8FF] bg-white/95 px-5 backdrop-blur sm:px-7"
-                style={{ WebkitBackdropFilter: "blur(16px)" }}
+                className={clsx(
+                    "sticky top-0 z-50 flex h-[62px] items-center justify-between px-5 sm:px-7 transition-all duration-300",
+                    scrolled
+                        ? "bg-white/98 border-b border-[#E0E8FF] shadow-sm"
+                        : "bg-white/95 border-b border-[#E0E8FF]",
+                )}
+                style={{ backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}
             >
-                {/* ── Brand / Logo ── */}
+                {/* Brand */}
                 <Link
                     href="/"
-                    className="flex items-center gap-1.5 shrink-0"
-                    aria-label="PharmaCode — B.Pharm NEP 2020 home"
+                    className="btn-press flex items-center gap-1.5 shrink-0"
+                    aria-label="PharmaCode home"
                 >
                     <Image
                         src="/nav-icon.png"
@@ -77,105 +78,107 @@ export function Navbar() {
                     </span>
                 </Link>
 
-                {/* ── Desktop nav links (hidden on mobile) ── */}
+                {/* Desktop links */}
                 <div className="hidden md:flex items-center gap-0.5">
-                    {NAV_ITEMS.map((item) => {
-                        const active = isActive(item.href);
+                    {NAV_ITEMS.map(({ href, label }) => {
+                        const active = isActive(href);
                         return (
                             <Link
-                                key={item.href}
-                                href={item.href}
+                                key={href}
+                                href={href}
                                 className={clsx(
-                                    "rounded-[9px] px-[13px] py-2 text-[13px] transition-colors duration-200",
+                                    "rounded-[9px] px-[13px] py-2 text-[13px] transition-all duration-200",
                                     active
                                         ? "bg-[#EEF2FF] font-bold text-secondary"
                                         : "font-medium text-[#6B7FA3] hover:bg-[#F4F6FF] hover:text-primary",
                                 )}
                             >
-                                {item.label}
+                                {label}
                             </Link>
                         );
                     })}
                     <Link
                         href="/notes/"
-                        className="ml-1.5 flex items-center gap-1.5 rounded-[10px] bg-primary px-[16px] py-2 text-[13px] font-bold text-white hover:bg-[#16245A] hover:shadow-lg hover:scale-[1.02] transition-all duration-200"
+                        className="btn-press ml-2 flex items-center gap-1.5 rounded-[10px] bg-primary px-4 py-2 text-[13px] font-bold text-white transition-all duration-200 hover:bg-[#16245A] hover:shadow-md active:scale-95"
                     >
                         <Download size={14} strokeWidth={2.5} />
                         Notes
                     </Link>
                 </div>
 
-                {/* ── Hamburger button (visible on mobile only) ── */}
+                {/* Hamburger — animated X ↔ Menu */}
                 <button
                     onClick={() => setMenuOpen((v) => !v)}
                     aria-label={menuOpen ? "Close menu" : "Open menu"}
                     aria-expanded={menuOpen}
-                    className="md:hidden flex flex-col justify-center items-center w-10 h-10 rounded-[10px] gap-[5px] transition-colors duration-200 hover:bg-[#EEF2FF] focus:outline-none"
+                    className="btn-press md:hidden flex items-center justify-center w-10 h-10 rounded-[10px] transition-colors duration-200 hover:bg-[#EEF2FF] active:bg-[#E0E8FF] focus:outline-none"
                 >
-                    {/* Animated hamburger bars */}
-                    <span
-                        className={`block w-5 h-[2px] bg-primary rounded-full transition-all duration-300 origin-center
-                            ${menuOpen ? "rotate-45 translate-y-[7px]" : ""}`}
-                    />
-                    <span
-                        className={`block w-5 h-[2px] bg-primary rounded-full transition-all duration-200
-                            ${menuOpen ? "opacity-0 scale-x-0" : ""}`}
-                    />
-                    <span
-                        className={`block w-5 h-[2px] bg-primary rounded-full transition-all duration-300 origin-center
-                            ${menuOpen ? "-rotate-45 -translate-y-[7px]" : ""}`}
-                    />
+                    <span className={clsx("transition-all duration-200", menuOpen ? "rotate-90 opacity-0 absolute" : "rotate-0 opacity-100")}>
+                        <Menu size={20} strokeWidth={2} className="text-primary" />
+                    </span>
+                    <span className={clsx("transition-all duration-200", menuOpen ? "rotate-0 opacity-100" : "-rotate-90 opacity-0 absolute")}>
+                        <X size={20} strokeWidth={2} className="text-primary" />
+                    </span>
                 </button>
             </nav>
 
-            {/* ── MOBILE DRAWER ─────────────────────────────────── */}
-            {menuOpen && (
-                <>
-                    {/* Backdrop */}
-                    <div
-                        className="fixed inset-0 z-40 bg-black/30 md:hidden"
-                        onClick={() => setMenuOpen(false)}
-                        aria-hidden="true"
-                    />
+            {/* ── MOBILE DRAWER ────────────────────────────────── */}
+            {/* Backdrop */}
+            <div
+                className={clsx(
+                    "fixed inset-0 z-40 md:hidden transition-all duration-300",
+                    menuOpen ? "bg-black/30 pointer-events-auto" : "bg-transparent pointer-events-none",
+                )}
+                onClick={() => setMenuOpen(false)}
+                aria-hidden="true"
+            />
 
-                    {/* Drawer panel */}
-                    <div className="fixed top-[62px] left-0 right-0 z-40 md:hidden bg-white border-b border-[#E0E8FF] shadow-xl drawer-enter">
-                        <div className="max-w-[480px] mx-auto px-5 py-4 flex flex-col gap-1">
-                            {NAV_ITEMS.map((item) => {
-                                const Icon = item.icon;
-                                return (
-                                    <Link
-                                        key={item.href}
-                                        href={item.href}
-                                        className={clsx(
-                                            "flex items-center gap-3 px-4 py-3 rounded-[12px] text-[15px] font-sans transition-all duration-150",
-                                            isActive(item.href)
-                                                ? "font-bold bg-[#EEF2FF] text-secondary"
-                                                : "font-medium text-primary hover:bg-[#F4F6FF]",
-                                        )}
-                                    >
-                                        <Icon size={18} strokeWidth={2} />
-                                        {item.label}
-                                        {isActive(item.href) && (
-                                            <span className="ml-auto w-1.5 h-1.5 rounded-full bg-secondary" />
-                                        )}
-                                    </Link>
-                                );
-                            })}
-
-                            {/* Mobile CTA */}
-                            <Link
-                                href="/notes/"
-                                onClick={() => setMenuOpen(false)}
-                                className="mt-2 flex items-center justify-center gap-2 px-4 py-3 rounded-[12px] bg-primary text-white text-[14px] font-bold font-sans"
+            {/* Drawer panel — always rendered, slides in/out */}
+            <div
+                className={clsx(
+                    "fixed top-[62px] left-0 right-0 z-40 md:hidden bg-white border-b border-[#E0E8FF] shadow-xl transition-all duration-300",
+                    menuOpen
+                        ? "opacity-100 translate-y-0 pointer-events-auto"
+                        : "opacity-0 -translate-y-3 pointer-events-none",
+                )}
+            >
+                <div className="max-w-[480px] mx-auto px-4 py-3 flex flex-col gap-1">
+                    {NAV_ITEMS.map(({ href, label, icon: Icon }, i) => (
+                        <Link
+                            key={href}
+                            href={href}
+                            className={clsx(
+                                "flex items-center gap-3 px-4 py-3.5 rounded-[12px] text-[15px] font-sans transition-all duration-150 active:scale-[0.98]",
+                                isActive(href)
+                                    ? "font-bold bg-[#EEF2FF] text-secondary"
+                                    : "font-medium text-primary active:bg-[#F4F6FF]",
+                            )}
+                            style={{ transitionDelay: menuOpen ? `${i * 40}ms` : "0ms" }}
+                        >
+                            <span
+                                className="flex h-8 w-8 items-center justify-center rounded-[8px]"
+                                style={{ background: isActive(href) ? "#DDE8FF" : "#F4F6FF" }}
                             >
-                                <Download size={16} strokeWidth={2.5} />
-                                Download Free Notes
-                            </Link>
-                        </div>
-                    </div>
-                </>
-            )}
+                                <Icon size={16} strokeWidth={2} />
+                            </span>
+                            {label}
+                            {isActive(href) && (
+                                <span className="ml-auto w-1.5 h-1.5 rounded-full bg-secondary" />
+                            )}
+                        </Link>
+                    ))}
+
+                    {/* Mobile CTA */}
+                    <Link
+                        href="/notes/"
+                        onClick={() => setMenuOpen(false)}
+                        className="btn-press mt-1.5 flex items-center justify-center gap-2 px-4 py-3.5 rounded-[12px] bg-primary text-white text-[14px] font-bold font-sans shadow-md active:scale-[0.97] transition-transform duration-150"
+                    >
+                        <Download size={16} strokeWidth={2.5} />
+                        Download Free Notes
+                    </Link>
+                </div>
+            </div>
         </>
     );
 }

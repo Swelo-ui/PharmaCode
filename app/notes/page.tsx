@@ -31,23 +31,23 @@ export default function NotesPage() {
             <JsonLd data={breadcrumbSchema(breadcrumbs)} />
             <Breadcrumb items={breadcrumbs} />
 
-            <h1 className="mb-2 font-display text-[26px] sm:text-[32px] font-black text-primary leading-tight flex items-center gap-3">
+            <h1 className="fade-up mb-2 font-display text-[26px] sm:text-[32px] font-black text-primary leading-tight flex items-center gap-3">
                 <Download size={28} strokeWidth={2.5} className="text-secondary shrink-0" />
                 B.Pharm Notes — Free Download
             </h1>
-            <p className="mb-7 font-[DM_Sans] text-[13px] sm:text-[14px] text-[#6B7FA3]">
+            <p className="fade-up fade-up-1 mb-7 font-[DM_Sans] text-[13px] sm:text-[14px] text-[#6B7FA3]">
                 PCI NEP 2020 · All 8 Semesters · PDF format · No login required
             </p>
 
             <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 md:grid-cols-3">
-                {SEMESTERS.flatMap((sem) =>
+                {SEMESTERS.flatMap((sem, si) =>
                     sem.subjects
                         .filter((s) => s.type === "T" && s.units.length > 0)
                         .slice(0, 2)
-                        .map((s) => (
+                        .map((s, ci) => (
                             <article
                                 key={sem.num + s.code}
-                                className="flex flex-col justify-between gap-3.5 rounded-[14px] border border-[#E8EDFF] bg-white p-[18px] transition-all duration-200 hover:shadow-md"
+                                className={`fade-up fade-up-${Math.min(si * 2 + ci + 1, 8)} lift flex flex-col justify-between gap-3.5 rounded-[14px] border border-[#E8EDFF] bg-white p-[18px]`}
                             >
                                 <div className="space-y-3">
                                     <div className="flex justify-between items-center gap-1">

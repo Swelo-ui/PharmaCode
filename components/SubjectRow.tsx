@@ -20,7 +20,7 @@ export function SubjectRow({ sub, semNum, semColor }: SubjectRowProps) {
 
     return (
         <div
-            className="lift mb-2.5 overflow-hidden rounded-[14px] border bg-white transition-all duration-200"
+            className="lift mb-2.5 overflow-hidden rounded-[14px] border bg-white"
             style={{
                 borderColor: open ? `${semColor}55` : "#E8EDFF",
                 borderWidth: 1.5,
@@ -31,8 +31,8 @@ export function SubjectRow({ sub, semNum, semColor }: SubjectRowProps) {
                 onClick={() => canExpand && setOpen((o) => !o)}
                 disabled={!canExpand}
                 className={clsx(
-                    "flex w-full items-start sm:items-center gap-2 sm:gap-2.5 px-3 sm:px-[18px] py-3.5 text-left",
-                    canExpand ? "cursor-pointer" : "cursor-default",
+                    "flex w-full items-start sm:items-center gap-2 sm:gap-2.5 px-3 sm:px-[18px] py-3.5 text-left transition-colors duration-150",
+                    canExpand ? "cursor-pointer active:bg-[#F4F6FF]" : "cursor-default",
                     open ? "bg-[#F8FAFF]" : "bg-white",
                 )}
                 aria-expanded={open}

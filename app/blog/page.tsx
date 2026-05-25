@@ -68,11 +68,11 @@ export default function BlogPage() {
             <JsonLd data={breadcrumbSchema(breadcrumbs)} />
             <Breadcrumb items={breadcrumbs} />
 
-            <h1 className="mb-2 font-display text-[26px] sm:text-[32px] font-black text-primary leading-tight flex items-center gap-3">
+            <h1 className="fade-up mb-2 font-display text-[26px] sm:text-[32px] font-black text-primary leading-tight flex items-center gap-3">
                 <PenLine size={28} strokeWidth={2.5} className="text-secondary shrink-0" />
                 PharmaCode Blog
             </h1>
-            <p className="mb-7 font-[DM_Sans] text-[13px] sm:text-[14px] text-[#6B7FA3]">
+            <p className="fade-up fade-up-1 mb-7 font-[DM_Sans] text-[13px] sm:text-[14px] text-[#6B7FA3]">
                 Study guides, career tips, syllabus analysis and more
             </p>
 
@@ -80,7 +80,7 @@ export default function BlogPage() {
                 {POSTS.map((p, i) => (
                     <article
                         key={i}
-                        className="flex flex-col justify-between overflow-hidden rounded-[16px] border border-[#E8EDFF] bg-white transition-all duration-200 hover:shadow-md"
+                        className={`fade-up fade-up-${Math.min(i + 1, 8)} lift flex flex-col justify-between overflow-hidden rounded-[16px] border border-[#E8EDFF] bg-white`}
                     >
                         <div>
                             <div className="px-[18px] pb-3.5 pt-5" style={{ background: p.bg }}>

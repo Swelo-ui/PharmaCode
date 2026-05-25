@@ -35,38 +35,34 @@ export default function SyllabusPage() {
             <JsonLd data={breadcrumbSchema(breadcrumbs)} />
             <Breadcrumb items={breadcrumbs} />
 
-            {/* H1 — Responsive typography sizes */}
-            <h1 className="mb-2.5 font-display text-[26px] sm:text-[36px] font-black text-primary leading-tight">
+            <h1 className="fade-up mb-2.5 font-display text-[26px] sm:text-[36px] font-black text-primary leading-tight">
                 B.Pharm Complete Syllabus — NEP 2020
             </h1>
-            <p className="mb-7 max-w-[560px] font-[DM_Sans] text-[14px] sm:text-[15px] text-[#6B7FA3]">
+            <p className="fade-up fade-up-1 mb-7 max-w-[560px] font-[DM_Sans] text-[14px] sm:text-[15px] text-[#6B7FA3]">
                 PCI approved curriculum · 8 Semesters · {TOTAL_CREDITS} Total Credits ·
                 Python, ML &amp; AI integrated from Semester 1
             </p>
 
-            {/* Stats pills — responsive min-width and proper sizes */}
+            {/* Stats pills */}
             <div className="mb-9 flex flex-wrap gap-2 sm:gap-2.5">
-                {STATS.map(([n, l, bg, c]) => (
+                {STATS.map(([n, l, bg, c], i) => (
                     <div
                         key={l}
-                        className="rounded-[12px] py-2.5 px-3 sm:px-5 text-center flex-1 sm:flex-none"
+                        className={`scale-in fade-up-${i + 1} rounded-[12px] py-2.5 px-3 sm:px-5 text-center flex-1 sm:flex-none`}
                         style={{ background: bg, minWidth: "clamp(72px, 18vw, 88px)" }}
                     >
-                        <div
-                            className="font-display text-[18px] sm:text-[22px] font-black"
-                            style={{ color: c }}
-                        >
-                            {n}
-                        </div>
+                        <div className="font-display text-[18px] sm:text-[22px] font-black" style={{ color: c }}>{n}</div>
                         <div className="font-[DM_Sans] text-[10px] sm:text-[11px] text-[#9CA3AF]">{l}</div>
                     </div>
                 ))}
             </div>
 
-            {/* Responsive grid for Semester Cards */}
-            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-                {SEMESTERS.map((s) => (
-                    <SemCard key={s.num} sem={s} />
+            {/* Semester grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+                {SEMESTERS.map((s, i) => (
+                    <div key={s.num} className={`fade-up fade-up-${Math.min(i + 1, 8)}`}>
+                        <SemCard sem={s} />
+                    </div>
                 ))}
             </div>
         </div>

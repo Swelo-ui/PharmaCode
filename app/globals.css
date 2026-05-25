@@ -2,11 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── BRAND TOKENS ───────────────────────────────────── */
 :root {
   --color-primary: #1a2b6b;
   --color-secondary: #4c6ef5;
   --color-surface: #fafbff;
-  --color-text-muted: #6b7fa3;
+  --color-muted: #6b7fa3;
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ─── BASE ───────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
 }
 
 html,
@@ -14,10 +22,12 @@ body {
   background: var(--color-surface);
   color: var(--color-primary);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  overflow-x: hidden;                       /* Prevent horizontal scroll on Android/iOS */
-  -webkit-tap-highlight-color: transparent; /* Remove tap flash on mobile */
-  -webkit-text-size-adjust: 100%;           /* Prevent iOS font-size auto-adjust */
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  touch-action: pan-y;
 }
 
 * {
@@ -29,110 +39,355 @@ a {
   text-decoration: none;
 }
 
-/* Nicer focus rings */
+/* ─── FOCUS RINGS ────────────────────────────────────── */
 :focus-visible {
   outline: 2px solid var(--color-secondary);
   outline-offset: 2px;
   border-radius: 6px;
 }
 
-/* Smooth accordion chevron rotation */
-.chev {
-  transition: transform 0.2s ease;
-}
-.chev.open {
-  transform: rotate(180deg);
-}
-
-/* Hover lift used on cards */
-.lift {
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease,
-    background-color 0.18s ease;
-}
-.lift:hover {
-  transform: translateY(-3px);
-}
-
-/* Hide scrollbar utility for horizontal sections if needed */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  scrollbar-width: none;
-}
-
-/* ─── CUSTOM UTILITIES ───────────────────────────────── */
-@layer utilities {
-  /* 2-line clamp for blog/card titles */
-  .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  /* 3-line clamp */
-  .line-clamp-3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  /* Safe word break for long strings (URLs, course codes) */
-  .word-break-all {
-    word-break: break-all;
-  }
-
-  /* Card hover lift */
-  .card-hover {
-    @apply transition-all duration-200 hover:-translate-y-1 hover:shadow-lg;
-  }
-}
-
-/* ─── SCROLLBAR (Desktop Chrome) ────────────────────── */
+/* ─── SCROLLBAR (Desktop) ────────────────────────────── */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
+
 ::-webkit-scrollbar-track {
   background: #f0f4ff;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #c7d2fe;
   border-radius: 99px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #4c6ef5;
 }
 
-/* ─── ACCORDION ANIMATION ───────────────────────────── */
-.accordion-enter {
-  animation: accordion-down 0.2s ease-out forwards;
+/* ─── SCROLLBAR HIDE UTILITY ─────────────────────────── */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
-@keyframes accordion-down {
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+/* ─── LINE CLAMP ─────────────────────────────────────── */
+@layer utilities {
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .word-break-all {
+    word-break: break-all;
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   ANIMATIONS
+══════════════════════════════════════════════════════ */
+
+/* ─── Page fade-in ───────────────────────────────────── */
+@keyframes page-in {
   from {
     opacity: 0;
-    transform: translateY(-6px);
+    transform: translateY(12px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-/* ─── MOBILE DRAWER ANIMATION ───────────────────────── */
-.drawer-enter {
-  animation: drawer-slide 0.22s ease-out forwards;
+main {
+  animation: page-in 0.35s var(--ease-out) both;
 }
 
-@keyframes drawer-slide {
+/* ─── Fade up (for staggered cards) ─────────────────── */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-up {
+  animation: fade-up 0.4s var(--ease-out) both;
+}
+
+.fade-up-1 {
+  animation-delay: 0.05s;
+}
+
+.fade-up-2 {
+  animation-delay: 0.10s;
+}
+
+.fade-up-3 {
+  animation-delay: 0.15s;
+}
+
+.fade-up-4 {
+  animation-delay: 0.20s;
+}
+
+.fade-up-5 {
+  animation-delay: 0.25s;
+}
+
+.fade-up-6 {
+  animation-delay: 0.30s;
+}
+
+.fade-up-7 {
+  animation-delay: 0.35s;
+}
+
+.fade-up-8 {
+  animation-delay: 0.40s;
+}
+
+/* ─── Scale in (for stat pills, badges) ─────────────── */
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.88);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.scale-in {
+  animation: scale-in 0.3s var(--ease-spring) both;
+}
+
+/* ─── Hero badge pulse ───────────────────────────────── */
+@keyframes pulse-dot {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* ─── Accordion open ─────────────────────────────────── */
+@keyframes accordion-down {
   from {
     opacity: 0;
     transform: translateY(-8px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.accordion-enter {
+  animation: accordion-down 0.22s var(--ease-out) forwards;
+}
+
+/* ─── Mobile drawer slide ────────────────────────────── */
+@keyframes drawer-slide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.drawer-enter {
+  animation: drawer-slide 0.22s var(--ease-out) forwards;
+}
+
+/* ─── Shimmer (skeleton loading) ─────────────────────── */
+@keyframes shimmer {
+  from {
+    background-position: -200% 0;
+  }
+
+  to {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #f0f4ff 25%, #e8edff 50%, #f0f4ff 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+/* ══════════════════════════════════════════════════════
+   INTERACTIVE COMPONENTS
+══════════════════════════════════════════════════════ */
+
+/* ─── Card lift (hover + active) ────────────────────── */
+.lift {
+  transition:
+    transform 0.2s var(--ease-out),
+    box-shadow 0.2s var(--ease-out),
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+  will-change: transform;
+}
+
+.lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(76, 110, 245, 0.13);
+}
+
+/* Android: active state instead of hover */
+.lift:active {
+  transform: scale(0.97);
+  box-shadow: none;
+}
+
+/* ─── Button press (mobile-first tap feel) ───────────── */
+.btn-press {
+  transition: transform 0.12s var(--ease-out), opacity 0.12s ease;
+  will-change: transform;
+}
+
+.btn-press:active {
+  transform: scale(0.95);
+  opacity: 0.85;
+}
+
+/* ─── Navbar link underline slide ───────────────────── */
+.nav-link {
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--color-secondary);
+  border-radius: 99px;
+  transition: width 0.2s var(--ease-out), left 0.2s var(--ease-out);
+}
+
+.nav-link:hover::after {
+  width: 60%;
+  left: 20%;
+}
+
+/* ─── Chevron rotate ─────────────────────────────────── */
+.chev {
+  transition: transform 0.22s var(--ease-out);
+  display: inline-block;
+}
+
+.chev.open {
+  transform: rotate(180deg);
+}
+
+/* ─── Smooth image load ──────────────────────────────── */
+img {
+  transition: opacity 0.3s ease;
+}
+
+/* ─── Ripple on tap (Android feel) ──────────────────── */
+@keyframes ripple {
+  from {
+    transform: scale(0);
+    opacity: 0.3;
+  }
+
+  to {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+.ripple-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s;
+}
+
+.ripple-container:active::after {
+  animation: ripple 0.4s var(--ease-out) forwards;
+}
+
+/* ─── RESPECT REDUCED MOTION (accessibility + SEO best practice) ── */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ─── Stats number pop ───────────────────────────────── */
+@keyframes count-pop {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.08);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.stat-pop {
+  animation: count-pop 0.4s var(--ease-spring) both;
 }
