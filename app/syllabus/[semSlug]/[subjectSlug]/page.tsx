@@ -80,66 +80,66 @@ export default function SubjectPage({ params }: { params: Params }) {
     const semFromList = getSemester(sem.num)!;
 
     return (
-        <div className="mx-auto max-w-[860px] px-5 py-7">
+        <div className="mx-auto max-w-[860px] px-4 sm:px-6 py-6 sm:py-8">
             <JsonLd
                 data={[breadcrumbSchema(breadcrumbs), subjectCourseSchema(sem, sub)]}
             />
             <Breadcrumb items={breadcrumbs} />
 
-            {/* Header card */}
+            {/* Header card — responsive padding */}
             <div
-                className="mb-7 rounded-[20px] border-2 px-6 py-6"
+                className="mb-7 rounded-[20px] border-2 px-4 py-4 sm:px-6 sm:py-6"
                 style={{ background: sem.bg, borderColor: `${sem.color}44` }}
             >
-                <div className="mb-2 flex flex-wrap items-center gap-2">
+                <div className="mb-2.5 flex flex-wrap gap-1.5 sm:gap-2">
                     <span
-                        className="rounded-md px-2.5 py-[3px] font-mono text-[12px] font-bold"
+                        className="rounded-md px-2.5 py-[3px] font-mono text-[11px] sm:text-[12px] font-bold"
                         style={{ background: tm.bg, color: tm.color }}
                     >
                         {sub.code}
                     </span>
                     <span
-                        className="rounded-md px-2.5 py-[3px] text-[11px] font-semibold"
+                        className="rounded-md px-2.5 py-[3px] text-[10px] sm:text-[11px] font-semibold"
                         style={{ background: "#fff", color: sem.color }}
                     >
                         Semester {sem.num}
                     </span>
-                    <span className="rounded-md bg-[#F0F4FF] px-2.5 py-[3px] text-[11px] font-bold text-secondary">
+                    <span className="rounded-md bg-[#F0F4FF] px-2.5 py-[3px] text-[10px] sm:text-[11px] font-bold text-secondary">
                         {sub.credits} credits
                     </span>
                     <span
-                        className="rounded-md px-2.5 py-[3px] text-[11px] font-semibold"
+                        className="rounded-md px-2.5 py-[3px] text-[10px] sm:text-[11px] font-semibold"
                         style={{ background: tm.bg, color: tm.color }}
                     >
                         {tm.label}
                     </span>
                     {sub.highlight && (
-                        <span className="rounded-md bg-[#FEF3C7] px-2.5 py-[3px] text-[11px] font-bold text-[#92400E]">
+                        <span className="rounded-md bg-[#FEF3C7] px-2.5 py-[3px] text-[10px] sm:text-[11px] font-bold text-[#92400E]">
                             ★ KEY SUBJECT
                         </span>
                     )}
                 </div>
-                <h1 className="font-display text-[28px] font-black leading-tight text-primary">
+                <h1 className="font-display text-[22px] sm:text-[28px] font-black leading-tight text-primary">
                     {sub.name}
                 </h1>
-                <p className="mt-2 max-w-prose text-[14px] text-[#374151]">
+                <p className="mt-2 max-w-prose font-[DM_Sans] text-[13px] sm:text-[14px] text-[#374151] leading-relaxed">
                     Complete unit-wise syllabus for {sub.code} as per the PCI B.Pharm NEP
                     2020 curriculum (Semester {sem.num} — {sem.label}).
                 </p>
             </div>
 
-            {/* Download CTA */}
-            <div className="mb-7 flex flex-wrap gap-3">
+            {/* Download CTA — stacked layout on mobile */}
+            <div className="mb-7 flex flex-col sm:flex-row gap-3">
                 <button
                     type="button"
-                    className="flex-1 rounded-[12px] px-5 py-3 text-[14px] font-bold text-white"
+                    className="w-full sm:flex-1 py-3 px-5 rounded-[12px] text-[#ffffff] text-[14px] font-bold font-[DM_Sans] transition-all duration-150 hover:opacity-90 hover:shadow-md"
                     style={{ background: sem.color }}
                 >
                     📥 Download {sub.code} Notes PDF
                 </button>
                 <Link
                     href={`/syllabus/semester-${sem.num}/`}
-                    className="rounded-[12px] border-[1.5px] bg-white px-5 py-3 text-[14px] font-semibold"
+                    className="w-full sm:w-auto text-center py-3 px-5 rounded-[12px] border-[1.5px] bg-white text-[14px] font-semibold font-[DM_Sans] transition-all duration-150 hover:bg-[#EEF2FF]"
                     style={{ borderColor: sem.color, color: sem.color }}
                 >
                     ← All Sem {sem.num} Subjects
@@ -147,7 +147,7 @@ export default function SubjectPage({ params }: { params: Params }) {
             </div>
 
             {/* Units */}
-            <h2 className="mb-3 font-display text-[20px] font-extrabold text-primary">
+            <h2 className="mb-3 font-display text-[18px] sm:text-[20px] font-extrabold text-primary">
                 {sub.type === "T" ? "Unit-wise Syllabus" : "Coverage"}
             </h2>
             <div className="space-y-3">
@@ -161,32 +161,32 @@ export default function SubjectPage({ params }: { params: Params }) {
                             key={i}
                             className="rounded-[14px] border border-[#E8EDFF] bg-white p-4"
                         >
-                            <div className="mb-1 flex items-center gap-2">
+                            <div className="mb-2 flex items-center gap-2">
                                 <span
-                                    className="rounded-md px-2 py-0.5 font-display text-[11px] font-extrabold text-white"
+                                    className="rounded-md px-2 py-0.5 font-display text-[10px] sm:text-[11px] font-extrabold text-white"
                                     style={{ background: sem.color }}
                                 >
                                     {sub.type === "T" ? `Unit ${i + 1}` : "•"}
                                 </span>
                                 {heading && (
-                                    <span className="font-display text-[14px] font-bold text-primary">
+                                    <span className="font-display text-[13px] sm:text-[14px] font-bold text-primary">
                                         {heading.replace(/^Unit\s+[IVX0-9]+/i, "").trim() ||
                                             heading}
                                     </span>
                                 )}
                             </div>
-                            <p className="text-[14px] leading-[1.6] text-[#374151]">{text}</p>
+                            <p className="font-[DM_Sans] text-[13px] sm:text-[14px] leading-[1.6] text-[#374151]">{text}</p>
                         </div>
                     );
                 })}
             </div>
 
-            {/* Reference / placeholder section for future */}
+            {/* Reference section */}
             <section className="mt-8 rounded-[14px] border border-[#E8EDFF] bg-[#F8FAFF] p-5">
-                <h3 className="mb-2 font-display text-[16px] font-extrabold text-primary">
+                <h3 className="mb-2 font-display text-[15px] sm:text-[16px] font-extrabold text-primary">
                     📚 What&apos;s coming next on this page
                 </h3>
-                <ul className="list-disc space-y-1 pl-5 text-[13px] text-[#6B7FA3]">
+                <ul className="list-disc space-y-1.5 pl-5 font-[DM_Sans] text-[12px] sm:text-[13px] text-[#6B7FA3]">
                     <li>Reference textbooks and recommended reading list</li>
                     <li>Previous year question papers (PYQ)</li>
                     <li>Topic-wise short notes and revision summaries</li>
@@ -197,7 +197,7 @@ export default function SubjectPage({ params }: { params: Params }) {
             {/* Sibling subjects */}
             {siblings.length > 0 && (
                 <section className="mt-8">
-                    <h3 className="mb-3 font-display text-[16px] font-extrabold text-primary">
+                    <h3 className="mb-3 font-display text-[15px] sm:text-[16px] font-extrabold text-primary">
                         Other subjects in Semester {sem.num}
                     </h3>
                     <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -205,13 +205,13 @@ export default function SubjectPage({ params }: { params: Params }) {
                             <Link
                                 key={s.code}
                                 href={`/syllabus/semester-${semFromList.num}/${s.slug}/`}
-                                className="flex items-center gap-2 rounded-[10px] border border-[#E8EDFF] bg-white px-3 py-2 text-[13px] hover:border-[var(--c)]"
+                                className="flex items-center gap-2 rounded-[10px] border border-[#E8EDFF] bg-white px-3 py-2.5 text-[12px] sm:text-[13px] hover:border-[var(--c)] transition-all duration-150"
                                 style={
                                     { ["--c" as string]: semFromList.color } as React.CSSProperties
                                 }
                             >
                                 <span
-                                    className="rounded-md px-2 py-0.5 font-mono text-[10px] font-bold"
+                                    className="rounded-md px-2 py-0.5 font-mono text-[9px] sm:text-[10px] font-bold"
                                     style={{
                                         background:
                                             (TYPE_META[s.type] || TYPE_META.T).bg,

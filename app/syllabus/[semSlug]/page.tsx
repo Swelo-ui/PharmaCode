@@ -71,84 +71,98 @@ export default function SemesterPage({ params }: { params: Params }) {
     const next = SEMESTERS.find((s) => s.num === sem.num + 1);
 
     return (
-        <div className="mx-auto max-w-[960px] px-5 py-7">
+        <div className="mx-auto max-w-[960px] px-4 sm:px-6 py-6 sm:py-8">
             <JsonLd
                 data={[breadcrumbSchema(breadcrumbs), semesterCourseSchema(sem)]}
             />
             <Breadcrumb items={breadcrumbs} />
 
+            {/* ── Semester Header Card ─────────────────────
+                FIX: px-4 py-4 on mobile → sm:px-7 sm:py-6
+                FIX: H1 text-[22px] → sm:text-[30px]
+                FIX: break-all on URL code element
+            ─────────────────────────────────────────────── */}
             <div
-                className="mb-7 rounded-[20px] border-2 px-7 py-6"
+                className="mb-7 rounded-[20px] border-2 px-4 py-4 sm:px-7 sm:py-6 mt-4"
                 style={{ background: sem.bg, borderColor: `${sem.color}44` }}
             >
-                <div className="flex flex-wrap items-center justify-between gap-4">
-                    <div>
+                <div className="flex flex-wrap items-start sm:items-center justify-between gap-4">
+                    <div className="min-w-0 flex-1">
                         <div className="mb-1.5 flex items-center gap-3">
                             <span
-                                className="flex h-[46px] w-[46px] items-center justify-center rounded-[14px] font-display text-[20px] font-black text-white"
+                                className="flex h-[42px] w-[42px] sm:w-[46px] sm:h-[46px] items-center justify-center rounded-[13px] font-display text-[18px] sm:text-[20px] font-black text-white shrink-0"
                                 style={{ background: sem.color }}
                             >
                                 {sem.num}
                             </span>
-                            <h1 className="font-display text-[30px] font-black text-primary">
+                            <h1 className="font-display text-[22px] sm:text-[30px] font-black text-primary leading-tight">
                                 Semester {sem.num}
                             </h1>
                         </div>
                         <div
-                            className="mb-1 text-[14px] font-semibold"
+                            className="mb-1.5 font-[DM_Sans] text-[13px] sm:text-[14px] font-semibold"
                             style={{ color: sem.color }}
                         >
                             {sem.label}
                         </div>
-                        <code className="font-mono text-[11px] text-[#9CA3AF]">
+                        <code className="font-mono text-[10px] sm:text-[11px] text-[#9CA3AF] break-all">
                             pharmacode.in/syllabus/semester-{sem.num}/
                         </code>
                     </div>
-                    <div className="flex flex-wrap gap-2.5">
+
+                    {/* Stats boxes */}
+                    <div className="flex flex-wrap gap-2 sm:gap-2.5">
                         {stats.map(({ v, l }) => (
                             <div
                                 key={l}
-                                className="rounded-[12px] border bg-white px-[18px] py-2.5 text-center"
+                                className="rounded-[11px] border bg-white px-3 sm:px-[18px] py-2 text-center"
                                 style={{ borderColor: `${sem.color}33` }}
                             >
                                 <div
-                                    className="font-display text-[22px] font-black"
+                                    className="font-display text-[18px] sm:text-[22px] font-black"
                                     style={{ color: sem.color }}
                                 >
                                     {v}
                                 </div>
-                                <div className="text-[11px] text-[#9CA3AF]">{l}</div>
+                                <div className="font-[DM_Sans] text-[10px] sm:text-[11px] text-[#9CA3AF]">{l}</div>
                             </div>
                         ))}
                     </div>
                 </div>
             </div>
 
-            <div className="mb-5 flex items-center gap-2 rounded-[10px] border border-[#FDE68A] bg-[#FFFBEB] px-4 py-2.5">
-                <span aria-hidden>💡</span>
-                <span className="text-[13px] text-[#92400E]">
-                    Click any subject to expand all units and access free PDF notes
+            {/* Tip banner */}
+            <div className="mb-6 flex items-start gap-2.5 rounded-[10px] border border-[#FDE68A] bg-[#FFFBEB] px-3 sm:px-4 py-2.5">
+                <span className="text-[14px] shrink-0 mt-[1px]" aria-hidden>💡</span>
+                <span className="font-[DM_Sans] text-[12px] sm:text-[13px] text-[#92400E] leading-[1.5]">
+                    Click any subject to expand all 5 units and access free PDF notes
                 </span>
             </div>
 
-            <h2 className="mb-3.5 flex items-center gap-2 font-display text-[20px] font-extrabold text-primary">
-                <span className="rounded-lg bg-[#EEF2FF] px-3.5 py-[3px] text-[13px] text-[#3730A3]">
-                    Theory Subjects
-                </span>
-            </h2>
-            {theory.map((s) => (
-                <SubjectRow
-                    key={s.code}
-                    sub={s}
-                    semNum={sem.num}
-                    semColor={sem.color}
-                />
-            ))}
+            {/* Theory */}
+            {theory.length > 0 && (
+                <section className="mb-6">
+                    <h2 className="mb-3.5 flex items-center gap-2 font-display text-[18px] sm:text-[20px] font-extrabold text-primary">
+                        <span className="rounded-lg bg-[#EEF2FF] px-3.5 py-[3px] text-[12px] sm:text-[13px] text-[#3730A3]">
+                            Theory Subjects
+                        </span>
+                    </h2>
+                    {theory.map((s) => (
+                        <SubjectRow
+                            key={s.code}
+                            sub={s}
+                            semNum={sem.num}
+                            semColor={sem.color}
+                        />
+                    ))}
+                </section>
+            )}
 
+            {/* Practical */}
             {practical.length > 0 && (
-                <>
-                    <h2 className="mb-3.5 mt-6 flex items-center gap-2 font-display text-[20px] font-extrabold text-primary">
-                        <span className="rounded-lg bg-[#F0FDF4] px-3.5 py-[3px] text-[13px] text-[#14532D]">
+                <section className="mb-6">
+                    <h2 className="mb-3.5 mt-6 flex items-center gap-2 font-display text-[18px] sm:text-[20px] font-extrabold text-primary">
+                        <span className="rounded-lg bg-[#F0FDF4] px-3.5 py-[3px] text-[12px] sm:text-[13px] text-[#14532D]">
                             Practical &amp; Electives
                         </span>
                     </h2>
@@ -160,13 +174,14 @@ export default function SemesterPage({ params }: { params: Params }) {
                             semColor={sem.color}
                         />
                     ))}
-                </>
+                </section>
             )}
 
+            {/* Internships */}
             {internships.length > 0 && (
-                <>
-                    <h2 className="mb-3.5 mt-6 flex items-center gap-2 font-display text-[20px] font-extrabold text-primary">
-                        <span className="rounded-lg bg-[#FFF7ED] px-3.5 py-[3px] text-[13px] text-[#92400E]">
+                <section className="mb-6">
+                    <h2 className="mb-3.5 mt-6 flex items-center gap-2 font-display text-[18px] sm:text-[20px] font-extrabold text-primary">
+                        <span className="rounded-lg bg-[#FFF7ED] px-3.5 py-[3px] text-[12px] sm:text-[13px] text-[#92400E]">
                             🏭 Internship (Mandatory)
                         </span>
                     </h2>
@@ -178,13 +193,14 @@ export default function SemesterPage({ params }: { params: Params }) {
                             semColor={sem.color}
                         />
                     ))}
-                </>
+                </section>
             )}
 
+            {/* Research Project */}
             {research.length > 0 && (
-                <>
-                    <h2 className="mb-3.5 mt-6 flex items-center gap-2 font-display text-[20px] font-extrabold text-primary">
-                        <span className="rounded-lg bg-[#FAF5FF] px-3.5 py-[3px] text-[13px] text-[#581C87]">
+                <section className="mb-6">
+                    <h2 className="mb-3.5 mt-6 flex items-center gap-2 font-display text-[18px] sm:text-[20px] font-extrabold text-primary">
+                        <span className="rounded-lg bg-[#FAF5FF] px-3.5 py-[3px] text-[12px] sm:text-[13px] text-[#581C87]">
                             🔬 Research Project
                         </span>
                     </h2>
@@ -196,14 +212,15 @@ export default function SemesterPage({ params }: { params: Params }) {
                             semColor={sem.color}
                         />
                     ))}
-                </>
+                </section>
             )}
 
+            {/* Prev / Next navigation */}
             <div className="mt-8 flex justify-between gap-3">
                 {prev ? (
                     <Link
                         href={`/syllabus/semester-${prev.num}/`}
-                        className="rounded-[10px] border-[1.5px] px-5 py-2.5 text-[13px] font-bold"
+                        className="rounded-[10px] border-[1.5px] px-4 py-2.5 text-[13px] font-bold transition-all duration-150 hover:opacity-90"
                         style={{
                             borderColor: prev.color,
                             background: prev.bg,
@@ -218,7 +235,7 @@ export default function SemesterPage({ params }: { params: Params }) {
                 {next ? (
                     <Link
                         href={`/syllabus/semester-${next.num}/`}
-                        className="rounded-[10px] border-[1.5px] px-5 py-2.5 text-[13px] font-bold"
+                        className="rounded-[10px] border-[1.5px] px-4 py-2.5 text-[13px] font-bold transition-all duration-150 hover:opacity-90"
                         style={{
                             borderColor: next.color,
                             background: next.bg,

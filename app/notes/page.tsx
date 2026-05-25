@@ -26,14 +26,14 @@ export default function NotesPage() {
     ];
 
     return (
-        <div className="mx-auto max-w-[960px] px-5 py-9">
+        <div className="mx-auto max-w-[960px] px-4 sm:px-6 py-8 sm:py-10">
             <JsonLd data={breadcrumbSchema(breadcrumbs)} />
             <Breadcrumb items={breadcrumbs} />
 
-            <h1 className="mb-2 font-display text-[32px] font-black text-primary">
+            <h1 className="mb-2 font-display text-[26px] sm:text-[32px] font-black text-primary leading-tight">
                 📥 B.Pharm Notes — Free Download
             </h1>
-            <p className="mb-7 text-[14px] text-[#6B7FA3]">
+            <p className="mb-7 font-[DM_Sans] text-[13px] sm:text-[14px] text-[#6B7FA3]">
                 PCI NEP 2020 · All 8 Semesters · PDF format · No login required
             </p>
 
@@ -45,46 +45,52 @@ export default function NotesPage() {
                         .map((s) => (
                             <article
                                 key={sem.num + s.code}
-                                className="flex flex-col gap-2.5 rounded-[14px] border border-[#E8EDFF] bg-white p-[18px]"
+                                className="flex flex-col justify-between gap-3.5 rounded-[14px] border border-[#E8EDFF] bg-white p-[18px] transition-all duration-200 hover:shadow-md"
                             >
-                                <div className="flex justify-between">
-                                    <span
-                                        className="rounded-md px-2.5 py-[3px] text-[11px] font-bold"
-                                        style={{ background: sem.badge, color: sem.color }}
-                                    >
-                                        Sem {sem.num}
-                                    </span>
-                                    {s.highlight && (
-                                        <span className="rounded-md bg-[#FEF9C3] px-2 py-[3px] text-[10px] font-bold text-[#854D0E]">
-                                            ★ KEY SUBJECT
+                                <div className="space-y-3">
+                                    <div className="flex justify-between items-center gap-1">
+                                        <span
+                                            className="rounded-md px-2.5 py-[3px] text-[10px] sm:text-[11px] font-bold"
+                                            style={{ background: sem.badge, color: sem.color }}
+                                        >
+                                            Sem {sem.num}
                                         </span>
-                                    )}
-                                </div>
-                                <div>
-                                    <div
-                                        className="mb-1 font-mono text-[11px]"
-                                        style={{ color: sem.color }}
-                                    >
-                                        {s.code}
+                                        {s.highlight && (
+                                            <span className="rounded-md bg-[#FEF9C3] px-2 py-[3px] text-[9px] sm:text-[10px] font-bold text-[#854D0E] whitespace-nowrap">
+                                                ★ KEY SUBJECT
+                                            </span>
+                                        )}
                                     </div>
-                                    <Link
-                                        href={`/syllabus/semester-${sem.num}/${s.slug}/`}
-                                        className="block text-[13px] font-semibold leading-tight text-primary hover:underline"
+                                    <div>
+                                        <div
+                                            className="mb-1 font-mono text-[10px] sm:text-[11px]"
+                                            style={{ color: sem.color }}
+                                        >
+                                            {s.code}
+                                        </div>
+                                        <Link
+                                            href={`/syllabus/semester-${sem.num}/${s.slug}/`}
+                                            className="block text-[13px] sm:text-[14px] font-semibold leading-snug text-primary hover:underline hover:text-secondary line-clamp-2"
+                                            style={{ minHeight: "2.8rem" }}
+                                        >
+                                            {s.name}
+                                        </Link>
+                                    </div>
+                                </div>
+                                <div className="space-y-2.5">
+                                    {/* Stats row — handles wrapping cleanly */}
+                                    <div className="flex flex-wrap items-center justify-between gap-1 text-[10px] sm:text-[11px] text-[#9CA3AF]">
+                                        <span>📄 PDF · ~2.4 MB · {s.units.length} Units</span>
+                                        <span className="whitespace-nowrap">↓ 1.4k downloads</span>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        className="w-full rounded-[10px] py-2.5 text-[12px] font-bold text-white transition-all duration-150 hover:opacity-90 hover:shadow-sm active:scale-[0.98]"
+                                        style={{ background: sem.color }}
                                     >
-                                        {s.name}
-                                    </Link>
+                                        📥 Download Free
+                                    </button>
                                 </div>
-                                <div className="flex justify-between text-[11px] text-[#9CA3AF]">
-                                    <span>📄 PDF · ~2.4 MB · {s.units.length} Units</span>
-                                    <span>↓ 1.4k</span>
-                                </div>
-                                <button
-                                    type="button"
-                                    className="w-full rounded-[10px] py-2.5 text-[12px] font-bold text-white"
-                                    style={{ background: sem.color }}
-                                >
-                                    📥 Download Free
-                                </button>
                             </article>
                         )),
                 )}

@@ -63,14 +63,14 @@ export default function BlogPage() {
     ];
 
     return (
-        <div className="mx-auto max-w-[960px] px-5 py-9">
+        <div className="mx-auto max-w-[960px] px-4 sm:px-6 py-8 sm:py-10">
             <JsonLd data={breadcrumbSchema(breadcrumbs)} />
             <Breadcrumb items={breadcrumbs} />
 
-            <h1 className="mb-2 font-display text-[32px] font-black text-primary">
+            <h1 className="mb-2 font-display text-[26px] sm:text-[32px] font-black text-primary leading-tight">
                 📝 PharmaCode Blog
             </h1>
-            <p className="mb-7 text-[14px] text-[#6B7FA3]">
+            <p className="mb-7 font-[DM_Sans] text-[13px] sm:text-[14px] text-[#6B7FA3]">
                 Study guides, career tips, syllabus analysis and more
             </p>
 
@@ -78,28 +78,32 @@ export default function BlogPage() {
                 {POSTS.map((p, i) => (
                     <article
                         key={i}
-                        className="overflow-hidden rounded-[16px] border border-[#E8EDFF] bg-white"
+                        className="flex flex-col justify-between overflow-hidden rounded-[16px] border border-[#E8EDFF] bg-white transition-all duration-200 hover:shadow-md"
                     >
-                        <div className="px-[18px] pb-3.5 pt-5" style={{ background: p.bg }}>
-                            <span
-                                className="rounded-md px-2.5 py-[3px] text-[11px] font-bold"
-                                style={{
-                                    background: `${p.color}22`,
-                                    color: p.color,
-                                }}
-                            >
-                                {p.tag}
-                            </span>
+                        <div>
+                            <div className="px-[18px] pb-3.5 pt-5" style={{ background: p.bg }}>
+                                <span
+                                    className="rounded-md px-2.5 py-[3px] text-[10px] sm:text-[11px] font-bold"
+                                    style={{
+                                        background: `${p.color}22`,
+                                        color: p.color,
+                                    }}
+                                >
+                                    {p.tag}
+                                </span>
+                            </div>
+                            <div className="px-[18px] pt-4">
+                                <h3 className="mb-2.5 font-display text-[14px] sm:text-[15px] font-extrabold leading-tight text-primary line-clamp-2" style={{ minHeight: "2.5rem" }}>
+                                    {p.title}
+                                </h3>
+                            </div>
                         </div>
-                        <div className="px-[18px] pb-[18px] pt-4">
-                            <h3 className="mb-2.5 font-display text-[15px] font-extrabold leading-tight text-primary">
-                                {p.title}
-                            </h3>
-                            <div className="flex items-center justify-between">
-                                <span className="text-[12px] text-[#9CA3AF]">{p.date}</span>
+                        <div className="px-[18px] pb-[18px] pt-2">
+                            <div className="flex flex-wrap items-center justify-between gap-2">
+                                <span className="text-[11px] sm:text-[12px] text-[#9CA3AF]">{p.date}</span>
                                 <button
                                     type="button"
-                                    className="rounded-lg border-[1.5px] bg-transparent px-3.5 py-1.5 text-[12px] font-bold"
+                                    className="rounded-lg border-[1.5px] bg-transparent px-3.5 py-1.5 text-[11px] sm:text-[12px] font-bold transition-all duration-150 hover:bg-[#F8FAFF]"
                                     style={{ borderColor: p.color, color: p.color }}
                                 >
                                     Read →

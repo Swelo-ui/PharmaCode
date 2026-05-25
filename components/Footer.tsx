@@ -20,12 +20,13 @@ const KEY_SUBJECTS = [
 
 export function Footer() {
     return (
-        <footer className="mt-16 bg-[#0F1D5C] px-7 pb-7 pt-11 text-white">
+        <footer className="mt-8 sm:mt-16 bg-[#0F1D5C] px-7 pb-7 pt-11 text-white">
             <div className="mx-auto max-w-[960px]">
-                <div className="mb-9 grid gap-7 sm:grid-cols-2 md:grid-cols-4">
+                {/* ── Top grid ──────────────────────────────────── */}
+                <div className="mb-9 grid gap-7 grid-cols-2 sm:grid-cols-2 md:grid-cols-4">
 
-                    {/* ── Brand column with logo ── */}
-                    <div>
+                    {/* Brand column with logo */}
+                    <div className="col-span-2 sm:col-span-2 md:col-span-1">
                         <Link
                             href="/"
                             className="mb-3 flex items-center gap-2.5"
@@ -43,80 +44,89 @@ export function Footer() {
                                 <span className="text-[#93C5FD]">Code</span>
                             </span>
                         </Link>
-                        <p className="text-[12px] leading-[1.7] text-[#6B7FA3]">
+                        <p className="text-[12px] leading-[1.7] text-[#8B9CC8]">
                             Code • Cure • Care
                             <br />
                             B.Pharm NEP 2020 hub
                             <br />
-                            pharmacode.in
+                            <span className="text-[#6B7FA3]">pharmacode.in</span>
                         </p>
                     </div>
 
-                    {/* ── Semesters ── */}
+                    {/* Semesters */}
                     <div>
                         <div className="mb-2.5 font-display text-[13px] font-bold text-[#E0E7FF]">
                             Semesters
                         </div>
-                        {SEMESTERS.map((s) => (
-                            <Link
-                                key={s.num}
-                                href={`/syllabus/semester-${s.num}/`}
-                                className="mb-1.5 block text-[12px] text-[#6B7FA3] hover:text-white"
-                            >
-                                Semester {s.num}
-                            </Link>
-                        ))}
+                        <div className="flex flex-col gap-1.5">
+                            {SEMESTERS.map((s) => (
+                                <Link
+                                    key={s.num}
+                                    href={`/syllabus/semester-${s.num}/`}
+                                    className="block text-[12px] text-[#8B9CC8] hover:text-[#C7D2FE] transition-colors duration-150"
+                                >
+                                    Semester {s.num}
+                                </Link>
+                            ))}
+                        </div>
                     </div>
 
-                    {/* ── Resources ── */}
+                    {/* Resources */}
                     <div>
                         <div className="mb-2.5 font-display text-[13px] font-bold text-[#E0E7FF]">
                             Resources
                         </div>
-                        {RESOURCES.map((r) => (
-                            <Link
-                                key={r.href}
-                                href={r.href}
-                                className="mb-1.5 block text-[12px] text-[#6B7FA3] hover:text-white"
-                            >
-                                {r.label}
-                            </Link>
-                        ))}
+                        <div className="flex flex-col gap-1.5">
+                            {RESOURCES.map((r) => (
+                                <Link
+                                    key={r.href}
+                                    href={r.href}
+                                    className="block text-[12px] text-[#8B9CC8] hover:text-[#C7D2FE] transition-colors duration-150"
+                                >
+                                    {r.label}
+                                </Link>
+                            ))}
+                        </div>
                     </div>
 
-                    {/* ── Key Subjects ── */}
+                    {/* Key Subjects */}
                     <div>
                         <div className="mb-2.5 font-display text-[13px] font-bold text-[#E0E7FF]">
                             Key Subjects
                         </div>
-                        {KEY_SUBJECTS.map((k) => (
-                            <Link
-                                key={k.label}
-                                href={k.href}
-                                className="mb-1.5 block text-[12px] text-[#6B7FA3] hover:text-white"
-                            >
-                                {k.label}
-                            </Link>
-                        ))}
+                        <div className="flex flex-col gap-1.5">
+                            {KEY_SUBJECTS.map((k) => (
+                                <Link
+                                    key={k.label}
+                                    href={k.href}
+                                    className="block text-[12px] text-[#8B9CC8] hover:text-[#C7D2FE] transition-colors duration-150"
+                                >
+                                    {k.label}
+                                </Link>
+                            ))}
+                        </div>
                     </div>
                 </div>
 
-                {/* ── Bottom bar ── */}
-                <div className="flex flex-wrap items-center justify-between gap-2.5 border-t border-[#1A2B6B] pt-5">
-                    <div className="flex items-center gap-2">
-                        <Image
-                            src="/logo.png"
-                            alt=""
-                            width={18}
-                            height={18}
-                            className="rounded-[4px] object-contain opacity-60"
-                            aria-hidden
-                        />
-                        <span className="text-[11px] text-[#374151]">
-                            © 2026 PharmaCode · pharmacode.in · PCI NEP 2020 B.Pharm Syllabus
-                        </span>
+                {/* ── Bottom bar ────────────────────────────────── */}
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-[#1E3280] pt-5 text-center sm:text-left">
+                    <div className="flex flex-col sm:flex-row items-center gap-2">
+                        <div className="flex items-center gap-2">
+                            <Image
+                                src="/logo.png"
+                                alt=""
+                                width={18}
+                                height={18}
+                                className="rounded-[4px] object-contain opacity-60"
+                                aria-hidden
+                            />
+                            <span className="text-[11px] text-[#8B9CC8]">
+                                © 2026 PharmaCode · pharmacode.in
+                                <span className="hidden sm:inline"> · PCI NEP 2020 B.Pharm Syllabus</span>
+                            </span>
+                        </div>
                     </div>
-                    <span className="text-[11px] text-[#374151]">
+                    <span className="text-[11px] text-[#6B7FA3]">
                         Made with 💊 for pharmacy students across India
                     </span>
                 </div>
