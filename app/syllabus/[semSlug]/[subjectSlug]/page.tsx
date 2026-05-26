@@ -77,42 +77,43 @@ function UnitCard({
     semBg: string;
 }) {
     return (
-        <div
-            className="bg-white rounded-[16px] overflow-hidden border border-[#E8EDFF] transition-all duration-200 hover:shadow-md hover:border-opacity-80"
-            style={{ borderLeftWidth: 4, borderLeftColor: semColor }}
-        >
-            {/* Unit header */}
-            <div
-                className="px-4 sm:px-5 py-3 flex items-center gap-3"
-                style={{ background: semBg }}
-            >
-                <span
-                    className="shrink-0 font-[DM_Sans] font-black text-[11px] px-2.5 py-[4px] rounded-[7px] text-white whitespace-nowrap"
+        <div className="bg-white rounded-[14px] overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 border border-[#F0F4FF]">
+            {/* Unit header — number circle + title + hours pill */}
+            <div className="px-4 sm:px-5 py-3 sm:py-3.5 flex items-center gap-3">
+                <div
+                    className="shrink-0 w-[30px] h-[30px] sm:w-[32px] sm:h-[32px] rounded-full flex items-center justify-center text-white font-[DM_Sans] font-black text-[11px] sm:text-[12px]"
                     style={{ background: semColor }}
                 >
-                    Unit {unit.num}
-                </span>
-                <span className="font-[Nunito] font-bold text-[14px] sm:text-[15px] text-[#1A2B6B] leading-tight">
+                    {index + 1}
+                </div>
+                <span className="flex-1 font-[Nunito] font-bold text-[13px] sm:text-[15px] text-[#1A2B6B] leading-snug">
                     {unit.title}
                 </span>
                 {unit.hours && (
-                    <span className="ml-auto shrink-0 font-[DM_Sans] text-[11px] text-[#9CA3AF] whitespace-nowrap">
+                    <span
+                        className="shrink-0 font-[DM_Sans] text-[10px] sm:text-[11px] font-semibold px-2.5 py-[3px] rounded-full whitespace-nowrap"
+                        style={{ background: semBg, color: semColor }}
+                    >
                         {unit.hours}
                     </span>
                 )}
             </div>
+
+            {/* Divider */}
+            <div className="mx-4 sm:mx-5 h-px bg-[#F0F4FF]" />
+
             {/* Sub-topics list */}
             {unit.topics.length > 0 && (
-                <div className="px-4 sm:px-5 py-3 sm:py-4">
-                    <ul className="flex flex-col gap-2.5">
+                <div className="px-4 sm:px-5 pt-3 pb-2">
+                    <ul className="flex flex-col gap-2">
                         {unit.topics.map((topic, i) => (
                             <li key={i} className="flex gap-2.5 items-start">
                                 <span
-                                    className="shrink-0 mt-[5px] w-[6px] h-[6px] rounded-full"
-                                    style={{ background: semColor, minWidth: 6 }}
+                                    className="shrink-0 mt-[6px] w-[5px] h-[5px] rounded-sm rotate-45"
+                                    style={{ background: semColor, minWidth: 5 }}
                                 />
                                 <span
-                                    className="font-[DM_Sans] text-[12px] sm:text-[13px] text-[#374151] leading-[1.65]"
+                                    className="font-[DM_Sans] text-[12px] sm:text-[13px] text-[#4B5563] leading-[1.65]"
                                     style={{ wordBreak: "break-word" }}
                                 >
                                     {topic}
@@ -122,6 +123,21 @@ function UnitCard({
                     </ul>
                 </div>
             )}
+
+            {/* Per-unit download button */}
+            <div className="px-4 sm:px-5 py-3">
+                <button
+                    className="w-full flex items-center justify-center gap-2 py-2 sm:py-2.5 rounded-[10px] text-[12px] sm:text-[13px] font-semibold font-[DM_Sans] transition-all duration-150 hover:opacity-90 active:scale-[0.98]"
+                    style={{
+                        background: semBg,
+                        color: semColor,
+                        border: `1.5px solid ${semColor}33`,
+                    }}
+                >
+                    <Download size={13} />
+                    Unit {index + 1} Notes PDF
+                </button>
+            </div>
         </div>
     );
 }
@@ -347,24 +363,17 @@ export default function SubjectPage({
                     </div>
                 )}
 
-                {/* ── Bottom Download CTA ───────────────────────── */}
+                {/* ── Bottom CTA ───────────────────────────────── */}
                 <div
                     className="mt-8 rounded-[16px] px-4 py-5 sm:px-6 sm:py-6 text-center"
                     style={{ background: sem.bg, border: `1.5px solid ${sem.color}33` }}
                 >
-                    <p className="font-[Nunito] font-bold text-[14px] sm:text-[15px] text-[#1A2B6B] mb-1.5">
+                    <p className="font-[Nunito] font-bold text-[14px] sm:text-[15px] text-[#1A2B6B] mb-1">
                         Get complete notes for {subject.code}
                     </p>
-                    <p className="font-[DM_Sans] text-[12px] text-[#6B7FA3] mb-3">
-                        PDF notes covering all {subject.units.length} units — free, no login required
+                    <p className="font-[DM_Sans] text-[12px] text-[#6B7FA3]">
+                        Click any unit above to download its PDF notes — free, no login required
                     </p>
-                    <button
-                        className="inline-flex items-center gap-2 px-6 py-2.5 rounded-[11px] text-white text-[14px] font-bold font-[DM_Sans] transition-all duration-150 hover:opacity-90 hover:shadow-md"
-                        style={{ background: sem.color }}
-                    >
-                        <Download size={15} />
-                        Download Free PDF Notes
-                    </button>
                 </div>
 
                 {/* ── Prev / Next Subject navigation ───────────── */}

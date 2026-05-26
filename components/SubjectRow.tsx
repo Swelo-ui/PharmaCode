@@ -58,8 +58,8 @@ export default function SubjectRow({ subject, semColor, semNum }: Props) {
                     {/* Right: badges + chevron */}
                     <div className="flex items-center gap-1.5 shrink-0">
                         {subject.highlight && (
-                            <span className="hidden xs:inline font-[DM_Sans] text-[9px] sm:text-[10px] font-bold px-1.5 py-[2px] rounded-[5px] bg-[#FEF3C7] text-[#92400E] whitespace-nowrap inline-flex items-center gap-0.5">
-                                <Star size={8} fill="currentColor" />
+                            <span className="hidden xs:inline-flex items-center gap-0.5 font-[DM_Sans] text-[9px] sm:text-[10px] font-bold px-2 py-[3px] rounded-[5px] bg-[#FEF3C7] text-[#92400E] whitespace-nowrap leading-none">
+                                <Star size={9} fill="currentColor" className="shrink-0" />
                                 KEY
                             </span>
                         )}
@@ -89,42 +89,23 @@ export default function SubjectRow({ subject, semColor, semNum }: Props) {
                                 key={unit.num}
                                 className={`px-3 sm:px-4 py-3 ${i < subject.units.length - 1 ? "border-b border-[#F0F4FF]" : ""}`}
                             >
-                                {/* Unit header */}
-                                <div className="flex items-start gap-2.5 mb-2">
+                                {/* Unit header — title + hours only */}
+                                <div className="flex items-center gap-2.5">
                                     <span
-                                        className="shrink-0 font-[DM_Sans] text-[9px] sm:text-[10px] font-black px-[7px] py-[3px] rounded-[5px] text-white mt-[1px]"
+                                        className="shrink-0 font-[DM_Sans] text-[9px] sm:text-[10px] font-black px-[7px] py-[3px] rounded-[5px] text-white"
                                         style={{ background: semColor }}
                                     >
                                         {subject.type === "T" ? `U${i + 1}` : "•"}
                                     </span>
-                                    <span className="font-[DM_Sans] font-semibold text-[12px] sm:text-[13px] text-[#1A2B6B] leading-[1.45]">
+                                    <span className="font-[DM_Sans] font-semibold text-[12px] sm:text-[13px] text-[#1A2B6B] leading-[1.45] flex-1">
                                         {unit.title}
                                     </span>
                                     {unit.hours && (
-                                        <span className="ml-auto shrink-0 font-[DM_Sans] text-[10px] text-[#9CA3AF] whitespace-nowrap mt-[2px]">
+                                        <span className="shrink-0 font-[DM_Sans] text-[10px] text-[#9CA3AF] whitespace-nowrap">
                                             {unit.hours}
                                         </span>
                                     )}
                                 </div>
-                                {/* Sub-topics (bullet points from PDF) */}
-                                {unit.topics.length > 0 && (
-                                    <ul className="pl-[22px] sm:pl-[26px] flex flex-col gap-1.5">
-                                        {unit.topics.map((topic, j) => (
-                                            <li key={j} className="flex gap-2 items-start">
-                                                <span
-                                                    className="shrink-0 mt-[6px] w-[5px] h-[5px] rounded-full"
-                                                    style={{ background: semColor + "99", minWidth: 5 }}
-                                                />
-                                                <span
-                                                    className="font-[DM_Sans] text-[11px] sm:text-[12px] text-[#4B5563] leading-[1.6]"
-                                                    style={{ wordBreak: "break-word" }}
-                                                >
-                                                    {topic}
-                                                </span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                )}
                             </div>
                         ))}
                     </div>
