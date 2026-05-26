@@ -6,6 +6,13 @@ import { getSemesterBySlug, getAllSemesters, type Subject } from "@/lib/syllabus
 import SubjectRow from "@/components/SubjectRow";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { JsonLd } from "@/components/JsonLd";
+import {
+    ChevronLeft,
+    ChevronRight,
+    Lightbulb,
+    FlaskConical,
+    Microscope,
+} from "lucide-react";
 import type { Metadata } from "next";
 
 export async function generateStaticParams() {
@@ -118,7 +125,7 @@ export default function SemesterPage({
 
                 {/* Tip banner */}
                 <div className="flex items-start gap-2.5 bg-[#FFFBEB] border border-[#FDE68A] rounded-[10px] px-3 sm:px-4 py-2.5 mb-6">
-                    <span className="text-[14px] shrink-0 mt-[1px]">💡</span>
+                    <Lightbulb size={15} className="shrink-0 mt-[1px] text-[#92400E]" />
                     <p className="font-[DM_Sans] text-[12px] sm:text-[13px] text-[#92400E] leading-[1.5]">
                         Click any subject to expand all units with detailed topic content from the official PCI NEP 2020 syllabus
                     </p>
@@ -166,8 +173,9 @@ export default function SemesterPage({
                 {internship.length > 0 && (
                     <section className="mb-6">
                         <h2 className="font-[Nunito] font-extrabold text-[18px] sm:text-[20px] text-[#1A2B6B] mb-4">
-                            <span className="bg-[#FFF7ED] text-[#92400E] rounded-[8px] px-3 py-[3px] text-[12px] sm:text-[13px]">
-                                🏭 Internship (Mandatory)
+                            <span className="bg-[#FFF7ED] text-[#92400E] rounded-[8px] px-3 py-[3px] text-[12px] sm:text-[13px] inline-flex items-center gap-1.5">
+                                <FlaskConical size={13} />
+                                Internship (Mandatory)
                             </span>
                         </h2>
                         {internship.map((s: Subject) => (
@@ -185,8 +193,9 @@ export default function SemesterPage({
                 {research.length > 0 && (
                     <section className="mb-6">
                         <h2 className="font-[Nunito] font-extrabold text-[18px] sm:text-[20px] text-[#1A2B6B] mb-4">
-                            <span className="bg-[#FAF5FF] text-[#581C87] rounded-[8px] px-3 py-[3px] text-[12px] sm:text-[13px]">
-                                🔬 Research Project
+                            <span className="bg-[#FAF5FF] text-[#581C87] rounded-[8px] px-3 py-[3px] text-[12px] sm:text-[13px] inline-flex items-center gap-1.5">
+                                <Microscope size={13} />
+                                Research Project
                             </span>
                         </h2>
                         {research.map((s: Subject) => (
@@ -212,7 +221,8 @@ export default function SemesterPage({
                                 color: prevSem.color,
                             }}
                         >
-                            ← Semester {prevSem.num}
+                            <ChevronLeft size={15} />
+                            Semester {prevSem.num}
                         </Link>
                     ) : (
                         <div />
@@ -227,7 +237,8 @@ export default function SemesterPage({
                                 color: nextSem.color,
                             }}
                         >
-                            Semester {nextSem.num} →
+                            Semester {nextSem.num}
+                            <ChevronRight size={15} />
                         </Link>
                     ) : (
                         <div />

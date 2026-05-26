@@ -10,6 +10,19 @@ import {
 } from "@/lib/syllabus";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { JsonLd } from "@/components/JsonLd";
+import {
+    Download,
+    ArrowLeft,
+    ChevronLeft,
+    ChevronRight,
+    BookOpen,
+    Clock,
+    CreditCard,
+    Star,
+    Link2,
+    ClipboardList,
+    FileText,
+} from "lucide-react";
 import type { Metadata } from "next";
 
 /* ── Static params ─────────────────────────────────── */
@@ -213,8 +226,9 @@ export default function SubjectPage({
                             </span>
                         )}
                         {subject.highlight && (
-                            <span className="font-[DM_Sans] text-[11px] font-bold px-2.5 py-[4px] rounded-[7px] bg-[#FEF3C7] text-[#92400E]">
-                                ★ KEY SUBJECT
+                            <span className="font-[DM_Sans] text-[11px] font-bold px-2.5 py-[4px] rounded-[7px] bg-[#FEF3C7] text-[#92400E] flex items-center gap-1">
+                                <Star size={10} fill="currentColor" />
+                                KEY SUBJECT
                             </span>
                         )}
                         <span
@@ -236,16 +250,16 @@ export default function SubjectPage({
                     {/* Quick stats row */}
                     <div className="flex flex-wrap gap-3 mb-4">
                         {[
-                            { icon: "📚", label: "Units", value: subject.units.length.toString() },
-                            { icon: "⏱️", label: "Total Hours", value: totalHours > 0 ? `${totalHours}h` : "—" },
-                            { icon: "💳", label: "Credits", value: subject.credits.toString() },
+                            { icon: <BookOpen size={14} />, label: "Units", value: subject.units.length.toString() },
+                            { icon: <Clock size={14} />, label: "Total Hours", value: totalHours > 0 ? `${totalHours}h` : "—" },
+                            { icon: <CreditCard size={14} />, label: "Credits", value: subject.credits.toString() },
                         ].map((stat) => (
                             <div
                                 key={stat.label}
                                 className="flex items-center gap-1.5 bg-white rounded-[10px] px-3 py-2"
                                 style={{ border: `1px solid ${sem.color}33` }}
                             >
-                                <span className="text-[14px]">{stat.icon}</span>
+                                <span className="text-[#6B7FA3]">{stat.icon}</span>
                                 <span className="font-[DM_Sans] text-[12px] text-[#6B7FA3]">{stat.label}:</span>
                                 <span
                                     className="font-[Nunito] font-bold text-[13px]"
@@ -263,7 +277,8 @@ export default function SubjectPage({
                             className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-3 rounded-[11px] text-white text-[13px] sm:text-[14px] font-bold font-[DM_Sans] transition-all duration-150 hover:opacity-90 hover:shadow-md active:scale-[0.98]"
                             style={{ background: sem.color }}
                         >
-                            📥 Download {subject.code} Notes PDF
+                            <Download size={15} />
+                            Download {subject.code} Notes PDF
                         </button>
                         <Link
                             href={`/syllabus/semester-${sem.num}`}
@@ -273,17 +288,17 @@ export default function SubjectPage({
                                 color: sem.color,
                             }}
                         >
-                            ← All Sem {sem.num} Subjects
+                            <ArrowLeft size={15} />
+                            All Sem {sem.num} Subjects
                         </Link>
                     </div>
                 </div>
 
                 {/* ── SEO: Canonical URL display ───────────────── */}
                 <div className="flex items-center gap-2 mb-6 px-3 py-2 bg-[#F8FAFF] rounded-[8px] border border-[#E8EDFF]">
-                    <span className="text-[11px] text-[#9CA3AF] font-[DM_Sans]">🔗 URL:</span>
-                    <code
-                        className="font-mono text-[10px] sm:text-[11px] text-[#4C6EF5] break-all"
-                    >
+                    <Link2 size={13} className="text-[#9CA3AF] shrink-0" />
+                    <span className="font-[DM_Sans] text-[11px] text-[#9CA3AF]">URL:</span>
+                    <code className="font-mono text-[10px] sm:text-[11px] text-[#4C6EF5] break-all">
                         {canonical}
                     </code>
                 </div>
@@ -320,7 +335,9 @@ export default function SubjectPage({
                         className="rounded-[16px] px-5 py-10 text-center"
                         style={{ background: sem.bg, border: `1.5px dashed ${sem.color}55` }}
                     >
-                        <div className="text-[32px] mb-3">📋</div>
+                        <div className="flex justify-center mb-3">
+                            <ClipboardList size={36} className="text-[#9CA3AF]" />
+                        </div>
                         <p className="font-[Nunito] font-bold text-[15px] text-[#1A2B6B] mb-1">
                             Detailed Syllabus Coming Soon
                         </p>
@@ -336,7 +353,7 @@ export default function SubjectPage({
                     style={{ background: sem.bg, border: `1.5px solid ${sem.color}33` }}
                 >
                     <p className="font-[Nunito] font-bold text-[14px] sm:text-[15px] text-[#1A2B6B] mb-1.5">
-                        📥 Get complete notes for {subject.code}
+                        Get complete notes for {subject.code}
                     </p>
                     <p className="font-[DM_Sans] text-[12px] text-[#6B7FA3] mb-3">
                         PDF notes covering all {subject.units.length} units — free, no login required
@@ -345,6 +362,7 @@ export default function SubjectPage({
                         className="inline-flex items-center gap-2 px-6 py-2.5 rounded-[11px] text-white text-[14px] font-bold font-[DM_Sans] transition-all duration-150 hover:opacity-90 hover:shadow-md"
                         style={{ background: sem.color }}
                     >
+                        <Download size={15} />
                         Download Free PDF Notes
                     </button>
                 </div>
@@ -363,7 +381,7 @@ export default function SubjectPage({
                                     className="flex-1 sm:flex-none flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-[10px] text-[12px] sm:text-[13px] font-semibold font-[DM_Sans] bg-white transition-all hover:shadow-sm"
                                     style={{ border: `1.5px solid ${sem.color}55`, color: sem.color }}
                                 >
-                                    <span>←</span>
+                                    <ChevronLeft size={15} />
                                     <span className="truncate max-w-[120px] sm:max-w-[180px]">{prevSub.code}</span>
                                 </Link>
                             ) : (
@@ -376,7 +394,7 @@ export default function SubjectPage({
                                     style={{ border: `1.5px solid ${sem.color}55`, color: sem.color }}
                                 >
                                     <span className="truncate max-w-[120px] sm:max-w-[180px]">{nextSub.code}</span>
-                                    <span>→</span>
+                                    <ChevronRight size={15} />
                                 </Link>
                             ) : (
                                 <div />

@@ -1,9 +1,8 @@
 "use client";
 // components/SubjectRow.tsx
-// Shows subject code, name, credits + expandable accordion
-// with FULL unit content (title + bullet points) from syllabus.ts
 import { useState } from "react";
 import Link from "next/link";
+import { Download, ExternalLink, Star, ChevronDown } from "lucide-react";
 import type { Subject } from "@/lib/syllabus";
 
 interface Props {
@@ -59,20 +58,20 @@ export default function SubjectRow({ subject, semColor, semNum }: Props) {
                     {/* Right: badges + chevron */}
                     <div className="flex items-center gap-1.5 shrink-0">
                         {subject.highlight && (
-                            <span className="hidden xs:inline font-[DM_Sans] text-[9px] sm:text-[10px] font-bold px-1.5 py-[2px] rounded-[5px] bg-[#FEF3C7] text-[#92400E] whitespace-nowrap">
-                                ★ KEY
+                            <span className="hidden xs:inline font-[DM_Sans] text-[9px] sm:text-[10px] font-bold px-1.5 py-[2px] rounded-[5px] bg-[#FEF3C7] text-[#92400E] whitespace-nowrap inline-flex items-center gap-0.5">
+                                <Star size={8} fill="currentColor" />
+                                KEY
                             </span>
                         )}
                         <span className="font-[DM_Sans] text-[11px] font-bold px-2 py-[3px] rounded-[7px] bg-[#F0F4FF] text-[#4C6EF5] whitespace-nowrap">
                             {subject.credits}cr
                         </span>
                         {hasUnits && (
-                            <span
-                                className="text-[12px] text-[#9CA3AF] inline-block transition-transform duration-200"
+                            <ChevronDown
+                                size={15}
+                                className="text-[#9CA3AF] transition-transform duration-200"
                                 style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
-                            >
-                                ▾
-                            </span>
+                            />
                         )}
                     </div>
                 </div>
@@ -133,10 +132,11 @@ export default function SubjectRow({ subject, semColor, semNum }: Props) {
                     {/* Action buttons */}
                     <div className="px-3 sm:px-4 pt-3 flex flex-col sm:flex-row gap-2">
                         <button
-                            className="w-full sm:flex-1 py-2.5 px-4 rounded-[10px] border-none text-white text-[12px] sm:text-[13px] font-bold font-[DM_Sans] transition-all duration-150 hover:opacity-90 hover:shadow-md active:scale-[0.98]"
+                            className="w-full sm:flex-1 py-2.5 px-4 rounded-[10px] border-none text-white text-[12px] sm:text-[13px] font-bold font-[DM_Sans] transition-all duration-150 hover:opacity-90 hover:shadow-md active:scale-[0.98] flex items-center justify-center gap-2"
                             style={{ background: semColor }}
                         >
-                            📥 Download Notes PDF
+                            <Download size={14} />
+                            Download Notes PDF
                         </button>
                         {subject.type === "T" && (
                             <Link
@@ -144,7 +144,8 @@ export default function SubjectRow({ subject, semColor, semNum }: Props) {
                                 className="w-full sm:w-auto flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-[10px] text-[12px] sm:text-[13px] font-semibold font-[DM_Sans] bg-transparent transition-all duration-150 hover:opacity-80"
                                 style={{ border: `1.5px solid ${semColor}`, color: semColor }}
                             >
-                                📌 View Full Syllabus Page
+                                <ExternalLink size={13} />
+                                View Full Syllabus Page
                             </Link>
                         )}
                     </div>
