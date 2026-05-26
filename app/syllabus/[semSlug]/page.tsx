@@ -1,251 +1,239 @@
-import type { Metadata } from "next";
+// app/syllabus/[semSlug]/page.tsx
+// Semester detail page — passes semNum to SubjectRow for "View Full Page" links
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { SEMESTERS, getSemester } from "@/lib/syllabus";
-import { SubjectRow } from "@/components/SubjectRow";
+import { getSemesterBySlug, getAllSemesters, type Subject } from "@/lib/syllabus";
+import SubjectRow from "@/components/SubjectRow";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { JsonLd } from "@/components/JsonLd";
-import { breadcrumbSchema, semesterCourseSchema } from "@/lib/schema";
-import { absUrl } from "@/lib/site";
-import { Lightbulb, Building2, FlaskConical, ChevronLeft, ChevronRight } from "lucide-react";
+import type { Metadata } from "next";
 
-interface Params {
-    semSlug: string;
-}
-
-/** Parse "semester-3" → 3. Returns null if invalid. */
-function parseSemSlug(slug: string): number | null {
-    const m = /^semester-(\d+)$/.exec(slug);
-    if (!m) return null;
-    const n = Number(m[1]);
-    return Number.isInteger(n) && n >= 1 && n <= 8 ? n : null;
-}
-
-export function generateStaticParams() {
-    return SEMESTERS.map((s) => ({ semSlug: `semester-${s.num}` }));
+export async function generateStaticParams() {
+    return getAllSemesters().map((s) => ({ semSlug: `semester-${s.num}` }));
 }
 
 export async function generateMetadata({
     params,
 }: {
-    params: Params;
+    params: { semSlug: string };
 }): Promise<Metadata> {
-    const num = parseSemSlug(params.semSlug);
-    const sem = num !== null ? getSemester(num) : undefined;
-    if (!sem) return { title: "Semester not found" };
-
-    const url = absUrl(`/syllabus/${params.semSlug}/`);
-    const title = `Semester ${sem.num} B.Pharm Syllabus NEP 2020 | ${sem.credits} Credits`;
-    const description = `Semester ${sem.num} B.Pharm syllabus as per PCI NEP 2020 — ${sem.label}. ${sem.subjects.length} subjects, ${sem.credits} credits, full unit-wise breakdown with free PDF notes.`;
-
+    const sem = getSemesterBySlug(params.semSlug);
+    if (!sem) return {};
     return {
-        title,
-        description,
-        alternates: { canonical: url },
-        openGraph: { title, description, url },
+        title: `Semester ${sem.num} B.Pharm Syllabus NEP 2020 | ${sem.credits} Credits | PharmaCode`,
+        description: `Complete Semester ${sem.num} B.Pharm syllabus as per PCI NEP 2020. ${sem.subjects.length} subjects, ${sem.credits} credits. Unit-wise detailed breakdown and free notes.`,
+        alternates: { canonical: `https://pharmacode.in/syllabus/semester-${sem.num}/` },
     };
 }
 
-export default function SemesterPage({ params }: { params: Params }) {
-    const num = parseSemSlug(params.semSlug);
-    const sem = num !== null ? getSemester(num) : undefined;
+export default function SemesterPage({
+    params,
+}: {
+    params: { semSlug: string };
+}) {
+    const sem = getSemesterBySlug(params.semSlug);
     if (!sem) notFound();
 
-    const breadcrumbs = [
-        { name: "Home", href: "/" },
-        { name: "Syllabus", href: "/syllabus/" },
-        { name: `Semester ${sem.num}`, href: `/syllabus/semester-${sem.num}/` },
-    ];
+    const theory = sem.subjects.filter((s: Subject) => s.type === "T");
+    const practicals = sem.subjects.filter((s: Subject) => s.type === "P");
+    const internship = sem.subjects.filter((s: Subject) => s.type === "I");
+    const research = sem.subjects.filter((s: Subject) => s.type === "RP");
 
-    const theory = sem.subjects.filter((s) => s.type === "T");
-    const practical = sem.subjects.filter((s) => s.type === "P");
-    const internships = sem.subjects.filter((s) => s.type === "I");
-    const research = sem.subjects.filter((s) => s.type === "RP");
+    const canonical = `https://pharmacode.in/syllabus/semester-${sem.num}/`;
+    const allSems = getAllSemesters();
+    const prevSem = sem.num > 1 ? allSems[sem.num - 2] : null;
+    const nextSem = sem.num < 8 ? allSems[sem.num] : null;
 
-    const stats = [
-        { v: sem.credits, l: "Credits" },
-        { v: theory.length, l: "Theory" },
-        { v: practical.length || "—", l: "Practical" },
-    ];
-
-    const prev = SEMESTERS.find((s) => s.num === sem.num - 1);
-    const next = SEMESTERS.find((s) => s.num === sem.num + 1);
+    const schema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://pharmacode.in/" },
+            { "@type": "ListItem", position: 2, name: "Syllabus", item: "https://pharmacode.in/syllabus/" },
+            { "@type": "ListItem", position: 3, name: `Semester ${sem.num}`, item: canonical },
+        ],
+    };
 
     return (
-        <div className="mx-auto w-full max-w-[960px] px-5 sm:px-8 py-6 sm:py-8">
-            <JsonLd
-                data={[breadcrumbSchema(breadcrumbs), semesterCourseSchema(sem)]}
-            />
-            <Breadcrumb items={breadcrumbs} />
+        <>
+            <JsonLd data={schema} />
+            <div className="max-w-[960px] mx-auto px-4 sm:px-6 py-6 sm:py-8">
+                <Breadcrumb items={[
+                    { name: "Home", href: "/" },
+                    { name: "Syllabus", href: "/syllabus" },
+                    { name: `Semester ${sem.num}`, href: `/syllabus/semester-${sem.num}` },
+                ]} />
 
-            {/* ── Semester Header Card ─────────────────────
-                FIX: px-4 py-4 on mobile → sm:px-7 sm:py-6
-                FIX: H1 text-[22px] → sm:text-[30px]
-                FIX: break-all on URL code element
-            ─────────────────────────────────────────────── */}
-            <div
-                className="mb-7 rounded-[20px] border-2 px-4 py-5 sm:px-7 sm:py-6 mt-4"
-                style={{ background: sem.bg, borderColor: `${sem.color}44` }}
-            >
-                {/* Mobile: stacked column | Desktop: row */}
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="min-w-0">
-                        <div className="mb-1.5 flex items-center gap-3">
-                            <span
-                                className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-[13px] font-display text-[18px] font-black text-white"
-                                style={{ background: sem.color }}
-                            >
-                                {sem.num}
-                            </span>
-                            <h1 className="font-display text-[24px] sm:text-[30px] font-black text-primary leading-tight">
-                                Semester {sem.num}
-                            </h1>
-                        </div>
-                        <div
-                            className="mb-1.5 font-[DM_Sans] text-[13px] sm:text-[14px] font-semibold"
-                            style={{ color: sem.color }}
-                        >
-                            {sem.label}
-                        </div>
-                        <code className="font-mono text-[10px] sm:text-[11px] text-[#9CA3AF] break-all">
-                            pharmacode.in/syllabus/semester-{sem.num}/
-                        </code>
-                    </div>
-
-                    {/* Stats boxes — full width row on mobile */}
-                    <div className="flex gap-2 sm:gap-2.5 sm:shrink-0">
-                        {stats.map(({ v, l }) => (
-                            <div
-                                key={l}
-                                className="flex-1 sm:flex-none rounded-[11px] border bg-white px-3 sm:px-[18px] py-2 text-center"
-                                style={{ borderColor: `${sem.color}33` }}
-                            >
+                {/* ── Header Card ──────────────────────────────── */}
+                <div
+                    className="rounded-[20px] px-4 py-4 sm:px-7 sm:py-6 mt-4 mb-7"
+                    style={{ background: sem.bg, border: `2px solid ${sem.color}44` }}
+                >
+                    <div className="flex flex-wrap items-start sm:items-center justify-between gap-4">
+                        <div className="min-w-0">
+                            <div className="flex items-center gap-3 mb-1.5">
                                 <div
-                                    className="font-display text-[18px] sm:text-[22px] font-black"
-                                    style={{ color: sem.color }}
+                                    className="w-[42px] h-[42px] sm:w-[46px] sm:h-[46px] rounded-[13px] flex items-center justify-center text-white font-[Nunito] font-black text-[18px] sm:text-[20px] shrink-0"
+                                    style={{ background: sem.color }}
                                 >
-                                    {v}
+                                    {sem.num}
                                 </div>
-                                <div className="font-[DM_Sans] text-[10px] sm:text-[11px] text-[#9CA3AF]">{l}</div>
+                                <h1 className="font-[Nunito] font-black text-[22px] sm:text-[30px] text-[#1A2B6B] leading-tight">
+                                    Semester {sem.num}
+                                </h1>
                             </div>
-                        ))}
+                            <p
+                                className="font-[DM_Sans] font-semibold text-[13px] sm:text-[14px] mb-1.5"
+                                style={{ color: sem.color }}
+                            >
+                                {sem.label}
+                            </p>
+                            <code className="font-mono text-[10px] sm:text-[11px] text-[#9CA3AF] break-all">
+                                {canonical}
+                            </code>
+                        </div>
+                        <div className="flex flex-wrap gap-2 sm:gap-2.5">
+                            {[
+                                { v: sem.credits, l: "Credits" },
+                                { v: theory.length, l: "Theory" },
+                                { v: practicals.length > 0 ? practicals.length : "—", l: "Practical" },
+                            ].map(({ v, l }) => (
+                                <div
+                                    key={l}
+                                    className="bg-white rounded-[11px] py-2 px-3 sm:px-4 text-center"
+                                    style={{ border: `1px solid ${sem.color}33` }}
+                                >
+                                    <div
+                                        className="font-[Nunito] font-black text-[18px] sm:text-[22px]"
+                                        style={{ color: sem.color }}
+                                    >
+                                        {v}
+                                    </div>
+                                    <div className="font-[DM_Sans] text-[10px] sm:text-[11px] text-[#9CA3AF]">{l}</div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Tip banner */}
-            <div className="mb-6 flex items-start gap-2.5 rounded-[10px] border border-[#FDE68A] bg-[#FFFBEB] px-3 sm:px-4 py-2.5">
-                <Lightbulb size={15} strokeWidth={2} className="shrink-0 mt-[1px] text-[#92400E]" aria-hidden />
-                <span className="font-[DM_Sans] text-[12px] sm:text-[13px] text-[#92400E] leading-[1.5]">
-                    Click any subject to expand all 5 units and access free PDF notes
-                </span>
-            </div>
+                {/* Tip banner */}
+                <div className="flex items-start gap-2.5 bg-[#FFFBEB] border border-[#FDE68A] rounded-[10px] px-3 sm:px-4 py-2.5 mb-6">
+                    <span className="text-[14px] shrink-0 mt-[1px]">💡</span>
+                    <p className="font-[DM_Sans] text-[12px] sm:text-[13px] text-[#92400E] leading-[1.5]">
+                        Click any subject to expand all units with detailed topic content from the official PCI NEP 2020 syllabus
+                    </p>
+                </div>
 
-            {/* Theory */}
-            {theory.length > 0 && (
-                <section className="mb-6">
-                    <h2 className="mb-3.5 flex items-center gap-2 font-display text-[18px] sm:text-[20px] font-extrabold text-primary">
-                        <span className="rounded-lg bg-[#EEF2FF] px-3.5 py-[3px] text-[12px] sm:text-[13px] text-[#3730A3]">
-                            Theory Subjects
-                        </span>
-                    </h2>
-                    {theory.map((s) => (
-                        <SubjectRow
-                            key={s.code}
-                            sub={s}
-                            semNum={sem.num}
-                            semColor={sem.color}
-                        />
-                    ))}
-                </section>
-            )}
-
-            {/* Practical */}
-            {practical.length > 0 && (
-                <section className="mb-6">
-                    <h2 className="mb-3.5 mt-6 flex items-center gap-2 font-display text-[18px] sm:text-[20px] font-extrabold text-primary">
-                        <span className="rounded-lg bg-[#F0FDF4] px-3.5 py-[3px] text-[12px] sm:text-[13px] text-[#14532D]">
-                            Practical &amp; Electives
-                        </span>
-                    </h2>
-                    {practical.map((s) => (
-                        <SubjectRow
-                            key={s.code}
-                            sub={s}
-                            semNum={sem.num}
-                            semColor={sem.color}
-                        />
-                    ))}
-                </section>
-            )}
-
-            {/* Internships */}
-            {internships.length > 0 && (
-                <section className="mb-6">
-                    <h2 className="mb-3.5 mt-6 flex items-center gap-2 font-display text-[18px] sm:text-[20px] font-extrabold text-primary">
-                        <span className="rounded-lg bg-[#FFF7ED] px-3.5 py-[3px] text-[12px] sm:text-[13px] text-[#92400E] inline-flex items-center gap-1.5">
-                            <Building2 size={13} strokeWidth={2} />
-                            Internship (Mandatory)
-                        </span>
-                    </h2>
-                    {internships.map((s) => (
-                        <SubjectRow
-                            key={s.code}
-                            sub={s}
-                            semNum={sem.num}
-                            semColor={sem.color}
-                        />
-                    ))}
-                </section>
-            )}
-
-            {/* Research Project */}
-            {research.length > 0 && (
-                <section className="mb-6">
-                    <h2 className="mb-3.5 mt-6 flex items-center gap-2 font-display text-[18px] sm:text-[20px] font-extrabold text-primary">
-                        <span className="rounded-lg bg-[#FAF5FF] px-3.5 py-[3px] text-[12px] sm:text-[13px] text-[#581C87] inline-flex items-center gap-1.5">
-                            <FlaskConical size={13} strokeWidth={2} />
-                            Research Project
-                        </span>
-                    </h2>
-                    {research.map((s) => (
-                        <SubjectRow
-                            key={s.code}
-                            sub={s}
-                            semNum={sem.num}
-                            semColor={sem.color}
-                        />
-                    ))}
-                </section>
-            )}
-
-            {/* Prev / Next navigation */}
-            <div className="mt-8 flex justify-between gap-3">
-                {prev ? (
-                    <Link
-                        href={`/syllabus/semester-${prev.num}/`}
-                        className="inline-flex items-center gap-1.5 rounded-[10px] border-[1.5px] px-4 py-2.5 text-[13px] font-bold transition-all duration-150 hover:opacity-90"
-                        style={{ borderColor: prev.color, background: prev.bg, color: prev.color }}
-                    >
-                        <ChevronLeft size={15} strokeWidth={2.5} />
-                        Semester {prev.num}
-                    </Link>
-                ) : (
-                    <span />
+                {/* ── Theory Subjects ──────────────────────────── */}
+                {theory.length > 0 && (
+                    <section className="mb-6">
+                        <h2 className="font-[Nunito] font-extrabold text-[18px] sm:text-[20px] text-[#1A2B6B] mb-4">
+                            <span className="bg-[#EEF2FF] text-[#3730A3] rounded-[8px] px-3 py-[3px] text-[12px] sm:text-[13px]">
+                                Theory Subjects
+                            </span>
+                        </h2>
+                        {theory.map((s: Subject) => (
+                            <SubjectRow
+                                key={s.code}
+                                subject={s}
+                                semColor={sem.color}
+                                semNum={sem.num}
+                            />
+                        ))}
+                    </section>
                 )}
-                {next ? (
-                    <Link
-                        href={`/syllabus/semester-${next.num}/`}
-                        className="inline-flex items-center gap-1.5 rounded-[10px] border-[1.5px] px-4 py-2.5 text-[13px] font-bold transition-all duration-150 hover:opacity-90"
-                        style={{ borderColor: next.color, background: next.bg, color: next.color }}
-                    >
-                        Semester {next.num}
-                        <ChevronRight size={15} strokeWidth={2.5} />
-                    </Link>
-                ) : (
-                    <span />
+
+                {/* ── Practical & Electives ────────────────────── */}
+                {practicals.length > 0 && (
+                    <section className="mb-6">
+                        <h2 className="font-[Nunito] font-extrabold text-[18px] sm:text-[20px] text-[#1A2B6B] mb-4">
+                            <span className="bg-[#F0FDF4] text-[#14532D] rounded-[8px] px-3 py-[3px] text-[12px] sm:text-[13px]">
+                                Practical &amp; Electives
+                            </span>
+                        </h2>
+                        {practicals.map((s: Subject) => (
+                            <SubjectRow
+                                key={s.code}
+                                subject={s}
+                                semColor={sem.color}
+                                semNum={sem.num}
+                            />
+                        ))}
+                    </section>
                 )}
+
+                {/* ── Internship ───────────────────────────────── */}
+                {internship.length > 0 && (
+                    <section className="mb-6">
+                        <h2 className="font-[Nunito] font-extrabold text-[18px] sm:text-[20px] text-[#1A2B6B] mb-4">
+                            <span className="bg-[#FFF7ED] text-[#92400E] rounded-[8px] px-3 py-[3px] text-[12px] sm:text-[13px]">
+                                🏭 Internship (Mandatory)
+                            </span>
+                        </h2>
+                        {internship.map((s: Subject) => (
+                            <SubjectRow
+                                key={s.code}
+                                subject={s}
+                                semColor={sem.color}
+                                semNum={sem.num}
+                            />
+                        ))}
+                    </section>
+                )}
+
+                {/* ── Research Project ─────────────────────────── */}
+                {research.length > 0 && (
+                    <section className="mb-6">
+                        <h2 className="font-[Nunito] font-extrabold text-[18px] sm:text-[20px] text-[#1A2B6B] mb-4">
+                            <span className="bg-[#FAF5FF] text-[#581C87] rounded-[8px] px-3 py-[3px] text-[12px] sm:text-[13px]">
+                                🔬 Research Project
+                            </span>
+                        </h2>
+                        {research.map((s: Subject) => (
+                            <SubjectRow
+                                key={s.code}
+                                subject={s}
+                                semColor={sem.color}
+                                semNum={sem.num}
+                            />
+                        ))}
+                    </section>
+                )}
+
+                {/* ── Prev / Next navigation ───────────────────── */}
+                <div className="flex justify-between gap-3 mt-8 pt-6 border-t border-[#E8EDFF]">
+                    {prevSem ? (
+                        <Link
+                            href={`/syllabus/semester-${prevSem.num}`}
+                            className="flex items-center gap-1.5 px-4 py-2.5 rounded-[10px] text-[13px] font-bold font-[DM_Sans] transition-all duration-150 hover:opacity-90"
+                            style={{
+                                border: `1.5px solid ${prevSem.color}`,
+                                background: prevSem.bg,
+                                color: prevSem.color,
+                            }}
+                        >
+                            ← Semester {prevSem.num}
+                        </Link>
+                    ) : (
+                        <div />
+                    )}
+                    {nextSem ? (
+                        <Link
+                            href={`/syllabus/semester-${nextSem.num}`}
+                            className="flex items-center gap-1.5 px-4 py-2.5 rounded-[10px] text-[13px] font-bold font-[DM_Sans] transition-all duration-150 hover:opacity-90"
+                            style={{
+                                border: `1.5px solid ${nextSem.color}`,
+                                background: nextSem.bg,
+                                color: nextSem.color,
+                            }}
+                        >
+                            Semester {nextSem.num} →
+                        </Link>
+                    ) : (
+                        <div />
+                    )}
+                </div>
             </div>
-        </div>
+        </>
     );
 }

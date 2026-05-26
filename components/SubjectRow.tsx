@@ -1,131 +1,152 @@
 "use client";
-
-import Link from "next/link";
+// components/SubjectRow.tsx
+// Shows subject code, name, credits + expandable accordion
+// with FULL unit content (title + bullet points) from syllabus.ts
 import { useState } from "react";
-import type { Subject } from "@/lib/types";
-import { TYPE_META } from "@/lib/syllabus";
-import { clsx } from "@/lib/format";
-import { Download, ExternalLink, Star, ChevronDown } from "lucide-react";
+import Link from "next/link";
+import type { Subject } from "@/lib/syllabus";
 
-interface SubjectRowProps {
-    sub: Subject;
-    semNum: number;
+interface Props {
+    subject: Subject;
     semColor: string;
+    semNum: number;
 }
 
-export function SubjectRow({ sub, semNum, semColor }: SubjectRowProps) {
+const TYPE_META: Record<string, { label: string; bg: string; color: string }> = {
+    T: { label: "Theory", bg: "#EEF2FF", color: "#3730A3" },
+    P: { label: "Practical", bg: "#F0FDF4", color: "#14532D" },
+    I: { label: "Internship", bg: "#FFF7ED", color: "#92400E" },
+    RP: { label: "Research Project", bg: "#FAF5FF", color: "#581C87" },
+};
+
+export default function SubjectRow({ subject, semColor, semNum }: Props) {
     const [open, setOpen] = useState(false);
-    const tm = TYPE_META[sub.type] || TYPE_META.T;
-    const canExpand = sub.units.length > 0;
+    const tm = TYPE_META[subject.type] ?? TYPE_META.T;
+    const hasUnits = subject.units.length > 0;
 
     return (
         <div
-            className="lift mb-2.5 overflow-hidden rounded-[14px] border bg-white"
+            className="rounded-[14px] overflow-hidden mb-2.5 bg-white transition-all duration-200"
             style={{
-                borderColor: open ? `${semColor}55` : "#E8EDFF",
-                borderWidth: 1.5,
+                border: `1.5px solid ${open ? semColor + "66" : "#E8EDFF"}`,
+                boxShadow: open ? `0 4px 16px ${semColor}18` : "none",
             }}
         >
+            {/* ── Row Header (tap to expand) ──────────────── */}
             <button
-                type="button"
-                onClick={() => canExpand && setOpen((o) => !o)}
-                disabled={!canExpand}
-                className={clsx(
-                    "flex w-full items-start sm:items-center gap-2 sm:gap-2.5 px-3 sm:px-[18px] py-3.5 text-left transition-colors duration-150",
-                    canExpand ? "cursor-pointer active:bg-[#F4F6FF]" : "cursor-default",
-                    open ? "bg-[#F8FAFF]" : "bg-white",
-                )}
+                onClick={() => hasUnits && setOpen((v) => !v)}
+                disabled={!hasUnits}
                 aria-expanded={open}
+                className="w-full text-left transition-colors duration-150"
+                style={{ background: open ? "#F8FAFF" : "white" }}
             >
-                {/* Left: Code badge + Name */}
-                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2.5 flex-1 min-w-0">
-                    <span
-                        className="self-start sm:self-auto flex-shrink-0 whitespace-nowrap rounded-md px-2 py-[3px] font-mono text-[10px] sm:text-[11px] font-bold"
-                        style={{ background: tm.bg, color: tm.color }}
-                    >
-                        {sub.code}
-                    </span>
-                    <span
-                        className="font-[DM_Sans] font-semibold text-[13px] sm:text-[14px] leading-tight text-primary"
-                        style={{ wordBreak: "break-word", minWidth: 0 }}
-                    >
-                        {sub.name}
-                    </span>
-                </div>
-
-                {/* Right: Badges + Chevron */}
-                <span className="flex flex-shrink-0 items-center gap-1.5 sm:gap-2 ml-1">
-                    {sub.highlight && (
-                        <span className="hidden xs:inline-flex items-center gap-1 rounded-md bg-[#FEF3C7] px-2 py-0.5 text-[10px] font-bold text-[#92400E]">
-                            <Star size={9} strokeWidth={2.5} className="fill-[#92400E]" />
-                            KEY
+                <div className="px-3 sm:px-4 py-3 sm:py-3.5 flex items-start sm:items-center gap-2 sm:gap-3">
+                    {/* Left: badge + name (stacked on mobile, inline on sm+) */}
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2.5 flex-1 min-w-0">
+                        <span
+                            className="self-start shrink-0 font-mono text-[9px] sm:text-[10px] font-bold px-2 py-[3px] rounded-[6px] whitespace-nowrap"
+                            style={{ background: tm.bg, color: tm.color }}
+                        >
+                            {subject.code}
                         </span>
-                    )}
-                    <span className="rounded-lg bg-[#F0F4FF] px-2.5 py-[3px] text-[11px] sm:text-[12px] font-bold text-secondary">
-                        {sub.credits}cr
-                    </span>
-                    {canExpand && (
-                        <ChevronDown
-                            size={15}
-                            strokeWidth={2}
-                            className={clsx(
-                                "text-[#9CA3AF] transition-transform duration-200",
-                                open && "rotate-180",
-                            )}
-                            aria-hidden
-                        />
-                    )}
-                </span>
+                        <span
+                            className="font-[DM_Sans] font-semibold text-[13px] sm:text-[14px] text-[#1A2B6B] leading-[1.4] min-w-0"
+                            style={{ wordBreak: "break-word" }}
+                        >
+                            {subject.name}
+                        </span>
+                    </div>
+                    {/* Right: badges + chevron */}
+                    <div className="flex items-center gap-1.5 shrink-0">
+                        {subject.highlight && (
+                            <span className="hidden xs:inline font-[DM_Sans] text-[9px] sm:text-[10px] font-bold px-1.5 py-[2px] rounded-[5px] bg-[#FEF3C7] text-[#92400E] whitespace-nowrap">
+                                ★ KEY
+                            </span>
+                        )}
+                        <span className="font-[DM_Sans] text-[11px] font-bold px-2 py-[3px] rounded-[7px] bg-[#F0F4FF] text-[#4C6EF5] whitespace-nowrap">
+                            {subject.credits}cr
+                        </span>
+                        {hasUnits && (
+                            <span
+                                className="text-[12px] text-[#9CA3AF] inline-block transition-transform duration-200"
+                                style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
+                            >
+                                ▾
+                            </span>
+                        )}
+                    </div>
+                </div>
             </button>
 
-            {open && canExpand && (
-                <div className="border-t border-[#EEF2FF] px-3 sm:px-[18px] pb-4 pt-3 accordion-enter">
-                    {/* KEY badge on mobile */}
-                    {sub.highlight && (
-                        <span className="xs:hidden inline-flex items-center gap-1 mb-2 rounded-md bg-[#FEF3C7] px-2 py-0.5 text-[10px] font-bold text-[#92400E]">
-                            <Star size={9} strokeWidth={2.5} className="fill-[#92400E]" />
-                            KEY SUBJECT
-                        </span>
-                    )}
-
-                    {/* Units list */}
-                    <ul className="flex flex-col gap-[7px]">
-                        {sub.units.map((u, i) => (
-                            <li key={i} className="flex items-start gap-2 sm:gap-2.5">
-                                <span
-                                    className="mt-[3px] flex-shrink-0 rounded-[5px] px-1.5 py-px text-[9px] sm:text-[10px] font-extrabold text-white"
-                                    style={{ background: semColor }}
-                                >
-                                    {sub.type === "T" ? `U${i + 1}` : "•"}
-                                </span>
-                                <span
-                                    className="font-[DM_Sans] text-[12px] sm:text-[13px] leading-[1.55] text-[#374151]"
-                                    style={{ wordBreak: "break-word" }}
-                                >
-                                    {u}
-                                </span>
-                            </li>
+            {/* ── Expanded Accordion Content ─────────────── */}
+            {open && hasUnits && (
+                <div
+                    className="border-t border-[#EEF2FF] pb-4 accordion-enter"
+                >
+                    {/* Unit list — full PDF content */}
+                    <div className="flex flex-col gap-0">
+                        {subject.units.map((unit, i) => (
+                            <div
+                                key={unit.num}
+                                className={`px-3 sm:px-4 py-3 ${i < subject.units.length - 1 ? "border-b border-[#F0F4FF]" : ""}`}
+                            >
+                                {/* Unit header */}
+                                <div className="flex items-start gap-2.5 mb-2">
+                                    <span
+                                        className="shrink-0 font-[DM_Sans] text-[9px] sm:text-[10px] font-black px-[7px] py-[3px] rounded-[5px] text-white mt-[1px]"
+                                        style={{ background: semColor }}
+                                    >
+                                        {subject.type === "T" ? `U${i + 1}` : "•"}
+                                    </span>
+                                    <span className="font-[DM_Sans] font-semibold text-[12px] sm:text-[13px] text-[#1A2B6B] leading-[1.45]">
+                                        {unit.title}
+                                    </span>
+                                    {unit.hours && (
+                                        <span className="ml-auto shrink-0 font-[DM_Sans] text-[10px] text-[#9CA3AF] whitespace-nowrap mt-[2px]">
+                                            {unit.hours}
+                                        </span>
+                                    )}
+                                </div>
+                                {/* Sub-topics (bullet points from PDF) */}
+                                {unit.topics.length > 0 && (
+                                    <ul className="pl-[22px] sm:pl-[26px] flex flex-col gap-1.5">
+                                        {unit.topics.map((topic, j) => (
+                                            <li key={j} className="flex gap-2 items-start">
+                                                <span
+                                                    className="shrink-0 mt-[6px] w-[5px] h-[5px] rounded-full"
+                                                    style={{ background: semColor + "99", minWidth: 5 }}
+                                                />
+                                                <span
+                                                    className="font-[DM_Sans] text-[11px] sm:text-[12px] text-[#4B5563] leading-[1.6]"
+                                                    style={{ wordBreak: "break-word" }}
+                                                >
+                                                    {topic}
+                                                </span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
                         ))}
-                    </ul>
+                    </div>
 
                     {/* Action buttons */}
-                    <div className="mt-4 flex flex-col sm:flex-row gap-2">
+                    <div className="px-3 sm:px-4 pt-3 flex flex-col sm:flex-row gap-2">
                         <button
-                            type="button"
-                            className="flex w-full sm:flex-1 items-center justify-center gap-2 py-2.5 px-4 rounded-[10px] border-none text-white text-[13px] font-bold font-[DM_Sans] transition-all duration-150 hover:opacity-90 hover:shadow-md active:scale-[0.98]"
+                            className="w-full sm:flex-1 py-2.5 px-4 rounded-[10px] border-none text-white text-[12px] sm:text-[13px] font-bold font-[DM_Sans] transition-all duration-150 hover:opacity-90 hover:shadow-md active:scale-[0.98]"
                             style={{ background: semColor }}
                         >
-                            <Download size={14} strokeWidth={2.5} />
-                            Download Notes PDF
+                            📥 Download Notes PDF
                         </button>
-                        <Link
-                            href={`/syllabus/semester-${semNum}/${sub.slug}/`}
-                            className="flex w-full sm:w-auto items-center justify-center gap-2 py-2.5 px-4 rounded-[10px] text-[13px] font-semibold font-[DM_Sans] bg-transparent transition-all duration-150 hover:bg-[#F0F4FF]"
-                            style={{ border: `1.5px solid ${semColor}`, color: semColor }}
-                        >
-                            <ExternalLink size={14} strokeWidth={2} />
-                            View Full Page
-                        </Link>
+                        {subject.type === "T" && (
+                            <Link
+                                href={`/syllabus/semester-${semNum}/${subject.slug}`}
+                                className="w-full sm:w-auto flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-[10px] text-[12px] sm:text-[13px] font-semibold font-[DM_Sans] bg-transparent transition-all duration-150 hover:opacity-80"
+                                style={{ border: `1.5px solid ${semColor}`, color: semColor }}
+                            >
+                                📌 View Full Syllabus Page
+                            </Link>
+                        )}
                     </div>
                 </div>
             )}
