@@ -56,7 +56,7 @@ export function Footer() {
                 </div>
 
                 <p className="font-[DM_Sans] text-[12px] text-[#6B7FA3] mb-8 leading-[1.6]">
-                    India's first B.Pharm NEP 2020 syllabus platform — unit-wise notes,
+                    India&apos;s first B.Pharm NEP 2020 syllabus platform — unit-wise notes,
                     AI subjects, and free PDF resources for pharmacy students.
                 </p>
 

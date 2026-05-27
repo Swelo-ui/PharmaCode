@@ -352,7 +352,7 @@ export default function SubjectPage({
                     <div className="flex items-center gap-2 mb-3">
                         <BookOpen size={17} className="shrink-0" style={{ color: sem.color }} />
                         <h3 className="font-[Nunito] font-extrabold text-[15px] sm:text-[16px] text-[#1A2B6B]">
-                            What's coming next on this page
+                            What&apos;s coming next on this page
                         </h3>
                     </div>
                     <ul className="flex flex-col gap-2.5">
