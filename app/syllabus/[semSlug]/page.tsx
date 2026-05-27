@@ -27,9 +27,14 @@ export async function generateMetadata({
     const sem = getSemesterBySlug(params.semSlug);
     if (!sem) return {};
     return {
-        title: `Semester ${sem.num} B.Pharm Syllabus NEP 2020 | ${sem.credits} Credits | PharmaCode`,
+        title: `Semester ${sem.num} B.Pharm Syllabus NEP 2020 | ${sem.credits} Credits`,
         description: `Complete Semester ${sem.num} B.Pharm syllabus as per PCI NEP 2020. ${sem.subjects.length} subjects, ${sem.credits} credits. Unit-wise detailed breakdown and free notes.`,
         alternates: { canonical: `https://pharmacode.in/syllabus/semester-${sem.num}/` },
+        openGraph: {
+            title: `Semester ${sem.num} B.Pharm Syllabus NEP 2020 | PharmaCode`,
+            description: `Complete Semester ${sem.num} B.Pharm syllabus as per PCI NEP 2020. ${sem.subjects.length} subjects, ${sem.credits} credits.`,
+            url: `https://pharmacode.in/syllabus/semester-${sem.num}/`,
+        },
     };
 }
 
@@ -79,12 +84,6 @@ export default function SemesterPage({
                     <div className="flex flex-wrap items-start sm:items-center justify-between gap-4">
                         <div className="min-w-0">
                             <div className="flex items-center gap-3 mb-1.5">
-                                <div
-                                    className="w-[42px] h-[42px] sm:w-[46px] sm:h-[46px] rounded-[13px] flex items-center justify-center text-white font-[Nunito] font-black text-[18px] sm:text-[20px] shrink-0"
-                                    style={{ background: sem.color }}
-                                >
-                                    {sem.num}
-                                </div>
                                 <h1 className="font-[Nunito] font-black text-[22px] sm:text-[30px] text-[#1A2B6B] leading-tight">
                                     Semester {sem.num}
                                 </h1>

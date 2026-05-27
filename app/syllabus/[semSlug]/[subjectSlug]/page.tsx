@@ -43,7 +43,7 @@ export async function generateMetadata({
     if (!subject) return {};
     const canonical = `https://pharmacode.in/syllabus/semester-${sem.num}/${subject.slug}/`;
     return {
-        title: `${subject.code}: ${subject.name} | Sem ${sem.num} | PharmaCode`,
+        title: `${subject.code}: ${subject.name} | Sem ${sem.num}`,
         description: `${subject.code} ${subject.name} — Complete unit-wise detailed syllabus as per PCI NEP 2020. All ${subject.units.length} units with sub-topics. Free PDF notes download. Semester ${sem.num}.`,
         alternates: { canonical },
         openGraph: {
