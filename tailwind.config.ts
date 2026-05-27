@@ -24,7 +24,7 @@ const config: Config = {
                 card: "#FFFFFF",
                 "text-muted": "#6B7FA3",
                 "border-soft": "#DDE6FF",
-                
+
                 // Add new extended keys from the user proposal
                 brand: {
                     navy:      "#1A2B6B",
@@ -51,10 +51,10 @@ const config: Config = {
                 display: ["Nunito", "ui-sans-serif", "system-ui", "sans-serif"],
                 sans: ["DM Sans", "ui-sans-serif", "system-ui", "sans-serif"],
                 mono: ["JetBrains Mono", "ui-monospace", "monospace"],
-                
+
                 // Add new display aliases if any files explicitly reference them
-                nunito:      ["Nunito",        "sans-serif"],
-                "dm-sans":   ["DM Sans",       "sans-serif"],
+                nunito: ["Nunito", "sans-serif"],
+                "dm-sans": ["DM Sans", "sans-serif"],
             },
             boxShadow: {
                 card: "0 8px 24px rgba(76, 110, 245, 0.13)",
