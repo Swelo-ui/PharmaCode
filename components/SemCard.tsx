@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { Semester } from "@/lib/types";
+import type { Semester } from "@/lib/syllabus";
 import { Star } from "lucide-react";
 
 interface SemCardProps {

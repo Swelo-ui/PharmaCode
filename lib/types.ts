@@ -1,14 +1,23 @@
 export type SubjectType = "T" | "P" | "I" | "RP";
 
+export interface SubjectUnit {
+    num: "I" | "II" | "III" | "IV" | "V";
+    title: string;
+    topics: string[];
+    hours: string;
+}
+
 export interface Subject {
     code: string;
     name: string;
     credits: number;
     type: SubjectType;
     highlight?: boolean;
-    units: string[];
+    units: SubjectUnit[];
     /** SEO slug used in /syllabus/semester-N/[slug]/ */
     slug: string;
+    objectives?: string[];
+    references?: string[];
 }
 
 export interface Semester {
