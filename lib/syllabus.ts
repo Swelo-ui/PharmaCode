@@ -1019,6 +1019,7 @@ const SEM4: Subject[] = [
             ]
         },
     ]),
+    s("BP406P–BP410P", "Practicals — Herbal Drug Technology, Medicinal Chemistry, Pharmaceutical Biotechnology, Social Pharmacy, Systemic Pharmacology I", 5, "P", []),
     s("BP411I", "Internship I (Mandatory)", 4, "I", [
         {
             num: "I", hours: "40 Hours", title: "Industrial / Hospital / Community Pharmacy Internship", topics: [
@@ -1274,6 +1275,7 @@ const SEM5: Subject[] = [
             ]
         },
     ]),
+    s("BP507P–BP510P", "Practicals — Biomedicinal Chemistry, Industrial Pharmacognosy, Pharmaceutical Dosage Form II, Systemic Pharmacology II", 6, "P", []),
 ];
 
 // ─────────────────────────────────────────────────────────────

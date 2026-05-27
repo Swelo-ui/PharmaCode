@@ -419,6 +419,7 @@ export default function SubjectPage({
                     const idx = allT.findIndex((s) => s.slug === subject.slug);
                     const prevSub = idx > 0 ? allT[idx - 1] : null;
                     const nextSub = idx < allT.length - 1 ? allT[idx + 1] : null;
+                    const isLastTheory = idx === allT.length - 1;
                     return (
                         <div className="flex justify-between gap-3 mt-6 pt-6 border-t border-[#E8EDFF]">
                             {prevSub ? (
@@ -440,6 +441,15 @@ export default function SubjectPage({
                                     style={{ border: `1.5px solid ${sem.color}55`, color: sem.color }}
                                 >
                                     <span className="truncate max-w-[120px] sm:max-w-[180px]">{nextSub.code}</span>
+                                    <ChevronRight size={15} />
+                                </Link>
+                            ) : isLastTheory ? (
+                                <Link
+                                    href={`/syllabus/semester-${sem.num}`}
+                                    className="flex-1 sm:flex-none flex items-center justify-end gap-2 px-3 sm:px-4 py-2.5 rounded-[10px] text-[12px] sm:text-[13px] font-semibold font-[DM_Sans] bg-white transition-all hover:shadow-sm"
+                                    style={{ border: `1.5px solid ${sem.color}55`, color: sem.color }}
+                                >
+                                    <span>All Sem {sem.num} Subjects</span>
                                     <ChevronRight size={15} />
                                 </Link>
                             ) : (
