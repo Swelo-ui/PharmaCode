@@ -16,7 +16,7 @@ export function SemCard({ sem }: SemCardProps) {
     return (
         <Link
             href={`/syllabus/semester-${sem.num}/`}
-            className="lift ripple-container block rounded-[18px] border-[1.5px] border-[#E8EDFF] bg-white p-[16px] active:scale-[0.97]"
+            className="lift ripple-container flex flex-col h-full rounded-[18px] border-[1.5px] border-[#E8EDFF] bg-white p-[16px] active:scale-[0.97]"
             style={
                 {
                     ["--sem-bg" as string]: sem.bg,
@@ -74,17 +74,19 @@ export function SemCard({ sem }: SemCardProps) {
                 )}
             </div>
 
-            {/* Highlight subjects */}
-            {highlights.length > 0 && (
-                <div className="mt-2.5 border-t border-[#E8EDFF] pt-2.5">
-                    {highlights.map((s) => (
-                        <div key={s.code} className="mb-0.5 flex items-center gap-1 text-[10px] text-[#6B7FA3]">
-                            <Star size={9} strokeWidth={2.5} className="fill-[#6B7FA3] shrink-0" />
-                            {s.code}
-                        </div>
-                    ))}
-                </div>
-            )}
+            {/* Highlight subjects — pushed to bottom with mt-auto */}
+            <div className="mt-auto">
+                {highlights.length > 0 && (
+                    <div className="mt-2.5 border-t border-[#E8EDFF] pt-2.5">
+                        {highlights.map((s) => (
+                            <div key={s.code} className="mb-0.5 flex items-center gap-1 text-[10px] text-[#6B7FA3]">
+                                <Star size={9} strokeWidth={2.5} className="fill-[#6B7FA3] shrink-0" />
+                                {s.code}
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
         </Link>
     );
 }

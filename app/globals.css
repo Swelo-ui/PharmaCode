@@ -391,3 +391,31 @@ img {
 .stat-pop {
   animation: count-pop 0.4s var(--ease-spring) both;
 }
+
+/* ─── Ticker / Marquee belt ─────────────────────────── */
+@keyframes ticker-scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker-scroll 80s linear infinite;
+  will-change: transform;
+}
+
+.ticker-track:hover {
+  animation-play-state: running;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track {
+    animation: none;
+  }
+}

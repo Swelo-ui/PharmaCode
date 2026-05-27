@@ -38,6 +38,25 @@ const STATS = [
     ["100%", "Free"],
 ];
 
+const TICKER_ITEMS = [
+    { tag: "NEP 2020", text: "B.Pharm syllabus now integrates Python, ML and AI from Semester 1 onwards", color: "#93C5FD" },
+    { tag: "Study Tip", text: "Master unit headings first — over 60% of GPAT questions are framed from unit titles", color: "#6EE7B7" },
+    { tag: "New Subject", text: "BP604T AI Applications in Pharmaceutical Sciences — Semester 6 key subject with QSAR and drug discovery", color: "#FCA5A5" },
+    { tag: "Free Notes", text: "Unit-wise PDF notes for all 8 semesters available on PharmaCode — no login, no paywall", color: "#FDE68A" },
+    { tag: "Syllabus Change", text: "PCI NEP 2020 replaces old B.Pharm curriculum — new subjects include Biostatistics, ML, AI Ethics and Startups", color: "#C4B5FD" },
+    { tag: "Study Tip", text: "Pharmacovigilance BP705T carries high weightage in exit exams and pharma job interviews", color: "#6EE7B7" },
+    { tag: "New Subject", text: "BP101T Python Programming — mandatory for all B.Pharm students, covers Pandas, Matplotlib and NumPy", color: "#FCA5A5" },
+    { tag: "NEP 2020", text: "Internship is mandatory in Semester 4 and Semester 6 — plan early for industry and hospital slots", color: "#93C5FD" },
+    { tag: "Study Tip", text: "QbD, ICH Q8 and validation in BP505T are the most asked topics in pharma company interviews", color: "#6EE7B7" },
+    { tag: "Syllabus Change", text: "Research Project spans Semester 7 and 8 — topic selection and literature review should begin in Semester 6", color: "#C4B5FD" },
+    { tag: "New Subject", text: "BP503T Innovation and Startup Ecosystem — covers patents, BMC, MVP and Indian pharma startup landscape", color: "#FCA5A5" },
+    { tag: "Study Tip", text: "Biopharmaceutics BP602T — BCS classification and IVIVC are high-yield topics for GPAT and competitive exams", color: "#6EE7B7" },
+    { tag: "Free Notes", text: "PharmaCode covers all PCI NEP 2020 subjects with unit-wise breakdown and topic-level detail", color: "#FDE68A" },
+    { tag: "NEP 2020", text: "BP801T AI Ethics and Translational AI — Semester 8 capstone subject covering FDA SaMD guidelines", color: "#93C5FD" },
+    { tag: "Study Tip", text: "Medicinal Chemistry BP402T SAR questions — always link structure to pharmacological activity for full marks", color: "#6EE7B7" },
+    { tag: "Syllabus Change", text: "Environmental Sciences and Ethics are now credit-bearing theory subjects under NEP 2020 — do not ignore them", color: "#C4B5FD" },
+];
+
 export default function HomePage() {
     return (
         <>
@@ -153,9 +172,9 @@ export default function HomePage() {
                         Tap any semester to see full subjects, units and download notes
                     </p>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 items-stretch">
                     {SEMESTERS.map((s, i) => (
-                        <div key={s.num} className={`fade-up fade-up-${Math.min(i + 1, 8)}`}>
+                        <div key={s.num} className={`fade-up fade-up-${Math.min(i + 1, 8)} flex`}>
                             <SemCard sem={s} />
                         </div>
                     ))}
@@ -191,7 +210,7 @@ export default function HomePage() {
 
             {/* ── CTA STRIP ────────────────────────────────────── */}
             <section
-                className="px-5 py-12 text-center"
+                className="px-5 pt-12 pb-10 text-center"
                 style={{ background: "linear-gradient(135deg, #1A2B6B, #4C6EF5)" }}
             >
                 <h2 className="fade-up mb-2 font-display text-[22px] sm:text-[28px] font-black text-white">
@@ -212,6 +231,40 @@ export default function HomePage() {
                     ))}
                 </div>
             </section>
+
+            {/* ── TICKER BELT ──────────────────────────────────── */}
+            <div
+                className="overflow-hidden py-3 select-none"
+                style={{
+                    background: "#0F1D5C",
+                    borderTop: "1px solid rgba(255,255,255,0.15)",
+                    borderBottom: "1px solid rgba(255,255,255,0.15)",
+                }}
+            >
+                <div className="ticker-track">
+                    {[0, 1].map((pass) => (
+                        <div key={pass} className="flex items-center gap-0" aria-hidden={pass === 1}>
+                            {TICKER_ITEMS.map((item, i) => (
+                                <span key={`${pass}-${i}`} className="flex items-center gap-3 px-6">
+                                    <span
+                                        className="shrink-0 w-[5px] h-[5px] rounded-full"
+                                        style={{ background: item.color }}
+                                    />
+                                    <span
+                                        className="font-[DM_Sans] text-[11px] sm:text-[12px] font-bold uppercase tracking-wider whitespace-nowrap"
+                                        style={{ color: item.color }}
+                                    >
+                                        {item.tag}
+                                    </span>
+                                    <span className="font-[DM_Sans] text-[12px] sm:text-[13px] text-[#C7D2FE] whitespace-nowrap">
+                                        {item.text}
+                                    </span>
+                                </span>
+                            ))}
+                        </div>
+                    ))}
+                </div>
+            </div>
         </>
     );
 }

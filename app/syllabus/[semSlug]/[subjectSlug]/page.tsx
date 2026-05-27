@@ -15,13 +15,10 @@ import {
     ArrowLeft,
     ChevronLeft,
     ChevronRight,
-    BookOpen,
-    Clock,
-    CreditCard,
     Star,
     Link2,
     ClipboardList,
-    FileText,
+    BookOpen,
 } from "lucide-react";
 import type { Metadata } from "next";
 
@@ -216,98 +213,72 @@ export default function SubjectPage({
 
                 {/* ── Subject Header Card ──────────────────────── */}
                 <div
-                    className="rounded-[20px] px-4 py-5 sm:px-6 sm:py-6 mt-5 mb-6"
-                    style={{ background: sem.bg, border: `2px solid ${sem.color}44` }}
+                    className="rounded-[20px] px-4 py-5 sm:px-5 sm:py-5 mt-4 mb-0"
+                    style={{ background: sem.bg, border: `1.5px solid ${sem.color}33` }}
                 >
-                    {/* Badge row */}
-                    <div className="flex flex-wrap gap-2 mb-3">
+                    {/* Badge row — code, sem, credits, type, key */}
+                    <div className="flex flex-wrap items-center gap-1.5 mb-3">
                         <span
-                            className="font-mono text-[10px] sm:text-[11px] font-bold px-2.5 py-[4px] rounded-[7px]"
-                            style={{ background: "#1A2B6B", color: "#fff" }}
+                            className="font-mono text-[10px] font-bold px-2 py-[3px] rounded-[6px] bg-[#1A2B6B] text-white"
                         >
                             {subject.code}
                         </span>
                         <span
-                            className="font-[DM_Sans] text-[11px] font-bold px-2.5 py-[4px] rounded-[7px]"
-                            style={{ background: tm.bg, color: tm.color }}
-                        >
-                            {tm.label}
-                        </span>
-                        <span className="font-[DM_Sans] text-[11px] font-bold px-2.5 py-[4px] rounded-[7px] bg-[#F0F4FF] text-[#4C6EF5]">
-                            {subject.credits} Credits
-                        </span>
-                        {totalHours > 0 && (
-                            <span className="font-[DM_Sans] text-[11px] font-bold px-2.5 py-[4px] rounded-[7px] bg-[#ECFDF5] text-[#065F46]">
-                                {totalHours} Hours
-                            </span>
-                        )}
-                        {subject.highlight && (
-                            <span className="font-[DM_Sans] text-[11px] font-bold px-2.5 py-[4px] rounded-[7px] bg-[#FEF3C7] text-[#92400E] flex items-center gap-1">
-                                <Star size={10} fill="currentColor" />
-                                KEY SUBJECT
-                            </span>
-                        )}
-                        <span
-                            className="font-[DM_Sans] text-[11px] font-bold px-2.5 py-[4px] rounded-[7px] text-white"
-                            style={{ background: sem.color }}
+                            className="font-[DM_Sans] text-[10px] font-bold px-2 py-[3px] rounded-[6px]"
+                            style={{ background: sem.color, color: "#fff" }}
                         >
                             Semester {sem.num}
                         </span>
+                        <span className="font-[DM_Sans] text-[10px] font-semibold px-2 py-[3px] rounded-[6px] bg-white text-[#4B5563]"
+                            style={{ border: `1px solid ${sem.color}33` }}>
+                            {subject.credits} credits
+                        </span>
+                        <span
+                            className="font-[DM_Sans] text-[10px] font-semibold px-2 py-[3px] rounded-[6px] bg-white text-[#4B5563]"
+                            style={{ border: `1px solid ${sem.color}33` }}
+                        >
+                            {tm.label}
+                        </span>
+                        {subject.highlight && (
+                            <span className="inline-flex items-center gap-1 font-[DM_Sans] text-[10px] font-bold px-2 py-[3px] rounded-[6px] bg-[#FEF3C7] text-[#92400E]">
+                                <Star size={9} fill="currentColor" className="shrink-0" />
+                                KEY SUBJECT
+                            </span>
+                        )}
                     </div>
 
-                    {/* Subject title H1 */}
+                    {/* Subject title */}
                     <h1
-                        className="font-[Nunito] font-black text-[20px] sm:text-[26px] md:text-[28px] text-[#1A2B6B] leading-[1.2] mb-4"
+                        className="font-[Nunito] font-black text-[22px] sm:text-[26px] text-[#1A2B6B] leading-[1.2] mb-2"
                         style={{ wordBreak: "break-word" }}
                     >
                         {subject.name}
                     </h1>
 
-                    {/* Quick stats row */}
-                    <div className="flex flex-wrap gap-3 mb-4">
-                        {[
-                            { icon: <BookOpen size={14} />, label: "Units", value: subject.units.length.toString() },
-                            { icon: <Clock size={14} />, label: "Total Hours", value: totalHours > 0 ? `${totalHours}h` : "—" },
-                            { icon: <CreditCard size={14} />, label: "Credits", value: subject.credits.toString() },
-                        ].map((stat) => (
-                            <div
-                                key={stat.label}
-                                className="flex items-center gap-1.5 bg-white rounded-[10px] px-3 py-2"
-                                style={{ border: `1px solid ${sem.color}33` }}
-                            >
-                                <span className="text-[#6B7FA3]">{stat.icon}</span>
-                                <span className="font-[DM_Sans] text-[12px] text-[#6B7FA3]">{stat.label}:</span>
-                                <span
-                                    className="font-[Nunito] font-bold text-[13px]"
-                                    style={{ color: sem.color }}
-                                >
-                                    {stat.value}
-                                </span>
-                            </div>
-                        ))}
-                    </div>
+                    {/* Description line */}
+                    <p className="font-[DM_Sans] text-[13px] text-[#6B7FA3] leading-[1.6]">
+                        Complete unit-wise syllabus for {subject.code} as per the PCI B.Pharm NEP 2020 curriculum
+                        {` (Semester ${sem.num} — ${sem.label})`}.
+                    </p>
+                </div>
 
-                    {/* Download + Back CTA buttons */}
-                    <div className="flex flex-col sm:flex-row gap-2.5">
-                        <button
-                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-3 rounded-[11px] text-white text-[13px] sm:text-[14px] font-bold font-[DM_Sans] transition-all duration-150 hover:opacity-90 hover:shadow-md active:scale-[0.98]"
-                            style={{ background: sem.color }}
-                        >
-                            <Download size={15} />
-                            Download {subject.code} Notes PDF
-                        </button>
-                        <Link
-                            href={`/syllabus/semester-${sem.num}`}
-                            className="flex items-center justify-center gap-2 px-5 py-3 rounded-[11px] text-[13px] sm:text-[14px] font-semibold font-[DM_Sans] bg-white transition-all duration-150 hover:shadow-sm"
-                            style={{
-                                border: `1.5px solid ${sem.color}66`,
-                                color: sem.color,
-                            }}
-                        >
-                            <ArrowLeft size={15} />
-                            All Sem {sem.num} Subjects
-                        </Link>
-                    </div>
+                {/* ── CTA Buttons — full width, outside card ───── */}
+                <div className="flex flex-col gap-2.5 mt-3 mb-6">
+                    <button
+                        className="w-full flex items-center justify-center gap-2 py-3.5 rounded-[14px] text-white text-[14px] font-bold font-[DM_Sans] transition-all duration-150 hover:opacity-90 hover:shadow-lg active:scale-[0.98]"
+                        style={{ background: sem.color }}
+                    >
+                        <Download size={16} />
+                        Download {subject.code} Notes PDF
+                    </button>
+                    <Link
+                        href={`/syllabus/semester-${sem.num}`}
+                        className="w-full flex items-center justify-center gap-2 py-3 rounded-[14px] text-[14px] font-semibold font-[DM_Sans] bg-white transition-all duration-150 hover:shadow-sm"
+                        style={{ border: `1.5px solid ${sem.color}55`, color: sem.color }}
+                    >
+                        <ArrowLeft size={15} />
+                        All Sem {sem.num} Subjects
+                    </Link>
                 </div>
 
                 {/* ── SEO: Canonical URL display ───────────────── */}
@@ -374,6 +345,72 @@ export default function SubjectPage({
                     <p className="font-[DM_Sans] text-[12px] text-[#6B7FA3]">
                         Click any unit above to download its PDF notes — free, no login required
                     </p>
+                </div>
+
+                {/* ── What's coming next ───────────────────────── */}
+                <div className="mt-6 rounded-[16px] px-4 py-4 sm:px-5 sm:py-5 bg-white border border-[#E8EDFF] shadow-sm">
+                    <div className="flex items-center gap-2 mb-3">
+                        <BookOpen size={17} className="shrink-0" style={{ color: sem.color }} />
+                        <h3 className="font-[Nunito] font-extrabold text-[15px] sm:text-[16px] text-[#1A2B6B]">
+                            What's coming next on this page
+                        </h3>
+                    </div>
+                    <ul className="flex flex-col gap-2.5">
+                        {[
+                            "Reference textbooks and recommended reading list",
+                            "Previous year question papers (PYQ)",
+                            "Topic-wise short notes and revision summaries",
+                            "Suggested external resources and video tutorials",
+                        ].map((item) => (
+                            <li key={item} className="flex gap-2.5 items-start">
+                                <span className="shrink-0 mt-[8px] w-[5px] h-[5px] rounded-full bg-[#9CA3AF]" style={{ minWidth: 5 }} />
+                                <span className="font-[DM_Sans] text-[13px] sm:text-[14px] text-[#6B7FA3] leading-[1.6]">
+                                    {item}
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+
+                {/* ── Other subjects in this semester ──────────── */}
+                <div className="mt-8 mb-2">
+                    <h3 className="font-[Nunito] font-extrabold text-[17px] sm:text-[19px] text-[#1A2B6B] mb-3">
+                        Other subjects in Semester {sem.num}
+                    </h3>
+                    {/* Grouped card — no gap between rows, divider lines only */}
+                    <div className="rounded-[14px] overflow-hidden border border-[#E8EDFF] bg-white">
+                        {sem.subjects
+                            .filter((s) => s.slug !== subject.slug)
+                            .map((s, idx, arr) => {
+                                const isTheory = s.type === "T";
+                                const typeColors: Record<string, { bg: string; color: string }> = {
+                                    T: { bg: "#EEF2FF", color: "#3730A3" },
+                                    P: { bg: "#F0FDF4", color: "#14532D" },
+                                    I: { bg: "#FFF7ED", color: "#92400E" },
+                                    RP: { bg: "#FAF5FF", color: "#581C87" },
+                                };
+                                const tc = typeColors[s.type] ?? typeColors.T;
+                                const isLast = idx === arr.length - 1;
+                                return (
+                                    <Link
+                                        key={s.slug}
+                                        href={isTheory ? `/syllabus/semester-${sem.num}/${s.slug}` : `/syllabus/semester-${sem.num}`}
+                                        className={`flex items-center gap-3 px-4 py-3.5 hover:bg-[#F8FAFF] active:bg-[#F0F4FF] transition-colors duration-100${!isLast ? " border-b border-[#F0F4FF]" : ""}`}
+                                    >
+                                        <span
+                                            className="shrink-0 font-mono text-[9px] sm:text-[10px] font-bold px-2 py-[3px] rounded-[5px] whitespace-nowrap"
+                                            style={{ background: tc.bg, color: tc.color }}
+                                        >
+                                            {s.code}
+                                        </span>
+                                        {/* Mobile: truncate after ~28 chars; Desktop: full */}
+                                        <span className="font-[DM_Sans] text-[13px] sm:text-[14px] text-[#1A2B6B] leading-snug flex-1 min-w-0 truncate sm:whitespace-normal sm:overflow-visible">
+                                            {s.name}
+                                        </span>
+                                    </Link>
+                                );
+                            })}
+                    </div>
                 </div>
 
                 {/* ── Prev / Next Subject navigation ───────────── */}

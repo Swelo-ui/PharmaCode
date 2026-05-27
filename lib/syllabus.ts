@@ -2092,3 +2092,6 @@ export function getAllSubjectSlugs(): { semSlug: string; subjectSlug: string }[]
         }))
     );
 }
+
+export const TOTAL_CREDITS: number = SEMESTERS.reduce((sum, s) => sum + s.credits, 0);
+export const TOTAL_SUBJECTS: number = SEMESTERS.reduce((sum, s) => sum + s.subjects.length, 0);
