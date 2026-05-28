@@ -185,18 +185,18 @@ const SEM1: Subject[] = [
             ]
         },
         {
-            num: "II", hours: "12 Hours", title: "Integumentary System, Skeletal System and Blood", topics: [
+            num: "II", hours: "12 Hours", title: "Integumentary System, Skeletal System and Joints", topics: [
                 "Integumentary system: structure and functions of skin; skin disorders: psoriasis, dermatitis, leprosy pathophysiology; basic principles of wound healing",
                 "Skeletal system: divisions, types of bones, salient features of axial and appendicular skeleton; organisation of skeletal muscle; physiology of muscle contraction; neuromuscular junction; classification of joints",
-                "Body fluids, composition and functions of blood; hemopoiesis; haemoglobin formation; coagulation mechanisms; blood grouping; Rh factors and transfusion",
                 "Pathophysiology of rheumatoid arthritis, osteoporosis, and gout",
             ]
         },
         {
-            num: "III", hours: "12 Hours", title: "Lymphatic System, Inflammation and Haematological Diseases", topics: [
+            num: "III", hours: "12 Hours", title: "Body Fluids, Blood, Lymphatic System and Haematological Diseases", topics: [
+                "Body fluids; composition and functions of blood; hemopoiesis; haemoglobin formation; coagulation mechanisms; blood grouping; Rh factors and transfusion",
                 "Lymphatic organs and tissues; lymphatic vessels; lymph formation; circulation and functions of lymphatic system",
                 "Basic mechanisms of inflammation and repair; classification and pathophysiology of inflammation; mediators of inflammation",
-                "Haematological diseases: pathophysiology of iron deficiency anaemia, megaloblastic anaemia (Vit B12 and folic acid), sickle cell anaemia, thalassemia, hereditary acquired anaemia, haemophilia",
+                "Haematological diseases: iron deficiency anaemia, megaloblastic anaemia (Vit B12 & folic acid), sickle cell anaemia, thalassemia, hereditary acquired anaemia, haemophilia",
             ]
         },
         {
@@ -207,10 +207,10 @@ const SEM1: Subject[] = [
             ]
         },
         {
-            num: "V", hours: "12 Hours", title: "Cardiovascular and Respiratory Systems", topics: [
-                "Cardiovascular system: anatomy of heart; cardiac cycle; cardiac output; regulation of blood pressure",
-                "Respiratory system: anatomy of lungs; mechanics of breathing; gas exchange; transport of oxygen and carbon dioxide",
-                "Pathophysiology of hypertension, cardiac failure, and respiratory disorders such as asthma",
+            num: "V", hours: "12 Hours", title: "Cardiovascular System and Pathophysiology", topics: [
+                "Anatomy of heart; blood circulation; blood vessels; structure and functions of artery, vein and capillaries; conduction system of heart; cardiac cycle; cardiac output",
+                "Regulation of blood pressure; pulse; electrocardiogram (ECG) and its interpretation",
+                "Pathophysiology of hypertension, cardiac arrhythmias, congestive heart failure, ischemic heart disease (angina, myocardial infarction, atherosclerosis, coronary artery disease)",
             ]
         },
     ]),
@@ -270,25 +270,26 @@ const SEM1: Subject[] = [
         },
         {
             num: "III", hours: "14 Hours", title: "Titrimetric Methods of Analysis", topics: [
-                "Acid-base titrations: theories of indicators, classification; preparation and standardization of HCl and NaOH; neutralization curves; assay of ammonium hydroxide",
-                "Non-aqueous titrations: types of solvents; acidimetric and alkalimetric titrations; estimation of sodium benzoate",
-                "Precipitation titrations and gravimetry: Mohr's, Volhard's, Modified Volhard's, Fajans methods; estimation of barium sulphate",
-                "Complexometric titrations: metal ion indicators, masking/demasking reagents; preparation of disodium EDTA; estimation of magnesium sulphate and calcium gluconate",
+                "Acid-base titrations: theories of indicators, classification; preparation and standardization of HCl and NaOH; neutralization curves; assay of ammonium hydroxide. Non-aqueous titrations: types of solvents; acidimetric and alkalimetric titrations; estimation of sodium benzoate",
+                "Precipitation titrations and gravimetry: Mohr's, Volhard's, Modified Volhard's, Fajans methods; estimation of barium sulphate by gravimetry",
+                "Complexometric titrations: metal ion indicators, masking/demasking reagents; preparation and standardization of disodium EDTA; estimation of magnesium sulphate and calcium gluconate",
+                "Redox titrations: oxidation-reduction concepts; types — permanganometry, cerimetry, iodimetry, iodometry, titrations with potassium iodate",
             ]
         },
         {
-            num: "IV", hours: "10 Hours", title: "Redox Titrations and Gastrointestinal Agents", topics: [
-                "Redox titrations: oxidation-reduction concepts; permanganometry, cerimetry, iodimetry, iodometry, titrations with potassium iodate",
-                "Antacids: ideal properties, combinations; sodium bicarbonate, aluminium hydroxide gel",
-                "Gastrointestinal agents: acidifiers (sodium acid phosphate, dilute HCl); agents promoting bowel movement (magnesium hydroxide, sodium orthophosphate)",
+            num: "IV", hours: "10 Hours", title: "Gastrointestinal Agents and Radiopharmaceuticals", topics: [
+                "Gastrointestinal agents — Acidifiers: sodium acid phosphate, dilute HCl. Antacids: ideal properties, combinations, sodium bicarbonate, aluminium hydroxide gel",
+                "Agents promoting bowel movement: magnesium hydroxide, sodium orthophosphate, sodium potassium tartrate, magnesium trisilicate",
                 "Antimicrobials: potassium permanganate, boric acid, hydrogen peroxide, chlorinated lime, iodine and preparations",
+                "Radiopharmaceuticals: basics of radioactivity; applications of Sodium Iodide I-131, Technetium-99m, Cobalt-60, Phosphorus-32; safe handling, storage, and disposal as per regulatory guidelines",
             ]
         },
         {
-            num: "V", hours: "6 Hours", title: "Radiopharmaceuticals and Miscellaneous Inorganic Compounds", topics: [
-                "Basics of radioactivity; applications of radioisotopes: Sodium Iodide I-131, Technetium-99m, Cobalt-60, Phosphorus-32; safe handling of radiopharmaceuticals",
-                "Major inorganic pharmaceutical compounds: acids, bases, salts — pharmaceutical applications and quality specifications",
-                "Pharmaceutical water: types, purification methods, quality specifications",
+            num: "V", hours: "6 Hours", title: "Miscellaneous Inorganic Pharmaceutical Compounds", topics: [
+                "Expectorants: potassium iodide, ammonium chloride",
+                "Emetics: copper sulphate, sodium potassium tartrate",
+                "Haematinics: ferrous sulphate, ferrous gluconate",
+                "Poison and Antidote: definition, classification of antidotes; sodium thiosulphate",
             ]
         },
     ]),
@@ -824,7 +825,10 @@ const SEM3: Subject[] = [
             ]
         },
     ]),
-    s("Practicals + AEC", "Practicals + AEC Elective (Nutraceuticals / Food Analysis / Yoga & Life Sciences)", 6, "P", []),
+    s("BP309P", "General Pharmacology (Practical)", 2, "P", []),
+    s("BP310P", "Heterocyclic Compounds and Stereochemistry (Practical)", 2, "P", []),
+    s("BP311P", "Pharmaceutical Dosage Forms I (Practical)", 1, "P", []),
+    s("BP312P AEC", "AEC Elective — Nutraceuticals / Food Analysis / Yoga & Life Sciences (Practical)", 1, "P", []),
 ];
 
 // ─────────────────────────────────────────────────────────────
@@ -1019,7 +1023,11 @@ const SEM4: Subject[] = [
             ]
         },
     ]),
-    s("BP406P–BP410P", "Practicals — Herbal Drug Technology, Medicinal Chemistry, Pharmaceutical Biotechnology, Social Pharmacy, Systemic Pharmacology I", 5, "P", []),
+    s("BP406P", "Herbal Drug Technology (Practical)", 1, "P", []),
+    s("BP407P", "Medicinal Chemistry (Practical)", 1, "P", []),
+    s("BP408P", "Pharmaceutical Biotechnology (Practical)", 1, "P", []),
+    s("BP409P", "Social Pharmacy and Public Health (Practical)", 1, "P", []),
+    s("BP410P", "Systemic Pharmacology I (Practical)", 1, "P", []),
     s("BP411I", "Internship I (Mandatory)", 4, "I", [
         {
             num: "I", hours: "40 Hours", title: "Industrial / Hospital / Community Pharmacy Internship", topics: [
@@ -1275,7 +1283,10 @@ const SEM5: Subject[] = [
             ]
         },
     ]),
-    s("BP507P–BP510P", "Practicals — Biomedicinal Chemistry, Industrial Pharmacognosy, Pharmaceutical Dosage Form II, Systemic Pharmacology II", 6, "P", []),
+    s("BP507P", "Biomedicinal Chemistry (Practical)", 2, "P", []),
+    s("BP508P", "Industrial Pharmacognosy (Practical)", 1, "P", []),
+    s("BP509P", "Pharmaceutical Dosage Form II (Practical)", 1, "P", []),
+    s("BP510P", "Systemic Pharmacology II (Practical)", 2, "P", []),
 ];
 
 // ─────────────────────────────────────────────────────────────
@@ -1507,6 +1518,10 @@ const SEM6: Subject[] = [
         },
     ]),
     s("BP607T AEC", "AEC Elective (Green Chemistry / Materiovigilance / Scientific Writing / Drug Store Management / Medicinal Plant Cultivation / API Sciences)", 1, "P", []),
+    s("BP608P", "Biopharmaceutics and Pharmacokinetics (Practical)", 1, "P", []),
+    s("BP609P", "Pharmaceutical Analysis (Practical)", 2, "P", []),
+    s("BP610P SEC", "SEC Elective — CADD / Analytical Method Development / Preclinical Studies (Practical)", 1, "P", []),
+    s("BP611P VAC", "VAC Elective — Professional Skills / PAT & QbD (Practical)", 1, "P", []),
     s("BP612I", "Internship II (Mandatory)", 4, "I", [
         {
             num: "I", hours: "40 Hours", title: "Advanced Experiential Learning", topics: [
@@ -1803,6 +1818,7 @@ const SEM7: Subject[] = [
         },
     ], true),
     s("BP708T AEC", "AEC Elective (cGMP / Pharmaceutical Automation / Cellular Biology / Medical Devices / Food Waste Products / Biosimilars)", 1, "P", []),
+    s("BP709P", "Modern Analytical Techniques (Practical)", 1, "P", []),
     s("BP710RP", "Research Project (Major)", 6, "RP", [
         {
             num: "I", hours: "—", title: "Topic Selection and Literature Review", topics: [
