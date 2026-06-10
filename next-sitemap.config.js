@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-    siteUrl: process.env.SITE_URL || "https://pharmacode.in",
+    siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://pharmacode.netlify.app",
     generateRobotsTxt: true,
     trailingSlash: true,
     changefreq: "weekly",
@@ -51,7 +51,7 @@ module.exports = {
             { userAgent: "*", disallow: ["/admin/", "/api/"] },
         ],
         additionalSitemaps: [
-            "https://pharmacode.in/sitemap.xml",
+            `${process.env.NEXT_PUBLIC_SITE_URL || "https://pharmacode.netlify.app"}/sitemap.xml`,
         ],
     },
 };

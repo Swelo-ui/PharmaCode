@@ -1,11 +1,15 @@
 export const SITE = {
     name: "PharmaCode",
-    url: process.env.NEXT_PUBLIC_SITE_URL || "https://pharmacode.in",
+    shortName: "PharmaCode — B.Pharm NEP 2020",
+    // Priority: custom domain > Netlify deploy URL > hardcoded fallback
+    url: process.env.NEXT_PUBLIC_SITE_URL
+        ? process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "")
+        : "https://pharmacode.netlify.app",
     tagline: "Code • Cure • Care",
     description:
-        "Complete B.Pharm syllabus as per PCI NEP 2020 — all 8 semesters, unit-wise notes, Python & AI integration. Free study material for pharmacy students.",
+        "Complete B.Pharm syllabus as per PCI NEP 2020 — all 8 semesters, unit-wise notes, Python & AI integration. Free study material for pharmacy students in India.",
     twitter: "@pharmacode",
-    ogImage: "/og-default.png",
+    ogImage: "/logo.png",
     locale: "en_IN",
 } as const;
 

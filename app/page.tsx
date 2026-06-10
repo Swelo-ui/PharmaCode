@@ -11,16 +11,26 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-    title: "B.Pharm Syllabus PCI NEP 2020 | Free Notes & Study Material",
+    title: "B.Pharm Notes & NEP 2020 Syllabus Free Download | PharmaCode",
     description:
-        "Complete B.Pharm syllabus as per PCI NEP 2020 — all 8 semesters, unit-wise notes, Python & AIML for pharmacy. Free study material for pharmacy students across India.",
+        "Free B.Pharm notes PDF — all 8 semesters as per PCI NEP 2020 syllabus. Unit-wise notes for every subject including Python, AI, Medicinal Chemistry, Pharmacology. No login required.",
     alternates: { canonical: absUrl("/") },
+    keywords: [
+        "B.Pharm notes free download",
+        "B.Pharm notes PDF",
+        "B.Pharm NEP 2020 notes",
+        "pharmacy notes all semester",
+        "B.Pharm syllabus 2025",
+        "PCI NEP 2020 B.Pharm notes",
+    ],
     openGraph: {
-        title: "B.Pharm Syllabus NEP 2020 | PharmaCode",
-        description: "Unit-wise B.Pharm syllabus with Python & AI integration. Free PDF notes for all 8 semesters.",
+        title: "PharmaCode — Free B.Pharm Notes & NEP 2020 Syllabus",
+        description: "Unit-wise B.Pharm notes with Python & AI. Free PDF for all 8 semesters — no login, no paywall.",
         url: absUrl("/"),
+        images: [{ url: absUrl("/logo.png"), width: 1200, height: 630, alt: "PharmaCode B.Pharm Notes" }],
     },
 };
+
 
 const FEATURES: [React.ElementType, string, string][] = [
     [Monitor, "Python & AI Built-In", "Dedicated pages for BP101T, BP301T, BP604T, BP703T, BP801T — the new-age subjects"],

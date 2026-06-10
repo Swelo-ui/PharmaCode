@@ -2,33 +2,38 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { SITE } from "@/lib/site";
+import { SITE, absUrl } from "@/lib/site";
 import { organizationSchema, websiteSchema } from "@/lib/schema";
 
 export const metadata: Metadata = {
     metadataBase: new URL(SITE.url),
     title: {
-        default: `${SITE.name} — B.Pharm Syllabus NEP 2020 | Free Notes`,
-        template: `%s | ${SITE.name}`,
+        // Google SERP mein ye dikhega — "PharmaCode" clearly branding ke saath
+        default: "PharmaCode — B.Pharm Notes & NEP 2020 Syllabus | Free PDF",
+        template: `%s | PharmaCode`,
     },
     description: SITE.description,
-    applicationName: SITE.name,
+    applicationName: "PharmaCode",
     keywords: [
-        // Broad intent
-        "B.Pharm syllabus",
-        "B.Pharm syllabus NEP 2020",
-        "B.Pharm 1st year syllabus",
-        "B.Pharm 2nd year syllabus",
-        "B.Pharm 3rd year syllabus",
-        "B.Pharm 4th year syllabus",
-        "pharmacy notes PDF download India",
+        // Primary high-volume keywords
+        "B.Pharm notes",
         "B.Pharm notes free download",
-        "PCI syllabus 2025 2026",
-        "PCI NEP 2020 B.Pharm",
-        // Subject codes — high search volume
+        "B.Pharm syllabus NEP 2020",
+        "B.Pharm syllabus PCI",
+        "pharmacy notes PDF",
+        "B.Pharm 1st year notes",
+        "B.Pharm 2nd year notes",
+        "B.Pharm 3rd year notes",
+        "B.Pharm 4th year notes",
+        "PharmaCode notes",
+        // NEP/PCI specific
+        "PCI NEP 2020 syllabus",
+        "B.Pharm latest syllabus 2024 2025 2026",
+        "B.Pharm all semester syllabus",
+        "pharmacy student India free notes",
+        // Subject codes
         "BP101T Python programming pharmacy",
         "BP104T human anatomy physiology",
-        "BP106T pharmaceutical inorganic chemistry",
         "BP202T biochemistry B.Pharm",
         "BP301T machine learning pharmacy",
         "BP402T medicinal chemistry",
@@ -38,58 +43,67 @@ export const metadata: Metadata = {
         "BP705T pharmacovigilance",
         "BP801T AI ethics pharmacy",
         // Exam & career
-        "GPAT 2027 preparation syllabus",
-        "pharmacy student India study material",
-        "unit wise pharmacy notes",
-        "B.Pharm complete syllabus all semesters",
+        "GPAT preparation notes",
+        "unit wise pharmacy notes India",
+        "free pharmacy study material",
     ],
     authors: [{ name: "PharmaCode Team" }],
+    creator: "PharmaCode",
+    publisher: "PharmaCode",
     /* ── Favicon / icons ── */
     icons: {
         icon: [
-            { url: "/favicon.png", type: "image/png" },
+            { url: "/favicon.png", type: "image/png", sizes: "any" },
+            { url: "/favicon.svg", type: "image/svg+xml" },
         ],
         apple: [
             { url: "/favicon.png", sizes: "180x180", type: "image/png" },
         ],
         shortcut: "/favicon.png",
     },
-    /* ── Open Graph ── */
+    /* ── Open Graph — Google SERP site name ke liye critical ── */
     openGraph: {
         type: "website",
-        siteName: SITE.name,
-        locale: SITE.locale,
+        siteName: "PharmaCode",   // <-- ye Google SERP mein "PharmaCode" dikhayega
+        locale: "en_IN",
         url: SITE.url,
-        title: `${SITE.name} — B.Pharm Syllabus NEP 2020`,
+        title: "PharmaCode — B.Pharm Notes & NEP 2020 Syllabus",
         description: SITE.description,
         images: [
             {
-                url: "/logo.png",
-                width: 1254,
-                height: 1254,
-                alt: "PharmaCode — B.Pharm NEP 2020 Syllabus",
+                url: absUrl("/logo.png"),
+                width: 1200,
+                height: 630,
+                alt: "PharmaCode — Free B.Pharm Notes & NEP 2020 Syllabus",
             },
         ],
     },
     /* ── Twitter / X ── */
     twitter: {
         card: "summary_large_image",
-        title: `${SITE.name} — B.Pharm Syllabus NEP 2020`,
+        site: "@pharmacode",
+        title: "PharmaCode — Free B.Pharm Notes & NEP 2020 Syllabus",
         description: SITE.description,
-        images: ["/logo.png"],
+        images: [absUrl("/logo.png")],
     },
     robots: {
         index: true,
         follow: true,
+        nocache: false,
         googleBot: {
             index: true,
             follow: true,
+            noimageindex: false,
+            "max-video-preview": -1,
             "max-image-preview": "large",
             "max-snippet": -1,
         },
     },
     alternates: {
         canonical: SITE.url,
+        languages: {
+            "en-IN": SITE.url,
+        },
     },
     verification: {
         google: "xFzbcs5yurwIMxwumKXtPidOA6OoKT9GQtwupO8PDVI",
