@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { JsonLd } from "@/components/JsonLd";
 import { faqSchema } from "@/lib/schema";
+import { HomepageFaqs } from "@/components/HomepageFaqs";
 
 export const metadata: Metadata = {
     title: "B.Pharm Notes & NEP 2020 Syllabus Free Download | PharmaCode",
@@ -102,6 +103,7 @@ const HOMEPAGE_FAQS = [
         a: "Yes. PharmaCode offers a complete repository of free PDF notes covering all 8 semesters of the B.Pharm program under the PCI NEP 2020 curriculum.",
     },
 ];
+
 
 export default function HomePage() {
     return (
@@ -279,33 +281,8 @@ export default function HomePage() {
             </section>
 
             {/* ── FAQ SECTION (SEO & User) ─────────────────────── */}
-            <section className="mx-auto w-full max-w-[900px] px-5 sm:px-8 py-12 sm:py-14">
-                <JsonLd data={faqSchema(HOMEPAGE_FAQS)} />
-                <div className="mb-8 text-center fade-up">
-                    <h2 className="mb-2 font-display text-[26px] sm:text-[34px] font-black text-primary flex items-center justify-center gap-2.5">
-                        <HelpCircle className="text-secondary shrink-0" size={28} />
-                        Frequently Asked Questions
-                    </h2>
-                    <p className="font-[DM_Sans] text-[14px] sm:text-[15px] text-[#6B7FA3]">
-                        Everything you need to know about B.Pharm NEP 2020 and PharmaCode resources
-                    </p>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {HOMEPAGE_FAQS.map((faq, i) => (
-                        <div
-                            key={i}
-                            className={`fade-up fade-up-${(i % 4) + 1} rounded-[16px] border border-[#E8EDFF] bg-white p-5 sm:p-6 shadow-sm`}
-                        >
-                            <h3 className="mb-2 font-display text-[14px] sm:text-[15px] font-extrabold text-primary leading-tight">
-                                {faq.q}
-                            </h3>
-                            <p className="font-[DM_Sans] text-[12px] sm:text-[13px] leading-[1.65] text-[#6B7FA3]">
-                                {faq.a}
-                            </p>
-                        </div>
-                    ))}
-                </div>
-            </section>
+            <JsonLd data={faqSchema(HOMEPAGE_FAQS)} />
+            <HomepageFaqs faqs={HOMEPAGE_FAQS} />
 
             {/* ── TICKER BELT ──────────────────────────────────── */}
             <div
