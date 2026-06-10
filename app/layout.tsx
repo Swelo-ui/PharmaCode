@@ -4,6 +4,8 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { SITE, absUrl } from "@/lib/site";
 import { organizationSchema, websiteSchema } from "@/lib/schema";
+import { Analytics } from "@vercel/analytics/react";
+
 
 export const metadata: Metadata = {
     metadataBase: new URL(SITE.url),
@@ -161,6 +163,7 @@ export default function RootLayout({
                 <Navbar />
                 <main className="w-full mx-auto">{children}</main>
                 <Footer />
+                <Analytics />
             </body>
         </html>
     );
