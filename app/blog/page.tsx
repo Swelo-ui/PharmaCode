@@ -10,6 +10,24 @@ export const metadata: Metadata = {
     description:
         "PharmaCode blog — B.Pharm syllabus guides, GPAT preparation tips, Python & AI in pharmacy, career advice and study strategies for pharmacy students.",
     alternates: { canonical: absUrl("/blog/") },
+    keywords: [
+        "B.Pharm blog",
+        "pharmacy study tips",
+        "GPAT preparation tips",
+        "B.Pharm NEP 2020 syllabus comparison",
+        "Python in pharmacy guides",
+        "AI in pharmaceutical sciences blog",
+        "pharmacovigilance vs regulatory affairs",
+        "pharmacy career advice India",
+        "B.Pharm semester 4 internship template",
+        "pharmacy student notes updates",
+    ],
+    openGraph: {
+        title: "PharmaCode Blog — Pharmacy Study Guides & Career Tips",
+        description: "B.Pharm NEP 2020 syllabus comparison, GPAT preparation tips, Python & AI in pharmacy, and career advice for pharmacy students.",
+        url: absUrl("/blog/"),
+        images: [{ url: absUrl("/og-image.png"), width: 1200, height: 630, alt: "PharmaCode Blog" }],
+    },
 };
 
 const POSTS = [

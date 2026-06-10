@@ -7,8 +7,10 @@ import { SemCard } from "@/components/SemCard";
 import { SITE, absUrl } from "@/lib/site";
 import {
     Monitor, BookOpen, Download, Search, Building2, Target,
-    BookMarked, FileDown,
+    BookMarked, FileDown, HelpCircle,
 } from "lucide-react";
+import { JsonLd } from "@/components/JsonLd";
+import { faqSchema } from "@/lib/schema";
 
 export const metadata: Metadata = {
     title: "B.Pharm Notes & NEP 2020 Syllabus Free Download | PharmaCode",
@@ -22,6 +24,13 @@ export const metadata: Metadata = {
         "pharmacy notes all semester",
         "B.Pharm syllabus 2025",
         "PCI NEP 2020 B.Pharm notes",
+        "B Pharmacy syllabus 2026",
+        "PCI B Pharm notes free download",
+        "B.Pharm 1st semester notes NEP 2020",
+        "bpharm new syllabus",
+        "B.Pharm exit exam notes",
+        "pharmacy study material download",
+        "GPAT preparation notes free",
     ],
     openGraph: {
         title: "PharmaCode — Free B.Pharm Notes & NEP 2020 Syllabus",
@@ -65,6 +74,33 @@ const TICKER_ITEMS = [
     { tag: "NEP 2020", text: "BP801T AI Ethics and Translational AI — Semester 8 capstone subject covering FDA SaMD guidelines", color: "#93C5FD" },
     { tag: "Study Tip", text: "Medicinal Chemistry BP402T SAR questions — always link structure to pharmacological activity for full marks", color: "#6EE7B7" },
     { tag: "Syllabus Change", text: "Environmental Sciences and Ethics are now credit-bearing theory subjects under NEP 2020 — do not ignore them", color: "#C4B5FD" },
+];
+
+const HOMEPAGE_FAQS = [
+    {
+        q: "What is B.Pharm PCI NEP 2020 syllabus?",
+        a: "The B.Pharm NEP 2020 (National Education Policy) is the new curriculum implemented by the Pharmacy Council of India (PCI). It introduces credit-based learning, mandatory industry/hospital internships in Semesters 4 and 6, and modern technical subjects like Python programming, Machine Learning, and AI in pharmaceutical sciences.",
+    },
+    {
+        q: "Are the notes on PharmaCode free to download?",
+        a: "Yes! All study material, unit-wise notes, and syllabus guides on PharmaCode are 100% free to download in PDF format. We do not require any registration, login, or payments.",
+    },
+    {
+        q: "Does PharmaCode cover Python Programming for pharmacy?",
+        a: "Yes! BP101T (Basics of Python Programming for Pharmaceutical Sciences) is covered unit-wise with specific notes, code explanations, and library guides (NumPy, Pandas, Matplotlib) tailored for pharmacy students.",
+    },
+    {
+        q: "How does the PCI NEP 2020 syllabus structure internships?",
+        a: "Under the new NEP 2020 guidelines, B.Pharm students must complete mandatory internships at the end of Semester 4 (hospital/clinical pharmacy) and Semester 6 (industrial/regulatory pharmacy). PharmaCode provides guides and report templates for these internships.",
+    },
+    {
+        q: "Is the study material on PharmaCode helpful for GPAT preparation?",
+        a: "Absolutely! The unit-wise syllabus content is highly aligned with GPAT 2027 and other national competitive exams. Key topics and high-weightage areas are highlighted across subject pages.",
+    },
+    {
+        q: "Can I download notes for all 8 semesters?",
+        a: "Yes. PharmaCode offers a complete repository of free PDF notes covering all 8 semesters of the B.Pharm program under the PCI NEP 2020 curriculum.",
+    },
 ];
 
 export default function HomePage() {
@@ -238,6 +274,35 @@ export default function HomePage() {
                         >
                             Sem {s.num}
                         </Link>
+                    ))}
+                </div>
+            </section>
+
+            {/* ── FAQ SECTION (SEO & User) ─────────────────────── */}
+            <section className="mx-auto w-full max-w-[900px] px-5 sm:px-8 py-12 sm:py-14">
+                <JsonLd data={faqSchema(HOMEPAGE_FAQS)} />
+                <div className="mb-8 text-center fade-up">
+                    <h2 className="mb-2 font-display text-[26px] sm:text-[34px] font-black text-primary flex items-center justify-center gap-2.5">
+                        <HelpCircle className="text-secondary shrink-0" size={28} />
+                        Frequently Asked Questions
+                    </h2>
+                    <p className="font-[DM_Sans] text-[14px] sm:text-[15px] text-[#6B7FA3]">
+                        Everything you need to know about B.Pharm NEP 2020 and PharmaCode resources
+                    </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {HOMEPAGE_FAQS.map((faq, i) => (
+                        <div
+                            key={i}
+                            className={`fade-up fade-up-${(i % 4) + 1} rounded-[16px] border border-[#E8EDFF] bg-white p-5 sm:p-6 shadow-sm`}
+                        >
+                            <h3 className="mb-2 font-display text-[14px] sm:text-[15px] font-extrabold text-primary leading-tight">
+                                {faq.q}
+                            </h3>
+                            <p className="font-[DM_Sans] text-[12px] sm:text-[13px] leading-[1.65] text-[#6B7FA3]">
+                                {faq.a}
+                            </p>
+                        </div>
                     ))}
                 </div>
             </section>

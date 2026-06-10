@@ -1,4 +1,4 @@
-# PharmaCode — pharmacode.in
+# PharmaCode — pharmacode.netlify.app
 
 > **Code • Cure • Care** — B.Pharm NEP 2020 syllabus, free unit-wise notes, Python & AI guides for pharmacy students across India.
 
@@ -89,8 +89,8 @@ Set production URL:
 
 ```bash
 # .env.local
-NEXT_PUBLIC_SITE_URL=https://pharmacode.in
-SITE_URL=https://pharmacode.in
+NEXT_PUBLIC_SITE_URL=https://pharmacode.netlify.app
+SITE_URL=https://pharmacode.netlify.app
 ```
 
 ## Adding / editing syllabus content
