@@ -3,20 +3,41 @@ import Link from "next/link";
 import { SEMESTERS } from "@/lib/syllabus";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { JsonLd } from "@/components/JsonLd";
-import { breadcrumbSchema } from "@/lib/schema";
+import { breadcrumbSchema, itemListSchema } from "@/lib/schema";
 import { absUrl } from "@/lib/site";
 import { Download, FileText, Star } from "lucide-react";
 
 export const metadata: Metadata = {
-    title: "B.Pharm Notes PDF Free Download — All Semesters",
+    title: "B.Pharm Notes PDF Free Download — All 8 Semesters NEP 2020 | PharmaCode",
     description:
-        "Download free B.Pharm notes as per PCI NEP 2020 syllabus. All 8 semesters, 50+ subjects, no login required. Unit-wise PDF notes for every theory subject.",
+        "Free B.Pharm notes PDF download — all 8 semesters as per PCI NEP 2020 syllabus. Unit-wise notes for 50+ subjects including Pharmacology, Medicinal Chemistry, Python, AI. No login required.",
+    keywords: [
+        "B.Pharm notes PDF free download",
+        "B.Pharm notes free download all semester",
+        "pharmacy notes PDF NEP 2020",
+        "B.Pharm 1st sem notes PDF",
+        "B.Pharm 2nd sem notes PDF",
+        "B.Pharm 3rd sem notes PDF",
+        "B.Pharm 4th sem notes PDF",
+        "B.Pharm 5th sem notes PDF",
+        "B.Pharm 6th sem notes PDF",
+        "B.Pharm 7th sem notes PDF",
+        "B.Pharm 8th sem notes PDF",
+        "pharmacology notes B.Pharm PDF",
+        "medicinal chemistry notes B.Pharm",
+        "pharmaceutical chemistry notes PDF",
+        "B.Pharm Python programming notes",
+        "biochemistry B.Pharm notes",
+        "free pharmacy study material India",
+        "B.Pharm notes without login",
+        "PCI NEP 2020 notes PDF",
+    ],
     alternates: { canonical: absUrl("/notes/") },
     openGraph: {
-        title: "B.Pharm Notes PDF Free Download | PharmaCode",
-        description:
-            "Free B.Pharm PDF notes for all 8 semesters. PCI NEP 2020 syllabus. No login.",
+        title: "B.Pharm Notes PDF Free Download — All Semesters | PharmaCode",
+        description: "Free B.Pharm PDF notes for all 8 semesters. PCI NEP 2020 syllabus. No login required.",
         url: absUrl("/notes/"),
+        images: [{ url: absUrl("/og-image.png"), width: 1200, height: 630, alt: "PharmaCode Free B.Pharm Notes PDF" }],
     },
 };
 
@@ -26,10 +47,23 @@ export default function NotesPage() {
         { name: "Notes", href: "/notes/" },
     ];
 
+    // ItemList schema — sab theory subjects ki list
+    const allNotes = SEMESTERS.flatMap((sem) =>
+        sem.subjects
+            .filter((s) => s.type === "T" && s.units.length > 0)
+            .map((s, i) => ({
+                name: `${s.code} ${s.name} Notes PDF — B.Pharm Sem ${sem.num}`,
+                url: `/syllabus/semester-${sem.num}/${s.slug}/`,
+                position: i + 1,
+            }))
+    ).map((item, i) => ({ ...item, position: i + 1 }));
+
     return (
         <div className="mx-auto w-full max-w-[960px] px-5 sm:px-8 py-8 sm:py-10">
             <JsonLd data={breadcrumbSchema(breadcrumbs)} />
+            <JsonLd data={itemListSchema(allNotes)} />
             <Breadcrumb items={breadcrumbs} />
+
 
             <h1 className="fade-up mb-2 font-display text-[26px] sm:text-[32px] font-black text-primary leading-tight flex items-center gap-3">
                 <Download size={28} strokeWidth={2.5} className="text-secondary shrink-0" />

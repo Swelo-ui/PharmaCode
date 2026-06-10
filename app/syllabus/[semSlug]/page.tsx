@@ -1,11 +1,11 @@
 // app/syllabus/[semSlug]/page.tsx
-// Semester detail page — passes semNum to SubjectRow for "View Full Page" links
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getSemesterBySlug, getAllSemesters, type Subject } from "@/lib/syllabus";
 import SubjectRow from "@/components/SubjectRow";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { JsonLd } from "@/components/JsonLd";
+import { absUrl } from "@/lib/site";
 import {
     ChevronLeft,
     ChevronRight,
@@ -26,14 +26,28 @@ export async function generateMetadata({
 }): Promise<Metadata> {
     const sem = getSemesterBySlug(params.semSlug);
     if (!sem) return {};
+    const canonical = absUrl(`/syllabus/semester-${sem.num}/`);
+    const semSuffix = ["1st","2nd","3rd","4th","5th","6th","7th","8th"][sem.num - 1];
     return {
-        title: `Semester ${sem.num} B.Pharm Syllabus NEP 2020 | ${sem.credits} Credits`,
-        description: `Complete Semester ${sem.num} B.Pharm syllabus as per PCI NEP 2020. ${sem.subjects.length} subjects, ${sem.credits} credits. Unit-wise detailed breakdown and free notes.`,
-        alternates: { canonical: `https://pharmacode.in/syllabus/semester-${sem.num}/` },
+        title: `B.Pharm ${semSuffix} Semester Syllabus NEP 2020 — ${sem.subjects.length} Subjects | PharmaCode`,
+        description: `Complete B.Pharm Semester ${sem.num} (${sem.label}) syllabus as per PCI NEP 2020. ${sem.subjects.filter(s=>s.type==="T").length} theory + ${sem.subjects.filter(s=>s.type==="P").length} practical subjects, ${sem.credits} credits. Unit-wise breakdown with free notes PDF download.`,
+        keywords: [
+            `B.Pharm semester ${sem.num} syllabus`,
+            `B.Pharm ${semSuffix} semester syllabus NEP 2020`,
+            `B.Pharm ${semSuffix} sem notes`,
+            `B.Pharm semester ${sem.num} subjects list`,
+            `B.Pharm semester ${sem.num} notes PDF free download`,
+            `pharmacy ${semSuffix} semester syllabus India`,
+            `B.Pharm semester ${sem.num} PCI NEP 2020`,
+            ...sem.subjects.filter(s=>s.type==="T").map(s=>`${s.code} syllabus`),
+            ...sem.subjects.filter(s=>s.type==="T").slice(0,3).map(s=>`${s.name} notes`),
+        ],
+        alternates: { canonical },
         openGraph: {
-            title: `Semester ${sem.num} B.Pharm Syllabus NEP 2020 | PharmaCode`,
-            description: `Complete Semester ${sem.num} B.Pharm syllabus as per PCI NEP 2020. ${sem.subjects.length} subjects, ${sem.credits} credits.`,
-            url: `https://pharmacode.in/syllabus/semester-${sem.num}/`,
+            title: `B.Pharm Semester ${sem.num} Syllabus NEP 2020 | PharmaCode`,
+            description: `${sem.subjects.length} subjects · ${sem.credits} credits · Free notes PDF`,
+            url: canonical,
+            images: [{ url: absUrl("/og-image.png"), width: 1200, height: 630, alt: `PharmaCode B.Pharm Semester ${sem.num} Syllabus` }],
         },
     };
 }
@@ -51,7 +65,7 @@ export default function SemesterPage({
     const internship = sem.subjects.filter((s: Subject) => s.type === "I");
     const research = sem.subjects.filter((s: Subject) => s.type === "RP");
 
-    const canonical = `https://pharmacode.in/syllabus/semester-${sem.num}/`;
+    const canonical = absUrl(`/syllabus/semester-${sem.num}/`);
     const allSems = getAllSemesters();
     const prevSem = sem.num > 1 ? allSems[sem.num - 2] : null;
     const nextSem = sem.num < 8 ? allSems[sem.num] : null;
@@ -60,8 +74,8 @@ export default function SemesterPage({
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         itemListElement: [
-            { "@type": "ListItem", position: 1, name: "Home", item: "https://pharmacode.in/" },
-            { "@type": "ListItem", position: 2, name: "Syllabus", item: "https://pharmacode.in/syllabus/" },
+            { "@type": "ListItem", position: 1, name: "Home", item: absUrl("/") },
+            { "@type": "ListItem", position: 2, name: "Syllabus", item: absUrl("/syllabus/") },
             { "@type": "ListItem", position: 3, name: `Semester ${sem.num}`, item: canonical },
         ],
     };

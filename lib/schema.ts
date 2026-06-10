@@ -22,11 +22,19 @@ export function breadcrumbSchema(items: BreadcrumbItem[]) {
 export function organizationSchema() {
     return {
         "@context": "https://schema.org",
-        "@type": "Organization",
-        name: SITE.name,
+        "@type": "EducationalOrganization",
+        name: "PharmaCode",
+        alternateName: "PharmaCode — B.Pharm NEP 2020",
         url: SITE.url,
         logo: absUrl("/logo.png"),
+        description: "Free B.Pharm study material, NEP 2020 syllabus, unit-wise notes and PDF downloads for pharmacy students in India.",
         sameAs: [],
+        knowsAbout: [
+            "B.Pharm NEP 2020 Syllabus",
+            "Pharmacy Education India",
+            "PCI Approved Curriculum",
+            "B.Pharm Notes PDF",
+        ],
     };
 }
 
@@ -34,7 +42,7 @@ export function websiteSchema() {
     return {
         "@context": "https://schema.org",
         "@type": "WebSite",
-        name: SITE.name,
+        name: "PharmaCode",
         url: SITE.url,
         potentialAction: {
             "@type": "SearchAction",
@@ -51,13 +59,16 @@ export function semesterCourseSchema(sem: Semester) {
         name: `B.Pharm Semester ${sem.num} — NEP 2020 Syllabus`,
         description: `${sem.label}. Complete subject and unit breakdown for B.Pharm Semester ${sem.num} as per PCI NEP 2020 (${sem.credits} credits).`,
         provider: {
-            "@type": "Organization",
+            "@type": "EducationalOrganization",
             name: SITE.name,
             sameAs: SITE.url,
         },
         url: absUrl(`/syllabus/semester-${sem.num}/`),
         educationalLevel: "Undergraduate",
         courseCode: `BPHARM-S${sem.num}`,
+        inLanguage: "en-IN",
+        isAccessibleForFree: true,
+        teaches: sem.subjects.map(s => s.name),
     };
 }
 
@@ -68,11 +79,51 @@ export function subjectCourseSchema(sem: Semester, sub: Subject) {
         name: `${sub.code}: ${sub.name}`,
         description: `${sub.name} — Semester ${sem.num} B.Pharm NEP 2020. Unit-wise syllabus, key topics and free PDF notes.`,
         provider: {
-            "@type": "Organization",
+            "@type": "EducationalOrganization",
             name: SITE.name,
             sameAs: SITE.url,
         },
         url: absUrl(`/syllabus/semester-${sem.num}/${sub.slug}/`),
         courseCode: sub.code,
+        educationalLevel: "Undergraduate — B.Pharm",
+        inLanguage: "en-IN",
+        isAccessibleForFree: true,
+        numberOfCredits: sub.credits,
     };
 }
+
+/* ── FAQ Schema — Rich Snippets ke liye ── */
+export function faqSchema(faqs: { q: string; a: string }[]) {
+    return {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: faqs.map(({ q, a }) => ({
+            "@type": "Question",
+            name: q,
+            acceptedAnswer: {
+                "@type": "Answer",
+                text: a,
+            },
+        })),
+    };
+}
+
+/* ── ItemList Schema — Notes page ke liye ── */
+export function itemListSchema(
+    items: { name: string; url: string; position: number }[]
+) {
+    return {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        name: "B.Pharm Notes PDF — All Semesters (PCI NEP 2020)",
+        description: "Free B.Pharm unit-wise notes PDF for all 8 semesters as per PCI NEP 2020 syllabus.",
+        numberOfItems: items.length,
+        itemListElement: items.map(({ name, url, position }) => ({
+            "@type": "ListItem",
+            position,
+            name,
+            url: absUrl(url),
+        })),
+    };
+}
+

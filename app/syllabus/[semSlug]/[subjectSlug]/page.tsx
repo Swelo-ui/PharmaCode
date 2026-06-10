@@ -1,5 +1,4 @@
 // app/syllabus/[semSlug]/[subjectSlug]/page.tsx
-// Shows FULL PDF-level detailed syllabus for each subject
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import {
@@ -10,6 +9,8 @@ import {
 } from "@/lib/syllabus";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { JsonLd } from "@/components/JsonLd";
+import { absUrl } from "@/lib/site";
+import { faqSchema } from "@/lib/schema";
 import {
     Download,
     ArrowLeft,
@@ -41,15 +42,30 @@ export async function generateMetadata({
     if (!sem) return {};
     const subject = getSubjectBySlug(sem, params.subjectSlug);
     if (!subject) return {};
-    const canonical = `https://pharmacode.in/syllabus/semester-${sem.num}/${subject.slug}/`;
+    const canonical = absUrl(`/syllabus/semester-${sem.num}/${subject.slug}/`);
+    const semSuffix = ["1st","2nd","3rd","4th","5th","6th","7th","8th"][sem.num - 1];
     return {
-        title: `${subject.code}: ${subject.name} | Sem ${sem.num}`,
-        description: `${subject.code} ${subject.name} — Complete unit-wise detailed syllabus as per PCI NEP 2020. All ${subject.units.length} units with sub-topics. Free PDF notes download. Semester ${sem.num}.`,
+        // Format: "BP101T Python Programming Notes PDF | B.Pharm Sem 1 NEP 2020"
+        title: `${subject.code} ${subject.name} Notes | B.Pharm ${semSuffix} Sem NEP 2020`,
+        description: `${subject.code} ${subject.name} — Complete ${subject.units.length}-unit syllabus as per PCI NEP 2020. Free PDF notes download. B.Pharm Semester ${sem.num} (${sem.label}). ${subject.credits} credits.`,
+        keywords: [
+            `${subject.code} notes`,
+            `${subject.code} notes PDF`,
+            `${subject.code} ${subject.name}`,
+            `${subject.name} B.Pharm notes`,
+            `${subject.name} notes PDF free download`,
+            `${subject.name} syllabus NEP 2020`,
+            `B.Pharm semester ${sem.num} ${subject.name.split(" ")[0].toLowerCase()} notes`,
+            `${subject.code} unit wise notes`,
+            `B.Pharm ${semSuffix} sem ${subject.name.split(" ")[0].toLowerCase()} syllabus`,
+            `PCI NEP 2020 ${subject.name}`,
+        ],
         alternates: { canonical },
         openGraph: {
-            title: `${subject.code}: ${subject.name} | PharmaCode`,
-            description: `Detailed syllabus for ${subject.name} — Semester ${sem.num}, B.Pharm NEP 2020.`,
+            title: `${subject.code} ${subject.name} Notes | PharmaCode`,
+            description: `Free PDF notes for ${subject.code} — ${subject.units.length} units, B.Pharm Sem ${sem.num}, NEP 2020.`,
             url: canonical,
+            images: [{ url: absUrl("/og-image.png"), width: 1200, height: 630, alt: `${subject.code} ${subject.name} Notes` }],
         },
     };
 }
@@ -151,7 +167,7 @@ export default function SubjectPage({
     if (!subject) notFound();
 
     const tm = TYPE_META[subject.type] ?? TYPE_META.T;
-    const canonical = `https://pharmacode.in/syllabus/semester-${sem.num}/${subject.slug}/`;
+    const canonical = absUrl(`/syllabus/semester-${sem.num}/${subject.slug}/`);
 
     /* Total lecture hours from units */
     const totalHours = subject.units
@@ -161,7 +177,7 @@ export default function SubjectPage({
         })
         .reduce((a, b) => a + b, 0);
 
-    /* JSON-LD */
+    /* JSON-LD — Course Schema */
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "Course",
@@ -172,10 +188,11 @@ export default function SubjectPage({
         numberOfCredits: subject.credits,
         educationalLevel: "Undergraduate — B.Pharm",
         inLanguage: "en-IN",
+        isAccessibleForFree: true,
         provider: {
-            "@type": "Organization",
+            "@type": "EducationalOrganization",
             name: "PharmaCode",
-            url: "https://pharmacode.in",
+            url: absUrl("/"),
         },
         hasCourseInstance: {
             "@type": "CourseInstance",
@@ -189,17 +206,37 @@ export default function SubjectPage({
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         itemListElement: [
-            { "@type": "ListItem", position: 1, name: "Home", item: "https://pharmacode.in/" },
-            { "@type": "ListItem", position: 2, name: "Syllabus", item: "https://pharmacode.in/syllabus/" },
-            { "@type": "ListItem", position: 3, name: `Semester ${sem.num}`, item: `https://pharmacode.in/syllabus/semester-${sem.num}/` },
+            { "@type": "ListItem", position: 1, name: "Home", item: absUrl("/") },
+            { "@type": "ListItem", position: 2, name: "Syllabus", item: absUrl("/syllabus/") },
+            { "@type": "ListItem", position: 3, name: `Semester ${sem.num}`, item: absUrl(`/syllabus/semester-${sem.num}/`) },
             { "@type": "ListItem", position: 4, name: subject.code, item: canonical },
         ],
     };
+
+    /* FAQ Schema — subject specific common student questions */
+    const subjectFaqs = faqSchema([
+        {
+            q: `What are the units in ${subject.code} ${subject.name}?`,
+            a: subject.units.length > 0
+                ? `${subject.code} ${subject.name} has ${subject.units.length} units: ${subject.units.map((u,i)=>`Unit ${i+1}: ${u.title}`).join(", ")}.`
+                : `${subject.code} ${subject.name} is a ${subject.credits}-credit subject in B.Pharm Semester ${sem.num} as per PCI NEP 2020 curriculum.`,
+        },
+        {
+            q: `How many credits is ${subject.code} in B.Pharm NEP 2020?`,
+            a: `${subject.code} (${subject.name}) carries ${subject.credits} credits in B.Pharm Semester ${sem.num} as per PCI NEP 2020 syllabus.`,
+        },
+        {
+            q: `Where can I download ${subject.code} notes PDF for free?`,
+            a: `You can download free ${subject.code} ${subject.name} notes PDF from PharmaCode. All unit-wise notes are available without login or registration.`,
+        },
+    ]);
+
 
     return (
         <>
             <JsonLd data={jsonLd} />
             <JsonLd data={breadcrumbLd} />
+            <JsonLd data={subjectFaqs} />
             <div className="max-w-[900px] mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 {/* Breadcrumb */}
                 <Breadcrumb
