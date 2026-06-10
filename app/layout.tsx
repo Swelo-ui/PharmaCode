@@ -50,31 +50,38 @@ export const metadata: Metadata = {
     authors: [{ name: "PharmaCode Team" }],
     creator: "PharmaCode",
     publisher: "PharmaCode",
-    /* ── Favicon / icons ── */
+    /* ── Favicon — feviicon 2 (cute pill character) ── */
     icons: {
         icon: [
-            { url: "/favicon.png", type: "image/png", sizes: "any" },
+            { url: "/favicon.png", type: "image/png", sizes: "32x32" },
+            { url: "/favicon.png", type: "image/png", sizes: "16x16" },
+            { url: "/favicon.png", type: "image/png", sizes: "192x192" },
             { url: "/favicon.svg", type: "image/svg+xml" },
         ],
         apple: [
             { url: "/favicon.png", sizes: "180x180", type: "image/png" },
         ],
         shortcut: "/favicon.png",
+        other: [
+            { rel: "mask-icon", url: "/favicon.svg" },
+        ],
     },
-    /* ── Open Graph — Google SERP site name ke liye critical ── */
+    /* ── Open Graph — og-image.png (PharmaCode logo with text) Google Images mein dikhega ── */
     openGraph: {
         type: "website",
-        siteName: "PharmaCode",   // <-- ye Google SERP mein "PharmaCode" dikhayega
+        siteName: "PharmaCode",
         locale: "en_IN",
         url: SITE.url,
-        title: "PharmaCode — B.Pharm Notes & NEP 2020 Syllabus",
+        title: "PharmaCode — Free B.Pharm Notes & NEP 2020 Syllabus",
         description: SITE.description,
         images: [
             {
-                url: absUrl("/logo.png"),
+                // og-image.png = PharmaCode full logo (text + mascot) — Google Images mein dikhega
+                url: absUrl("/og-image.png"),
                 width: 1200,
                 height: 630,
-                alt: "PharmaCode — Free B.Pharm Notes & NEP 2020 Syllabus",
+                alt: "PharmaCode — B.Pharm NEP 2020 Syllabus Free Notes India",
+                type: "image/png",
             },
         ],
     },
@@ -84,7 +91,7 @@ export const metadata: Metadata = {
         site: "@pharmacode",
         title: "PharmaCode — Free B.Pharm Notes & NEP 2020 Syllabus",
         description: SITE.description,
-        images: [absUrl("/logo.png")],
+        images: [absUrl("/og-image.png")],
     },
     robots: {
         index: true,

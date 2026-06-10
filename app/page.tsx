@@ -27,7 +27,7 @@ export const metadata: Metadata = {
         title: "PharmaCode — Free B.Pharm Notes & NEP 2020 Syllabus",
         description: "Unit-wise B.Pharm notes with Python & AI. Free PDF for all 8 semesters — no login, no paywall.",
         url: absUrl("/"),
-        images: [{ url: absUrl("/logo.png"), width: 1200, height: 630, alt: "PharmaCode B.Pharm Notes" }],
+        images: [{ url: absUrl("/og-image.png"), width: 1200, height: 630, alt: "PharmaCode — B.Pharm NEP 2020 Syllabus Free Notes" }],
     },
 };
 
