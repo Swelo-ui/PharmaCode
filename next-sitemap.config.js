@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-    siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://pharmacode.netlify.app",
+    siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://pharmacode.vercel.app",
     generateRobotsTxt: true,
     trailingSlash: true,
     changefreq: "weekly",
@@ -51,7 +51,7 @@ module.exports = {
             { userAgent: "*", disallow: ["/admin/", "/api/"] },
         ],
         additionalSitemaps: [
-            `${process.env.NEXT_PUBLIC_SITE_URL || "https://pharmacode.netlify.app"}/sitemap.xml`,
+            `${process.env.NEXT_PUBLIC_SITE_URL || "https://pharmacode.vercel.app"}/sitemap.xml`,
         ],
     },
 };

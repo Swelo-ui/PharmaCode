@@ -126,7 +126,7 @@ export function Footer() {
                 {/* ── Bottom bar ───────────────────────────────── */}
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
                     <p className="font-[DM_Sans] text-[11px] text-[#6B7FA3]">
-                        © 2026 PharmaCode · pharmacode.netlify.app · PCI NEP 2020 B.Pharm Syllabus
+                        © 2026 PharmaCode · pharmacode.vercel.app · PCI NEP 2020 B.Pharm Syllabus
                     </p>
                     <p className="font-[DM_Sans] text-[11px] text-[#6B7FA3]">
                         Made for pharmacy students across India
