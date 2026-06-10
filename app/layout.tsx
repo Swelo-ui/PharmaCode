@@ -5,6 +5,7 @@ import { Footer } from "@/components/Footer";
 import { SITE, absUrl } from "@/lib/site";
 import { organizationSchema, websiteSchema } from "@/lib/schema";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 
 export const metadata: Metadata = {
@@ -164,6 +165,7 @@ export default function RootLayout({
                 <main className="w-full mx-auto">{children}</main>
                 <Footer />
                 <Analytics />
+                <SpeedInsights />
             </body>
         </html>
     );
