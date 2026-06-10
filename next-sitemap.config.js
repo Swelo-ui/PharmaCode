@@ -1,7 +1,7 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
     siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://pharmacode.vercel.app",
-    generateRobotsTxt: true,
+    generateRobotsTxt: false,   // Manual robots.txt in /public — do NOT overwrite
     trailingSlash: true,
     changefreq: "weekly",
     priority: 0.7,           // default fallback
@@ -45,13 +45,4 @@ module.exports = {
         };
     },
 
-    robotsTxtOptions: {
-        policies: [
-            { userAgent: "*", allow: "/" },
-            { userAgent: "*", disallow: ["/admin/", "/api/"] },
-        ],
-        additionalSitemaps: [
-            `${process.env.NEXT_PUBLIC_SITE_URL || "https://pharmacode.vercel.app"}/sitemap.xml`,
-        ],
-    },
 };

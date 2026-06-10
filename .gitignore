@@ -38,6 +38,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# sitemap (generated)
-public/sitemap*.xml
-public/robots.txt
+# sitemap & robots are now manually maintained — tracked in git
+# (next-sitemap generateRobotsTxt is disabled)
