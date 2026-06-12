@@ -1,8 +1,0 @@
-# robots.txt — PharmaCode
-User-agent: *
-Allow: /
-Disallow: /admin/
-Disallow: /api/
-
-# Sitemap
-Sitemap: https://pharmacode.vercel.app/sitemap.xml
