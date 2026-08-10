@@ -279,3 +279,43 @@ export function CopyEmailBox() {
     );
 }
 
+/* ═══════════════════════════════════════════════
+   COPY UPI BOX — Designed for Android & Mobile
+   ═══════════════════════════════════════════════ */
+export function CopyUpiBox() {
+    const [copied, setCopied] = useState(false);
+    const upiId = "pharmacode@ybl";
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(upiId);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
+
+    return (
+        <div className="mt-3.5 rounded-[14px] bg-[#F8FAFC] border border-[#E2E8F0] p-2.5 sm:p-3 max-w-[340px] mx-auto text-center shadow-xs">
+            <div className="flex items-center justify-between gap-2 bg-white border border-[#CBD5E1] rounded-[10px] px-3 py-2">
+                <div className="text-left overflow-hidden">
+                    <span className="block text-[9px] font-bold text-[#64748B] uppercase tracking-wider">
+                        UPI ID / VPA
+                    </span>
+                    <span className="font-mono text-[13px] sm:text-[14px] font-extrabold text-[#0F172A] select-all">
+                        {upiId}
+                    </span>
+                </div>
+                <button
+                    type="button"
+                    onClick={handleCopy}
+                    className="shrink-0 inline-flex items-center gap-1 rounded-lg bg-primary px-3 py-1.5 text-[11px] font-bold text-white shadow-xs hover:bg-[#1A2B6B] active:scale-95 transition-all"
+                >
+                    {copied ? "Copied! ✓" : "Copy UPI"}
+                </button>
+            </div>
+            <p className="text-[10px] text-[#64748B] mt-1.5 font-medium">
+                Tap button to copy UPI ID &amp; pay directly via GPay / PhonePe / Paytm
+            </p>
+        </div>
+    );
+}
+
+

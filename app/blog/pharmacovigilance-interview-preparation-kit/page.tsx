@@ -4,7 +4,7 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
 import { absUrl } from "@/lib/site";
-import { CountdownTimer, DynamicPriceHeader, DynamicLinkedInBox, DynamicCTAButton, CopyEmailBox } from "./CountdownTimer";
+import { CountdownTimer, DynamicPriceHeader, DynamicLinkedInBox, DynamicCTAButton, CopyEmailBox, CopyUpiBox } from "./CountdownTimer";
 import {
     BookOpen, CheckCircle2, FileText, GraduationCap, Shield,
     Star, Clock, Layers, Brain, ClipboardList, AlertTriangle,
