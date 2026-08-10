@@ -407,6 +407,8 @@ export default function PVKitBlogPage() {
                                             priority
                                         />
                                     </div>
+                                    
+                                    <CopyUpiBox />
 
                                     {/* UPI apps */}
                                     <div className="flex items-center justify-center gap-2 mt-4 flex-wrap">
