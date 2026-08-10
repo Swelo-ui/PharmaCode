@@ -5,24 +5,42 @@ import { Clock, Flame, TrendingUp, Sparkles, ExternalLink, AlertCircle } from "l
 
 const LINKEDIN_POST_URL = "https://www.linkedin.com/posts/pharmacode-edu_pharmacovigilance-pharmajobs-pharmacareers-activity-7491846601469173760-IEc3?utm_source=share&utm_medium=member_android&rcm=ACoAAFJJusgB3neGi-tKhJzWlgrA6W4nkyJxXH4";
 
+// 2 Hours 45 Minutes timer duration in milliseconds (9900000 ms)
+const DURATION_MS = (2 * 60 * 60 + 45 * 60) * 1000;
+
 function useCountdown() {
-    const [timeLeft, setTimeLeft] = useState({ hours: 5, minutes: 42, seconds: 18 });
+    const [timeLeft, setTimeLeft] = useState({ hours: 2, minutes: 45, seconds: 0 });
     const [isExpired, setIsExpired] = useState(false);
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
         setMounted(true);
-        const getNextMidnight = () => {
-            const now = new Date();
-            const end = new Date(now);
-            end.setHours(23, 59, 59, 999);
-            return end.getTime();
+
+        const getTargetTime = () => {
+            const STORAGE_KEY = "pv_kit_offer_expiry_v1";
+            try {
+                const savedTarget = localStorage.getItem(STORAGE_KEY);
+                if (savedTarget) {
+                    const parsed = parseInt(savedTarget, 10);
+                    if (!isNaN(parsed)) return parsed;
+                }
+            } catch {
+                // fallback if localStorage fails
+            }
+
+            const newTarget = Date.now() + DURATION_MS;
+            try {
+                localStorage.setItem(STORAGE_KEY, newTarget.toString());
+            } catch {
+                // fallback
+            }
+            return newTarget;
         };
 
-        const target = getNextMidnight();
+        const target = getTargetTime();
 
         const updateTimer = () => {
-            const now = new Date().getTime();
+            const now = Date.now();
             const diff = target - now;
 
             if (diff <= 0) {
@@ -53,15 +71,13 @@ export function CountdownTimer({ variant = "card" }: { variant?: "card" | "hero"
     const { timeLeft, isExpired, mounted } = useCountdown();
     const formatNum = (num: number) => String(num).padStart(2, "0");
 
-    const currentPrice = isExpired ? "99" : "79";
-
     if (variant === "hero") {
         if (isExpired) {
             return (
                 <div className="fade-up inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-1.5 mb-5 flex-wrap">
                     <span className="pulse-dot w-2 h-2 rounded-full bg-[#F59E0B]" />
                     <span className="text-[12px] sm:text-[13px] font-semibold text-white/90">
-                        ⚡ Current Price — ₹99 · Follow us on LinkedIn for exclusive discounts
+                        ⚡ Launch Offer Expired — Standard Price ₹99 Active
                     </span>
                 </div>
             );
@@ -70,7 +86,7 @@ export function CountdownTimer({ variant = "card" }: { variant?: "card" | "hero"
             <div className="fade-up inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-1.5 mb-5 flex-wrap">
                 <span className="pulse-dot w-2 h-2 rounded-full bg-[#EF4444]" />
                 <span className="text-[12px] sm:text-[13px] font-semibold text-white/90">
-                    🔥 Launch Price ₹79 Ends In:
+                    🔥 ₹79 Launch Price Ends In:
                 </span>
                 {mounted ? (
                     <div className="flex items-center gap-1 font-mono font-bold text-[#FCA5A5] text-[12px] sm:text-[13px] bg-black/20 px-2 py-0.5 rounded-md">
@@ -79,7 +95,7 @@ export function CountdownTimer({ variant = "card" }: { variant?: "card" | "hero"
                         <span>{formatNum(timeLeft.seconds)}s</span>
                     </div>
                 ) : (
-                    <span className="font-mono text-[#FCA5A5] text-[12px]">05h:42m:18s</span>
+                    <span className="font-mono text-[#FCA5A5] text-[12px]">02h:45m:00s</span>
                 )}
             </div>
         );
@@ -93,7 +109,7 @@ export function CountdownTimer({ variant = "card" }: { variant?: "card" | "hero"
             <div className="bg-[#FEF3C7] border-b border-[#FDE68A] px-4 py-3 text-center">
                 <div className="flex items-center justify-center gap-1.5 text-[#92400E] font-display text-[12px] sm:text-[13px] font-black mb-0.5">
                     <AlertCircle size={15} className="text-[#D97706] shrink-0" />
-                    <span>LAUNCH OFFER HAS ENDED — PRICE IS NOW ₹99</span>
+                    <span>₹79 LAUNCH OFFER EXPIRED — CURRENT PRICE IS ₹99</span>
                 </div>
                 <p className="font-sans text-[11px] sm:text-[12px] text-[#A16207] font-semibold">
                     Follow PharmaCode on LinkedIn to get notified about future exclusive discounts!
@@ -106,28 +122,28 @@ export function CountdownTimer({ variant = "card" }: { variant?: "card" | "hero"
         <div className="bg-[#FFF1F2] border-b border-[#FECDD3] px-4 py-3 text-center">
             <div className="flex items-center justify-center gap-1.5 text-[#9F1239] font-display text-[12px] sm:text-[13px] font-black mb-1">
                 <Flame size={15} className="text-[#E11D48] animate-bounce shrink-0" />
-                <span>LIMITED TIME OFFER — LAUNCH PRICE ₹79</span>
+                <span>LIMITED TIME LAUNCH OFFER — ₹79 ONLY</span>
             </div>
 
             {/* Timer boxes */}
             <div className="flex items-center justify-center gap-1.5 my-1.5">
                 <div className="flex flex-col items-center">
                     <span className="bg-[#E11D48] text-white font-mono text-[14px] sm:text-[16px] font-extrabold px-2 py-1 rounded-[6px] shadow-sm min-w-[34px] text-center">
-                        {mounted ? formatNum(timeLeft.hours) : "05"}
+                        {mounted ? formatNum(timeLeft.hours) : "02"}
                     </span>
                     <span className="text-[9px] font-bold text-[#9F1239] uppercase mt-0.5">Hours</span>
                 </div>
                 <span className="font-bold text-[#E11D48] text-[16px] -mt-3.5">:</span>
                 <div className="flex flex-col items-center">
                     <span className="bg-[#E11D48] text-white font-mono text-[14px] sm:text-[16px] font-extrabold px-2 py-1 rounded-[6px] shadow-sm min-w-[34px] text-center">
-                        {mounted ? formatNum(timeLeft.minutes) : "42"}
+                        {mounted ? formatNum(timeLeft.minutes) : "45"}
                     </span>
                     <span className="text-[9px] font-bold text-[#9F1239] uppercase mt-0.5">Mins</span>
                 </div>
                 <span className="font-bold text-[#E11D48] text-[16px] -mt-3.5">:</span>
                 <div className="flex flex-col items-center">
                     <span className="bg-[#E11D48] text-white font-mono text-[14px] sm:text-[16px] font-extrabold px-2 py-1 rounded-[6px] shadow-sm min-w-[34px] text-center">
-                        {mounted ? formatNum(timeLeft.seconds) : "18"}
+                        {mounted ? formatNum(timeLeft.seconds) : "00"}
                     </span>
                     <span className="text-[9px] font-bold text-[#9F1239] uppercase mt-0.5">Secs</span>
                 </div>
@@ -135,7 +151,7 @@ export function CountdownTimer({ variant = "card" }: { variant?: "card" | "hero"
 
             <p className="font-sans text-[11px] sm:text-[12px] text-[#BE123C] font-semibold flex items-center justify-center gap-1 mt-1 flex-wrap">
                 <TrendingUp size={13} className="shrink-0" />
-                <span>Special ₹79 price is <strong className="underline">exclusive for LinkedIn Followers</strong> (₹99 for non-followers)</span>
+                <span>₹79 launch price is <strong className="underline">exclusive for LinkedIn Followers</strong> (₹99 after timer ends)</span>
             </p>
         </div>
     );
@@ -153,7 +169,7 @@ export function DynamicPriceHeader() {
                 <div className="flex items-center justify-center gap-2 mb-1 flex-wrap">
                     <span className="text-[13px] text-white/60 line-through font-sans">₹199 Regular</span>
                     <span className="text-[13px] text-white/80 line-through font-sans">₹79 Expired</span>
-                    <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-[11px] font-black text-white">CURRENT PRICE</span>
+                    <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-[11px] font-black text-white">REGULAR DISCOUNT PRICE</span>
                 </div>
                 <div className="font-display text-[38px] sm:text-[44px] font-black text-white leading-none my-1">
                     ₹99
@@ -167,7 +183,7 @@ export function DynamicPriceHeader() {
         <div className="bg-gradient-to-r from-[#4C6EF5] to-[#7B9BF7] px-6 py-5 text-center">
             <div className="flex items-center justify-center gap-2 mb-1 flex-wrap">
                 <span className="text-[13px] text-white/60 line-through font-sans">₹199 Regular</span>
-                <span className="text-[13px] text-white/80 line-through font-sans">₹99 Non-Followers</span>
+                <span className="text-[13px] text-white/80 line-through font-sans">₹99 Standard</span>
                 <span className="rounded-full bg-[#EF4444] px-2.5 py-0.5 text-[11px] font-black text-white animate-pulse">FOLLOWERS LAUNCH PRICE</span>
             </div>
             <div className="font-display text-[38px] sm:text-[44px] font-black text-white leading-none my-1">
@@ -189,10 +205,10 @@ export function DynamicLinkedInBox() {
             <div className="bg-[#FEF3C7] border-b border-[#FDE68A] px-5 py-3.5 text-center">
                 <div className="flex items-center justify-center gap-1.5 text-[#92400E] font-display text-[12px] sm:text-[13px] font-extrabold mb-1">
                     <AlertCircle size={14} className="text-[#D97706] shrink-0" />
-                    <span>Launch offer has ended. Current price is ₹99.</span>
+                    <span>Launch offer ₹79 has expired. Current price is ₹99.</span>
                 </div>
                 <p className="font-sans text-[11px] sm:text-[12px] text-[#A16207] leading-[1.5]">
-                    Follow PharmaCode on LinkedIn to get notified about upcoming exclusive discounts and offers.
+                    Follow PharmaCode on LinkedIn to get notified about future special discounts.
                 </p>
                 <a
                     href={LINKEDIN_POST_URL}
