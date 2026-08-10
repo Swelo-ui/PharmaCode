@@ -53,6 +53,12 @@ const staticRoutes: MetadataRoute.Sitemap = [
     changeFrequency: "yearly",
     priority: 0.3,
   },
+  {
+    url: `${BASE_URL}/blog/pharmacovigilance-interview-preparation-kit/`,
+    lastModified: new Date("2026-08-10"),
+    changeFrequency: "monthly",
+    priority: 0.85,
+  },
 ];
 
 // ─── 2. SEMESTER LANDING PAGES ───────────────────────────────

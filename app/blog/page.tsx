@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
 import { absUrl } from "@/lib/site";
-import { PenLine, ArrowRight } from "lucide-react";
+import { PenLine, ArrowRight, Sparkles } from "lucide-react";
 
 export const metadata: Metadata = {
     title: "Pharmacy Study Tips, Syllabus Guides & Career Advice — Blog",
@@ -21,6 +22,8 @@ export const metadata: Metadata = {
         "pharmacy career advice India",
         "B.Pharm semester 4 internship template",
         "pharmacy student notes updates",
+        "pharmacovigilance interview preparation",
+        "PV interview guide PDF",
     ],
     openGraph: {
         title: "PharmaCode Blog — Pharmacy Study Guides & Career Tips",
@@ -30,7 +33,24 @@ export const metadata: Metadata = {
     },
 };
 
-const POSTS = [
+const POSTS: {
+    tag: string;
+    title: string;
+    date: string;
+    color: string;
+    bg: string;
+    href?: string;
+    isNew?: boolean;
+}[] = [
+    {
+        tag: "🔥 PV Interview Kit",
+        title: "Pharmacovigilance — Complete Guide & Interview Preparation Kit (44 Pages)",
+        date: "Aug 2026",
+        color: "#DC2626",
+        bg: "linear-gradient(135deg, #FEF2F2, #FFF1F2, #EEF2FF)",
+        href: "/blog/pharmacovigilance-interview-preparation-kit/",
+        isNew: true,
+    },
     {
         tag: "Syllabus Guide",
         title: "B.Pharm NEP 2020 vs Old Curriculum — Complete Comparison",
@@ -95,43 +115,63 @@ export default function BlogPage() {
             </p>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {POSTS.map((p, i) => (
-                    <article
-                        key={i}
-                        className={`fade-up fade-up-${Math.min(i + 1, 8)} lift flex flex-col justify-between overflow-hidden rounded-[16px] border border-[#E8EDFF] bg-white`}
-                    >
-                        <div>
-                            <div className="px-[18px] pb-3.5 pt-5" style={{ background: p.bg }}>
-                                <span
-                                    className="rounded-md px-2.5 py-[3px] text-[10px] sm:text-[11px] font-bold"
-                                    style={{
-                                        background: `${p.color}22`,
-                                        color: p.color,
-                                    }}
-                                >
-                                    {p.tag}
-                                </span>
-                            </div>
-                            <div className="px-[18px] pt-4">
-                                <h3 className="mb-2.5 font-display text-[14px] sm:text-[15px] font-extrabold leading-tight text-primary line-clamp-2" style={{ minHeight: "2.5rem" }}>
-                                    {p.title}
-                                </h3>
-                            </div>
-                        </div>
-                        <div className="px-[18px] pb-[18px] pt-2">
-                            <div className="flex flex-wrap items-center justify-between gap-2">
-                                <span className="text-[11px] sm:text-[12px] text-[#9CA3AF]">{p.date}</span>
-                                <button
-                                    type="button"
-                                    className="inline-flex items-center gap-1.5 rounded-lg border-[1.5px] bg-transparent px-3.5 py-1.5 text-[11px] sm:text-[12px] font-bold transition-all duration-150 hover:bg-[#F8FAFF]"
-                                    style={{ borderColor: p.color, color: p.color }}
-                                >
-                                    Read <ArrowRight size={12} strokeWidth={2.5} />
-                                </button>
-                            </div>
-                        </div>
-                    </article>
-                ))}
+                {POSTS.map((p, i) => {
+                    const CardWrapper = p.href ? Link : "div";
+                    const wrapperProps = p.href ? { href: p.href } : {};
+
+                    return (
+                        <article
+                            key={i}
+                            className={`fade-up fade-up-${Math.min(i + 1, 8)} lift flex flex-col justify-between overflow-hidden rounded-[16px] border bg-white ${p.isNew ? "border-[#FCA5A5] ring-2 ring-[#FCA5A5]/30 shadow-lg" : "border-[#E8EDFF]"}`}
+                        >
+                            {/* @ts-expect-error polymorphic wrapper */}
+                            <CardWrapper {...wrapperProps} className={p.href ? "block" : ""}>
+                                <div>
+                                    <div
+                                        className="px-[18px] pb-3.5 pt-5 relative"
+                                        style={{ background: p.bg }}
+                                    >
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                            <span
+                                                className="rounded-md px-2.5 py-[3px] text-[10px] sm:text-[11px] font-bold"
+                                                style={{
+                                                    background: `${p.color}22`,
+                                                    color: p.color,
+                                                }}
+                                            >
+                                                {p.tag}
+                                            </span>
+                                            {p.isNew && (
+                                                <span className="inline-flex items-center gap-1 rounded-full bg-[#DC2626] px-2 py-[2px] text-[9px] font-bold text-white uppercase tracking-wider">
+                                                    <Sparkles size={9} strokeWidth={2.5} /> New
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="px-[18px] pt-4">
+                                        <h3
+                                            className="mb-2.5 font-display text-[14px] sm:text-[15px] font-extrabold leading-tight text-primary line-clamp-2"
+                                            style={{ minHeight: "2.5rem" }}
+                                        >
+                                            {p.title}
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div className="px-[18px] pb-[18px] pt-2">
+                                    <div className="flex flex-wrap items-center justify-between gap-2">
+                                        <span className="text-[11px] sm:text-[12px] text-[#9CA3AF]">{p.date}</span>
+                                        <span
+                                            className="inline-flex items-center gap-1.5 rounded-lg border-[1.5px] bg-transparent px-3.5 py-1.5 text-[11px] sm:text-[12px] font-bold transition-all duration-150 hover:bg-[#F8FAFF]"
+                                            style={{ borderColor: p.color, color: p.color }}
+                                        >
+                                            {p.href ? "View" : "Read"} <ArrowRight size={12} strokeWidth={2.5} />
+                                        </span>
+                                    </div>
+                                </div>
+                            </CardWrapper>
+                        </article>
+                    );
+                })}
             </div>
         </div>
     );
