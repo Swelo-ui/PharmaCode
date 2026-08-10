@@ -5,43 +5,20 @@ import { Clock, Flame, TrendingUp, Sparkles, ExternalLink, AlertCircle } from "l
 
 const LINKEDIN_POST_URL = "https://www.linkedin.com/posts/pharmacode-edu_pharmacovigilance-pharmajobs-pharmacareers-activity-7491846601469173760-IEc3?utm_source=share&utm_medium=member_android&rcm=ACoAAFJJusgB3neGi-tKhJzWlgrA6W4nkyJxXH4";
 
-// 2 Hours 45 Minutes timer duration in milliseconds (9900000 ms)
-const DURATION_MS = (2 * 60 * 60 + 45 * 60) * 1000;
+// Fixed Expiry: August 11, 2026 at 01:00:00 AM IST
+const OFFER_EXPIRY_TIMESTAMP = new Date("2026-08-11T01:00:00+05:30").getTime();
 
 function useCountdown() {
-    const [timeLeft, setTimeLeft] = useState({ hours: 2, minutes: 45, seconds: 0 });
+    const [timeLeft, setTimeLeft] = useState({ hours: 13, minutes: 36, seconds: 0 });
     const [isExpired, setIsExpired] = useState(false);
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
         setMounted(true);
 
-        const getTargetTime = () => {
-            const STORAGE_KEY = "pv_kit_offer_expiry_v1";
-            try {
-                const savedTarget = localStorage.getItem(STORAGE_KEY);
-                if (savedTarget) {
-                    const parsed = parseInt(savedTarget, 10);
-                    if (!isNaN(parsed)) return parsed;
-                }
-            } catch {
-                // fallback if localStorage fails
-            }
-
-            const newTarget = Date.now() + DURATION_MS;
-            try {
-                localStorage.setItem(STORAGE_KEY, newTarget.toString());
-            } catch {
-                // fallback
-            }
-            return newTarget;
-        };
-
-        const target = getTargetTime();
-
         const updateTimer = () => {
             const now = Date.now();
-            const diff = target - now;
+            const diff = OFFER_EXPIRY_TIMESTAMP - now;
 
             if (diff <= 0) {
                 setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
@@ -50,7 +27,7 @@ function useCountdown() {
             }
 
             setIsExpired(false);
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const hours = Math.floor(diff / (1000 * 60 * 60));
             const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((diff % (1000 * 60)) / 1000);
             setTimeLeft({ hours, minutes, seconds });
@@ -86,7 +63,7 @@ export function CountdownTimer({ variant = "card" }: { variant?: "card" | "hero"
             <div className="fade-up inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-1.5 mb-5 flex-wrap">
                 <span className="pulse-dot w-2 h-2 rounded-full bg-[#EF4444]" />
                 <span className="text-[12px] sm:text-[13px] font-semibold text-white/90">
-                    🔥 ₹79 Launch Price Ends In:
+                    🔥 ₹79 Launch Price Ends Tonight (1 AM):
                 </span>
                 {mounted ? (
                     <div className="flex items-center gap-1 font-mono font-bold text-[#FCA5A5] text-[12px] sm:text-[13px] bg-black/20 px-2 py-0.5 rounded-md">
@@ -95,7 +72,7 @@ export function CountdownTimer({ variant = "card" }: { variant?: "card" | "hero"
                         <span>{formatNum(timeLeft.seconds)}s</span>
                     </div>
                 ) : (
-                    <span className="font-mono text-[#FCA5A5] text-[12px]">02h:45m:00s</span>
+                    <span className="font-mono text-[#FCA5A5] text-[12px]">13h:36m:00s</span>
                 )}
             </div>
         );
@@ -109,7 +86,7 @@ export function CountdownTimer({ variant = "card" }: { variant?: "card" | "hero"
             <div className="bg-[#FEF3C7] border-b border-[#FDE68A] px-4 py-3 text-center">
                 <div className="flex items-center justify-center gap-1.5 text-[#92400E] font-display text-[12px] sm:text-[13px] font-black mb-0.5">
                     <AlertCircle size={15} className="text-[#D97706] shrink-0" />
-                    <span>₹79 LAUNCH OFFER EXPIRED — CURRENT PRICE IS ₹99</span>
+                    <span>LAUNCH OFFER HAS ENDED — CURRENT PRICE IS ₹99</span>
                 </div>
                 <p className="font-sans text-[11px] sm:text-[12px] text-[#A16207] font-semibold">
                     Follow PharmaCode on LinkedIn to get notified about future exclusive discounts!
@@ -122,21 +99,21 @@ export function CountdownTimer({ variant = "card" }: { variant?: "card" | "hero"
         <div className="bg-[#FFF1F2] border-b border-[#FECDD3] px-4 py-3 text-center">
             <div className="flex items-center justify-center gap-1.5 text-[#9F1239] font-display text-[12px] sm:text-[13px] font-black mb-1">
                 <Flame size={15} className="text-[#E11D48] animate-bounce shrink-0" />
-                <span>LIMITED TIME LAUNCH OFFER — ₹79 ONLY</span>
+                <span>LIMITED TIME LAUNCH OFFER — ₹79 ONLY (ENDS AT 1 AM TONIGHT)</span>
             </div>
 
             {/* Timer boxes */}
             <div className="flex items-center justify-center gap-1.5 my-1.5">
                 <div className="flex flex-col items-center">
                     <span className="bg-[#E11D48] text-white font-mono text-[14px] sm:text-[16px] font-extrabold px-2 py-1 rounded-[6px] shadow-sm min-w-[34px] text-center">
-                        {mounted ? formatNum(timeLeft.hours) : "02"}
+                        {mounted ? formatNum(timeLeft.hours) : "13"}
                     </span>
                     <span className="text-[9px] font-bold text-[#9F1239] uppercase mt-0.5">Hours</span>
                 </div>
                 <span className="font-bold text-[#E11D48] text-[16px] -mt-3.5">:</span>
                 <div className="flex flex-col items-center">
                     <span className="bg-[#E11D48] text-white font-mono text-[14px] sm:text-[16px] font-extrabold px-2 py-1 rounded-[6px] shadow-sm min-w-[34px] text-center">
-                        {mounted ? formatNum(timeLeft.minutes) : "45"}
+                        {mounted ? formatNum(timeLeft.minutes) : "36"}
                     </span>
                     <span className="text-[9px] font-bold text-[#9F1239] uppercase mt-0.5">Mins</span>
                 </div>
@@ -151,7 +128,7 @@ export function CountdownTimer({ variant = "card" }: { variant?: "card" | "hero"
 
             <p className="font-sans text-[11px] sm:text-[12px] text-[#BE123C] font-semibold flex items-center justify-center gap-1 mt-1 flex-wrap">
                 <TrendingUp size={13} className="shrink-0" />
-                <span>₹79 launch price is <strong className="underline">exclusive for LinkedIn Followers</strong> (₹99 after timer ends)</span>
+                <span>₹79 launch price valid till 1 AM tonight for LinkedIn Followers (₹99 afterwards)</span>
             </p>
         </div>
     );
@@ -230,7 +207,7 @@ export function DynamicLinkedInBox() {
                 <span>₹79 Special Price is Exclusive for LinkedIn Followers!</span>
             </div>
             <p className="font-sans text-[11px] sm:text-[12px] text-[#1E3A8A] leading-[1.5]">
-                Please note: The discounted ₹79 rate applies to PharmaCode LinkedIn followers <em>(follower status is cross-checked upon email verification)</em>. Non-followers pay ₹99.
+                Please note: The discounted ₹79 rate applies to PharmaCode LinkedIn followers <em>(follower status is cross-checked upon email verification)</em>. Non-followers pay ₹99. Offer valid till 1 AM tonight.
             </p>
             <a
                 href={LINKEDIN_POST_URL}
