@@ -4,7 +4,7 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
 import { absUrl } from "@/lib/site";
-import { CountdownTimer } from "./CountdownTimer";
+import { CountdownTimer, DynamicPriceHeader, DynamicLinkedInBox, DynamicCTAButton } from "./CountdownTimer";
 import {
     BookOpen, CheckCircle2, FileText, GraduationCap, Shield,
     Star, Clock, Layers, Brain, ClipboardList, AlertTriangle,
@@ -140,14 +140,7 @@ export default function PVKitBlogPage() {
 
                     {/* CTA buttons */}
                     <div className="fade-up fade-up-4 flex flex-wrap gap-3 items-center">
-                        <a
-                            href="#get-guide"
-                            className="btn-press inline-flex items-center gap-2 rounded-[12px] bg-white px-6 py-3 text-[14px] sm:text-[15px] font-bold text-primary shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02]"
-                        >
-                            <Sparkles size={18} strokeWidth={2} className="text-secondary" />
-                            Get the Guide — ₹79
-                            <ArrowRight size={16} strokeWidth={2.5} />
-                        </a>
+                        <DynamicCTAButton variant="hero" />
                         <a
                             href={LINKEDIN_POST_URL}
                             target="_blank"
@@ -393,38 +386,11 @@ export default function PVKitBlogPage() {
                                 {/* Countdown Urgency Banner */}
                                 <CountdownTimer variant="card" />
 
-                                {/* Price header */}
-                                <div className="bg-gradient-to-r from-[#4C6EF5] to-[#7B9BF7] px-6 py-5 text-center">
-                                    <div className="flex items-center justify-center gap-2 mb-1 flex-wrap">
-                                        <span className="text-[13px] text-white/60 line-through font-sans">₹199 Regular</span>
-                                        <span className="text-[13px] text-white/80 line-through font-sans">₹99 Non-Followers</span>
-                                        <span className="rounded-full bg-[#EF4444] px-2.5 py-0.5 text-[11px] font-black text-white animate-pulse">FOLLOWERS LAUNCH PRICE</span>
-                                    </div>
-                                    <div className="font-display text-[38px] sm:text-[44px] font-black text-white leading-none my-1">
-                                        ₹79
-                                    </div>
-                                    <p className="text-[12px] text-white/80 font-sans">One-time payment · Complete 44-page PDF guide</p>
-                                </div>
+                                {/* Dynamic Price header — auto switches ₹79→₹99 on expiry */}
+                                <DynamicPriceHeader />
 
-                                {/* LinkedIn Follower Price Condition Box */}
-                                <div className="bg-[#EFF6FF] border-b border-[#BFDBFE] px-5 py-3.5 text-center">
-                                    <div className="flex items-center justify-center gap-1.5 text-[#1E40AF] font-display text-[12px] sm:text-[13px] font-extrabold mb-1">
-                                        <Sparkles size={14} className="text-[#2563EB] shrink-0" />
-                                        <span>₹79 Special Price is Exclusive for LinkedIn Followers!</span>
-                                    </div>
-                                    <p className="font-sans text-[11px] sm:text-[12px] text-[#1E3A8A] leading-[1.5]">
-                                        Please note: The discounted ₹79 rate applies to PharmaCode LinkedIn followers <em>(follower status is cross-checked upon email verification)</em>. Non-followers pay ₹99.
-                                    </p>
-                                    <a
-                                        href={LINKEDIN_POST_URL}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="btn-press inline-flex items-center gap-1.5 mt-2 rounded-full bg-[#0A66C2] px-3.5 py-1 text-[11px] font-bold text-white shadow-sm hover:bg-[#084e96] transition-colors"
-                                    >
-                                        <ExternalLink size={12} />
-                                        Follow PharmaCode on LinkedIn ↗
-                                    </a>
-                                </div>
+                                {/* Dynamic LinkedIn Follower Box — auto switches on expiry */}
+                                <DynamicLinkedInBox />
 
                                 {/* QR code */}
                                 <div className="p-6 text-center">
