@@ -4,7 +4,7 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
 import { absUrl } from "@/lib/site";
-import { CountdownTimer, DynamicPriceHeader, DynamicLinkedInBox, DynamicCTAButton } from "./CountdownTimer";
+import { CountdownTimer, DynamicPriceHeader, DynamicLinkedInBox, DynamicCTAButton, CopyEmailBox } from "./CountdownTimer";
 import {
     BookOpen, CheckCircle2, FileText, GraduationCap, Shield,
     Star, Clock, Layers, Brain, ClipboardList, AlertTriangle,
@@ -77,7 +77,7 @@ const FEATURES = [
 /* ── How to buy steps ── */
 const STEPS = [
     { num: "1", title: "Scan the QR Code", desc: "Use any UPI app — GPay, PhonePe, Paytm, BHIM or any other." },
-    { num: "2", title: "Pay ₹79", desc: "One-time launch price. No subscription. No recurring charges." },
+    { num: "2", title: "Pay ₹99", desc: "Standard price (₹79 launch price for LinkedIn Followers)." },
     { num: "3", title: "Send Screenshot", desc: "Email the payment screenshot to the address shown below." },
     { num: "4", title: "Receive Your PDF", desc: "You'll receive the complete 44-page guide on your email within hours." },
 ];
@@ -425,48 +425,39 @@ export default function PVKitBlogPage() {
                                 <div className="h-px bg-[#E8EDFF] mx-6" />
 
                                 {/* Email instructions */}
-                                <div className="p-6">
-                                    <div className="rounded-[14px] bg-[#FFFBEB] border border-[#FDE68A] p-4 mb-4">
-                                        <div className="flex items-start gap-3">
-                                            <div className="shrink-0 w-8 h-8 rounded-[8px] bg-[#FEF3C7] flex items-center justify-center mt-0.5">
-                                                <Mail size={16} strokeWidth={2} className="text-[#D97706]" />
+                                <div className="p-4 sm:p-6 space-y-3.5">
+                                    <div className="rounded-[14px] bg-[#FFFBEB] border border-[#FDE68A] p-3.5 sm:p-4">
+                                        <div className="flex items-start gap-2.5 sm:gap-3">
+                                            <div className="shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-[8px] bg-[#FEF3C7] flex items-center justify-center mt-0.5">
+                                                <Mail size={15} strokeWidth={2} className="text-[#D97706]" />
                                             </div>
                                             <div>
-                                                <h4 className="font-display text-[13px] font-extrabold text-[#92400E] mb-1">
+                                                <h4 className="font-display text-[12px] sm:text-[13px] font-extrabold text-[#92400E] mb-0.5">
                                                     After Payment
                                                 </h4>
-                                                <p className="font-sans text-[12px] text-[#A16207] leading-[1.6]">
+                                                <p className="font-sans text-[11px] sm:text-[12px] text-[#A16207] leading-[1.5]">
                                                     Send your <strong>payment screenshot</strong> or <strong>transaction reference</strong> to
-                                                    the email below. Your complete PDF guide will be sent to your email within a few hours.
+                                                    the email below. Your complete PDF guide will be delivered within a few hours.
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="rounded-[12px] bg-[#F0F4FF] border border-[#DDE6FF] p-4 text-center">
-                                        <div className="flex items-center justify-center gap-2 mb-2">
-                                            <Mail size={16} strokeWidth={2} className="text-secondary" />
-                                            <span className="font-display text-[12px] font-bold text-[#6B7FA3] uppercase tracking-wider">
-                                                Send Screenshot To
-                                            </span>
-                                        </div>
-                                        <p className="font-display text-[16px] sm:text-[18px] font-black text-primary select-all">
-                                            pharmacode.connect@gmail.com
-                                        </p>
-                                    </div>
+                                    {/* Responsive Email Box with Instant Copy Button */}
+                                    <CopyEmailBox />
 
                                     {/* Mobile tip */}
-                                    <div className="mt-4 flex items-center gap-2 rounded-[10px] bg-[#F0FDF4] border border-[#BBF7D0] px-3 py-2.5">
+                                    <div className="flex items-center gap-2 rounded-[10px] bg-[#F0FDF4] border border-[#BBF7D0] p-2.5 sm:p-3">
                                         <Smartphone size={14} strokeWidth={2} className="text-[#15803D] shrink-0" />
-                                        <p className="font-sans text-[11px] text-[#15803D] leading-[1.4]">
-                                            <strong>Mobile users:</strong> Long-press the email above to copy, or take a payment screenshot and email it directly.
+                                        <p className="font-sans text-[10px] sm:text-[11px] text-[#15803D] leading-[1.4]">
+                                            <strong>Mobile users:</strong> Tap &apos;Copy Email&apos; above or long-press to copy the email address instantly.
                                         </p>
                                     </div>
                                 </div>
 
                                 {/* What you get */}
-                                <div className="bg-[#F9FAFB] px-6 py-5 border-t border-[#E8EDFF]">
-                                    <p className="font-display text-[12px] font-bold text-[#6B7FA3] uppercase tracking-wider mb-3">
+                                <div className="bg-[#F9FAFB] px-4 sm:px-6 py-4 sm:py-5 border-t border-[#E8EDFF]">
+                                    <p className="font-display text-[11px] sm:text-[12px] font-bold text-[#6B7FA3] uppercase tracking-wider mb-2.5">
                                         What you&apos;ll receive
                                     </p>
                                     <div className="space-y-2">
@@ -477,9 +468,9 @@ export default function PVKitBlogPage() {
                                             "Case studies & revision cheat sheet",
                                             "Resume & mock interview strategy",
                                         ].map((item) => (
-                                            <div key={item} className="flex items-center gap-2">
-                                                <ChevronRight size={12} strokeWidth={2.5} className="text-[#10B981] shrink-0" />
-                                                <span className="font-sans text-[12px] sm:text-[13px] text-[#374151]">{item}</span>
+                                            <div key={item} className="flex items-start gap-2">
+                                                <ChevronRight size={12} strokeWidth={2.5} className="text-[#10B981] shrink-0 mt-0.5" />
+                                                <span className="font-sans text-[11px] sm:text-[13px] text-[#374151] leading-[1.4]">{item}</span>
                                             </div>
                                         ))}
                                     </div>
