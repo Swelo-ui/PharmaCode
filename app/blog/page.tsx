@@ -43,6 +43,15 @@ const POSTS: {
     isNew?: boolean;
 }[] = [
     {
+        tag: "🎓 Free PV Courses",
+        title: "10 Free Pharmacovigilance Courses with Certificates — WHO-UMC Platform",
+        date: "Aug 2026",
+        color: "#059669",
+        bg: "linear-gradient(135deg, #ECFDF5, #F0FDF4, #EEF2FF)",
+        href: "/blog/free-pharmacovigilance-courses-who-umc/",
+        isNew: true,
+    },
+    {
         tag: "🔥 PV Interview Kit",
         title: "Pharmacovigilance — Complete Guide & Interview Preparation Kit (44 Pages)",
         date: "Aug 2026",

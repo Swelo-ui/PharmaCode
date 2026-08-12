@@ -59,6 +59,12 @@ const staticRoutes: MetadataRoute.Sitemap = [
     changeFrequency: "monthly",
     priority: 0.85,
   },
+  {
+    url: `${BASE_URL}/blog/free-pharmacovigilance-courses-who-umc/`,
+    lastModified: new Date("2026-08-12"),
+    changeFrequency: "monthly",
+    priority: 0.85,
+  },
 ];
 
 // ─── 2. SEMESTER LANDING PAGES ───────────────────────────────

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
@@ -262,6 +263,34 @@ export default function PVKitBlogPage() {
                             <ExternalLink size={14} strokeWidth={2.5} />
                             View Demo PDF on LinkedIn ↗
                         </a>
+                    </div>
+                </div>
+            </section>
+
+            {/* ══════════════ SMART CROSS-LINKING CALLOUT BANNER ══════════════ */}
+            <section className="mx-auto max-w-[960px] px-5 sm:px-8 py-6">
+                <div className="rounded-[20px] bg-gradient-to-r from-[#0F1D5C] via-[#1E3A8A] to-[#2563EB] p-5 sm:p-7 text-white shadow-lg relative overflow-hidden">
+                    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5 relative z-10">
+                        <div className="space-y-2 max-w-[620px]">
+                            <div className="inline-flex items-center gap-2 rounded-full bg-[#10B981] px-3 py-1 text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-white">
+                                <GraduationCap size={13} /> Free Certification Opportunity
+                            </div>
+                            <h3 className="font-display text-[18px] sm:text-[22px] font-black text-white leading-tight">
+                                Want 100% Free PV Certificates for Your Resume?
+                            </h3>
+                            <p className="font-sans text-[12px] sm:text-[13px] text-white/80 leading-[1.6]">
+                                Check out our guide to <strong className="text-white">10 Free Pharmacovigilance Courses with Certificates</strong> offered by the official <strong className="text-white">Uppsala Monitoring Centre (WHO-UMC)</strong> learning portal!
+                            </p>
+                        </div>
+                        <div className="shrink-0 w-full md:w-auto">
+                            <Link
+                                href="/blog/free-pharmacovigilance-courses-who-umc/"
+                                className="btn-press w-full md:w-auto inline-flex items-center justify-center gap-2 rounded-[12px] bg-[#6EE7B7] px-5 py-3 text-[13px] font-black text-[#064E3B] hover:bg-[#A7F3D0] transition-all duration-200 shadow-md"
+                            >
+                                <span>Explore Free WHO-UMC Courses</span>
+                                <ArrowRight size={16} strokeWidth={2.5} />
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </section>
