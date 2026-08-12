@@ -44,10 +44,10 @@ const WHO_UMC_CATALOG_URL = "https://learning.who-umc.org/visitor_class_catalog/
 const PV_INTERVIEW_KIT_URL = "/blog/pharmacovigilance-interview-preparation-kit/";
 
 const PROMO_DEMO_PAGES = [
-    { num: "01", title: "Cover & TOC", url: "https://res.cloudinary.com/dhf7udqhi/image/upload/v1786545645/752bca76-c59a-47b2-ae88-81fb5a43bc39.png", subtitle: "Full Sequence" },
-    { num: "04", title: "PV Foundations", url: "https://res.cloudinary.com/dhf7udqhi/image/upload/v1786545757/a15d574c-aa94-43e6-9234-0a4f120c9cd4.png", subtitle: "Definitions & Scope" },
-    { num: "06", title: "ICSR Processing", url: "https://res.cloudinary.com/dhf7udqhi/image/upload/v1786545872/d453f2ad-1c12-468f-a53c-6491e60d679d.png", subtitle: "Case Workflow" },
-    { num: "07", title: "Signal Flowchart", url: "https://res.cloudinary.com/dhf7udqhi/image/upload/v1786545890/ecb6f522-8128-46c7-a795-750bbb2d9f06.png", subtitle: "Detection Steps" },
+    { num: "01", title: "Cover & TOC", url: "/blog/pv-kit/demo-01.png", subtitle: "Full Sequence" },
+    { num: "04", title: "PV Foundations", url: "/blog/pv-kit/demo-04.png", subtitle: "Definitions & Scope" },
+    { num: "06", title: "ICSR Processing", url: "/blog/pv-kit/demo-06.png", subtitle: "Case Workflow" },
+    { num: "07", title: "Signal Flowchart", url: "/blog/pv-kit/demo-07.png", subtitle: "Detection Steps" },
 ];
 
 /* ── Course list data ── */
