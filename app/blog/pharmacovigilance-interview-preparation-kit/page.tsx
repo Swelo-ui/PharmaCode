@@ -107,7 +107,7 @@ export default function PVKitBlogPage() {
 
                 <div className="mx-auto max-w-[960px] px-5 sm:px-8 pt-6 pb-10 sm:pt-10 sm:pb-14 relative z-10">
                     <div className="mb-4">
-                        <Breadcrumb items={breadcrumbs} />
+                        <Breadcrumb items={breadcrumbs} variant="light" />
                     </div>
 
                     {/* Countdown Timer Badge */}

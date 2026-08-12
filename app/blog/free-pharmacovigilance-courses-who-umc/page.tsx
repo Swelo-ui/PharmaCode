@@ -204,14 +204,19 @@ export default function FreePVCoursesPage() {
 
                 <div className="mx-auto max-w-[960px] px-4 sm:px-6 md:px-8 pt-6 pb-10 sm:pt-10 sm:pb-14 relative z-10">
                     <div className="mb-4">
-                        <Breadcrumb items={breadcrumbs} />
+                        <Breadcrumb items={breadcrumbs} variant="light" />
                     </div>
 
-                    {/* Verified Free Badge */}
-                    <div className="fade-up inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 px-3.5 py-1.5 mb-4 flex-wrap">
-                        <Sparkles size={14} className="text-[#34D399] animate-pulse" />
-                        <span className="text-[11px] sm:text-[12px] font-extrabold text-white uppercase tracking-wide">
-                            100% Free • Global Access • Verified Certificates 🏆
+                    {/* Verified Free Badges — Android & Mobile Screen Optimized */}
+                    <div className="fade-up flex flex-wrap items-center gap-2 mb-5">
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#10B981]/25 border border-[#10B981]/40 px-3.5 py-1 text-[11px] font-extrabold text-[#6EE7B7] uppercase tracking-wider shadow-sm">
+                            <Sparkles size={13} className="shrink-0 animate-pulse text-[#34D399]" /> 100% Free
+                        </span>
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 px-3.5 py-1 text-[11px] font-extrabold text-white/90 uppercase tracking-wider">
+                            <Globe size={13} className="text-[#93C5FD] shrink-0" /> Global Access
+                        </span>
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 px-3.5 py-1 text-[11px] font-extrabold text-white/90 uppercase tracking-wider">
+                            <Award size={13} className="text-[#FBBF24] shrink-0" /> Verified Certificates 🏆
                         </span>
                     </div>
 
