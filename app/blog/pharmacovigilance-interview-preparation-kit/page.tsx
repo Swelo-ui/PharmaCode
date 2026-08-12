@@ -5,6 +5,7 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
 import { absUrl } from "@/lib/site";
+import { ProtectedDemoGrid } from "@/components/ProtectedDemoGrid";
 import { CountdownTimer, DynamicPriceHeader, DynamicLinkedInBox, DynamicCTAButton, CopyEmailBox, CopyUpiBox } from "./CountdownTimer";
 import {
     BookOpen, CheckCircle2, FileText, GraduationCap, Shield,
@@ -63,6 +64,58 @@ const CHAPTERS = [
     { icon: MessageSquare, title: "Technical Interview Q&A", desc: "Detailed technical questions and model answers for pharmacovigilance roles.", color: "#D97706" },
     { icon: Target, title: "Scenario-Based & Case Studies", desc: "Real-world PV scenarios and case studies to test practical understanding.", color: "#9333EA" },
     { icon: Lightbulb, title: "Resume, Mock Interview & Revision", desc: "ATS-friendly resume tips, mock interview strategy and quick revision cheat sheet.", color: "#E11D48" },
+];
+
+/* ── Demo Preview Images Data ── */
+const DEMO_PAGES = [
+    {
+        num: "01",
+        title: "Cover & Positioning",
+        url: "https://res.cloudinary.com/dhf7udqhi/image/upload/v1786545645/752bca76-c59a-47b2-ae88-81fb5a43bc39.png",
+        subtitle: "Official Guide Cover & Positioning for Freshers",
+    },
+    {
+        num: "02",
+        title: "15-Chapter Table of Contents",
+        url: "https://res.cloudinary.com/dhf7udqhi/image/upload/v1786545673/26c0c7b4-8eb5-4582-b065-560ff197562b.png",
+        subtitle: "Structured sequence from PV basics to advanced Q&A",
+    },
+    {
+        num: "03",
+        title: "How to Use the Kit",
+        url: "https://res.cloudinary.com/dhf7udqhi/image/upload/v1786545741/40a4ff35-255a-4e9d-b718-e2e1ea24e3a2.png",
+        subtitle: "Maximizing your preparation for interviews",
+    },
+    {
+        num: "04",
+        title: "Chapter 01 — PV Foundations",
+        url: "https://res.cloudinary.com/dhf7udqhi/image/upload/v1786545757/a15d574c-aa94-43e6-9234-0a4f120c9cd4.png",
+        subtitle: "Core concepts, terminology & definitions",
+    },
+    {
+        num: "05",
+        title: "MedDRA & Signal Detection",
+        url: "https://res.cloudinary.com/dhf7udqhi/image/upload/v1786545776/245ee5a7-d59f-484e-817c-f4d4fc67cff7.png",
+        subtitle: "Hierarchy, coding conventions & signal management",
+    },
+    {
+        num: "06",
+        title: "ICSR & Case Processing",
+        url: "https://res.cloudinary.com/dhf7udqhi/image/upload/v1786545872/d453f2ad-1c12-468f-a53c-6491e60d679d.png",
+        subtitle: "Individual Case Safety Report workflow",
+    },
+    {
+        num: "07",
+        title: "Signal Management Flowchart",
+        url: "https://res.cloudinary.com/dhf7udqhi/image/upload/v1786545890/ecb6f522-8128-46c7-a795-750bbb2d9f06.png",
+        subtitle: "Visual flow of signal detection & validation",
+    },
+    {
+        num: "08",
+        title: "PV Databases & Software Tools",
+        url: "https://res.cloudinary.com/dhf7udqhi/image/upload/v1786546011/1c6bbf97-7d68-49a1-8950-e01af7c2480a.png",
+        subtitle: "Argus, ArisGlobal, Oracle AERS & database concepts",
+    },
 ];
 
 /* ── Feature pills ── */
@@ -263,6 +316,42 @@ export default function PVKitBlogPage() {
                             <ExternalLink size={14} strokeWidth={2.5} />
                             View Demo PDF on LinkedIn ↗
                         </a>
+                    </div>
+                </div>
+            </section>
+
+            {/* ══════════════ DEMO PDF PREVIEW SHOWCASE ══════════════ */}
+            <section id="demo-preview" className="bg-[#F8FAFC] py-10 sm:py-14 border-y border-[#E2E8F0] scroll-mt-[65px]">
+                <div className="mx-auto max-w-[960px] px-4 sm:px-6 md:px-8">
+                    <div className="text-center mb-8 sm:mb-10">
+                        <span className="inline-block rounded-md bg-[#EEF2FF] px-3 py-1 text-[11px] font-bold text-secondary mb-2.5 uppercase tracking-wider border border-[#C7D2FE]">
+                            👀 Inside Demo Preview
+                        </span>
+                        <h2 className="font-display text-[22px] sm:text-[30px] font-black text-primary leading-tight mb-2">
+                            Review Demo Pages Before Getting the Kit
+                        </h2>
+                        <p className="font-sans text-[13px] sm:text-[14px] text-[#64748B] max-w-[580px] mx-auto leading-[1.6]">
+                            Below are selected page previews from the actual 44-page Pharmacovigilance Kit. Tap any preview to jump to the download section.
+                        </p>
+                    </div>
+
+                    <ProtectedDemoGrid pages={DEMO_PAGES} targetHref="#get-guide" />
+
+                    {/* Burger vs Investment Psychology Box */}
+                    <div className="mt-10 rounded-[20px] bg-gradient-to-r from-[#FFF1F2] via-[#FFF7ED] to-[#FEF2F2] border border-[#FECDD3] p-6 sm:p-8 text-center max-w-[720px] mx-auto shadow-sm">
+                        <div className="w-12 h-12 rounded-full bg-[#FFE4E6] text-[#E11D48] font-display text-[22px] flex items-center justify-center mx-auto mb-3 shadow-sm">
+                            🍔
+                        </div>
+                        <h3 className="font-display text-[18px] sm:text-[22px] font-black text-[#9F1239] mb-2">
+                            Think About It This Way 👇
+                        </h3>
+                        <p className="font-sans text-[13px] sm:text-[14px] text-[#475569] leading-[1.75] mb-3">
+                            Sometimes we spend the price of a <strong className="text-[#9F1239]">burger</strong> on a single meal and forget about it the next day.
+                            Here, that same small spend unlocks a <strong className="text-primary">15-chapter structured learning resource</strong> that stays with you throughout your interview prep and early career!
+                        </p>
+                        <p className="font-display text-[13px] sm:text-[14px] font-extrabold text-primary">
+                            💡 Invest in something that stays useful long after the meal is over.
+                        </p>
                     </div>
                 </div>
             </section>

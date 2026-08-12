@@ -5,6 +5,7 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbSchema, faqSchema } from "@/lib/schema";
 import { absUrl } from "@/lib/site";
+import { ProtectedDemoGrid } from "@/components/ProtectedDemoGrid";
 import {
     BookOpen, CheckCircle2, GraduationCap, Shield,
     Clock, Globe, Award, Sparkles, ArrowRight, ArrowDown, ExternalLink,
@@ -41,6 +42,13 @@ export const metadata: Metadata = {
 
 const WHO_UMC_CATALOG_URL = "https://learning.who-umc.org/visitor_class_catalog/category/21580";
 const PV_INTERVIEW_KIT_URL = "/blog/pharmacovigilance-interview-preparation-kit/";
+
+const PROMO_DEMO_PAGES = [
+    { num: "01", title: "Cover & TOC", url: "https://res.cloudinary.com/dhf7udqhi/image/upload/v1786545645/752bca76-c59a-47b2-ae88-81fb5a43bc39.png", subtitle: "Full Sequence" },
+    { num: "04", title: "PV Foundations", url: "https://res.cloudinary.com/dhf7udqhi/image/upload/v1786545757/a15d574c-aa94-43e6-9234-0a4f120c9cd4.png", subtitle: "Definitions & Scope" },
+    { num: "06", title: "ICSR Processing", url: "https://res.cloudinary.com/dhf7udqhi/image/upload/v1786545872/d453f2ad-1c12-468f-a53c-6491e60d679d.png", subtitle: "Case Workflow" },
+    { num: "07", title: "Signal Flowchart", url: "https://res.cloudinary.com/dhf7udqhi/image/upload/v1786545890/ecb6f522-8128-46c7-a795-750bbb2d9f06.png", subtitle: "Detection Steps" },
+];
 
 /* ── Course list data ── */
 const COURSES = [
@@ -489,25 +497,39 @@ export default function FreePVCoursesPage() {
                 </div>
             </section>
 
-            {/* ══════════════ SECONDARY INTERNAL LINKING BOX ══════════════ */}
-            <section className="bg-[#EEF2FF] py-10">
-                <div className="mx-auto max-w-[960px] px-4 sm:px-6 md:px-8 text-center space-y-4">
-                    <span className="inline-block rounded-md bg-white px-3 py-1 text-[11px] font-bold text-secondary uppercase tracking-wider border border-[#C7D2FE]">
-                        💡 Smart Career Move
-                    </span>
-                    <h2 className="font-display text-[20px] sm:text-[26px] font-black text-primary max-w-[700px] mx-auto">
-                        Certificates Get You Noticed. <span className="text-secondary">Interview Prep Gets You Hired.</span>
-                    </h2>
-                    <p className="font-sans text-[13px] sm:text-[14px] text-[#4B5563] max-w-[620px] mx-auto leading-[1.7]">
-                        Having course certificates on your resume is great, but interviewers will test your practical understanding of ICSRs, MedDRA, Naranjo causality scale, and scenario-based case studies.
-                    </p>
-                    <div className="pt-2">
+            {/* ══════════════ PROMOTIONAL PV KIT DEMO PREVIEW SHOWCASE ══════════════ */}
+            <section className="bg-gradient-to-b from-[#F8FAFC] to-[#EEF2FF] py-10 sm:py-14 border-t border-[#E2E8F0]">
+                <div className="mx-auto max-w-[960px] px-4 sm:px-6 md:px-8">
+                    <div className="text-center mb-8">
+                        <span className="inline-block rounded-md bg-[#EF4444] px-3 py-1 text-[11px] font-bold text-white uppercase tracking-wider mb-2.5 shadow-sm">
+                            🚀 Enhance Your Learning
+                        </span>
+                        <h2 className="font-display text-[22px] sm:text-[28px] font-black text-primary leading-tight mb-2">
+                            Certificates Get You Noticed. <span className="text-secondary">Interview Prep Gets You Hired.</span>
+                        </h2>
+                        <p className="font-sans text-[13px] sm:text-[14px] text-[#64748B] max-w-[620px] mx-auto leading-[1.6]">
+                            Having course certificates on your resume is great, but interviewers will test your practical understanding of ICSRs, MedDRA, Naranjo causality scale, and case studies. Check out sample demo pages below:
+                        </p>
+                    </div>
+
+                    <div className="mb-8">
+                        <ProtectedDemoGrid pages={PROMO_DEMO_PAGES} variant="promo" targetHref={PV_INTERVIEW_KIT_URL} />
+                    </div>
+
+                    {/* Promotional Callout Card */}
+                    <div className="rounded-[20px] bg-gradient-to-r from-[#0F1D5C] via-[#1E3A8A] to-[#2563EB] p-6 sm:p-8 text-white text-center max-w-[760px] mx-auto shadow-xl relative overflow-hidden">
+                        <h3 className="font-display text-[18px] sm:text-[22px] font-black text-white mb-2">
+                            Get the 44-Page Pharmacovigilance Complete Guide & Kit
+                        </h3>
+                        <p className="font-sans text-[13px] sm:text-[14px] text-white/80 max-w-[600px] mx-auto leading-[1.6] mb-5">
+                            Covers 15 Chapters, 100+ Technical & HR Q&A, ICSR Case Processing Workflow, MedDRA Coding, Causality Assessment (WHO-UMC & Naranjo), and Revision Cheat Sheet!
+                        </p>
                         <Link
                             href={PV_INTERVIEW_KIT_URL}
-                            className="btn-press inline-flex items-center gap-2 rounded-[12px] bg-secondary px-6 py-3 text-[13px] sm:text-[14px] font-black text-white shadow-md hover:bg-[#3B5BDB] transition-all duration-200"
+                            className="btn-press inline-flex items-center gap-2 rounded-[12px] bg-[#6EE7B7] px-6 py-3 text-[13px] sm:text-[14px] font-black text-[#064E3B] hover:bg-[#A7F3D0] transition-all duration-200 shadow-md"
                         >
                             <BookOpen size={16} strokeWidth={2.5} />
-                            Get Pharmacovigilance Complete Guide (44 Pages PDF) →
+                            <span>See Complete PV Guide & Demo Pages →</span>
                         </Link>
                     </div>
                 </div>
