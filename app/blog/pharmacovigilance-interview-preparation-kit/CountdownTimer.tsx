@@ -51,28 +51,32 @@ export function CountdownTimer({ variant = "card" }: { variant?: "card" | "hero"
     if (variant === "hero") {
         if (isExpired) {
             return (
-                <div className="fade-up inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-1.5 mb-5 flex-wrap">
-                    <span className="pulse-dot w-2 h-2 rounded-full bg-[#F59E0B]" />
-                    <span className="text-[12px] sm:text-[13px] font-semibold text-white/90">
-                        ⚡ Launch Offer Expired — Standard Price ₹99 Active
+                <div className="fade-up flex flex-wrap items-center gap-2 mb-5">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F59E0B]/25 border border-[#F59E0B]/40 px-3.5 py-1 text-[11px] font-extrabold text-[#FCD34D] uppercase tracking-wider shadow-sm">
+                        <span className="w-2 h-2 rounded-full bg-[#F59E0B] animate-pulse" />
+                        ⚡ Standard Price Active
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 px-3.5 py-1 text-[11px] font-extrabold text-white/90 uppercase tracking-wider">
+                        Complete Guide — ₹99
                     </span>
                 </div>
             );
         }
         return (
-            <div className="fade-up inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-1.5 mb-5 flex-wrap">
-                <span className="pulse-dot w-2 h-2 rounded-full bg-[#EF4444]" />
-                <span className="text-[12px] sm:text-[13px] font-semibold text-white/90">
-                    🔥 ₹79 Launch Price Ends Tonight (1 AM):
+            <div className="fade-up flex flex-wrap items-center gap-2 mb-5">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#EF4444]/25 border border-[#EF4444]/40 px-3.5 py-1 text-[11px] font-extrabold text-[#FCA5A5] uppercase tracking-wider shadow-sm">
+                    <span className="w-2 h-2 rounded-full bg-[#EF4444] animate-ping" />
+                    🔥 ₹79 Launch Price Active
                 </span>
                 {mounted ? (
-                    <div className="flex items-center gap-1 font-mono font-bold text-[#FCA5A5] text-[12px] sm:text-[13px] bg-black/20 px-2 py-0.5 rounded-md">
-                        <span>{formatNum(timeLeft.hours)}h</span>:
-                        <span>{formatNum(timeLeft.minutes)}m</span>:
-                        <span>{formatNum(timeLeft.seconds)}s</span>
-                    </div>
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 px-3.5 py-1 text-[11px] font-extrabold text-white uppercase tracking-wider font-mono">
+                        <Clock size={12} className="text-[#FCA5A5]" />
+                        {formatNum(timeLeft.hours)}h {formatNum(timeLeft.minutes)}m {formatNum(timeLeft.seconds)}s
+                    </span>
                 ) : (
-                    <span className="font-mono text-[#FCA5A5] text-[12px]">13h:36m:00s</span>
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 px-3.5 py-1 text-[11px] font-extrabold text-white uppercase tracking-wider">
+                        Limited Time Offer
+                    </span>
                 )}
             </div>
         );
