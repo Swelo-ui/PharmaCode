@@ -7,7 +7,7 @@ import { breadcrumbSchema, faqSchema } from "@/lib/schema";
 import { absUrl } from "@/lib/site";
 import {
     BookOpen, CheckCircle2, GraduationCap, Shield,
-    Clock, Globe, Award, Sparkles, ArrowRight, ExternalLink,
+    Clock, Globe, Award, Sparkles, ArrowRight, ArrowDown, ExternalLink,
     AlertTriangle, Layers, FileCheck, Stethoscope, BarChart3,
     Check, Users, HelpCircle, Lightbulb, Bookmark
 } from "lucide-react";
@@ -252,13 +252,11 @@ export default function FreePVCoursesPage() {
                     {/* CTA Buttons */}
                     <div className="fade-up fade-up-4 flex flex-wrap gap-3 items-center">
                         <a
-                            href={WHO_UMC_CATALOG_URL}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            href="#courses-list"
                             className="btn-press inline-flex items-center gap-2 rounded-[12px] bg-[#34D399] px-5 py-3 text-[13px] sm:text-[14px] font-black text-[#064E3B] shadow-lg hover:bg-[#6EE7B7] transition-all duration-200"
                         >
-                            <ExternalLink size={16} strokeWidth={2.5} />
-                            Access Free WHO-UMC Courses ↗
+                            <ArrowDown size={16} strokeWidth={2.5} />
+                            Explore All 10 Free Courses ↓
                         </a>
                         <Link
                             href={PV_INTERVIEW_KIT_URL}
@@ -346,7 +344,7 @@ export default function FreePVCoursesPage() {
             </section>
 
             {/* ══════════════ ALL 10 COURSES DETAILED LIST ══════════════ */}
-            <section className="bg-[#F8FAFC] py-10 sm:py-14 border-y border-[#E2E8F0]">
+            <section id="courses-list" className="bg-[#F8FAFC] py-10 sm:py-14 border-y border-[#E2E8F0] scroll-mt-[65px]">
                 <div className="mx-auto max-w-[960px] px-4 sm:px-6 md:px-8">
                     <div className="text-center mb-8 sm:mb-10">
                         <span className="inline-block rounded-md bg-white px-3 py-1 text-[11px] font-bold text-[#3B82F6] mb-2.5 uppercase tracking-wider border border-[#E2E8F0]">
