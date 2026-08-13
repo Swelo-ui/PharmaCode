@@ -13,45 +13,51 @@ const BASE_URL = "https://pharmacode.vercel.app";
 const staticRoutes: MetadataRoute.Sitemap = [
   {
     url: `${BASE_URL}/`,
-    lastModified: new Date("2026-06-11"),
+    lastModified: new Date("2026-08-13"),
     changeFrequency: "weekly",
     priority: 1.0,
   },
   {
     url: `${BASE_URL}/syllabus/`,
-    lastModified: new Date("2026-06-11"),
+    lastModified: new Date("2026-08-13"),
     changeFrequency: "monthly",
     priority: 0.9,
   },
   {
     url: `${BASE_URL}/notes/`,
-    lastModified: new Date("2026-06-11"),
+    lastModified: new Date("2026-08-13"),
     changeFrequency: "weekly",
     priority: 0.9,
   },
   {
     url: `${BASE_URL}/blog/`,
-    lastModified: new Date("2026-06-11"),
+    lastModified: new Date("2026-08-13"),
     changeFrequency: "weekly",
     priority: 0.8,
   },
   {
     url: `${BASE_URL}/about/`,
-    lastModified: new Date("2026-06-11"),
+    lastModified: new Date("2026-08-13"),
+    changeFrequency: "yearly",
+    priority: 0.6,
+  },
+  {
+    url: `${BASE_URL}/career/`,
+    lastModified: new Date("2026-08-13"),
+    changeFrequency: "weekly",
+    priority: 0.85,
+  },
+  {
+    url: `${BASE_URL}/contribute/`,
+    lastModified: new Date("2026-08-13"),
     changeFrequency: "yearly",
     priority: 0.5,
   },
   {
-    url: `${BASE_URL}/contribute/`,
-    lastModified: new Date("2026-06-11"),
+    url: `${BASE_URL}/privacy-policy/`,
+    lastModified: new Date("2026-08-13"),
     changeFrequency: "yearly",
     priority: 0.4,
-  },
-  {
-    url: `${BASE_URL}/privacy-policy/`,
-    lastModified: new Date("2026-06-11"),
-    changeFrequency: "yearly",
-    priority: 0.3,
   },
   {
     url: `${BASE_URL}/blog/pharmacovigilance-interview-preparation-kit/`,
@@ -72,7 +78,7 @@ const semesterRoutes: MetadataRoute.Sitemap = Array.from(
   { length: 8 },
   (_, i) => ({
     url: `${BASE_URL}/syllabus/semester-${i + 1}/`,
-    lastModified: new Date("2026-06-11"),
+    lastModified: new Date("2026-08-13"),
     changeFrequency: "monthly" as const,
     priority: 0.85,
   })
@@ -189,9 +195,9 @@ const subjects: { semester: number; slug: string }[] = [
 const subjectRoutes: MetadataRoute.Sitemap = subjects.map(
   ({ semester, slug }) => ({
     url: `${BASE_URL}/syllabus/semester-${semester}/${slug}/`,
-    lastModified: new Date("2026-06-11"),
+    lastModified: new Date("2026-08-13"),
     changeFrequency: "monthly" as const,
-    priority: 0.75,
+    priority: 0.80,
   })
 );
 

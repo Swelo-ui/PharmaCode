@@ -5,7 +5,8 @@ import { SEMESTERS } from "@/lib/syllabus";
 const RESOURCES = [
     { href: "/notes/", label: "Free Notes" },
     { href: "/blog/", label: "Blog" },
-    { href: "/about/", label: "About" },
+    { href: "/about/", label: "About Us" },
+    { href: "/career/", label: "Career Guidance" },
     { href: "/contribute/", label: "Contribute" },
     { href: "/privacy-policy/", label: "Privacy" },
 ];

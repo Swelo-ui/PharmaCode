@@ -220,12 +220,66 @@ export default function HomePage() {
                         Tap any semester to see full subjects, units and download notes
                     </p>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 items-stretch">
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 items-stretch mb-12">
                     {SEMESTERS.map((s, i) => (
                         <div key={s.num} className={`fade-up fade-up-${Math.min(i + 1, 8)} flex`}>
                             <SemCard sem={s} />
                         </div>
                     ))}
+                </div>
+
+                {/* ── FEATURED KEY SUBJECTS (INTERNAL LINKING FOR GOOGLEBOT) ── */}
+                <div className="rounded-[20px] bg-white border border-[#E8EDFF] p-6 sm:p-8 shadow-sm">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
+                        <div>
+                            <h3 className="font-display text-[20px] sm:text-[24px] font-black text-primary">
+                                Featured B.Pharm Subjects &amp; Free Notes
+                            </h3>
+                            <p className="font-[DM_Sans] text-[13px] text-[#6B7FA3]">
+                                Explore unit-wise PCI NEP 2020 syllabus pages for key theory subjects
+                            </p>
+                        </div>
+                        <Link
+                            href="/syllabus/"
+                            className="text-[13px] font-bold text-[#4C6EF5] hover:underline shrink-0"
+                        >
+                            View All Subjects →
+                        </Link>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                        {[
+                            { sem: 1, code: "BP101T", name: "Basics of Python Programming", slug: "bp101t-basics-of-python-programming-for-pharmaceutical-sciences" },
+                            { sem: 1, code: "BP104T", name: "Human Anatomy & Physiology I", slug: "bp104t-human-anatomy-physiology-and-pathophysiology-i" },
+                            { sem: 2, code: "BP202T", name: "Biochemistry", slug: "bp202t-biochemistry" },
+                            { sem: 3, code: "BP301T", name: "Machine Learning in Pharma", slug: "bp301t-introduction-to-machine-learning-in-pharmaceutical-sciences" },
+                            { sem: 4, code: "BP402T", name: "Medicinal Chemistry", slug: "bp402t-medicinal-chemistry" },
+                            { sem: 5, code: "BP505T", name: "Pharmaceutical QA", slug: "bp505t-pharmaceutical-quality-assurance" },
+                            { sem: 6, code: "BP602T", name: "Biopharmaceutics & PK", slug: "bp602t-biopharmaceutics-and-pharmacokinetics" },
+                            { sem: 6, code: "BP604T", name: "AI Applications in Pharma", slug: "bp604t-ai-applications-in-pharmaceutical-sciences" },
+                            { sem: 7, code: "BP705T", name: "Pharmacovigilance", slug: "bp705t-pharmacovigilance" },
+                            { sem: 7, code: "BP707T", name: "Regulatory Affairs", slug: "bp707t-regulatory-affairs" },
+                            { sem: 8, code: "BP801T", name: "AI Ethics & Translational AI", slug: "bp801t-ethical-considerations-and-translational-applications-of-ai-in-pharmacy" },
+                        ].map((s) => (
+                            <Link
+                                key={s.code}
+                                href={`/syllabus/semester-${s.sem}/${s.slug}/`}
+                                className="flex items-center gap-3 p-3 rounded-[12px] bg-[#F8FAFF] hover:bg-[#EEF2FF] border border-[#E0E8FF] transition-all group"
+                            >
+                                <span className="shrink-0 font-mono text-[10px] font-bold px-2 py-1 rounded-[6px] bg-[#EEF2FF] text-[#3730A3] group-hover:bg-[#4C6EF5] group-hover:text-white transition-colors">
+                                    {s.code}
+                                </span>
+                                <div className="min-w-0 flex-1">
+                                    <div className="font-[DM_Sans] text-[13px] font-bold text-primary group-hover:text-[#4C6EF5] truncate">
+                                        {s.name}
+                                    </div>
+                                    <div className="font-[DM_Sans] text-[11px] text-[#9CA3AF]">
+                                        Semester {s.sem} · Free PDF Notes
+                                    </div>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
                 </div>
             </section>
 

@@ -260,25 +260,23 @@ export function CopyEmailBox() {
     };
 
     return (
-        <div className="rounded-[12px] bg-[#F0F4FF] border border-[#DDE6FF] p-3.5 sm:p-4 text-center">
-            <div className="flex items-center justify-center gap-1.5 mb-1.5">
+        <div className="rounded-[14px] bg-[#F0F4FF] border border-[#DDE6FF] p-4 text-center flex flex-col items-center justify-center gap-2">
+            <div className="flex items-center justify-center gap-1.5 mb-0.5">
                 <Clock size={14} className="text-secondary shrink-0" />
                 <span className="font-display text-[11px] sm:text-[12px] font-bold text-[#6B7FA3] uppercase tracking-wider">
                     Send Payment Screenshot To
                 </span>
             </div>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 mt-1">
-                <p className="font-display text-[13px] xs:text-[15px] sm:text-[17px] font-black text-primary break-all select-all leading-tight">
-                    {email}
-                </p>
-                <button
-                    type="button"
-                    onClick={handleCopy}
-                    className="shrink-0 inline-flex items-center gap-1 rounded-md bg-white border border-[#C7D2FE] px-2.5 py-1 text-[11px] font-bold text-[#4C6EF5] hover:bg-[#EEF2FF] transition-all shadow-xs"
-                >
-                    {copied ? "Copied! ✓" : "Copy Email"}
-                </button>
-            </div>
+            <p className="font-display text-[14px] xs:text-[15px] sm:text-[16px] font-black text-primary select-all leading-tight">
+                {email}
+            </p>
+            <button
+                type="button"
+                onClick={handleCopy}
+                className="shrink-0 inline-flex items-center justify-center gap-1.5 rounded-lg bg-white border border-[#C7D2FE] px-3.5 py-1.5 text-[12px] font-bold text-[#4C6EF5] hover:bg-[#EEF2FF] active:scale-95 transition-all shadow-xs cursor-pointer"
+            >
+                {copied ? "Copied to Clipboard! ✓" : "Copy Email Address"}
+            </button>
         </div>
     );
 }

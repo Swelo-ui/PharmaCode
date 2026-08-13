@@ -109,9 +109,9 @@ export const metadata: Metadata = {
         },
     },
     alternates: {
-        canonical: SITE.url,
+        canonical: "./",
         languages: {
-            "en-IN": SITE.url,
+            "en-IN": "./",
         },
     },
     verification: {
