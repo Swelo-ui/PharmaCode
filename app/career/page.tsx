@@ -28,7 +28,7 @@ export const metadata: Metadata = {
         title: "B.Pharm Career Guidance & Placement Support — PharmaCode",
         description: "Right Guidance. Real Opportunities. Better Tomorrow. Career support for B.Pharm students.",
         url: absUrl("/career/"),
-        images: [{ url: absUrl("/pic2.jpg"), width: 1200, height: 630, alt: "PharmaCode Career Guidance" }],
+        images: [{ url: absUrl("/pic4.jpg"), width: 1200, height: 630, alt: "PharmaCode Career Guidance" }],
     },
 };
 
@@ -177,7 +177,7 @@ export default function CareerPage() {
                 </div>
             </div>
 
-            {/* ── POSTER VISUAL & COMMUNITY SECTION ── */}
+            {/* ── POSTER VISUAL & COMMUNITY SECTION (PIC4 & PIC2 SHOWCASE) ── */}
             <div className="rounded-[20px] sm:rounded-[24px] bg-[#F8FAFF] border border-[#E0E8FF] p-5 sm:p-10 mb-8 sm:mb-10">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center">
                     <div className="lg:col-span-6 space-y-3.5 sm:space-y-4">
@@ -204,7 +204,7 @@ export default function CareerPage() {
                     <div className="lg:col-span-6 flex justify-center">
                         <div className="rounded-[16px] sm:rounded-[20px] border-2 border-[#E8EDFF] bg-white p-2.5 sm:p-3 shadow-xl max-w-[420px] w-full">
                             <Image
-                                src="/pic2.jpg"
+                                src="/pic4.jpg"
                                 alt="PharmaCode Career Guidance Poster"
                                 width={500}
                                 height={700}

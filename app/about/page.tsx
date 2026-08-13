@@ -8,7 +8,8 @@ import { absUrl } from "@/lib/site";
 import {
     Sparkles, ShieldCheck, Compass, FileCheck2,
     Briefcase, GraduationCap, ArrowRight,
-    BookOpen, Award, Target, HelpCircle, Newspaper, Library, Users2, FileText
+    BookOpen, Award, Target, HelpCircle, Newspaper, Library, Users2, FileText,
+    TrendingUp, UserCheck, CheckCircle2
 } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
         title: "About PharmaCode — Code · Cure · Care",
         description: "Your Career. Our Guidance. Real Opportunities. Empowering B.Pharm Students & Graduates.",
         url: absUrl("/about/"),
-        images: [{ url: absUrl("/pic1.png"), width: 1200, height: 630, alt: "PharmaCode Career Guidance & Notes" }],
+        images: [{ url: absUrl("/pic3.jpg"), width: 1200, height: 630, alt: "PharmaCode Career Guidance & Notes" }],
     },
 };
 
@@ -61,7 +62,7 @@ export default function AboutPage() {
             <Breadcrumb items={breadcrumbs} />
 
             {/* ── HERO BANNER ── */}
-            <div className="relative overflow-hidden rounded-[20px] sm:rounded-[24px] bg-gradient-to-br from-[#0F1D5C] via-[#1A2B6B] to-[#3B59C8] p-5 xs:p-6 sm:p-10 text-white mb-8 sm:mb-10 shadow-xl border border-white/10">
+            <div className="relative overflow-hidden rounded-[20px] sm:rounded-[24px] bg-gradient-to-br from-[#0F1D5C] via-[#1A2B6B] to-[#3B59C8] p-5 xs:p-6 sm:p-10 text-white mb-6 sm:mb-8 shadow-xl border border-white/10">
                 {/* Glow Background blobs */}
                 <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[#4C6EF5]/25 blur-3xl pointer-events-none" />
                 <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-[#93C5FD]/15 blur-3xl pointer-events-none" />
@@ -106,7 +107,7 @@ export default function AboutPage() {
                         </div>
                     </div>
 
-                    {/* Right side poster graphics */}
+                    {/* Right side poster graphic (pic1.png) */}
                     <div className="lg:col-span-5 flex justify-center">
                         <div className="relative rounded-[16px] sm:rounded-[20px] overflow-hidden border-2 border-white/20 shadow-2xl bg-white/5 backdrop-blur-sm p-1.5 sm:p-2 hover:scale-[1.01] transition-transform duration-300 w-full max-w-[500px]">
                             <Image
@@ -120,6 +121,34 @@ export default function AboutPage() {
                         </div>
                     </div>
                 </div>
+            </div>
+
+            {/* ── METRICS STATS BAR (FROM PIC3.JPG) ── */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-8 sm:mb-12">
+                {[
+                    { label: "5000+ Happy Students", sub: "Guided Nationwide", icon: UserCheck, color: "#2563EB", bg: "#EFF6FF" },
+                    { label: "100+ Expert Resources", sub: "PCI Syllabus Aligned", icon: BookOpen, color: "#059669", bg: "#ECFDF5" },
+                    { label: "100+ Industry Insights", sub: "QA, QC, PV & RA", icon: TrendingUp, color: "#D97706", bg: "#FFFBEB" },
+                    { label: "Daily Updated Content", sub: "News & Job Alerts", icon: Sparkles, color: "#E11D48", bg: "#FFF1F2" },
+                ].map((stat) => (
+                    <div
+                        key={stat.label}
+                        className="rounded-[16px] border border-[#E8EDFF] bg-white p-3.5 sm:p-4 text-center flex flex-col items-center justify-center shadow-2xs hover:shadow-md transition-shadow"
+                    >
+                        <div
+                            className="w-10 h-10 rounded-[12px] flex items-center justify-center mb-2"
+                            style={{ background: stat.bg, color: stat.color }}
+                        >
+                            <stat.icon size={20} />
+                        </div>
+                        <span className="font-display font-black text-[14px] sm:text-[16px] text-[#1A2B6B] leading-tight">
+                            {stat.label}
+                        </span>
+                        <span className="font-[DM_Sans] text-[11px] sm:text-[12px] text-[#6B7FA3] mt-0.5">
+                            {stat.sub}
+                        </span>
+                    </div>
+                ))}
             </div>
 
             {/* ── TRUST BADGES ROW ── */}
@@ -307,32 +336,58 @@ export default function AboutPage() {
                 </div>
             </div>
 
-            {/* ── OFFICIAL CAREER POSTER SECTION (CLEAN CENTERED PORTRAIT SHOWCASE) ── */}
+            {/* ── OFFICIAL CAREER POSTERS SHOWCASE (PERFECT MATCHED PAIR PIC3 & PIC4) ── */}
             <div className="mb-10 sm:mb-14">
                 <div className="text-center mb-6 sm:mb-8">
                     <h2 className="font-display text-[22px] sm:text-[30px] font-black text-[#1A2B6B]">
-                        PharmaCode Official Guidance Poster
+                        PharmaCode Official Career &amp; Success Posters
                     </h2>
                     <p className="font-[DM_Sans] text-[13px] sm:text-[14px] text-[#6B7FA3]">
-                        Your Complete Career &amp; Knowledge Roadmap for B.Pharm Students
+                        Empowering B.Pharm students and graduates for a brighter tomorrow
                     </p>
                 </div>
 
-                <div className="max-w-[640px] mx-auto rounded-[20px] sm:rounded-[24px] border-2 border-[#E0E8FF] bg-white p-3 sm:p-4.5 shadow-xl text-center">
-                    <Image
-                        src="/pic2.jpg"
-                        alt="PharmaCode Official Career Guidance & Knowledge Bank Poster"
-                        width={700}
-                        height={990}
-                        className="rounded-[14px] sm:rounded-[18px] w-full h-auto object-cover"
-                    />
-                    <div className="mt-3.5 pb-1">
-                        <p className="font-display font-black text-[15px] sm:text-[17px] text-[#1A2B6B]">
-                            PharmaCode Knowledge Bank &amp; Career Guidance Roadmap
-                        </p>
-                        <p className="font-[DM_Sans] text-[12px] sm:text-[13px] text-[#6B7FA3] mt-0.5">
-                            Empowering B.Pharm Students &amp; Graduates for a Better Tomorrow
-                        </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 items-stretch">
+                    {/* Left Poster (pic3.jpg) */}
+                    <div className="rounded-[20px] border-2 border-[#E0E8FF] bg-white p-3.5 sm:p-5 shadow-xl flex flex-col justify-between hover:scale-[1.01] transition-transform duration-300">
+                        <div>
+                            <Image
+                                src="/pic3.jpg"
+                                alt="PharmaCode Student Success & Guidance Poster"
+                                width={700}
+                                height={990}
+                                className="rounded-[14px] sm:rounded-[16px] w-full h-auto object-cover"
+                            />
+                        </div>
+                        <div className="mt-3.5 text-center">
+                            <p className="font-display font-black text-[15px] sm:text-[16px] text-[#1A2B6B]">
+                                Student Guidance &amp; Success Roadmap
+                            </p>
+                            <p className="font-[DM_Sans] text-[12px] text-[#6B7FA3] mt-0.5">
+                                Your Career. Our Guidance. Real Opportunities.
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Right Poster (pic4.jpg) */}
+                    <div className="rounded-[20px] border-2 border-[#E0E8FF] bg-white p-3.5 sm:p-5 shadow-xl flex flex-col justify-between hover:scale-[1.01] transition-transform duration-300">
+                        <div>
+                            <Image
+                                src="/pic4.jpg"
+                                alt="PharmaCode Career Partner & Community Poster"
+                                width={700}
+                                height={990}
+                                className="rounded-[14px] sm:rounded-[16px] w-full h-auto object-cover"
+                            />
+                        </div>
+                        <div className="mt-3.5 text-center">
+                            <p className="font-display font-black text-[15px] sm:text-[16px] text-[#1A2B6B]">
+                                Community &amp; Smart Resource Hub
+                            </p>
+                            <p className="font-[DM_Sans] text-[12px] text-[#6B7FA3] mt-0.5">
+                                Right Guidance. Real Opportunities. Stronger Tomorrow.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
