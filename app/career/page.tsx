@@ -43,12 +43,20 @@ export default function CareerPage() {
             <JsonLd data={breadcrumbSchema(breadcrumbs)} />
             <Breadcrumb items={breadcrumbs} />
 
-            {/* ── HERO BANNER ── */}
+            {/* ── HERO BANNER (MATCHES PV KIT BLOG STYLING) ── */}
             <div className="rounded-[20px] sm:rounded-[24px] bg-gradient-to-r from-[#0F1D5C] via-[#1A2B6B] to-[#2E4BAD] p-5 sm:p-8 md:p-10 text-white mb-8 sm:mb-10 shadow-lg">
-                <div className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3.5 py-1 text-[10.5px] xs:text-[11.5px] font-semibold text-[#93C5FD] mb-3 flex-wrap">
-                    <Sparkles size={13} className="text-[#6EE7B7] shrink-0" />
-                    <span>PharmaCode • Career Guidance &amp; Opportunities</span>
+                
+                {/* 2-Pill Badge System — PV Kit Style */}
+                <div className="flex flex-wrap items-center gap-2 mb-4">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-[#10B981]/25 border border-[#10B981]/40 px-3.5 py-1 text-[11px] font-extrabold text-[#6EE7B7] uppercase tracking-wider shadow-sm">
+                        <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
+                        ✨ India&apos;s Most Trusted Platform
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 px-3.5 py-1 text-[11px] font-extrabold text-white/90 uppercase tracking-wider">
+                        B.Pharm Students &amp; Graduates
+                    </span>
                 </div>
+
                 <h1 className="font-display text-[24px] xs:text-[28px] sm:text-[40px] font-black leading-[1.15] mb-3 tracking-tight">
                     Right Guidance. <span className="text-[#6EE7B7]">Real Opportunities.</span>
                     <br />
@@ -73,7 +81,7 @@ export default function CareerPage() {
                 </div>
             </div>
 
-            {/* ── CAREER DOMAINS IN PHARMA (MOBILE OPTIMIZED COMPACT CARDS) ── */}
+            {/* ── CAREER DOMAINS IN PHARMA ── */}
             <div className="mb-10 sm:mb-14">
                 <div className="text-center mb-6 sm:mb-8">
                     <h2 className="font-display text-[22px] sm:text-[30px] font-black text-[#1A2B6B]">

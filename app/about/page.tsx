@@ -69,10 +69,15 @@ export default function AboutPage() {
 
                 <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center">
                     <div className="lg:col-span-7 space-y-3.5 sm:space-y-4">
-                        {/* Live badge */}
-                        <div className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3.5 py-1 text-[10px] sm:text-[12px] font-semibold text-[#93C5FD] backdrop-blur-md flex-wrap">
-                            <Sparkles size={13} className="text-[#6EE7B7] shrink-0" />
-                            <span>PharmaCode • Code • Cure • Care</span>
+                        {/* 2-Pill Badge System — PV Kit Style */}
+                        <div className="flex flex-wrap items-center gap-2 mb-4">
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#10B981]/25 border border-[#10B981]/40 px-3.5 py-1 text-[11px] font-extrabold text-[#6EE7B7] uppercase tracking-wider shadow-sm">
+                                <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
+                                ✨ PharmaCode Platform
+                            </span>
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 px-3.5 py-1 text-[11px] font-extrabold text-[#93C5FD] uppercase tracking-wider">
+                                Code • Cure • Care
+                            </span>
                         </div>
 
                         <h1 className="font-display text-[24px] xs:text-[28px] sm:text-[40px] font-black leading-[1.15] tracking-tight">
