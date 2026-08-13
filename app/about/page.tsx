@@ -60,7 +60,7 @@ export default function AboutPage() {
             <JsonLd data={aboutSchema} />
             <Breadcrumb items={breadcrumbs} />
 
-            {/* ── HERO BANNER (MATCHES PIC1.PNG & PIC2.JPG DESIGN) ── */}
+            {/* ── HERO BANNER ── */}
             <div className="relative overflow-hidden rounded-[20px] sm:rounded-[24px] bg-gradient-to-br from-[#0F1D5C] via-[#1A2B6B] to-[#3B59C8] p-5 xs:p-6 sm:p-10 text-white mb-8 sm:mb-10 shadow-xl border border-white/10">
                 {/* Glow Background blobs */}
                 <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[#4C6EF5]/25 blur-3xl pointer-events-none" />
@@ -122,7 +122,7 @@ export default function AboutPage() {
                 </div>
             </div>
 
-            {/* ── TRUST BADGES ROW (FROM PIC1.PNG) ── */}
+            {/* ── TRUST BADGES ROW ── */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 mb-8 sm:mb-12">
                 {[
                     { label: "Industry-Focused Guidance", icon: Target, bg: "#EEF2FF", color: "#3730A3" },
@@ -167,7 +167,7 @@ export default function AboutPage() {
                 </div>
             </div>
 
-            {/* ── SERVICES WE PROVIDE (FROM PIC1 & PIC2) ── */}
+            {/* ── SERVICES WE PROVIDE (COMPACT MOBILE FRIENDLY LAYOUT) ── */}
             <div className="mb-10 sm:mb-14">
                 <div className="text-center mb-6 sm:mb-8">
                     <h2 className="font-display text-[22px] sm:text-[32px] font-black text-[#1A2B6B]">
@@ -225,18 +225,20 @@ export default function AboutPage() {
                     ].map((s) => (
                         <div
                             key={s.title}
-                            className="rounded-[16px] sm:rounded-[18px] border border-[#E8EDFF] bg-white p-4.5 sm:p-6 shadow-2xs hover:shadow-md transition-all duration-200"
+                            className="rounded-[14px] sm:rounded-[18px] border border-[#E8EDFF] bg-white p-4 sm:p-5 shadow-2xs hover:shadow-md transition-all duration-200 flex flex-col justify-start"
                         >
-                            <div
-                                className="w-10 h-10 sm:w-12 sm:h-12 rounded-[12px] sm:rounded-[14px] flex items-center justify-center mb-3 sm:mb-4"
-                                style={{ background: s.bg, color: s.color }}
-                            >
-                                <s.icon size={22} />
+                            <div className="flex items-center gap-3 mb-2.5">
+                                <div
+                                    className="w-9 h-9 sm:w-11 sm:h-11 rounded-[10px] sm:rounded-[12px] flex items-center justify-center shrink-0"
+                                    style={{ background: s.bg, color: s.color }}
+                                >
+                                    <s.icon size={20} />
+                                </div>
+                                <h3 className="font-display text-[15px] sm:text-[17px] font-bold text-[#1A2B6B] leading-tight">
+                                    {s.title}
+                                </h3>
                             </div>
-                            <h3 className="font-display text-[16px] sm:text-[18px] font-extrabold text-[#1A2B6B] mb-1.5 leading-snug">
-                                {s.title}
-                            </h3>
-                            <p className="font-[DM_Sans] text-[12.5px] sm:text-[13px] text-[#6B7FA3] leading-relaxed">
+                            <p className="font-[DM_Sans] text-[12.5px] sm:text-[13px] text-[#4B5563] leading-relaxed">
                                 {s.desc}
                             </p>
                         </div>
@@ -244,7 +246,7 @@ export default function AboutPage() {
                 </div>
             </div>
 
-            {/* ── SMART PREPARATION KNOWLEDGE HUB (FROM PIC2.JPG) ── */}
+            {/* ── SMART PREPARATION KNOWLEDGE HUB ── */}
             <div className="rounded-[20px] sm:rounded-[24px] bg-[#F8FAFF] border border-[#E0E8FF] p-5 sm:p-10 mb-10 sm:mb-14">
                 <div className="max-w-[700px] mb-6 sm:mb-8">
                     <span className="text-[11px] sm:text-[12px] font-bold text-[#4C6EF5] uppercase tracking-wider font-[DM_Sans] block mb-1">
@@ -297,7 +299,7 @@ export default function AboutPage() {
                                     {item.title}
                                 </h3>
                             </div>
-                            <p className="font-[DM_Sans] text-[12px] text-[#6B7FA3] leading-relaxed">
+                            <p className="font-[DM_Sans] text-[12px] sm:text-[12.5px] text-[#4B5563] leading-relaxed">
                                 {item.desc}
                             </p>
                         </div>
@@ -305,46 +307,32 @@ export default function AboutPage() {
                 </div>
             </div>
 
-            {/* ── VISUAL POSTER SHOWCASE SECTION ── */}
+            {/* ── OFFICIAL CAREER POSTER SECTION (CLEAN CENTERED PORTRAIT SHOWCASE) ── */}
             <div className="mb-10 sm:mb-14">
                 <div className="text-center mb-6 sm:mb-8">
-                    <h2 className="font-display text-[20px] sm:text-[28px] font-black text-[#1A2B6B]">
-                        PharmaCode Official Posters &amp; Guides
+                    <h2 className="font-display text-[22px] sm:text-[30px] font-black text-[#1A2B6B]">
+                        PharmaCode Official Guidance Poster
                     </h2>
-                    <p className="font-[DM_Sans] text-[12.5px] sm:text-[13px] text-[#6B7FA3]">
-                        Designed to empower B.Pharm students and graduates across India
+                    <p className="font-[DM_Sans] text-[13px] sm:text-[14px] text-[#6B7FA3]">
+                        Your Complete Career &amp; Knowledge Roadmap for B.Pharm Students
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                    <div className="rounded-[16px] sm:rounded-[20px] border border-[#E8EDFF] bg-white p-3 sm:p-4 shadow-sm">
-                        <Image
-                            src="/pic1.png"
-                            alt="PharmaCode Guidance & Services Poster"
-                            width={800}
-                            height={533}
-                            className="rounded-[12px] sm:rounded-[14px] w-full h-auto object-cover"
-                        />
-                        <div className="mt-2.5 text-center">
-                            <p className="font-display font-bold text-[13px] sm:text-[14px] text-[#1A2B6B]">
-                                PharmaCode Services &amp; Guidance Overview
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="rounded-[16px] sm:rounded-[20px] border border-[#E8EDFF] bg-white p-3 sm:p-4 shadow-sm">
-                        <Image
-                            src="/pic2.jpg"
-                            alt="PharmaCode Knowledge Bank & Community Poster"
-                            width={800}
-                            height={1131}
-                            className="rounded-[12px] sm:rounded-[14px] w-full h-auto object-cover"
-                        />
-                        <div className="mt-2.5 text-center">
-                            <p className="font-display font-bold text-[13px] sm:text-[14px] text-[#1A2B6B]">
-                                PharmaCode Knowledge Bank &amp; Career Roadmap
-                            </p>
-                        </div>
+                <div className="max-w-[640px] mx-auto rounded-[20px] sm:rounded-[24px] border-2 border-[#E0E8FF] bg-white p-3 sm:p-4.5 shadow-xl text-center">
+                    <Image
+                        src="/pic2.jpg"
+                        alt="PharmaCode Official Career Guidance & Knowledge Bank Poster"
+                        width={700}
+                        height={990}
+                        className="rounded-[14px] sm:rounded-[18px] w-full h-auto object-cover"
+                    />
+                    <div className="mt-3.5 pb-1">
+                        <p className="font-display font-black text-[15px] sm:text-[17px] text-[#1A2B6B]">
+                            PharmaCode Knowledge Bank &amp; Career Guidance Roadmap
+                        </p>
+                        <p className="font-[DM_Sans] text-[12px] sm:text-[13px] text-[#6B7FA3] mt-0.5">
+                            Empowering B.Pharm Students &amp; Graduates for a Better Tomorrow
+                        </p>
                     </div>
                 </div>
             </div>
