@@ -28,7 +28,7 @@ export const metadata: Metadata = {
         title: "B.Pharm Career Guidance & Placement Support — PharmaCode",
         description: "Right Guidance. Real Opportunities. Better Tomorrow. Career support for B.Pharm students.",
         url: absUrl("/career/"),
-        images: [{ url: absUrl("/pic4.jpg"), width: 1200, height: 630, alt: "PharmaCode Career Guidance" }],
+        images: [{ url: absUrl("/pic2.jpg"), width: 1200, height: 630, alt: "PharmaCode Career Guidance" }],
     },
 };
 
@@ -45,8 +45,9 @@ export default function CareerPage() {
 
             {/* ── HERO BANNER ── */}
             <div className="rounded-[20px] sm:rounded-[24px] bg-gradient-to-r from-[#0F1D5C] via-[#1A2B6B] to-[#2E4BAD] p-5 sm:p-8 md:p-10 text-white mb-8 sm:mb-10 shadow-lg">
-                <div className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[10px] sm:text-[11px] font-semibold text-[#93C5FD] mb-3 flex-wrap">
-                    <Sparkles size={13} className="shrink-0" /> India&apos;s Most Trusted Platform for B.Pharm Students &amp; Graduates
+                <div className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3.5 py-1 text-[10.5px] xs:text-[11.5px] font-semibold text-[#93C5FD] mb-3 flex-wrap">
+                    <Sparkles size={13} className="text-[#6EE7B7] shrink-0" />
+                    <span>PharmaCode • Career Guidance &amp; Opportunities</span>
                 </div>
                 <h1 className="font-display text-[24px] xs:text-[28px] sm:text-[40px] font-black leading-[1.15] mb-3 tracking-tight">
                     Right Guidance. <span className="text-[#6EE7B7]">Real Opportunities.</span>
@@ -72,7 +73,7 @@ export default function CareerPage() {
                 </div>
             </div>
 
-            {/* ── CAREER DOMAINS IN PHARMA ── */}
+            {/* ── CAREER DOMAINS IN PHARMA (MOBILE OPTIMIZED COMPACT CARDS) ── */}
             <div className="mb-10 sm:mb-14">
                 <div className="text-center mb-6 sm:mb-8">
                     <h2 className="font-display text-[22px] sm:text-[30px] font-black text-[#1A2B6B]">
@@ -83,7 +84,7 @@ export default function CareerPage() {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-5">
                     {[
                         {
                             title: "Pharmacovigilance (PV)",
@@ -142,27 +143,29 @@ export default function CareerPage() {
                     ].map((domain) => (
                         <div
                             key={domain.title}
-                            className="rounded-[16px] sm:rounded-[20px] border border-[#E8EDFF] bg-white p-4.5 sm:p-6 shadow-2xs flex flex-col justify-between hover:shadow-md transition-shadow"
+                            className="rounded-[14px] sm:rounded-[18px] border border-[#E8EDFF] bg-white p-4 sm:p-5 shadow-2xs flex flex-col justify-between hover:shadow-md transition-all duration-200"
                         >
                             <div>
-                                <div className="flex items-center justify-between gap-2 mb-3">
-                                    <div
-                                        className="w-9 h-9 sm:w-10 sm:h-10 rounded-[10px] sm:rounded-[12px] flex items-center justify-center shrink-0"
-                                        style={{ background: domain.bg, color: domain.color }}
-                                    >
-                                        <domain.icon size={18} />
+                                <div className="flex items-start justify-between gap-2 mb-2.5">
+                                    <div className="flex items-center gap-2.5">
+                                        <div
+                                            className="w-9 h-9 sm:w-10 sm:h-10 rounded-[10px] sm:rounded-[12px] flex items-center justify-center shrink-0"
+                                            style={{ background: domain.bg, color: domain.color }}
+                                        >
+                                            <domain.icon size={18} />
+                                        </div>
+                                        <h3 className="font-display text-[15px] sm:text-[17px] font-bold text-[#1A2B6B] leading-tight">
+                                            {domain.title}
+                                        </h3>
                                     </div>
                                     <span
-                                        className="px-2 py-0.5 rounded-full text-[9.5px] sm:text-[10px] font-bold uppercase tracking-wider"
+                                        className="px-2 py-0.5 rounded-full text-[9.5px] sm:text-[10px] font-bold uppercase tracking-wider shrink-0 mt-0.5"
                                         style={{ background: domain.bg, color: domain.color }}
                                     >
                                         {domain.tag}
                                     </span>
                                 </div>
-                                <h3 className="font-display text-[16px] sm:text-[17px] font-bold text-[#1A2B6B] mb-1.5 leading-snug">
-                                    {domain.title}
-                                </h3>
-                                <p className="font-[DM_Sans] text-[12.5px] sm:text-[13px] text-[#6B7FA3] leading-relaxed mb-4">
+                                <p className="font-[DM_Sans] text-[12.5px] sm:text-[13px] text-[#4B5563] leading-relaxed mb-3">
                                     {domain.desc}
                                 </p>
                             </div>
@@ -177,7 +180,7 @@ export default function CareerPage() {
                 </div>
             </div>
 
-            {/* ── POSTER VISUAL & COMMUNITY SECTION (PIC4 & PIC2 SHOWCASE) ── */}
+            {/* ── POSTER VISUAL & COMMUNITY SECTION (PIC2 SHOWCASE) ── */}
             <div className="rounded-[20px] sm:rounded-[24px] bg-[#F8FAFF] border border-[#E0E8FF] p-5 sm:p-10 mb-8 sm:mb-10">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center">
                     <div className="lg:col-span-6 space-y-3.5 sm:space-y-4">
