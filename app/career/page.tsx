@@ -204,8 +204,8 @@ export default function CareerPage() {
                     <div className="lg:col-span-6 flex justify-center">
                         <div className="rounded-[16px] sm:rounded-[20px] border-2 border-[#E8EDFF] bg-white p-2.5 sm:p-3 shadow-xl max-w-[420px] w-full">
                             <Image
-                                src="/pic4.jpg"
-                                alt="PharmaCode Career Guidance Poster"
+                                src="/pic2.jpg"
+                                alt="PharmaCode Career Guidance & Knowledge Roadmap Poster"
                                 width={500}
                                 height={700}
                                 className="rounded-[12px] sm:rounded-[14px] w-full h-auto object-cover"
