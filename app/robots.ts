@@ -14,13 +14,13 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        // Block internal Next.js paths from indexing
-        disallow: [
-          "/api/",
-          "/_next/",
-          "/404",
-          "/500",
-        ],
+        disallow: ["/api/", "/_next/", "/404", "/500"],
+      },
+      // Explicitly allow Google AI & LLM Search crawlers for AI Overviews & Citations
+      {
+        userAgent: ["Google-Extended", "GPTBot", "PerplexityBot", "ClaudeBot", "Applebot-Extended"],
+        allow: "/",
+        disallow: ["/api/", "/_next/"],
       },
     ],
     sitemap: `${SITE.url}/sitemap.xml`,

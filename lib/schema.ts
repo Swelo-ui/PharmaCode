@@ -35,6 +35,14 @@ export function organizationSchema() {
             "Pharmacy Education India",
             "PCI Approved Curriculum",
             "B.Pharm Notes PDF",
+            "BP101T Basics of Python Programming for Pharmaceutical Sciences",
+            "BP301T Introduction to Machine Learning in Pharmaceutical Sciences",
+            "BP604T AI Applications in Pharmaceutical Sciences",
+            "BP705T Pharmacovigilance",
+            "BP707T Regulatory Affairs",
+            "BP801T Ethical Considerations and Translational Applications of AI in Pharmacy",
+            "GPAT 2027 Syllabus & Preparation",
+            "B.Pharm Semester 1 to 8 Free Notes PDF",
         ],
     };
 }
