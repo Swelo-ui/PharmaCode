@@ -46,7 +46,7 @@ export default function PrivacyPolicyPage() {
                 </div>
 
                 <p className="font-[DM_Sans] text-[13px] sm:text-[14px] text-[#4B5563] leading-relaxed mb-6">
-                    At PharmaCode (pharmacode.vercel.app), we believe that educational resources should be openly accessible without harvesting personal data. This Privacy Policy outlines how we treat information on our website.
+                    At PharmaCode, we believe that educational resources should be openly accessible without harvesting personal data. This Privacy Policy outlines how we treat information on our website.
                 </p>
 
                 <div className="space-y-5 sm:space-y-6 border-t border-[#F0F4FF] pt-5 sm:pt-6">
@@ -73,7 +73,7 @@ export default function PrivacyPolicyPage() {
                                 2. Anonymized Analytics
                             </h2>
                             <p className="font-[DM_Sans] text-[12.5px] sm:text-[13px] text-[#6B7FA3] leading-relaxed">
-                                We use privacy-friendly Vercel Analytics to understand total page views and popular subjects across semesters. This data is fully aggregated and anonymized, without personal identifier tracking or invasive advertising cookies.
+                                We use privacy-friendly site analytics to understand total page views and popular subjects across semesters. This data is fully aggregated and anonymized, without personal identifier tracking or invasive advertising cookies.
                             </p>
                         </div>
                     </section>

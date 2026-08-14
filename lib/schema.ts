@@ -24,7 +24,8 @@ export function organizationSchema() {
         "@context": "https://schema.org",
         "@type": "EducationalOrganization",
         name: "PharmaCode",
-        alternateName: "PharmaCode — B.Pharm NEP 2020",
+        legalName: "PharmaCode",
+        alternateName: ["PharmaCode", "Pharma Code", "PharmaCode India", "PharmaCode — B.Pharm NEP 2020"],
         url: SITE.url,
         logo: absUrl("/logo.png"),
         description: "Free B.Pharm study material, NEP 2020 syllabus, unit-wise notes and PDF downloads for pharmacy students in India.",
@@ -43,7 +44,13 @@ export function websiteSchema() {
         "@context": "https://schema.org",
         "@type": "WebSite",
         name: "PharmaCode",
+        alternateName: ["PharmaCode", "Pharma Code", "PharmaCode India", "PharmaCode B.Pharm"],
         url: SITE.url,
+        publisher: {
+            "@type": "EducationalOrganization",
+            name: "PharmaCode",
+            logo: absUrl("/logo.png"),
+        },
         potentialAction: {
             "@type": "SearchAction",
             target: `${SITE.url}/search?q={search_term_string}`,

@@ -6,8 +6,9 @@
 // ============================================================
 
 import { MetadataRoute } from "next";
+import { SITE } from "@/lib/site";
 
-const BASE_URL = "https://pharmacode.vercel.app";
+const BASE_URL = SITE.url;
 
 // ─── 1. STATIC / CORE PAGES ──────────────────────────────────
 const staticRoutes: MetadataRoute.Sitemap = [

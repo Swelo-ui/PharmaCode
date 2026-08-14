@@ -6,6 +6,7 @@
 // ============================================================
 
 import { MetadataRoute } from "next";
+import { SITE } from "@/lib/site";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -22,7 +23,7 @@ export default function robots(): MetadataRoute.Robots {
         ],
       },
     ],
-    sitemap: "https://pharmacode.vercel.app/sitemap.xml",
-    host: "https://pharmacode.vercel.app",
+    sitemap: `${SITE.url}/sitemap.xml`,
+    host: SITE.url,
   };
 }
