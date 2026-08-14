@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { JsonLd } from "@/components/JsonLd";
-import { breadcrumbSchema, faqSchema } from "@/lib/schema";
+import { breadcrumbSchema, faqSchema, articleSchema } from "@/lib/schema";
 import { absUrl } from "@/lib/site";
 import { ProtectedDemoGrid } from "@/components/ProtectedDemoGrid";
 import {
@@ -198,6 +198,14 @@ export default function FreePVCoursesPage() {
         <div className="w-full">
             <JsonLd data={breadcrumbSchema(breadcrumbs)} />
             <JsonLd data={faqSchema(FAQS)} />
+            <JsonLd
+                data={articleSchema({
+                    title: "10 Free Pharmacovigilance Courses with Certificates — WHO-UMC Platform",
+                    description: "Access 10 free Pharmacovigilance & Drug Safety courses with certificates from Uppsala Monitoring Centre (WHO-UMC). Perfect for B.Pharm, M.Pharm students & freshers.",
+                    url: "/blog/free-pharmacovigilance-courses-who-umc/",
+                    imageUrl: "/blog/free-pv-courses/who-umc-free-pv-courses.jpeg",
+                })}
+            />
 
             {/* ══════════════ HERO SECTION ══════════════ */}
             <section

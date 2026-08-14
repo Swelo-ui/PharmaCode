@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { JsonLd } from "@/components/JsonLd";
-import { breadcrumbSchema } from "@/lib/schema";
+import { breadcrumbSchema, articleSchema } from "@/lib/schema";
 import { absUrl } from "@/lib/site";
 import { ProtectedDemoGrid } from "@/components/ProtectedDemoGrid";
 import { CountdownTimer, DynamicPriceHeader, DynamicLinkedInBox, DynamicCTAButton, CopyEmailBox, CopyUpiBox } from "./CountdownTimer";
@@ -146,6 +146,14 @@ export default function PVKitBlogPage() {
     return (
         <div className="w-full">
             <JsonLd data={breadcrumbSchema(breadcrumbs)} />
+            <JsonLd
+                data={articleSchema({
+                    title: "Pharmacovigilance Complete Guide & Interview Preparation Kit — 44 Pages PDF",
+                    description: "Complete Pharmacovigilance Interview Preparation Kit by PharmaCode covering PV fundamentals, ICSR, MedDRA, causality assessment, signal detection, PSUR, GVP, HR & technical interview Q&A.",
+                    url: "/blog/pharmacovigilance-interview-preparation-kit/",
+                    imageUrl: "/blog/pv-kit/pharmacode-services.jpeg",
+                })}
+            />
 
             {/* ══════════════ HERO SECTION ══════════════ */}
             <section

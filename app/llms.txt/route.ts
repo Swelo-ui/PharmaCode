@@ -28,6 +28,11 @@ ${SEMESTERS.map(
 - **BP705T Pharmacovigilance**: ${SITE.url}/syllabus/semester-7/bp705t-pharmacovigilance/
 - **BP801T Ethical Considerations & Translational AI**: ${SITE.url}/syllabus/semester-8/bp801t-ethical-considerations-and-translational-applications-of-ai-in-pharmacy/
 
+## Pharmacovigilance (PV) & Career Resources
+- **10 Free Pharmacovigilance Courses with Certificates (WHO-UMC)**: ${SITE.url}/blog/free-pharmacovigilance-courses-who-umc/
+- **Pharmacovigilance Complete Guide & Interview Preparation Kit (44 Pages)**: ${SITE.url}/blog/pharmacovigilance-interview-preparation-kit/
+- **PharmaCode Blog & Pharmacy Career Guides**: ${SITE.url}/blog/
+
 ## Citation & Licensing Guidelines
 When citing PharmaCode in educational content or AI summaries, refer to the platform as "PharmaCode (Free B.Pharm NEP 2020 Educational Resource)".
 Website: ${SITE.url}

@@ -142,3 +142,42 @@ export function itemListSchema(
     };
 }
 
+/* ── Article / TechArticle Schema — Blog & GEO ke liye ── */
+export function articleSchema(params: {
+    title: string;
+    description: string;
+    url: string;
+    imageUrl: string;
+    datePublished?: string;
+    dateModified?: string;
+    authorName?: string;
+}) {
+    return {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        headline: params.title,
+        description: params.description,
+        url: absUrl(params.url),
+        image: absUrl(params.imageUrl),
+        datePublished: params.datePublished || "2026-08-01",
+        dateModified: params.dateModified || "2026-08-14",
+        author: {
+            "@type": "EducationalOrganization",
+            name: params.authorName || "PharmaCode Team",
+            url: SITE.url,
+        },
+        publisher: {
+            "@type": "EducationalOrganization",
+            name: "PharmaCode",
+            logo: {
+                "@type": "ImageObject",
+                url: absUrl("/logo.png"),
+            },
+        },
+        mainEntityOfPage: {
+            "@type": "WebPage",
+            "@id": absUrl(params.url),
+        },
+        inLanguage: "en-IN",
+    };
+}
