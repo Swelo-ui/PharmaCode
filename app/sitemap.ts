@@ -72,6 +72,12 @@ const staticRoutes: MetadataRoute.Sitemap = [
     changeFrequency: "monthly",
     priority: 0.85,
   },
+  {
+    url: `${BASE_URL}/blog/free-pharmaceutical-quality-assurance-certification/`,
+    lastModified: new Date("2026-08-15"),
+    changeFrequency: "monthly",
+    priority: 0.85,
+  },
 ];
 
 // ─── 2. SEMESTER LANDING PAGES ───────────────────────────────

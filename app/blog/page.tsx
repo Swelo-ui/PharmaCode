@@ -43,6 +43,15 @@ const POSTS: {
     isNew?: boolean;
 }[] = [
     {
+        tag: "🧪 Free QA Course",
+        title: "Free Pharmaceutical Quality Assurance (QA) Course with Certificate — Pharma Lesson",
+        date: "Aug 2026",
+        color: "#0D9488",
+        bg: "linear-gradient(135deg, #F0FDFA, #ECFDF5, #EEF2FF)",
+        href: "/blog/free-pharmaceutical-quality-assurance-certification/",
+        isNew: true,
+    },
+    {
         tag: "🎓 Free PV Courses",
         title: "10 Free Pharmacovigilance Courses with Certificates — WHO-UMC Platform",
         date: "Aug 2026",
