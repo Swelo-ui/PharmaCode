@@ -43,7 +43,16 @@ const POSTS: {
     isNew?: boolean;
 }[] = [
     {
-        tag: "🧪 Free QA Course",
+        tag: "RA Complete Guide",
+        title: "Regulatory Affairs (RA) — Complete Guide: From Dossier to Drug Approval (₹89)",
+        date: "Sep 2026",
+        color: "#4C6EF5",
+        bg: "linear-gradient(135deg, #EEF2FF, #E0E7FF, #DBEAFE)",
+        href: "/blog/regulatory-affairs-complete-guide/",
+        isNew: true,
+    },
+    {
+        tag: "Free QA Course",
         title: "Free Pharmaceutical Quality Assurance (QA) Course with Certificate — Pharma Lesson",
         date: "Aug 2026",
         color: "#0D9488",

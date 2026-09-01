@@ -61,6 +61,12 @@ const staticRoutes: MetadataRoute.Sitemap = [
     priority: 0.4,
   },
   {
+    url: `${BASE_URL}/blog/regulatory-affairs-complete-guide/`,
+    lastModified: new Date("2026-09-01"),
+    changeFrequency: "weekly",
+    priority: 0.95,
+  },
+  {
     url: `${BASE_URL}/blog/pharmacovigilance-interview-preparation-kit/`,
     lastModified: new Date("2026-08-10"),
     changeFrequency: "monthly",
