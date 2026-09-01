@@ -242,7 +242,7 @@ export function RADemoGrid({ pages }: { pages: DemoImageItem[] }) {
                         className="absolute right-2 sm:right-6 w-10 h-10 rounded-full bg-white/15 flex items-center justify-center text-white hover:bg-white/25 transition-colors z-20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer"
                         onClick={(e) => {
                             e.stopPropagation();
-                            setActiveIndex((i) => (i === imagesLength - 1 ? 0 : i + 1));
+                            next();
                         }}
                         aria-label="Next Page"
                     >
