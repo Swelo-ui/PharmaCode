@@ -11,6 +11,9 @@ import '../../core/widgets/empty_state_view.dart';
 import '../../features/bookmarks/presentation/bookmarks_controller.dart';
 import '../../models/ai_bookmark_model.dart';
 import '../../services/ai_bookmark_service.dart';
+import '../../widgets/pharma_markdown_widget.dart';
+import '../../widgets/pharma_mascot_widget.dart';
+import '../ai/pharma_helper_screen.dart';
 import '../syllabus/subject_detail_screen.dart';
 
 class BookmarksScreen extends ConsumerStatefulWidget {
@@ -340,10 +343,11 @@ class _BookmarksScreenState extends ConsumerState<BookmarksScreen>
               child: ListView.separated(
                 padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
                 itemCount: filtered.length,
-                separatorBuilder: (ctx, idx) => const SizedBox(height: 12),
+                separatorBuilder: (ctx, idx) => const SizedBox(height: 14),
                 itemBuilder: (context, index) {
                   final item = filtered[index];
                   final isExpanded = _expandedBookmarkIds.contains(item.id);
+                  final isLongContent = item.answer.length > 500;
 
                   return Container(
                     decoration: BoxDecoration(
@@ -352,9 +356,9 @@ class _BookmarksScreenState extends ConsumerState<BookmarksScreen>
                       border: Border.all(color: const Color(0xFFE2E8F0), width: 1.2),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.02),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
+                          color: Colors.black.withValues(alpha: 0.03),
+                          blurRadius: 10,
+                          offset: const Offset(0, 3),
                         ),
                       ],
                     ),
@@ -362,43 +366,69 @@ class _BookmarksScreenState extends ConsumerState<BookmarksScreen>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Card Header
+                        // Card Header: PharmaHelper Branding & Subject Badge (Matching AI Tutor)
                         Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            const PharmaMascotWidget(
+                              size: 26,
+                              state: MascotState.idle,
+                              showBadge: false,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'PharmaHelper',
+                              style: GoogleFonts.dmSans(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 13,
+                                color: AppTheme.primaryNavy,
+                              ),
+                            ),
                             if (item.subjectCode != null && item.subjectCode!.isNotEmpty) ...[
+                              const SizedBox(width: 6),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFFEEF2FF),
                                   borderRadius: BorderRadius.circular(6),
+                                  border: Border.all(color: const Color(0xFFC7D2FE)),
                                 ),
                                 child: Text(
                                   item.subjectCode!,
                                   style: GoogleFonts.dmSans(
                                     color: const Color(0xFF3730A3),
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: 10.5,
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 10,
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 8),
                             ],
-                            Expanded(
-                              child: Text(
-                                item.question,
-                                style: GoogleFonts.dmSans(
-                                  color: AppTheme.primaryNavy,
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 14.5,
-                                  height: 1.3,
+                            if (item.providerUsed != null) ...[
+                              const SizedBox(width: 6),
+                              Flexible(
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFF1F5F9),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Text(
+                                    item.providerUsed!,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.inter(
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.w600,
+                                      color: const Color(0xFF475569),
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
+                            const Spacer(),
                             IconButton(
                               constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                               padding: EdgeInsets.zero,
-                              icon: const Icon(Icons.delete_outline_rounded, color: Color(0xFFEF4444), size: 20),
+                              icon: const Icon(Icons.delete_outline_rounded, color: Color(0xFFEF4444), size: 19),
                               tooltip: 'Delete Note',
                               onPressed: () async {
                                 await AiBookmarkService.instance.deleteBookmark(item.id);
@@ -415,29 +445,132 @@ class _BookmarksScreenState extends ConsumerState<BookmarksScreen>
                             ),
                           ],
                         ),
-                        const SizedBox(height: 10),
-                        // Answer Preview or Full Content
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF8FAFC),
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: const Color(0xFFE2E8F0)),
-                          ),
-                          child: Text(
-                            isExpanded ? item.answer : (item.answer.length > 250 ? '${item.answer.substring(0, 250)}...' : item.answer),
-                            style: GoogleFonts.inter(
-                              fontSize: 13,
-                              height: 1.45,
-                              color: const Color(0xFF334155),
+
+                        // Question Banner
+                        if (item.question.trim().isNotEmpty) ...[
+                          const SizedBox(height: 10),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF8FAFC),
+                              borderRadius: BorderRadius.circular(10),
+                              border: const Border(
+                                left: BorderSide(color: Color(0xFF2563EB), width: 3),
+                              ),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.only(top: 2),
+                                  child: Icon(Icons.psychology_alt_rounded, size: 15, color: Color(0xFF2563EB)),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    item.question,
+                                    style: GoogleFonts.dmSans(
+                                      color: AppTheme.primaryNavy,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 13.5,
+                                      height: 1.35,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
+                        ],
+
+                        const SizedBox(height: 12),
+
+                        // Formatted Answer (Same UI/UX as AI Tutor with Terminal Code Blocks & Tables)
+                        Stack(
+                          children: [
+                            ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxHeight: (!isExpanded && isLongContent) ? 260 : double.infinity,
+                              ),
+                              child: ClipRect(
+                                child: PharmaMarkdownWidget(
+                                  text: item.answer,
+                                  baseFontSize: 13.5,
+                                ),
+                              ),
+                            ),
+                            if (!isExpanded && isLongContent)
+                              Positioned(
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                height: 70,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        Colors.white.withValues(alpha: 0.0),
+                                        Colors.white.withValues(alpha: 0.95),
+                                        Colors.white,
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
-                        const SizedBox(height: 8),
-                        // Actions & Toggle
+
+                        const SizedBox(height: 10),
+                        const Divider(color: Color(0xFFF1F5F9), height: 1),
+                        const SizedBox(height: 10),
+
+                        // Actions Row: Open in AI, Copy, Share, Expand/Collapse
                         Row(
                           children: [
-                            if (item.answer.length > 250)
+                            // Ask follow-up in AI Tutor
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => PharmaHelperScreen(
+                                      initialPrompt: item.question,
+                                      initialContextTitle: item.subjectCode,
+                                    ),
+                                  ),
+                                );
+                              },
+                              borderRadius: BorderRadius.circular(6),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4.5),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFEFF6FF),
+                                  borderRadius: BorderRadius.circular(6),
+                                  border: Border.all(color: const Color(0xFFBFDBFE)),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(Icons.auto_awesome_rounded, size: 12, color: Color(0xFF1D4ED8)),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      'Ask AI',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w700,
+                                        color: const Color(0xFF1D4ED8),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+
+                            // Read Full / Show Less button
+                            if (isLongContent)
                               InkWell(
                                 onTap: () {
                                   setState(() {
@@ -450,11 +583,11 @@ class _BookmarksScreenState extends ConsumerState<BookmarksScreen>
                                 },
                                 borderRadius: BorderRadius.circular(6),
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
                                   child: Row(
                                     children: [
                                       Text(
-                                        isExpanded ? 'Show Less' : 'Read Full Note',
+                                        isExpanded ? 'Show Less' : 'Read More',
                                         style: GoogleFonts.inter(
                                           fontSize: 11.5,
                                           fontWeight: FontWeight.w700,
@@ -470,12 +603,15 @@ class _BookmarksScreenState extends ConsumerState<BookmarksScreen>
                                   ),
                                 ),
                               ),
+
                             const Spacer(),
+
+                            // Copy
                             InkWell(
                               onTap: () => _copyToClipboard(item.answer),
                               borderRadius: BorderRadius.circular(6),
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4.5),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFFF1F5F9),
                                   borderRadius: BorderRadius.circular(6),
@@ -484,17 +620,26 @@ class _BookmarksScreenState extends ConsumerState<BookmarksScreen>
                                   children: [
                                     const Icon(Icons.copy_rounded, size: 12, color: Color(0xFF475569)),
                                     const SizedBox(width: 4),
-                                    Text('Copy', style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: const Color(0xFF475569))),
+                                    Text(
+                                      'Copy',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w600,
+                                        color: const Color(0xFF475569),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
                             ),
                             const SizedBox(width: 8),
+
+                            // Share
                             InkWell(
                               onTap: () => _shareContent(item.question, item.answer),
                               borderRadius: BorderRadius.circular(6),
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4.5),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFFF1F5F9),
                                   borderRadius: BorderRadius.circular(6),
@@ -503,7 +648,14 @@ class _BookmarksScreenState extends ConsumerState<BookmarksScreen>
                                   children: [
                                     const Icon(Icons.share_rounded, size: 12, color: Color(0xFF475569)),
                                     const SizedBox(width: 4),
-                                    Text('Share', style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: const Color(0xFF475569))),
+                                    Text(
+                                      'Share',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w600,
+                                        color: const Color(0xFF475569),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),

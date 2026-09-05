@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.pharmacode.bpharm"
-    compileSdk = 36
+    compileSdk = 37
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
