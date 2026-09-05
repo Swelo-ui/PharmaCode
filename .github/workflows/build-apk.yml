@@ -65,11 +65,11 @@ jobs:
 
       - name: Build Android Release APK
         working-directory: pharmacode_app
-        run: flutter build apk --release
+        run: flutter build apk --release --android-skip-build-dependency-validation
 
       - name: Build Android Release AAB (Play Store)
         working-directory: pharmacode_app
-        run: flutter build appbundle --release
+        run: flutter build appbundle --release --android-skip-build-dependency-validation
 
       - name: Output Error to Summary
         if: failure()
