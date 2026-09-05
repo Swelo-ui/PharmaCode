@@ -62,9 +62,22 @@ jobs:
       - name: Build Android Release APK (Universal & Split ABIs)
         working-directory: pharmacode_app
         run: |
-          set -e
+          set +e
           echo "Building Universal Release APK..."
-          flutter build apk --release -v
+          flutter build apk --release -v > build_output.log 2>&1
+          BUILD_CODE=$?
+          if [ $BUILD_CODE -ne 0 ]; then
+            echo "### Flutter Build Failed (Exit Code: $BUILD_CODE)" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            grep -E "FAILURE|ERROR|Exception|What went wrong|Did not find|failed" -B 2 -A 8 build_output.log | tail -n 60 >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            echo "### Last 60 lines of log" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            tail -n 60 build_output.log >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            tail -n 80 build_output.log
+            exit $BUILD_CODE
+          fi
           echo "Building Split per ABI APKs..."
           flutter build apk --release --split-per-abi
 
@@ -77,7 +90,7 @@ jobs:
       - name: Prepare Release Artifacts
         run: |
           mkdir -p release-assets
-          cp pharmacode_app/build/app/outputs/flutter-apk/app-release.apk release-assets/PharmaCode-v1.0.2-Universal.apk
+          cp pharmacode_app/build/app/outputs/flutter-apk/app-release.apk release-assets/PharmaCode-v1.0.2-Universal.apk 2>/dev/null || true
           cp pharmacode_app/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk release-assets/PharmaCode-v1.0.2-arm64.apk 2>/dev/null || true
           cp pharmacode_app/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk release-assets/PharmaCode-v1.0.2-armv7.apk 2>/dev/null || true
           cp pharmacode_app/build/app/outputs/bundle/release/app-release.aab release-assets/PharmaCode-v1.0.2-Release.aab 2>/dev/null || true
