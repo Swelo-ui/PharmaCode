@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1072247356262",
+    "project_id": "pharmacode-f95c9",
+    "storage_bucket": "pharmacode-f95c9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1072247356262:android:91f7b1e0cc3d382d7526a7",
+        "android_client_info": {
+          "package_name": "com.pharmacode.bpharm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1072247356262-ju5nsffjjhm3g6dr1tnboh7dgc4rbs93.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pharmacode.bpharm",
+            "certificate_hash": "96817758ce7cf281c4bf2342f227db2c81cdbc7a"
+          }
+        },
+        {
+          "client_id": "1072247356262-g5ftdn1lh52uell7kfdhgo7ud1o59pll.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuaQc5HmY98nTAsIUatO6ro5AUv5Qj2mk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1072247356262-g5ftdn1lh52uell7kfdhgo7ud1o59pll.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
