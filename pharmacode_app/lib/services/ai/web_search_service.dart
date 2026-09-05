@@ -19,8 +19,20 @@ class WebSearchService {
   factory WebSearchService() => _instance;
   WebSearchService._internal();
 
+  /// Check if query is a greeting or casual chat
+  bool isGreetingOrCasual(String query) {
+    final lower = query.trim().toLowerCase();
+    if (lower.length < 5) return true;
+    final greetings = RegExp(
+      r'^(hi|hello|hey|namaste|hlo|heya|hola|kaise ho|kese ho|good morning|good evening|good afternoon|test|ok|okay|bye|thanks|thank you)\b',
+      caseSensitive: false,
+    );
+    return greetings.hasMatch(lower);
+  }
+
   /// Check if query likely needs live web search
   bool shouldTriggerSearch(String query) {
+    if (isGreetingOrCasual(query)) return false;
     final lower = query.toLowerCase();
     final triggers = [
       'latest',
@@ -43,12 +55,52 @@ class WebSearchService {
     return triggers.any((t) => lower.contains(t));
   }
 
+  /// Check if result is relevant to medical/pharmaceutical context or query
+  bool _isRelevantResult(String title, String snippet, String query) {
+    final combined = '$title $snippet'.toLowerCase();
+    final queryTokens = query.toLowerCase().split(RegExp(r'\s+')).where((t) => t.length > 2);
+
+    // Matches any query keyword
+    final matchesQuery = queryTokens.any((t) => combined.contains(t));
+
+    // Pharma / Health keywords whitelist
+    final pharmaTerms = [
+      'pharm',
+      'drug',
+      'medicin',
+      'clinical',
+      'fda',
+      'cdsco',
+      'therapy',
+      'therapeutic',
+      'disease',
+      'dose',
+      'tablet',
+      'capsule',
+      'adme',
+      'mechanism',
+      'receptor',
+      'treatment',
+      'patient',
+      'trial',
+      'guideline',
+      'who',
+    ];
+    final hasPharmaRelevance = pharmaTerms.any((p) => combined.contains(p));
+
+    return matchesQuery || hasPharmaRelevance;
+  }
+
   /// Perform search via DuckDuckGo Instant Answer API + Lite Web API
   Future<List<SearchResultItem>> search(String query, {int maxResults = 4}) async {
     final cleanQuery = query
         .replaceAll(RegExp(r'\b(search web|google search|latest news on)\b', caseSensitive: false), '')
         .trim();
-    if (cleanQuery.isEmpty) return [];
+
+    // Never search on greetings or empty queries
+    if (cleanQuery.isEmpty || isGreetingOrCasual(cleanQuery)) {
+      return [];
+    }
 
     final List<SearchResultItem> results = [];
 
@@ -68,7 +120,7 @@ class WebSearchService {
         final abstractText = data['AbstractText'] as String? ?? '';
         final abstractUrl = data['AbstractURL'] as String? ?? '';
 
-        if (abstractText.isNotEmpty) {
+        if (abstractText.isNotEmpty && _isRelevantResult(heading, abstractText, cleanQuery)) {
           results.add(SearchResultItem(
             title: heading.isNotEmpty ? heading : cleanQuery,
             snippet: abstractText,
@@ -83,7 +135,7 @@ class WebSearchService {
             if (item is Map && item.containsKey('Text') && item.containsKey('FirstURL')) {
               final text = item['Text'] as String? ?? '';
               final url = item['FirstURL'] as String? ?? '';
-              if (text.isNotEmpty) {
+              if (text.isNotEmpty && _isRelevantResult('', text, cleanQuery)) {
                 results.add(SearchResultItem(
                   title: text.split(' - ').first,
                   snippet: text,
@@ -95,7 +147,7 @@ class WebSearchService {
         }
       }
     } catch (e) {
-      debugPrint('[WebSearchService] Instant answer failed: $e');
+      debugPrint('[WebSearchService] Instant answer notice: $e');
     }
 
     // 2. If results are still low, try DuckDuckGo HTML Lite fallback
@@ -115,7 +167,6 @@ class WebSearchService {
 
         if (res.statusCode == 200) {
           final body = res.body;
-          // Extract snippets using regex
           final snippetRegex = RegExp(
             r'<a class="result__snippet[^>]*href="([^"]*)"[^>]*>(.*?)<\/a>',
             dotAll: true,
@@ -127,7 +178,7 @@ class WebSearchService {
             final rawSnippet = m.group(2) ?? '';
             final cleanSnippet = rawSnippet.replaceAll(RegExp(r'<[^>]*>'), '').trim();
 
-            if (cleanSnippet.isNotEmpty) {
+            if (cleanSnippet.isNotEmpty && _isRelevantResult(cleanQuery, cleanSnippet, cleanQuery)) {
               results.add(SearchResultItem(
                 title: cleanQuery,
                 snippet: cleanSnippet,
@@ -137,7 +188,7 @@ class WebSearchService {
           }
         }
       } catch (e) {
-        debugPrint('[WebSearchService] HTML search failed: $e');
+        debugPrint('[WebSearchService] HTML search notice: $e');
       }
     }
 

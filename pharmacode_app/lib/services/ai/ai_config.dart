@@ -5,6 +5,7 @@ enum AiProvider {
   groq,
   gemini,
   openrouter,
+  ovhcloud,
   pollinations,
 }
 
@@ -62,11 +63,21 @@ class AiConfig {
       keySignupUrl: 'https://openrouter.ai/keys',
       description: 'Access to top open-source models with dedicated free tiers.',
     ),
+    AiProvider.ovhcloud: AiProviderConfig(
+      provider: AiProvider.ovhcloud,
+      displayName: 'Kepler AI Engine (Zero-Key)',
+      endpoint: 'https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/chat/completions',
+      primaryModel: 'Mistral-7B-Instruct-v0.3',
+      fallbackModel: 'Mistral-Nemo-Instruct-2407',
+      requiresKey: false,
+      keySignupUrl: 'https://freellm.net',
+      description: 'Anonymous zero-key high speed endpoint from awesome-freellm-apis.',
+    ),
     AiProvider.pollinations: AiProviderConfig(
       provider: AiProvider.pollinations,
-      displayName: 'Serverless AI (Zero-Key Fallback)',
+      displayName: 'Pollinations AI (Zero-Key)',
       endpoint: 'https://text.pollinations.ai/',
-      primaryModel: 'mistral',
+      primaryModel: 'openai-fast',
       fallbackModel: 'openai',
       requiresKey: false,
       keySignupUrl: 'https://pollinations.ai',

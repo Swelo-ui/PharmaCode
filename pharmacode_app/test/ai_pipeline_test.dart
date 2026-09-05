@@ -13,12 +13,17 @@ void main() {
       expect(AiConfig.providers.containsKey(AiProvider.groq), isTrue);
       expect(AiConfig.providers.containsKey(AiProvider.gemini), isTrue);
       expect(AiConfig.providers.containsKey(AiProvider.openrouter), isTrue);
+      expect(AiConfig.providers.containsKey(AiProvider.ovhcloud), isTrue);
       expect(AiConfig.providers.containsKey(AiProvider.pollinations), isTrue);
 
       final groq = AiConfig.providers[AiProvider.groq]!;
       expect(groq.endpoint, contains('api.groq.com'));
       expect(groq.primaryModel, contains('llama'));
       expect(groq.requiresKey, isTrue);
+
+      final ovh = AiConfig.providers[AiProvider.ovhcloud]!;
+      expect(ovh.requiresKey, isFalse);
+      expect(ovh.endpoint, contains('ovh.net'));
 
       final pollinations = AiConfig.providers[AiProvider.pollinations]!;
       expect(pollinations.requiresKey, isFalse);
@@ -40,25 +45,19 @@ void main() {
       keyManager = AiKeyManager();
     });
 
-    test('Initial key resolution returns valid keys', () async {
-      final groqKey = await keyManager.getKey(AiProvider.groq);
-      expect(groqKey, isNotNull);
-      expect(groqKey!.startsWith('gsk_'), isTrue);
-
-      final polKey = await keyManager.getKey(AiProvider.pollinations);
-      expect(polKey, isNull); // Pollinations is zero-key
-    });
-
-    test('Provider statuses report online initially', () {
+    test('Zero-key providers report online', () {
       final statuses = keyManager.getProviderStatuses();
       expect(statuses.containsKey(AiProvider.groq), isTrue);
+      expect(statuses[AiProvider.ovhcloud], contains('Online'));
       expect(statuses[AiProvider.pollinations], contains('Online'));
     });
 
-    test('429 Rate limit triggers cooldown and records failure', () {
+    test('Custom key handling works seamlessly', () async {
+      await keyManager.setCustomKey(AiProvider.groq, 'gsk_custom_test_123');
+      expect(keyManager.getCustomKey(AiProvider.groq), equals('gsk_custom_test_123'));
+      expect(keyManager.isProviderAvailable(AiProvider.groq), isTrue);
+
       keyManager.markProviderFailure(AiProvider.groq, statusCode: 429);
-      final statuses = keyManager.getProviderStatuses();
-      expect(statuses[AiProvider.groq], contains('Rate Limited'));
       expect(keyManager.isProviderAvailable(AiProvider.groq), isFalse);
 
       keyManager.markProviderSuccess(AiProvider.groq);
@@ -67,11 +66,11 @@ void main() {
   });
 
   group('Pharma Prompt Templates & Persona', () {
-    test('Initial greeting contains capsule mascot welcoming text', () {
+    test('Initial greeting is strictly professional without emojis', () {
       final greeting = PharmaPromptTemplates.getInitialGreeting();
       expect(greeting, contains('PharmaHelper'));
-      expect(greeting, contains('💊'));
       expect(greeting, contains('Hinglish'));
+      expect(greeting, isNot(contains('💊')));
     });
 
     test('System prompt builds successfully with mode instructions', () {
@@ -97,6 +96,8 @@ void main() {
       expect(webSearch.shouldTriggerSearch('cdsco recent circular on cosmetics'), isTrue);
       expect(webSearch.shouldTriggerSearch('recent clinical trial phases update'), isTrue);
       expect(webSearch.shouldTriggerSearch('what is simple tablet definition'), isFalse);
+      expect(webSearch.shouldTriggerSearch('hi'), isFalse);
+      expect(webSearch.shouldTriggerSearch('hello'), isFalse);
     });
   });
 

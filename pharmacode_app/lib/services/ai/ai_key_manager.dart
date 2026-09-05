@@ -29,34 +29,9 @@ class AiKeyManager {
     AiProvider.groq: KeyHealth(),
     AiProvider.gemini: KeyHealth(),
     AiProvider.openrouter: KeyHealth(),
+    AiProvider.ovhcloud: KeyHealth(),
     AiProvider.pollinations: KeyHealth(),
   };
-
-  // Pre-configured XOR-scrambled backup keys with rotation
-  // Each key is obfuscated with XOR key 0x5A to prevent plain text extraction in APK
-  static const int _xorKey = 0x5A;
-
-  // Groq keys pool (obfuscated)
-  static final List<String> _bundledGroqKeys = [
-    // Pre-loaded rotating Groq keys
-    AiConfig.encodeSecret('gsk_free_demo_key_groq_pharma_1', _xorKey),
-    AiConfig.encodeSecret('gsk_free_demo_key_groq_pharma_2', _xorKey),
-  ];
-
-  // Gemini keys pool (obfuscated)
-  static final List<String> _bundledGeminiKeys = [
-    AiConfig.encodeSecret('AIzaSy_demo_gemini_key_pharma_1', _xorKey),
-    AiConfig.encodeSecret('AIzaSy_demo_gemini_key_pharma_2', _xorKey),
-  ];
-
-  // OpenRouter keys pool (obfuscated)
-  static final List<String> _bundledOpenRouterKeys = [
-    AiConfig.encodeSecret('sk-or-v1-demo-openrouter-key-1', _xorKey),
-  ];
-
-  int _groqIndex = 0;
-  int _geminiIndex = 0;
-  int _openRouterIndex = 0;
 
   /// Custom keys saved by student/dev
   String? _customGroqKey;
@@ -93,19 +68,11 @@ class AiKeyManager {
         if (_customGroqKey != null && _customGroqKey!.trim().isNotEmpty) {
           return _customGroqKey!.trim();
         }
-        if (_bundledGroqKeys.isNotEmpty) {
-          final encoded = _bundledGroqKeys[_groqIndex % _bundledGroqKeys.length];
-          return AiConfig.decodeSecret(encoded, _xorKey);
-        }
         return null;
 
       case AiProvider.gemini:
         if (_customGeminiKey != null && _customGeminiKey!.trim().isNotEmpty) {
           return _customGeminiKey!.trim();
-        }
-        if (_bundledGeminiKeys.isNotEmpty) {
-          final encoded = _bundledGeminiKeys[_geminiIndex % _bundledGeminiKeys.length];
-          return AiConfig.decodeSecret(encoded, _xorKey);
         }
         return null;
 
@@ -113,33 +80,16 @@ class AiKeyManager {
         if (_customOpenRouterKey != null && _customOpenRouterKey!.trim().isNotEmpty) {
           return _customOpenRouterKey!.trim();
         }
-        if (_bundledOpenRouterKeys.isNotEmpty) {
-          final encoded = _bundledOpenRouterKeys[_openRouterIndex % _bundledOpenRouterKeys.length];
-          return AiConfig.decodeSecret(encoded, _xorKey);
-        }
         return null;
 
+      case AiProvider.ovhcloud:
       case AiProvider.pollinations:
         return null; // Zero key needed
     }
   }
 
-  /// Rotate to next key within a provider
-  void rotateProviderKey(AiProvider provider) {
-    switch (provider) {
-      case AiProvider.groq:
-        _groqIndex++;
-        break;
-      case AiProvider.gemini:
-        _geminiIndex++;
-        break;
-      case AiProvider.openrouter:
-        _openRouterIndex++;
-        break;
-      case AiProvider.pollinations:
-        break;
-    }
-  }
+  /// Rotate or mark provider state
+  void rotateProviderKey(AiProvider provider) {}
 
   /// Save custom key entered by user
   Future<void> setCustomKey(AiProvider provider, String? key) async {
@@ -173,6 +123,7 @@ class AiKeyManager {
       case AiProvider.openrouter:
         _customOpenRouterKey = cleaned;
         break;
+      case AiProvider.ovhcloud:
       case AiProvider.pollinations:
         break;
     }
@@ -189,6 +140,7 @@ class AiKeyManager {
         return _customGeminiKey;
       case AiProvider.openrouter:
         return _customOpenRouterKey;
+      case AiProvider.ovhcloud:
       case AiProvider.pollinations:
         return null;
     }
@@ -196,10 +148,13 @@ class AiKeyManager {
 
   /// Record rate-limit or error on a provider
   void markProviderFailure(AiProvider provider, {int statusCode = 500}) {
-    rotateProviderKey(provider);
-    final cooldown = statusCode == 429 ? 90 : 45; // 90s cooldown on 429
-    _providerHealth[provider]?.recordFailure(cooldownSeconds: cooldown);
-    debugPrint('[AiKeyManager] Provider ${provider.name} failed with $statusCode. Cooldown: ${cooldown}s');
+    // Only apply a brief 15s cooldown on true HTTP 429 rate limit
+    if (statusCode == 429) {
+      _providerHealth[provider]?.recordFailure(cooldownSeconds: 15);
+      debugPrint('[AiKeyManager] Provider ${provider.name} rate limited (429). Cooldown: 15s');
+    } else {
+      debugPrint('[AiKeyManager] Provider ${provider.name} failed with $statusCode.');
+    }
   }
 
   /// Record success on a provider
@@ -207,28 +162,39 @@ class AiKeyManager {
     _providerHealth[provider]?.recordSuccess();
   }
 
-  /// Check if provider is available (not in cooldown)
+  /// Check if provider is available
   bool isProviderAvailable(AiProvider provider) {
-    if (provider == AiProvider.pollinations) return true; // Always available
+    if (provider == AiProvider.ovhcloud || provider == AiProvider.pollinations) {
+      return true; // Always available zero-key endpoints
+    }
     final health = _providerHealth[provider];
-    if (health == null) return true;
-    return !health.isInCooldown;
+    if (health != null && health.isInCooldown) return false;
+
+    // Providers requiring keys are available if a custom key is saved
+    final hasKey = getCustomKey(provider) != null && getCustomKey(provider)!.isNotEmpty;
+    return hasKey;
   }
 
   /// Provider diagnostics status
   Map<AiProvider, String> getProviderStatuses() {
     final Map<AiProvider, String> result = {};
     for (final p in AiProvider.values) {
-      if (p == AiProvider.pollinations) {
-        result[p] = '100% Online (Zero-Key Backup)';
+      if (p == AiProvider.ovhcloud) {
+        result[p] = 'Online (Zero-Key Kepler)';
+      } else if (p == AiProvider.pollinations) {
+        result[p] = 'Online (Zero-Key Backup)';
       } else {
+        final hasCustom = getCustomKey(p) != null && getCustomKey(p)!.isNotEmpty;
         final health = _providerHealth[p];
-        if (health != null && health.isInCooldown) {
-          final sec = health.cooldownUntil!.difference(DateTime.now()).inSeconds;
-          result[p] = 'Rate Limited (cooldown ${sec}s)';
+        if (hasCustom) {
+          if (health != null && health.isInCooldown) {
+            final sec = health.cooldownUntil!.difference(DateTime.now()).inSeconds;
+            result[p] = 'Cooldown (${sec}s)';
+          } else {
+            result[p] = 'Active (Custom Key)';
+          }
         } else {
-          final hasCustom = getCustomKey(p) != null;
-          result[p] = hasCustom ? 'Active (Custom Key)' : 'Active (Free Tier)';
+          result[p] = 'Ready (Tap to add Key)';
         }
       }
     }

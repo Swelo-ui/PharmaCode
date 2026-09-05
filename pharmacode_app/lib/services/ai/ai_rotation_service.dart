@@ -76,16 +76,22 @@ class AiRotationService {
     );
 
     // 5. Providers priority order:
-    // Groq (Ultra fast) -> Gemini (Deep reasoning) -> OpenRouter (Open-source free) -> Pollinations (0-key safety net)
+    // Custom Keys (Groq / Gemini / OpenRouter) -> OVHcloud Kepler (Zero-Key) -> Pollinations (Zero-Key)
     final providerQueue = [
       AiProvider.groq,
       AiProvider.gemini,
       AiProvider.openrouter,
+      AiProvider.ovhcloud,
       AiProvider.pollinations,
     ];
 
-    // Filter by health (move in-cooldown providers to back)
+    // Priority: Providers with active custom keys -> Keyless providers -> Inactive providers
     providerQueue.sort((a, b) {
+      final aHasCustom = _keyManager.getCustomKey(a) != null && _keyManager.getCustomKey(a)!.isNotEmpty;
+      final bHasCustom = _keyManager.getCustomKey(b) != null && _keyManager.getCustomKey(b)!.isNotEmpty;
+      if (aHasCustom && !bHasCustom) return -1;
+      if (!aHasCustom && bHasCustom) return 1;
+
       final aAvail = _keyManager.isProviderAvailable(a);
       final bAvail = _keyManager.isProviderAvailable(b);
       if (aAvail && !bAvail) return -1;
@@ -182,6 +188,16 @@ class AiRotationService {
           },
         );
 
+      case AiProvider.ovhcloud:
+        return _callOpenAiCompatible(
+          endpoint: config.endpoint,
+          apiKey: '',
+          model: config.primaryModel,
+          fallbackModel: config.fallbackModel,
+          messages: messages,
+          provider: provider,
+        );
+
       case AiProvider.pollinations:
         return _callPollinations(messages);
     }
@@ -199,7 +215,7 @@ class AiRotationService {
   }) async {
     final headers = {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer $apiKey',
+      if (apiKey.isNotEmpty) 'Authorization': 'Bearer $apiKey',
       ...?extraHeaders,
     };
 
@@ -225,10 +241,10 @@ class AiRotationService {
       }
     }
 
-    // On 429 (Rate Limit) or 401, notify key manager and throw
-    if (res.statusCode == 429 || res.statusCode == 401 || res.statusCode == 403) {
+    // On 429 (Rate Limit), notify key manager and throw
+    if (res.statusCode == 429) {
       _keyManager.markProviderFailure(provider, statusCode: res.statusCode);
-      throw Exception('Provider $provider returned HTTP ${res.statusCode}');
+      throw Exception('Provider $provider returned HTTP 429');
     }
 
     throw Exception('Provider $provider failed with HTTP ${res.statusCode}: ${res.body}');
@@ -236,38 +252,25 @@ class AiRotationService {
 
   /// Pollinations Zero-Key Serverless Fallback
   Future<String?> _callPollinations(List<Map<String, String>> messages) async {
-    // Format conversation into prompt
-    final promptBuffer = StringBuffer();
-    for (final m in messages) {
-      final role = m['role'] == 'user' ? 'Student' : (m['role'] == 'system' ? 'System' : 'PharmaHelper');
-      promptBuffer.writeln('$role: ${m['content']}');
-    }
-    promptBuffer.writeln('PharmaHelper:');
+    try {
+      final lastUserMessage = messages.lastWhere((m) => m['role'] == 'user', orElse: () => {'content': ''})['content'] ?? '';
+      if (lastUserMessage.isEmpty) return null;
 
-    final fullPrompt = promptBuffer.toString();
+      final prompt = Uri.encodeComponent(lastUserMessage);
+      final uri = Uri.parse('https://text.pollinations.ai/$prompt?model=openai-fast');
 
-    // Pollinations OpenAI endpoint or text endpoint
-    final uri = Uri.parse('https://text.pollinations.ai/');
-    final res = await http.post(
-      uri,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'messages': messages,
-        'model': 'mistral',
-        'jsonMode': false,
-      }),
-    ).timeout(const Duration(seconds: 16));
+      final res = await http.get(uri, headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 PharmaCode/1.0',
+      }).timeout(const Duration(seconds: 10));
 
-    if (res.statusCode == 200) {
-      final text = utf8.decode(res.bodyBytes).trim();
-      if (text.isNotEmpty) return text;
-    }
-
-    // Direct GET fallback on pollinations
-    final getUri = Uri.parse('https://text.pollinations.ai/${Uri.encodeComponent(fullPrompt.substring(0, fullPrompt.length.clamp(0, 1000)))}');
-    final getRes = await http.get(getUri).timeout(const Duration(seconds: 12));
-    if (getRes.statusCode == 200) {
-      return utf8.decode(getRes.bodyBytes).trim();
+      if (res.statusCode == 200) {
+        final text = utf8.decode(res.bodyBytes).trim();
+        if (text.isNotEmpty && !text.startsWith('{') && !text.contains('"error"')) {
+          return text;
+        }
+      }
+    } catch (e) {
+      debugPrint('[AiRotationService] Pollinations fallback notice: $e');
     }
 
     return null;
@@ -303,7 +306,7 @@ class AiRotationService {
     PharmaChatMode mode,
   ) {
     final buffer = StringBuffer();
-    buffer.writeln('### 📚 PharmaHelper (Offline Guide)\n');
+    buffer.writeln('### PharmaHelper (Offline Study Guide)\n');
     buffer.writeln('Main abhi aapke device ke offline database se information retrieve kar raha hoon:\n');
 
     if (!ctx.isEmpty) {

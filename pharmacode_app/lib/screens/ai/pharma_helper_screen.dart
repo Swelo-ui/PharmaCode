@@ -37,12 +37,12 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
   bool _webSearchEnabled = false;
 
   final List<String> _suggestedPrompts = [
-    'Bioavailability simple Hinglish me samjhao 💊',
-    'Write a 5-mark answer on Tablet Capping & Lamination 📝',
-    'What are the 4 validity criteria in Pharmacovigilance ICSR? 🔬',
-    'GPCR signaling pathway simple analogy se batao ⚡',
-    'ICH Q1A stability testing guidelines summary 📋',
-    'Recent FDA approved antibody drugs search karo 🌐',
+    'Bioavailability simple Hinglish me samjhao',
+    'Write a 5-mark answer on Tablet Capping & Lamination',
+    'What are the 4 validity criteria in Pharmacovigilance ICSR?',
+    'GPCR signaling pathway simple analogy se batao',
+    'ICH Q1A stability testing guidelines summary',
+    'Recent FDA approved antibody drugs search karo',
   ];
 
   @override
@@ -161,7 +161,7 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
   void _shareMessage(String text) {
     SharePlus.instance.share(
       ShareParams(
-        text: '📚 PharmaCode AI Tutor Note:\n\n$text\n\nStudied via PharmaCode — Complete B.Pharm Companion',
+        text: 'PharmaCode AI Tutor Note:\n\n$text\n\nStudied via PharmaCode — Complete B.Pharm Companion',
         subject: 'PharmaCode Study Note',
       ),
     );
@@ -306,25 +306,25 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
           children: [
             _buildModeChip(
               mode: PharmaChatMode.tutorHinglish,
-              label: '🎓 Professor (Hinglish)',
+              label: 'Professor (Hinglish)',
               color: const Color(0xFF2563EB),
             ),
             const SizedBox(width: 8),
             _buildModeChip(
               mode: PharmaChatMode.examPrep,
-              label: '📝 Exam Prep (5/10 Marks)',
+              label: 'Exam Prep (5/10 Marks)',
               color: const Color(0xFF7C3AED),
             ),
             const SizedBox(width: 8),
             _buildModeChip(
               mode: PharmaChatMode.mnemonic,
-              label: '💡 Mnemonics & Tricks',
+              label: 'Mnemonics & Revision',
               color: const Color(0xFFD97706),
             ),
             const SizedBox(width: 8),
             _buildModeChip(
               mode: PharmaChatMode.webSearch,
-              label: '🌐 Web Research (FDA/CDSCO)',
+              label: 'Clinical & Web Research',
               color: const Color(0xFF0D9488),
             ),
           ],
@@ -504,7 +504,7 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                   const SizedBox(height: 14),
                   const Divider(color: Color(0xFFE2E8F0)),
                   Text(
-                    '🌐 Live Web Citations & Sources:',
+                    'Verified Web Sources & Citations:',
                     style: GoogleFonts.inter(
                       fontSize: 11.5,
                       fontWeight: FontWeight.w700,
@@ -708,94 +708,110 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
       top: false,
       bottom: true,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: Colors.white,
           border: const Border(top: BorderSide(color: Color(0xFFE2E8F0))),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 10,
-              offset: const Offset(0, -3),
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 8,
+              offset: const Offset(0, -2),
             ),
           ],
         ),
-      child: Row(
-        children: [
-          // Web Search Toggle
-          IconButton(
-            icon: Icon(
-              Icons.language_rounded,
-              color: _webSearchEnabled ? const Color(0xFF0D9488) : const Color(0xFF94A3B8),
-            ),
-            tooltip: _webSearchEnabled ? 'Web Search Active' : 'Enable Web Search',
-            onPressed: () {
-              setState(() {
-                _webSearchEnabled = !_webSearchEnabled;
-              });
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    _webSearchEnabled ? '🌐 Live Web Grounding Enabled' : 'Offline In-App Grounding Only',
-                    style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+        child: Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFFF1F5F9),
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: const Color(0xFFE2E8F0)),
+          ),
+          padding: const EdgeInsets.only(left: 4, right: 6, top: 3, bottom: 3),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Web Search Toggle inside pill
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(20),
+                  onTap: () {
+                    setState(() {
+                      _webSearchEnabled = !_webSearchEnabled;
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          _webSearchEnabled ? 'Live Web Grounding Enabled' : 'Offline In-App Grounding Only',
+                          style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                        ),
+                        duration: const Duration(seconds: 1),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: _webSearchEnabled ? const Color(0xFFCCFBF1) : Colors.transparent,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.language_rounded,
+                      size: 20,
+                      color: _webSearchEnabled ? const Color(0xFF0D9488) : const Color(0xFF94A3B8),
+                    ),
                   ),
-                  duration: const Duration(seconds: 1),
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
-            },
-          ),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF1F5F9),
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: TextField(
-                controller: _textCtrl,
-                minLines: 1,
-                maxLines: 4,
-                textInputAction: TextInputAction.send,
-                onSubmitted: _handleSendMessage,
-                style: GoogleFonts.inter(fontSize: 14, color: const Color(0xFF0F172A)),
-                decoration: InputDecoration(
-                  hintText: 'Ask PharmaHelper in Hinglish or English...',
-                  hintStyle: GoogleFonts.inter(color: const Color(0xFF94A3B8), fontSize: 13.5),
-                  border: InputBorder.none,
-                  isDense: true,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 10),
                 ),
               ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Container(
-            width: 42,
-            height: 42,
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFF2563EB), Color(0xFF1D4ED8)],
-              ),
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF2563EB).withValues(alpha: 0.3),
-                  blurRadius: 6,
-                  offset: const Offset(0, 2),
+              const SizedBox(width: 4),
+              Expanded(
+                child: TextField(
+                  controller: _textCtrl,
+                  minLines: 1,
+                  maxLines: 4,
+                  textInputAction: TextInputAction.send,
+                  onSubmitted: _handleSendMessage,
+                  style: GoogleFonts.inter(fontSize: 14, color: const Color(0xFF0F172A)),
+                  decoration: InputDecoration(
+                    hintText: 'Ask PharmaHelper in Hinglish or English...',
+                    hintStyle: GoogleFonts.inter(color: const Color(0xFF94A3B8), fontSize: 13),
+                    border: InputBorder.none,
+                    isDense: true,
+                    contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                  ),
                 ),
-              ],
-            ),
-            child: IconButton(
-              icon: const Icon(Icons.send_rounded, color: Colors.white, size: 19),
-              onPressed: () => _handleSendMessage(_textCtrl.text),
-            ),
+              ),
+              const SizedBox(width: 4),
+              Container(
+                width: 34,
+                height: 34,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF1E3A8A), Color(0xFF2563EB)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  shape: BoxShape.circle,
+                ),
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+                  icon: _isLoading
+                      ? const SizedBox(
+                          width: 14,
+                          height: 14,
+                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                        )
+                      : const Icon(Icons.arrow_upward_rounded, color: Colors.white, size: 18),
+                  onPressed: _isLoading ? null : () => _handleSendMessage(_textCtrl.text),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   /// Clean formatted text rendering for markdown without extra heavy packages
   Widget _renderFormattedText(String text) {
@@ -915,23 +931,112 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
   }
 
   Widget _buildRichInlineText(String text) {
-    // Basic bold **text** parser
-    final parts = text.split('**');
-    final List<TextSpan> spans = [];
+    // Clean unwanted raw patterns like *"quote"* or "*quote*"
+    String cleaned = text;
+    cleaned = cleaned.replaceAll(RegExp(r'\*\"(.*?)\"\*'), '"\$1"');
+    cleaned = cleaned.replaceAll(RegExp(r'\"\*(.*?)\*\"'), '"\$1"');
 
-    for (int i = 0; i < parts.length; i++) {
-      final isBold = i % 2 == 1;
-      spans.add(
-        TextSpan(
-          text: parts[i],
+    // Tokenise markdown spans: bold (**...**), italic (*...* or _..._), code (`...`)
+    final regex = RegExp(r'(\*\*[^*]+?\*\*|\*[^*\s][^*]*?\*|`[^`]+?`|_[^_\s][^_]*?_)');
+    final matches = regex.allMatches(cleaned);
+
+    if (matches.isEmpty) {
+      final plainText = cleaned.replaceAll(RegExp(r'^\*+|\*+$'), '').trim();
+      return Text(
+        plainText,
+        style: GoogleFonts.inter(
+          fontSize: 13.8,
+          height: 1.45,
+          fontWeight: FontWeight.w400,
+          color: const Color(0xFF334155),
+        ),
+      );
+    }
+
+    final List<TextSpan> spans = [];
+    int lastIndex = 0;
+
+    for (final match in matches) {
+      if (match.start > lastIndex) {
+        final pre = cleaned.substring(lastIndex, match.start).replaceAll(RegExp(r'^\*+|\*+$'), '');
+        if (pre.isNotEmpty) {
+          spans.add(TextSpan(
+            text: pre,
+            style: GoogleFonts.inter(
+              fontSize: 13.8,
+              height: 1.45,
+              fontWeight: FontWeight.w400,
+              color: const Color(0xFF334155),
+            ),
+          ));
+        }
+      }
+
+      final token = match.group(0)!;
+      if (token.startsWith('**') && token.endsWith('**') && token.length > 4) {
+        final inner = token.substring(2, token.length - 2);
+        spans.add(TextSpan(
+          text: inner,
           style: GoogleFonts.inter(
             fontSize: 13.8,
             height: 1.45,
-            fontWeight: isBold ? FontWeight.w800 : FontWeight.w400,
-            color: isBold ? const Color(0xFF0F172A) : const Color(0xFF334155),
+            fontWeight: FontWeight.w800,
+            color: const Color(0xFF0F172A),
           ),
-        ),
-      );
+        ));
+      } else if (token.startsWith('*') && token.endsWith('*') && token.length > 2) {
+        final inner = token.substring(1, token.length - 1);
+        spans.add(TextSpan(
+          text: inner,
+          style: GoogleFonts.inter(
+            fontSize: 13.8,
+            height: 1.45,
+            fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.w500,
+            color: const Color(0xFF1E293B),
+          ),
+        ));
+      } else if (token.startsWith('_') && token.endsWith('_') && token.length > 2) {
+        final inner = token.substring(1, token.length - 1);
+        spans.add(TextSpan(
+          text: inner,
+          style: GoogleFonts.inter(
+            fontSize: 13.8,
+            height: 1.45,
+            fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.w500,
+            color: const Color(0xFF1E293B),
+          ),
+        ));
+      } else if (token.startsWith('`') && token.endsWith('`') && token.length > 2) {
+        final inner = token.substring(1, token.length - 1);
+        spans.add(TextSpan(
+          text: ' $inner ',
+          style: GoogleFonts.jetBrainsMono(
+            fontSize: 12.5,
+            fontWeight: FontWeight.w600,
+            color: const Color(0xFF1E40AF),
+            backgroundColor: const Color(0xFFEFF6FF),
+          ),
+        ));
+      }
+
+      lastIndex = match.end;
+    }
+
+    if (lastIndex < cleaned.length) {
+      final post = cleaned.substring(lastIndex).replaceAll(RegExp(r'^\*+|\*+$'), '');
+      if (post.isNotEmpty) {
+        spans.add(TextSpan(
+          text: post,
+          style: GoogleFonts.inter(
+            fontSize: 13.8,
+            height: 1.45,
+            fontWeight: FontWeight.w400,
+            color: const Color(0xFF334155),
+          ),
+        ));
+      }
     }
 
     return Text.rich(TextSpan(children: spans));
@@ -1027,7 +1132,9 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                           decoration: BoxDecoration(
                             color: entry.value.contains('Online') || entry.value.contains('Active')
                                 ? const Color(0xFFDCFCE7)
-                                : const Color(0xFFFEF3C7),
+                                : (entry.value.contains('Cooldown')
+                                    ? const Color(0xFFFEF3C7)
+                                    : const Color(0xFFEFF6FF)),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
@@ -1037,7 +1144,9 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                               fontWeight: FontWeight.w700,
                               color: entry.value.contains('Online') || entry.value.contains('Active')
                                   ? const Color(0xFF166534)
-                                  : const Color(0xFF92400E),
+                                  : (entry.value.contains('Cooldown')
+                                      ? const Color(0xFF92400E)
+                                      : const Color(0xFF1D4ED8)),
                             ),
                           ),
                         ),

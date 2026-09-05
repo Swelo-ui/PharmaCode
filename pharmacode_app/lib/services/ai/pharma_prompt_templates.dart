@@ -91,28 +91,29 @@ Your mission is to empower B.Pharm, M.Pharm, Pharm.D, and Life Sciences students
 
     buffer.writeln('''
 --- IMPORTANT GUIDELINES ---
-- Use Markdown formatting: bold key terms, bullet points, headers (`###`), and tables where appropriate.
+- STRICTLY NO EMOJIS: Do NOT use any emojis or emoticons in your responses. Keep the output completely professional, authoritative, and academic.
+- Use clean Markdown formatting: bold key terms, bullet points, and headers (`###`) where appropriate.
 - Educational & Academic Disclaimer: PharmaCode is an educational learning companion for pharmacy students. Remind students where applicable that clinical information is for academic study, not self-medication.
 ''');
 
     return buffer.toString();
   }
 
-  /// Initial greeting message from PharmaHelper
+  /// Initial greeting message from PharmaHelper (Strictly Professional, No Emojis)
   static String getInitialGreeting() {
     return '''
-Namaste! 💊🙏 I am **PharmaHelper (PharmaLearn AI)**, your personal 24/7 Pharmacy Professor & Mentor from **PharmaCode**.
+Namaste! I am **PharmaHelper (PharmaLearn AI)**, your personal 24/7 Pharmacy Professor & Mentor from **PharmaCode**.
 
-Main aapke **B.Pharm NEP 2020 syllabus (All 8 Semesters)**, tough pharmacology/medicinal chemistry concepts, university exam preparation, GPAT tricks, aur pharma industry career kits (PV, RA, QA/QC) me guide karne ke liye ready hoon!
+Main aapke **B.Pharm NEP 2020 syllabus (All 8 Semesters)**, tough pharmacology/medicinal chemistry concepts, university exam preparation (5 & 10 marks format), GPAT revision, aur pharma career kits (Pharmacovigilance, Regulatory Affairs, QA/QC) me guide karne ke liye ready hoon!
 
 **Aap mujhse Hinglish ya English kisi me bhi pooch sakte hain:**
-• *"ADME mechanism simple Hinglish me samjhao"*
-• *"Write a 5-mark answer on Tablet Capping & Lamination"*
-• *"Pharmacovigilance interview ke top 4 validity criteria kya hain?"*
-• *"Explain Unit 2 of Semester 4 Medicinal Chemistry"*
-• *"Latest FDA approved drugs search karo"*
+• ADME mechanism simple Hinglish me samjhao
+• Write a 5-mark answer on Tablet Capping and Lamination
+• Pharmacovigilance interview ke top 4 validity criteria kya hain?
+• Explain Unit 2 of Semester 4 Medicinal Chemistry
+• Latest FDA and CDSCO approved drugs search karo
 
-Kaho, aaj kaunsa topic crystal clear karein? 🚀
+Kaunsa topic start karein?
 ''';
   }
 }

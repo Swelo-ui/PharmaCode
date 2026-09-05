@@ -148,47 +148,51 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
         tooltip: 'Menu',
       ),
       title: _currentIndex == 0
-          ? Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 28,
-                  height: 28,
-                  margin: const EdgeInsets.only(right: 6),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(
-                      'assets/images/app_icon.png',
-                      fit: BoxFit.contain,
-                      filterQuality: FilterQuality.high,
+          ? FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 28,
+                    height: 28,
+                    margin: const EdgeInsets.only(right: 6),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.asset(
+                        'assets/images/app_icon.png',
+                        fit: BoxFit.contain,
+                        filterQuality: FilterQuality.high,
+                      ),
                     ),
                   ),
-                ),
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'Pharma',
-                        style: GoogleFonts.dmSans(
-                          color: AppTheme.primaryNavy,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 18,
-                          letterSpacing: -0.4,
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Pharma',
+                          style: GoogleFonts.dmSans(
+                            color: AppTheme.primaryNavy,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 18,
+                            letterSpacing: -0.4,
+                          ),
                         ),
-                      ),
-                      TextSpan(
-                        text: 'Code',
-                        style: GoogleFonts.dmSans(
-                          color: AppTheme.brandBlue,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 18,
-                          letterSpacing: -0.4,
+                        TextSpan(
+                          text: 'Code',
+                          style: GoogleFonts.dmSans(
+                            color: AppTheme.brandBlue,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 18,
+                            letterSpacing: -0.4,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             )
           : Text(
               titles[_currentIndex],
@@ -200,26 +204,33 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
             ),
       actions: [
         IconButton(
-          constraints: const BoxConstraints(minWidth: 38, minHeight: 38),
-          padding: const EdgeInsets.all(8),
-          icon: const Icon(Icons.search_rounded, size: 22),
+          constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+          padding: const EdgeInsets.all(6),
+          icon: const Icon(Icons.search_rounded, size: 21),
           onPressed: () => showSearch(context: context, delegate: GlobalSearchDelegate()),
           tooltip: 'Search',
         ),
-        AnimatedDownloadButton(
-          isActive: _currentIndex == 2,
-          onTap: () {
+        IconButton(
+          constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+          padding: const EdgeInsets.all(6),
+          icon: Icon(
+            _currentIndex == 2 ? Icons.file_download_rounded : Icons.file_download_outlined,
+            size: 21,
+            color: _currentIndex == 2 ? AppTheme.brandBlue : AppTheme.primaryNavy,
+          ),
+          onPressed: () {
             HapticFeedback.selectionClick();
             setState(() => _currentIndex = 2);
           },
+          tooltip: 'Free Notes & Downloads',
         ),
         Stack(
           alignment: Alignment.center,
           children: [
             IconButton(
-              constraints: const BoxConstraints(minWidth: 38, minHeight: 38),
-              padding: const EdgeInsets.all(8),
-              icon: const Icon(Icons.notifications_outlined, size: 22),
+              constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+              padding: const EdgeInsets.all(6),
+              icon: const Icon(Icons.notifications_outlined, size: 21),
               onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const NotificationsScreen()),
@@ -228,16 +239,16 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
             ),
             if (unreadCount > 0)
               Positioned(
-                top: 8,
-                right: 8,
+                top: 5,
+                right: 5,
                 child: Container(
-                  width: 15,
-                  height: 15,
+                  width: 14,
+                  height: 14,
                   decoration: const BoxDecoration(color: Color(0xFFEF4444), shape: BoxShape.circle),
                   alignment: Alignment.center,
                   child: Text(
                     unreadCount > 9 ? '9+' : '$unreadCount',
-                    style: const TextStyle(color: Colors.white, fontSize: 8.5, fontWeight: FontWeight.bold),
+                    style: const TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -247,8 +258,8 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
           GestureDetector(
             onTap: _onProfileButtonTapped,
             child: Container(
-              margin: const EdgeInsets.only(right: 12, left: 4),
-              padding: const EdgeInsets.all(2),
+              margin: const EdgeInsets.only(right: 8, left: 2),
+              padding: const EdgeInsets.all(1.5),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(color: const Color(0xFF10B981), width: 1.8),
@@ -257,24 +268,24 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
                 avatarKey: avatarKey,
                 photoUrl: photoUrl,
                 name: displayName,
-                size: 28,
+                size: 26,
                 showOnlineDot: true,
               ),
             ),
           )
         else
           IconButton(
-            constraints: const BoxConstraints(minWidth: 38, minHeight: 38),
-            padding: const EdgeInsets.all(8),
+            constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+            padding: const EdgeInsets.all(6),
             icon: const Icon(
               Icons.account_circle_outlined,
               color: AppTheme.primaryNavy,
-              size: 24,
+              size: 22,
             ),
             onPressed: _onProfileButtonTapped,
             tooltip: 'Sign In',
           ),
-        const SizedBox(width: 4),
+        const SizedBox(width: 2),
       ],
     );
   }
@@ -809,80 +820,6 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
         Navigator.pop(context);
         setState(() => _currentIndex = index);
       },
-    );
-  }
-}
-
-/// Animated Download button in the AppBar next to Search
-class AnimatedDownloadButton extends StatefulWidget {
-  final bool isActive;
-  final VoidCallback onTap;
-
-  const AnimatedDownloadButton({
-    super.key,
-    required this.isActive,
-    required this.onTap,
-  });
-
-  @override
-  State<AnimatedDownloadButton> createState() => _AnimatedDownloadButtonState();
-}
-
-class _AnimatedDownloadButtonState extends State<AnimatedDownloadButton>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _ctrl;
-  late Animation<double> _bounceAnim;
-
-  @override
-  void initState() {
-    super.initState();
-    _ctrl = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1500),
-    )..repeat(reverse: true);
-
-    _bounceAnim = Tween<double>(begin: 0.0, end: 2.5).animate(
-      CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut),
-    );
-  }
-
-  @override
-  void dispose() {
-    _ctrl.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      constraints: const BoxConstraints(minWidth: 38, minHeight: 38),
-      padding: const EdgeInsets.all(8),
-      tooltip: 'Free Notes & Downloads',
-      onPressed: widget.onTap,
-      icon: AnimatedBuilder(
-        animation: _bounceAnim,
-        builder: (context, child) {
-          return Transform.translate(
-            offset: Offset(0, _bounceAnim.value),
-            child: child,
-          );
-        },
-        child: Container(
-          padding: const EdgeInsets.all(3),
-          decoration: widget.isActive
-              ? BoxDecoration(
-                  color: const Color(0xFFDBEAFE),
-                  shape: BoxShape.circle,
-                  border: Border.all(color: AppTheme.brandBlue, width: 1.2),
-                )
-              : null,
-          child: Icon(
-            Icons.download_rounded,
-            size: 22,
-            color: widget.isActive ? AppTheme.brandBlue : AppTheme.primaryNavy,
-          ),
-        ),
-      ),
     );
   }
 }
