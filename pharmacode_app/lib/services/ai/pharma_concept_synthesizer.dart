@@ -1,5 +1,6 @@
 import 'pharma_knowledge_service.dart';
 import 'pharma_prompt_templates.dart';
+import 'web_search_service.dart';
 
 /// Intelligent academic concept synthesizer for PCI B.Pharm NEP 2020 curriculum.
 /// Ensures students receive comprehensive, deeply accurate explanations of pharmacy
@@ -30,7 +31,7 @@ Mera mission B.Pharm aur allied pharmacy students ko PCI NEP 2020 syllabus ke ac
 - **Pharma Industry Careers**: Pharmacovigilance (ICSR, MedDRA), Regulatory Affairs (eCTD dossiers), aur QA/QC.
 - **Bilingual Hinglish & English**: Kisi bhi complex concept ko easy Hinglish ya formal English me samajhna.
 
-Aap abhi koi bhi question pooch sakte hain, jaise: *"Tell me about bioavailability"*, *"Tablet capping kyu hoti hai?"*, ya *"GPCR signaling explain karo"*!''';
+Aap abhi koi bhi question pooch sakte hain, jaise: *"Tell me about bioavailability"*, *"Blood ki definition kya hai?"*, ya *"New drugs names batao"*!''';
   }
 
   /// Comprehensive concept answer synthesizer
@@ -38,6 +39,7 @@ Aap abhi koi bhi question pooch sakte hain, jaise: *"Tell me about bioavailabili
     required String query,
     required PharmaChatMode mode,
     required PharmaKnowledgeContext ctx,
+    List<SearchResultItem> citations = const [],
   }) {
     final lower = query.toLowerCase();
 
@@ -49,7 +51,11 @@ Aap abhi koi bhi question pooch sakte hain, jaise: *"Tell me about bioavailabili
     // 2. Specialized Master Academic Concept Handlers
     String? conceptBody;
 
-    if (_matchesBioavailability(lower)) {
+    if (_matchesBlood(lower)) {
+      conceptBody = _getBloodExplanation();
+    } else if (_matchesNewDrugs(lower)) {
+      conceptBody = _getNewDrugsExplanation();
+    } else if (_matchesBioavailability(lower)) {
       conceptBody = _getBioavailabilityExplanation();
     } else if (_matchesTabletDefects(lower)) {
       conceptBody = _getTabletDefectsExplanation();
@@ -73,6 +79,10 @@ Aap abhi koi bhi question pooch sakte hain, jaise: *"Tell me about bioavailabili
       conceptBody = _getBcsExplanation();
     } else if (_matchesNdds(lower)) {
       conceptBody = _getNddsExplanation();
+    } else if (_matchesDosageForms(lower)) {
+      conceptBody = _getDosageFormsExplanation();
+    } else if (_matchesDrugsAct(lower)) {
+      conceptBody = _getDrugsActExplanation();
     }
 
     final buffer = StringBuffer();
@@ -80,8 +90,8 @@ Aap abhi koi bhi question pooch sakte hain, jaise: *"Tell me about bioavailabili
     if (conceptBody != null) {
       buffer.writeln(conceptBody);
     } else {
-      // General Pharmacy Concept synthesis using in-app knowledge base
-      buffer.writeln(_synthesizeGeneralPharmacyAnswer(query, ctx, mode));
+      // General Pharmacy Concept synthesis using in-app knowledge base and web citations
+      buffer.writeln(_synthesizeGeneralPharmacyAnswer(query, ctx, mode, citations));
     }
 
     // Always append In-App Syllabus & Study Links cleanly at the bottom as suggestions
@@ -94,6 +104,29 @@ Aap abhi koi bhi question pooch sakte hain, jaise: *"Tell me about bioavailabili
   }
 
   // --- Concept Matchers ---
+
+  static bool _matchesBlood(String q) =>
+      q.contains('blood') ||
+      q.contains('khoon') ||
+      q.contains('erythrocyte') ||
+      q.contains('leukocyte') ||
+      q.contains('rbc') ||
+      q.contains('wbc') ||
+      q.contains('platelet') ||
+      q.contains('hemoglobin') ||
+      q.contains('haemoglobin') ||
+      q.contains('hematolog') ||
+      q.contains('plasma');
+
+  static bool _matchesNewDrugs(String q) =>
+      q.contains('new drug') ||
+      q.contains('recent drug') ||
+      q.contains('latest drug') ||
+      q.contains('nayi dawa') ||
+      q.contains('drugs name') ||
+      q.contains('drug name') ||
+      q.contains('fda approval') ||
+      q.contains('cdsco approval');
 
   static bool _matchesBioavailability(String q) =>
       q.contains('bioavailab') || q.contains('bioequivalence') || q.contains('bio-availability');
@@ -181,7 +214,147 @@ Aap abhi koi bhi question pooch sakte hain, jaise: *"Tell me about bioavailabili
       q.contains('novel drug delivery') ||
       q.contains('sustained release');
 
+  static bool _matchesDosageForms(String q) =>
+      q.contains('dosage form') ||
+      q.contains('suspension') ||
+      q.contains('emulsion') ||
+      q.contains('ointment') ||
+      q.contains('suppository') ||
+      q.contains('parenteral');
+
+  static bool _matchesDrugsAct(String q) =>
+      q.contains('drugs and cosmetics act') ||
+      q.contains('schedule m') ||
+      q.contains('schedule y') ||
+      q.contains('schedule h') ||
+      q.contains('schedule x') ||
+      q.contains('pharmacy act');
+
   // --- Master Concept Explanations ---
+
+  static String _getBloodExplanation() {
+    return '''### Blood: Definition, Composition & Physiological Functions (PCI B.Pharm HAP BP101T)
+
+**Blood** is a specialized **fluid connective tissue** that circulates through the cardiovascular system (heart, arteries, veins, and capillaries). In an average healthy adult, blood volume is approximately **5 to 6 liters** (accounting for ~7% to 8% of total body weight), with a normal physiological pH range of **7.35 to 7.45** (slightly alkaline) and a specific gravity of 1.050 to 1.060.
+
+---
+
+### 1. Composition of Blood
+Blood consists of two main fractions: **Fluid Plasma (~55%)** and **Formed Cellular Elements (~45%)**:
+
+#### A. Blood Plasma (55% by Volume)
+Plasma is a straw-colored liquid consisting of:
+- **Water (90-92%)**: Serves as the primary biological solvent.
+- **Plasma Proteins (7-8%)**:
+  - **Albumin (4.5 g/dL)**: Synthesized by the liver; provides 75-80% of plasma colloid osmotic (oncotic) pressure (~25 mmHg) to prevent tissue edema. Also acts as the main transport carrier for acidic drugs (e.g., Warfarin, NSAIDs).
+  - **Globulins (alpha, beta, gamma - 2.5 g/dL)**: Alpha and beta transport lipids and minerals; **Gamma globulins (Immunoglobulins IgG, IgM, IgA, IgE, IgD)** provide humoral immunity.
+  - **Fibrinogen & Prothrombin (0.3 g/dL)**: Essential clotting factors synthesized in the liver (dependent on Vitamin K).
+- **Other Solutes (1-2%)**: Electrolytes (\$Na^+, K^+, Ca^{2+}, Cl^-, HCO_3^-\$), nutrients (glucose, amino acids), and metabolic waste products (urea, creatinine).
+
+#### B. Formed Cellular Elements (45% by Volume)
+1. **Erythrocytes (Red Blood Cells - RBCs)**:
+   - **Count**: 4.5 to 5.5 million/mm³ (higher in males than females).
+   - **Structure**: Circular, biconcave, non-nucleated discs (diameter ~7.2 µm). The biconcave shape maximizes surface-area-to-volume ratio for rapid gas exchange.
+   - **Hemoglobin Content**: 12 to 16 g/dL. Each hemoglobin tetramer contains 4 heme groups with ferrous iron (\$Fe^{2+}\$), binding up to 4 oxygen molecules (\$Hb + 4O_2 \\leftrightarrow Hb(O_2)_4\$).
+   - **Lifespan**: ~120 days. Produced via **erythropoiesis** in red bone marrow stimulated by renal erythropoietin (EPO).
+2. **Leukocytes (White Blood Cells - WBCs)**:
+   - **Total Count**: 4,000 to 11,000/mm³. Body's active defense against pathogens.
+   - **Granulocytes**:
+     - *Neutrophils (60-70%)*: Primary phagocytes against acute bacterial infections.
+     - *Eosinophils (1-4%)*: Defense against parasitic infections and allergic reactions; contain histaminase.
+     - *Basophils (0.5-1%)*: Release histamine, heparin, and serotonin in hypersensitivity responses.
+   - **Agranulocytes**:
+     - *Lymphocytes (20-30%)*: B-cells (humoral antibody production) and T-cells (cell-mediated immunity, CD4 helper / CD8 cytotoxic).
+     - *Monocytes (2-8%)*: Transform into tissue macrophages (e.g., Kupffer cells in liver, microglia in CNS) for phagocytosis and antigen presentation.
+3. **Thrombocytes (Platelets)**:
+   - **Count**: 1.5 to 4.5 lakh/mm³ (150,000 - 450,000/µL).
+   - **Function**: Cell fragments derived from megakaryocytes in bone marrow; crucial for primary hemostasis, platelet plug formation, and clotting activation. Lifespan: 7-10 days.
+
+---
+
+### 2. Core Physiological Functions of Blood
+1. **Transport**: Transports \$O_2\$ from lungs to tissues and \$CO_2\$ from tissues to lungs. Delivers absorbed nutrients (glucose, amino acids, lipids) and carries metabolic waste to kidneys and liver.
+2. **Homeostasis & Regulation**: Regulates body temperature via vasodilation/vasoconstriction and maintains acid-base balance via the carbonic acid-bicarbonate buffer system (\$\\text{H}_2\\text{CO}_3 / \\text{HCO}_3^-\$).
+3. **Immune Protection**: Leukocytes, antibodies, and complement system destroy invasive microorganisms and neutralize toxins.
+4. **Hemostasis**: Clotting cascade (13 factors: Extrinsic Tissue Factor pathway and Intrinsic contact pathway converging on Factor X to convert Prothrombin to Thrombin, polymerizing Fibrinogen into a stable Fibrin mesh).
+
+---
+
+### 3. Blood Grouping (ABO & Rh System)
+- **ABO System**: Determined by the presence or absence of Antigen A and Antigen B on the erythrocyte surface.
+  - Type A (Antigen A, Anti-B antibodies).
+  - Type B (Antigen B, Anti-A antibodies).
+  - Type AB (Both A & B antigens, No antibodies) -> **Universal Recipient**.
+  - Type O (Neither A nor B antigen, Both Anti-A & Anti-B antibodies) -> **Universal Donor**.
+- **Rh System**: Presence of D-antigen makes blood Rh-positive (\$Rh^+\$); absence makes it Rh-negative (\$Rh^-\$). Clinically crucial in erythroblastosis fetalis (hemolytic disease of the newborn).
+
+---
+
+### 4. Saral Hinglish Summary (Quick Revision)
+*Aasan bhasha mein:*
+Blood hamare sharir ka ek fluid connective tissue hai jo pure body mein oxygen, nutrients, aur hormones circulate karta hai. Isme do main hisse hote hain:
+1. **Plasma (55%)**: Pani aur proteins (Albumin, Globulin, Fibrinogen).
+2. **Blood Cells (45%)**: **RBC** (jo hemoglobin ke zariye oxygen transport karte hain), **WBC** (jo infection aur bimariyon se ladte hain), aur **Platelets** (jo chot lagne par blood clotting karke bleeding rokte hain).''';
+  }
+
+  static String _getNewDrugsExplanation() {
+    return '''### Recent High-Impact New Drugs & FDA/CDSCO Approvals (PCI B.Pharm Pharmacology & Regulatory Affairs)
+
+In modern pharmaceutical sciences, new drugs are discovered, evaluated through preclinical and Phase I-IV clinical trials under IND (Investigational New Drug), and approved via NDA (New Drug Application) or BLA (Biologics License Application) by global regulatory bodies like the USFDA, EMA, and CDSCO (India).
+
+---
+
+### 1. Major Recently Approved Breakthrough Drugs
+Here are the most significant new molecules and biological therapeutics approved in recent years:
+
+1. **Tirzepatide (Brand names: Mounjaro / Zepbound)**:
+   - **Drug Class**: Dual GIP (Glucose-dependent insulinotropic polypeptide) and GLP-1 (Glucagon-like peptide-1) receptor agonist.
+   - **Clinical Indication**: Type 2 Diabetes Mellitus and Chronic Weight Management (Obesity).
+   - **Significance**: First-in-class dual incretin mimetic showing superior glycemic control and up to 20-25% body weight reduction.
+2. **Donanemab (Brand name: Kisunla) & Lecanemab (Brand name: Leqembi)**:
+   - **Drug Class**: Recombinant humanized IgG1 monoclonal antibodies targeting brain Amyloid-beta (\$A\\beta\$) fibrils and plaques.
+   - **Clinical Indication**: Early Alzheimer's Disease (Mild Cognitive Impairment).
+   - **Significance**: True disease-modifying therapies that slow down cognitive decline by clearing accumulated amyloid plaque burden from brain tissue.
+3. **Capivasertib (Brand name: Truqap)**:
+   - **Drug Class**: Potent, selective pan-AKT kinase inhibitor (targeting AKT1, AKT2, AKT3 isoforms).
+   - **Clinical Indication**: Locally advanced or metastatic HR-positive, HER2-negative breast cancer with PIK3CA, AKT1, or PTEN biomarker alterations.
+   - **Significance**: Targets the hyperactivated PI3K/AKT signaling pathway responsible for endocrine resistance in oncology.
+4. **Omaveloxolone (Brand name: Skyclarys)**:
+   - **Drug Class**: Synthetic triterpenoid; Nrf2 (Nuclear factor erythroid 2-related factor 2) activator.
+   - **Clinical Indication**: Friedreich's Ataxia (for adults and adolescents aged 16+).
+   - **Significance**: First FDA-approved therapy for this hereditary neurodegenerative disease; restores mitochondrial redox balance.
+5. **Efgartigimod alfa (Brand name: Vyvgart)**:
+   - **Drug Class**: Neonatal Fc Receptor (FcRn) blocker (engineered human IgG1 Fc fragment).
+   - **Clinical Indication**: Generalized Myasthenia Gravis (gMG) in AChR antibody-positive patients.
+   - **Significance**: Accelerates the catabolism and clearance of pathogenic IgG autoantibodies from circulation.
+6. **Resmetirom (Brand name: Rezdiffra)**:
+   - **Drug Class**: Selective Thyroid Hormone Receptor-beta (THR-\$\\beta\$) agonist.
+   - **Clinical Indication**: Non-Alcoholic Steatohepatitis (NASH / MASH) with moderate to advanced liver fibrosis.
+   - **Significance**: First medication ever approved by the USFDA for liver fibrosis in NASH.
+7. **Aprocitentan (Brand name: Tryvio)**:
+   - **Drug Class**: Dual Endothelin Receptor Antagonist (\$ET_A / ET_B\$).
+   - **Clinical Indication**: Resistant Hypertension in combination with standard triple therapy (ACEi/ARB + CCB + Diuretic).
+
+---
+
+### 2. Nomenclature & Classification Rules for New Drugs
+Notice the standardized USAN (United States Adopted Names) stems used in modern drug naming:
+- **-mab**: Monoclonal Antibody (e.g., Donane**mab**, Lecane**mab**, Pembrorolizu**mab**).
+- **-nib**: Kinase Inhibitor (e.g., Capivaser**tib**, Ibruti**nib**, Erloti**nib**).
+- **-tide**: Peptide agonist (e.g., Tirzepa**tide**, Semaglu**tide**).
+- **-cept**: Receptor fusion protein (e.g., Etaner**cept**, Afliber**cept**).
+
+---
+
+### 3. The New Drug Approval Pipeline (USFDA & CDSCO)
+- **Preclinical**: Target validation, in vitro screening, animal toxicity (GLP compliance).
+- **IND (Investigational New Drug)**: Filed to get permission for human clinical trials.
+- **Phase I**: Safety, tolerability, PK/PD in 20-100 healthy volunteers.
+- **Phase II**: Dose-ranging and efficacy in 100-300 patient volunteers.
+- **Phase III**: Pivotal, multi-center, double-blind RCTs in 1,000-3,000+ patients.
+- **NDA / BLA**: Final dossier submitted to FDA/CDSCO for market approval.
+- **Phase IV**: Post-marketing safety surveillance (Pharmacovigilance / PvPI).''';
+  }
 
   static String _getBioavailabilityExplanation() {
     return '''### Bioavailability & Bioequivalence (PCI B.Pharm NEP 2020)
@@ -610,34 +783,95 @@ NDDS aims to deliver therapeutics at a controlled, targeted rate to specific ana
    - Delivers drug at a zero-order release rate independent of gastrointestinal pH and motility.''';
   }
 
-  // --- General Synthesis Helper ---
+  static String _getDosageFormsExplanation() {
+    return '''### Pharmaceutical Dosage Forms: Classification & Overview (PCI B.Pharm Pharmaceutics)
+
+A **dosage form** is the physical formulation in which a drug (API) is combined with non-medicinal excipients to deliver safe, effective, and reproducible therapy to patients.
+
+---
+
+### 1. Classification by Physical State
+1. **Solid Dosage Forms**:
+   - *Unit Dose*: Tablets (compressed, coated, effervescent, chewable, sublingual), Capsules (Hard gelatin vs Soft gelatin), Lozenges, Pastilles.
+   - *Bulk Dose*: Insufflations, dusting powders, effervescent granules.
+2. **Liquid Dosage Forms**:
+   - *Monophasic (True Solutions)*: Syrups (66.7% w/w sucrose in water as per IP), Elixirs (sweetened hydroalcoholic solutions), Linctuses (viscous cough preparations), Drops, Gargles, Mouthwashes.
+   - *Biphasic (Dispersed Systems)*:
+     - **Suspensions**: Coarse dispersion of insoluble solid particles in liquid vehicle. Key requirement: optimum sedimentation volume (\$F = V_u / V_0\$) and easy re-dispersibility.
+     - **Emulsions**: Thermodynamically unstable two-phase system (O/W or W/O) stabilized by an emulsifying agent. Tests for type: Dilution test, Dye solubility test (Amaranth/Sudan III), Conductivity test.
+3. **Semisolid Dosage Forms**:
+   - Ointments (hydrocarbon, absorption, water-removable, water-soluble bases), Creams (O/W vanishing or W/O cold creams), Pastes (high concentration of insoluble powder > 20-50%), Gels (cross-linked carbomer/methylcellulose network), Suppositories (cocoa butter/PEG bases for rectal/vaginal delivery).
+4. **Gaseous & Inhalation Dosage Forms**:
+   - Metered Dose Inhalers (MDIs with HFA propellants), Dry Powder Inhalers (DPIs), Nebulizer solutions for direct pulmonary delivery.
+5. **Sterile Parenterals**:
+   - Intravenous (IV), Intramuscular (IM), Subcutaneous (SC), Intradermal (ID). Must be sterile, isotonic, and strictly pyrogen-free (tested via LAL test).''';
+  }
+
+  static String _getDrugsActExplanation() {
+    return '''### Drugs & Cosmetics Act 1940 and Rules 1945 (PCI B.Pharm Jurisprudence BP505T)
+
+Enacted to regulate the import, manufacture, distribution, and sale of drugs and cosmetics in India, ensuring safety, efficacy, and standard quality.
+
+---
+
+### Crucial Schedules to Know
+- **Schedule M**: Good Manufacturing Practices (GMP) and plant/equipment requirements for pharmaceutical manufacturing.
+- **Schedule Y**: Requirements and guidelines for clinical trials, import, and manufacture of new drugs.
+- **Schedule H**: Prescription drugs that can only be sold on the prescription of a Registered Medical Practitioner (RMP).
+- **Schedule H1**: Specific antibiotics, anti-TB, and psychotropic drugs requiring separate 3-year record registers to prevent antimicrobial resistance.
+- **Schedule X**: Habit-forming psychotropic and narcotic drugs requiring triplicate prescriptions.
+- **Schedule C & C1**: Biological and special products (sera, vaccines, antibiotics, parenterals).
+- **Schedule G**: Drugs that must carry a cautionary label: *"Warning: To be taken under medical supervision only"*.
+- **Schedule P & P1**: Life period (shelf life) and storage conditions of drugs, along with retail package sizes.''';
+  }
+
+  // --- Dynamic Synthesis Helper (NO GENERIC 3-BULLET BOILERPLATE) ---
 
   static String _synthesizeGeneralPharmacyAnswer(
     String query,
     PharmaKnowledgeContext ctx,
     PharmaChatMode mode,
+    List<SearchResultItem> citations,
   ) {
     final buffer = StringBuffer();
-    buffer.writeln('### Concept Overview: ${query.trim()}\n');
+    final cleanQuery = query.trim();
 
-    // If matches were found in syllabus/blogs, construct a synthesized overview
-    if (!ctx.isEmpty && ctx.blogMatches.isNotEmpty) {
-      buffer.writeln('Yeh topic aapke pharmacy curriculum aur industry practice me ek fundamental concept hai:\n');
-      for (final b in ctx.blogMatches.take(2)) {
-        buffer.writeln(b);
+    // 1. If live search results are available, synthesize directly from research snippets
+    if (citations.isNotEmpty) {
+      buffer.writeln('### $cleanQuery (Scientific Overview & Research)\n');
+      for (final c in citations.take(3)) {
+        if (c.snippet.isNotEmpty) {
+          buffer.writeln('${c.snippet}\n');
+        }
       }
-    } else {
-      buffer.writeln('''Yeh concept B.Pharm PCI NEP 2020 curriculum ka mahatvapurna hissa hai.
-
-**Mukhya Bindu (Key Points):**
-1. **Scientific Principle**: Har pharmaceutical formulation ya therapeutic mechanism specific biological pathways ya physicochemical laws par kaam karta hai.
-2. **Quality & Standard**: Indian Pharmacopoeia (IP) aur international guidelines (ICH/WHO) ke anusar iski testing aur standardization anivarya hai.
-3. **Academic Relevance**: University semester exams me is par 2-mark (definition/formula), 5-mark (classification va working principle), ya 10-mark descriptive questions aate hain.
-
-Aap specific aspect (jaise MOA, formulation steps, formula, ya clinical uses) mention karke detailed step-by-step explanation prapt kar sakte hain!''');
+      return buffer.toString().trim();
     }
 
-    return buffer.toString();
+    // 2. If in-app RAG syllabus or blog matches are available, explain from actual syllabus content
+    if (!ctx.isEmpty) {
+      buffer.writeln('### $cleanQuery (PCI B.Pharm Curriculum Context)\n');
+
+      if (ctx.syllabusMatches.isNotEmpty) {
+        buffer.writeln('Yeh topic aapke B.Pharm curriculum ke in specific units aur subjects me padhaya jata hai:\n');
+        for (final s in ctx.syllabusMatches.take(2)) {
+          buffer.writeln(s);
+        }
+        buffer.writeln('\n**Core Study Pointer**: University exams aur GPAT ke liye is concept ki fundamental scientific definition, mechanism of action, formulation parameters, aur clinical significance ko systematically prepare karein.');
+      } else if (ctx.blogMatches.isNotEmpty) {
+        buffer.writeln('PharmaCode Industry & Study Kit Analysis:\n');
+        for (final b in ctx.blogMatches.take(2)) {
+          buffer.writeln(b);
+        }
+      }
+      return buffer.toString().trim();
+    }
+
+    // 3. Fallback direct question answering
+    buffer.writeln('### $cleanQuery\n');
+    buffer.writeln('Yeh pharmaceutical sciences aur pharmacy curriculum ka ek mahatvapurna concept hai.');
+    buffer.writeln('\nIs concept par real-time research aur full LLM intelligence ke liye bottom bar me globe icon tap karke web search enable karein ya AI Settings se apna free Groq/Gemini key connect karein!');
+
+    return buffer.toString().trim();
   }
 
   // --- Suggested Study Links Formatter ---

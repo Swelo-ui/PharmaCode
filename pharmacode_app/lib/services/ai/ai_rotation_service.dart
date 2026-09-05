@@ -136,7 +136,12 @@ class AiRotationService {
 
     // Final safety fallback if all networks faced harsh timeouts
     if (generatedAnswer == null || generatedAnswer.isEmpty) {
-      generatedAnswer = _generateLocalSafetyResponse(userMessage, knowledgeCtx, mode);
+      generatedAnswer = _generateLocalSafetyResponse(
+        userMessage,
+        knowledgeCtx,
+        mode,
+        citations: citations,
+      );
       successfulProvider = 'PharmaCode Academic Engine';
     }
 
@@ -320,12 +325,14 @@ class AiRotationService {
   String _generateLocalSafetyResponse(
     String query,
     PharmaKnowledgeContext ctx,
-    PharmaChatMode mode,
-  ) {
+    PharmaChatMode mode, {
+    List<SearchResultItem> citations = const [],
+  }) {
     return PharmaConceptSynthesizer.synthesizeAnswer(
       query: query,
       mode: mode,
       ctx: ctx,
+      citations: citations,
     );
   }
 }

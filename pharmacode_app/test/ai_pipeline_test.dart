@@ -155,5 +155,39 @@ void main() {
       expect(answer, contains('Bioequivalence'));
       expect(answer, contains('Suggested In-App Syllabus & Study Links:'));
     });
+
+    test('Blood definition answer provides fluid connective tissue, cells, and functions without generic template', () async {
+      final knowledgeService = PharmaKnowledgeService();
+      final ctx = await knowledgeService.retrieveContext('blood');
+
+      final answer = PharmaConceptSynthesizer.synthesizeAnswer(
+        query: 'blood ki defination',
+        mode: PharmaChatMode.tutorHinglish,
+        ctx: ctx,
+      );
+
+      expect(answer, contains('fluid connective tissue'));
+      expect(answer, contains('Plasma'));
+      expect(answer, contains('Erythrocytes'));
+      expect(answer, contains('Leukocytes'));
+      expect(answer, contains('Platelets'));
+      expect(answer, isNot(contains('Scientific Principle: Har pharmaceutical formulation')));
+    });
+
+    test('New drugs answer provides actual recent approved drugs without generic template', () async {
+      final knowledgeService = PharmaKnowledgeService();
+      final ctx = await knowledgeService.retrieveContext('new drugs names');
+
+      final answer = PharmaConceptSynthesizer.synthesizeAnswer(
+        query: 'new drugs names',
+        mode: PharmaChatMode.tutorHinglish,
+        ctx: ctx,
+      );
+
+      expect(answer, contains('Tirzepatide'));
+      expect(answer, contains('Donanemab'));
+      expect(answer, contains('Lecanemab'));
+      expect(answer, isNot(contains('Scientific Principle: Har pharmaceutical formulation')));
+    });
   });
 }
