@@ -7,6 +7,7 @@ import 'pharma_concept_synthesizer.dart';
 import 'pharma_knowledge_service.dart';
 import 'pharma_prompt_templates.dart';
 import 'web_search_service.dart';
+import 'ai_security_guard.dart';
 
 class ChatMessage {
   final String id;
@@ -53,6 +54,19 @@ class AiRotationService {
         isUser: false,
         timestamp: DateTime.now(),
         providerUsed: 'PharmaLearn AI',
+        citations: const [],
+      );
+    }
+
+    // 0. Security Guard Check (Anti-leak, anti-jailbreak, input sanitization)
+    final securityCheck = AiSecurityGuard.inspectInput(userMessage);
+    if (securityCheck.isBlocked) {
+      return ChatMessage(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        content: securityCheck.cannedResponse ?? 'Query blocked by security guard.',
+        isUser: false,
+        timestamp: DateTime.now(),
+        providerUsed: 'PharmaCode Security Guard',
         citations: const [],
       );
     }
@@ -178,6 +192,9 @@ General stories ya off-topic content ke bajaye, main aapko pharmacy ke kisi inte
 Aap pharmacy ka kaunsa topic seekhna chahenge?''';
       }
     }
+
+    // Scrub any accidental credential pattern leaks before returning
+    generatedAnswer = AiSecurityGuard.scrubOutput(generatedAnswer);
 
     final elapsed = DateTime.now().difference(startTime).inMilliseconds;
     debugPrint('[AiRotationService] Response complete in ${elapsed}ms via $successfulProvider');

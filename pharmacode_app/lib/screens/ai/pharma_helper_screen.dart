@@ -8,6 +8,8 @@ import '../../core/theme.dart';
 import '../../core/ads/ad_service.dart';
 import '../../core/widgets/ad_banner_widget.dart';
 import '../../models/syllabus_models.dart';
+import '../../models/ai_bookmark_model.dart';
+import '../../services/ai_bookmark_service.dart';
 import '../../services/ai/ai_config.dart';
 import '../../services/ai/ai_key_manager.dart';
 import '../../services/ai/ai_rotation_service.dart';
@@ -274,6 +276,244 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
     );
   }
 
+  void _openSavedNotesSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => _buildSavedNotesBottomSheet(ctx),
+    );
+  }
+
+  Widget _buildSavedNotesBottomSheet(BuildContext ctx) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.78,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
+      ),
+      child: Column(
+        children: [
+          Center(
+            child: Container(
+              margin: const EdgeInsets.only(top: 10, bottom: 6),
+              width: 38,
+              height: 4,
+              decoration: BoxDecoration(
+                color: const Color(0xFFCBD5E1),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(18, 6, 14, 12),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFEF3C7),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(Icons.bookmarks_rounded, size: 20, color: Color(0xFFD97706)),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Saved AI Notes & Solutions',
+                        style: GoogleFonts.dmSans(
+                          fontSize: 16.5,
+                          fontWeight: FontWeight.w800,
+                          color: AppTheme.primaryNavy,
+                        ),
+                      ),
+                      Text(
+                        'Cloud synced across your devices',
+                        style: GoogleFonts.inter(
+                          fontSize: 11.5,
+                          color: AppTheme.textMuted,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close_rounded, size: 22, color: Color(0xFF64748B)),
+                  onPressed: () => Navigator.pop(ctx),
+                ),
+              ],
+            ),
+          ),
+          const Divider(height: 1, color: Color(0xFFE2E8F0)),
+          Expanded(
+            child: ValueListenableBuilder<List<AiBookmark>>(
+              valueListenable: AiBookmarkService.instance.bookmarksNotifier,
+              builder: (context, bookmarks, _) {
+                if (bookmarks.isEmpty) {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFF1F5F9),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.bookmark_outline_rounded, size: 36, color: Color(0xFF94A3B8)),
+                          ),
+                          const SizedBox(height: 14),
+                          Text(
+                            'No Saved AI Notes Yet',
+                            style: GoogleFonts.dmSans(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: AppTheme.primaryNavy,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            'Chat me AI responses ke neeche diye "Save" button par tap karein. Aapke imp questions, solutions aur python scripts yaha save rahenge!',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.inter(fontSize: 12.5, color: const Color(0xFF64748B), height: 1.4),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+
+                return ListView.separated(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+                  itemCount: bookmarks.length,
+                  separatorBuilder: (ctx, idx) => const SizedBox(height: 12),
+                  itemBuilder: (context, index) {
+                    final item = bookmarks[index];
+                    return Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF8FAFC),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: const Color(0xFFE2E8F0)),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              if (item.subjectCode != null && item.subjectCode!.isNotEmpty) ...[
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFEEF2FF),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Text(
+                                    item.subjectCode!,
+                                    style: GoogleFonts.dmSans(
+                                      fontSize: 10.5,
+                                      fontWeight: FontWeight.w800,
+                                      color: const Color(0xFF3730A3),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                              ],
+                              Expanded(
+                                child: Text(
+                                  item.question,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppTheme.primaryNavy,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.delete_outline_rounded, size: 18, color: Color(0xFFEF4444)),
+                                tooltip: 'Delete Bookmark',
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                onPressed: () async {
+                                  await AiBookmarkService.instance.deleteBookmark(item.id);
+                                },
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          ConstrainedBox(
+                            constraints: const BoxConstraints(maxHeight: 180),
+                            child: SingleChildScrollView(
+                              child: _renderFormattedText(item.answer),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              InkWell(
+                                onTap: () => _copyToClipboard(item.answer),
+                                borderRadius: BorderRadius.circular(6),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(6),
+                                    border: Border.all(color: const Color(0xFFCBD5E1)),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(Icons.copy_rounded, size: 12, color: Color(0xFF475569)),
+                                      const SizedBox(width: 4),
+                                      Text('Copy', style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: const Color(0xFF475569))),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              InkWell(
+                                onTap: () => _shareMessage(item.answer),
+                                borderRadius: BorderRadius.circular(6),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(6),
+                                    border: Border.all(color: const Color(0xFFCBD5E1)),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(Icons.share_rounded, size: 12, color: Color(0xFF475569)),
+                                      const SizedBox(width: 4),
+                                      Text('Share', style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: const Color(0xFF475569))),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -382,6 +622,43 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
         ],
       ),
       actions: [
+        ValueListenableBuilder<List<AiBookmark>>(
+          valueListenable: AiBookmarkService.instance.bookmarksNotifier,
+          builder: (context, bookmarks, _) {
+            return Stack(
+              alignment: Alignment.center,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.bookmarks_rounded, size: 22),
+                  tooltip: 'Saved AI Notes',
+                  onPressed: _openSavedNotesSheet,
+                ),
+                if (bookmarks.isNotEmpty)
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Container(
+                      padding: const EdgeInsets.all(3),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFD97706),
+                        shape: BoxShape.circle,
+                      ),
+                      constraints: const BoxConstraints(minWidth: 15, minHeight: 15),
+                      child: Text(
+                        '${bookmarks.length}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 8.5,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
+            );
+          },
+        ),
         IconButton(
           icon: const Icon(Icons.tune_rounded, size: 22),
           tooltip: 'AI Engine Settings',
@@ -932,6 +1209,77 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    ValueListenableBuilder<List<AiBookmark>>(
+                      valueListenable: AiBookmarkService.instance.bookmarksNotifier,
+                      builder: (context, bookmarks, _) {
+                        final isSaved = AiBookmarkService.instance.isBookmarked(msg.content);
+                        return InkWell(
+                          onTap: () async {
+                            String questionPrompt = 'PharmaCode AI Note';
+                            final msgIdx = _messages.indexOf(msg);
+                            if (msgIdx > 0) {
+                              for (int k = msgIdx - 1; k >= 0; k--) {
+                                if (_messages[k].isUser) {
+                                  questionPrompt = _messages[k].content;
+                                  break;
+                                }
+                              }
+                            }
+                            final added = await AiBookmarkService.instance.toggleBookmark(
+                              question: questionPrompt,
+                              answer: msg.content,
+                              subjectCode: _attachedSubject?.code,
+                              subjectName: _attachedSubject?.name,
+                              mode: _selectedMode.name,
+                              providerUsed: msg.providerUsed,
+                            );
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    added
+                                        ? 'Saved to Cloud Bookmarks!'
+                                        : 'Removed from Bookmarks',
+                                  ),
+                                  duration: const Duration(seconds: 2),
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                            }
+                          },
+                          borderRadius: BorderRadius.circular(6),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: isSaved ? const Color(0xFFFEF3C7) : const Color(0xFFF1F5F9),
+                              borderRadius: BorderRadius.circular(6),
+                              border: isSaved
+                                  ? Border.all(color: const Color(0xFFFCD34D), width: 0.8)
+                                  : null,
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  isSaved ? Icons.bookmark_rounded : Icons.bookmark_outline_rounded,
+                                  size: 13,
+                                  color: isSaved ? const Color(0xFFD97706) : const Color(0xFF475569),
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  isSaved ? 'Saved' : 'Save',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    color: isSaved ? const Color(0xFFB45309) : const Color(0xFF475569),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(width: 8),
                     InkWell(
                       onTap: () => _copyToClipboard(msg.content),
                       borderRadius: BorderRadius.circular(6),
@@ -1220,8 +1568,219 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
     return t.split('|').map((c) => c.trim()).toList();
   }
 
+  Widget _buildTerminalCodeWidget({
+    required String code,
+    required String language,
+  }) {
+    final cleanLang = language.trim().isNotEmpty ? language.trim().toUpperCase() : 'TERMINAL';
+    final cleanCode = code
+        .replaceAll(r'\n', '\n')
+        .replaceAll(r'\\n', '\n')
+        .replaceAll(RegExp(r'^`+\s*([a-zA-Z0-9_\-]*\s*)?'), '')
+        .replaceAll(RegExp(r'`+$'), '')
+        .trimRight();
+    final codeLines = cleanCode.split('\n');
+
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0F172A), // Deep Slate IDE / Terminal
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFF334155), width: 1.2),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Terminal Window Titlebar
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: const BoxDecoration(
+              color: Color(0xFF1E293B),
+              border: Border(bottom: BorderSide(color: Color(0xFF334155), width: 1)),
+            ),
+            child: Row(
+              children: [
+                // macOS / Linux style terminal window buttons
+                Container(width: 9.5, height: 9.5, decoration: const BoxDecoration(color: Color(0xFFEF4444), shape: BoxShape.circle)),
+                const SizedBox(width: 5.5),
+                Container(width: 9.5, height: 9.5, decoration: const BoxDecoration(color: Color(0xFFF59E0B), shape: BoxShape.circle)),
+                const SizedBox(width: 5.5),
+                Container(width: 9.5, height: 9.5, decoration: const BoxDecoration(color: Color(0xFF10B981), shape: BoxShape.circle)),
+                const SizedBox(width: 12),
+                const Icon(Icons.terminal_rounded, size: 14, color: Color(0xFF94A3B8)),
+                const SizedBox(width: 5),
+                Text(
+                  cleanLang,
+                  style: GoogleFonts.jetBrainsMono(
+                    color: const Color(0xFF38BDF8),
+                    fontWeight: FontWeight.w800,
+                    fontSize: 11,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+                const Spacer(),
+                InkWell(
+                  onTap: () {
+                    Clipboard.setData(ClipboardData(text: cleanCode));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Code copied to clipboard!'),
+                        duration: Duration(seconds: 2),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  },
+                  borderRadius: BorderRadius.circular(6),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF334155),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.copy_rounded, size: 12, color: Color(0xFFF1F5F9)),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Copy Code',
+                          style: GoogleFonts.inter(
+                            color: const Color(0xFFF1F5F9),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 11,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Code Content with Line Numbering & Horizontal Scroll
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.all(12),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Gutter line numbers
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    for (int n = 1; n <= codeLines.length; n++)
+                      Text(
+                        '$n ',
+                        style: GoogleFonts.jetBrainsMono(
+                          fontSize: 12,
+                          height: 1.5,
+                          color: const Color(0xFF64748B),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(width: 12),
+                // Code lines
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (final line in codeLines)
+                      _buildSyntaxTintedLine(line),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSyntaxTintedLine(String line) {
+    final t = line.trimLeft();
+    Color textColor = const Color(0xFFF1F5F9);
+    FontWeight weight = FontWeight.w400;
+
+    if (t.startsWith('#') || t.startsWith('//') || t.startsWith('/*')) {
+      textColor = const Color(0xFF4ADE80); // Comments soft green
+    } else if (t.startsWith('import ') ||
+        t.startsWith('from ') ||
+        t.startsWith('def ') ||
+        t.startsWith('class ') ||
+        t.startsWith('return ') ||
+        t.startsWith('if ') ||
+        t.startsWith('elif ') ||
+        t.startsWith('else:') ||
+        t.startsWith('for ') ||
+        t.startsWith('while ') ||
+        t.startsWith('try:') ||
+        t.startsWith('except ') ||
+        t.startsWith('conda ') ||
+        t.startsWith('pip ')) {
+      textColor = const Color(0xFF38BDF8); // Keywords cyan
+      weight = FontWeight.w600;
+    } else if (t.startsWith('print(') || t.startsWith('pd.') || t.startsWith('np.')) {
+      textColor = const Color(0xFFF472B6); // Functions soft pink
+    }
+
+    return Text(
+      line.isEmpty ? ' ' : line,
+      style: GoogleFonts.jetBrainsMono(
+        fontSize: 12,
+        height: 1.5,
+        color: textColor,
+        fontWeight: weight,
+      ),
+    );
+  }
+
   Widget _buildMarkdownTable(List<String> headers, List<List<String>> rows) {
     if (headers.isEmpty && rows.isEmpty) return const SizedBox.shrink();
+
+    // Check if this table is actually a single-column code container wrapped by the model (e.g. Image 1 issue)
+    final isSingleColCodeTable = headers.length == 1 &&
+        (headers.first.toLowerCase().contains('code') ||
+            headers.first.toLowerCase().contains('example') ||
+            headers.first.toLowerCase().contains('script') ||
+            headers.first.toLowerCase().contains('terminal') ||
+            (rows.isNotEmpty &&
+                rows.every((r) =>
+                    r.isNotEmpty &&
+                    (r.first.contains(r'\n') ||
+                        r.first.contains('import ') ||
+                        r.first.contains('pd.') ||
+                        r.first.contains('#')))));
+
+    if (isSingleColCodeTable && rows.isNotEmpty) {
+      final buffer = StringBuffer();
+      for (final r in rows) {
+        if (r.isNotEmpty) {
+          String cell = r.first.trim();
+          if (cell.startsWith('```')) cell = cell.replaceFirst(RegExp(r'^```[a-zA-Z0-9_\-]*\s*'), '');
+          if (cell.endsWith('```')) cell = cell.substring(0, cell.length - 3);
+          if (cell.startsWith('`')) cell = cell.replaceFirst(RegExp(r'^`+\s*([a-zA-Z0-9_\-]*\s*)?'), '');
+          if (cell.endsWith('`')) cell = cell.replaceAll(RegExp(r'`+$'), '');
+          cell = cell.replaceAll(r'\n', '\n').replaceAll(r'\\n', '\n').trim();
+          if (cell.isNotEmpty) {
+            buffer.writeln(cell);
+          }
+        }
+      }
+      return _buildTerminalCodeWidget(
+        code: buffer.toString(),
+        language: 'python',
+      );
+    }
 
     final colCount = headers.isNotEmpty ? headers.length : (rows.isNotEmpty ? rows.first.length : 1);
 
@@ -1294,7 +1853,11 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                         alignment: Alignment.centerLeft,
                         child: ConstrainedBox(
                           constraints: const BoxConstraints(maxWidth: 280, minWidth: 90),
-                          child: _buildRichInlineText(c < rows[r].length ? rows[r][c] : ''),
+                          child: _buildRichInlineText(
+                            (c < rows[r].length ? rows[r][c] : '')
+                                .replaceAll(r'\n', '\n')
+                                .replaceAll(r'\\n', '\n'),
+                          ),
                         ),
                       ),
                   ],
@@ -1335,6 +1898,38 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
         if (!isFirstItem) {
           children.add(const SizedBox(height: 5));
         }
+        continue;
+      }
+
+      // 0. Fenced Code Block Detection (```python ... ``` or ` bash ...)
+      if (trimmed.startsWith('```') ||
+          RegExp(r'^`{1,3}\s*(?:python|bash|sh|shell|sql|r|terminal|dart|javascript|json|html|css)', caseSensitive: false).hasMatch(trimmed)) {
+        String lang = 'terminal';
+        final langMatch = RegExp(r'^`{1,3}\s*([a-zA-Z0-9_\-]+)?', caseSensitive: false).firstMatch(trimmed);
+        if (langMatch != null && langMatch.group(1) != null && langMatch.group(1)!.isNotEmpty) {
+          lang = langMatch.group(1)!.toLowerCase();
+        }
+
+        final codeLines = <String>[];
+        int k = i + 1;
+        while (k < lines.length &&
+            !lines[k].trim().startsWith('```') &&
+            !RegExp(r'^`{1,3}\s*$').hasMatch(lines[k].trim())) {
+          codeLines.add(lines[k]);
+          k++;
+        }
+        if (k < lines.length &&
+            (lines[k].trim().startsWith('```') || RegExp(r'^`{1,3}\s*$').hasMatch(lines[k].trim()))) {
+          i = k; // Advance past closing backticks
+        } else {
+          i = k - 1;
+        }
+
+        children.add(_buildTerminalCodeWidget(
+          code: codeLines.join('\n'),
+          language: lang,
+        ));
+        isFirstItem = false;
         continue;
       }
 
