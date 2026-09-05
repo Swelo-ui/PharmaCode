@@ -30,10 +30,12 @@ jobs:
       - name: Setup Android SDK 37 & Licenses
         run: |
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --channel=3 "platforms;android-37.0" "platforms;android-37" || true
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-37.0" "platforms;android-37" || true
           if [ -d "$ANDROID_HOME/platforms/android-37.0" ] && [ ! -d "$ANDROID_HOME/platforms/android-37" ]; then
-            ln -s "$ANDROID_HOME/platforms/android-37.0" "$ANDROID_HOME/platforms/android-37"
+            cp -r "$ANDROID_HOME/platforms/android-37.0" "$ANDROID_HOME/platforms/android-37"
           fi
+          ls -la "$ANDROID_HOME/platforms"
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -58,13 +60,25 @@ jobs:
       - name: Build Android Release APK (Universal & Split ABIs)
         working-directory: pharmacode_app
         run: |
-          flutter build apk --release
+          set -e
+          echo "Building Universal Release APK..."
+          flutter build apk --release -v 2>&1 | tee ../flutter_apk_build.log || {
+            echo "::error::Flutter build APK failed"
+            tail -n 150 ../flutter_apk_build.log
+            exit 1
+          }
+          echo "Building Split per ABI APKs..."
           flutter build apk --release --split-per-abi
 
       - name: Build Android App Bundle (AAB for Google Play Console)
         working-directory: pharmacode_app
         run: |
-          flutter build appbundle --release
+          echo "Building Signed Release AAB..."
+          flutter build appbundle --release -v 2>&1 | tee ../flutter_aab_build.log || {
+            echo "::error::Flutter build AAB failed"
+            tail -n 150 ../flutter_aab_build.log
+            exit 1
+          }
 
       - name: Prepare Release Artifacts
         run: |
@@ -107,7 +121,7 @@ jobs:
             Official signed release artifacts for **PharmaCode — B.Pharm NEP 2020 Companion with PharmaHelper AI Tutor**.
 
             ### Available Downloads:
-            - **Google Play App Bundle**: `PharmaCode-v1.0.2-Release.aab` (Signed with release keystore for Play Console)
+            - **Google Play App Bundle**: `PharmaCode-v1.0.2-Release.aab` (Signed with production release keystore for Play Console)
             - **Universal APK**: `PharmaCode-v1.0.2-Universal.apk` (Install directly on any Android device)
             - **ARM64 APK**: `PharmaCode-v1.0.2-arm64.apk` (Fast & lightweight for modern 64-bit phones)
           files: |

@@ -1,3 +1,6 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
@@ -26,9 +29,11 @@ android {
     }
 
     val keystorePropertiesFile = rootProject.file("key.properties")
-    val keystoreProperties = java.util.Properties()
+    val keystoreProperties = Properties()
     if (keystorePropertiesFile.exists()) {
-        keystorePropertiesFile.inputStream().use { keystoreProperties.load(it) }
+        FileInputStream(keystorePropertiesFile).use { stream ->
+            keystoreProperties.load(stream)
+        }
     }
 
     signingConfigs {
