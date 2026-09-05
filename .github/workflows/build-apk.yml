@@ -31,14 +31,16 @@ jobs:
         run: |
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;36.0.0" || true
-          # Pre-cache Android 37 platform if available
+          # Ensure platform 37 availability (alias from android-36 in case any plugin requests SDK 37)
           echo "Ensuring platform 37 availability..."
-          curl -sL "https://dl.google.com/android/repository/platform-37.0_r02.zip" -o /tmp/platform-37.zip 2>/dev/null || true
-          if [ -s /tmp/platform-37.zip ]; then
-            mkdir -p /tmp/p37 && unzip -qo /tmp/platform-37.zip -d /tmp/p37 2>/dev/null || true
-            mkdir -p "$ANDROID_HOME/platforms/android-37" "$ANDROID_HOME/platforms/android-37.0"
-            cp -r /tmp/p37/*/* "$ANDROID_HOME/platforms/android-37/" 2>/dev/null || true
-            cp -r /tmp/p37/*/* "$ANDROID_HOME/platforms/android-37.0/" 2>/dev/null || true
+          if [ ! -d "$ANDROID_HOME/platforms/android-37" ]; then
+            mkdir -p "$ANDROID_HOME/platforms/android-37"
+            cp -r "$ANDROID_HOME/platforms/android-36"/* "$ANDROID_HOME/platforms/android-37/"
+            if [ -f "$ANDROID_HOME/platforms/android-37/source.properties" ]; then
+              sed -i 's/ro.build.version.sdk=36/ro.build.version.sdk=37/g' "$ANDROID_HOME/platforms/android-37/source.properties"
+              sed -i 's/ro.build.version.codename=36/ro.build.version.codename=37/g' "$ANDROID_HOME/platforms/android-37/source.properties"
+              sed -i 's/ro.build.version.release=36/ro.build.version.release=37/g' "$ANDROID_HOME/platforms/android-37/source.properties"
+            fi
           fi
           echo "Installed Android SDK Platforms:"
           ls -la "$ANDROID_HOME/platforms"
