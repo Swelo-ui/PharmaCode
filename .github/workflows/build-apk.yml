@@ -59,40 +59,21 @@ jobs:
           flutter analyze
           flutter test test/ai_pipeline_test.dart
 
-      - name: Build Android Release APK (Universal & Split ABIs)
+      - name: Compile Flutter Assets & Bundle
         working-directory: pharmacode_app
-        run: |
-          set +e
-          echo "Building Universal Release APK..."
-          flutter build apk --release -v > build_output.log 2>&1
-          BUILD_CODE=$?
-          if [ $BUILD_CODE -ne 0 ]; then
-            echo "### Flutter Build Failed (Exit Code: $BUILD_CODE)" >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
-            grep -E "FAILURE|ERROR|Exception|What went wrong|Did not find|failed" -B 2 -A 8 build_output.log | tail -n 60 >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
-            echo "### Last 60 lines of log" >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
-            tail -n 60 build_output.log >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
-            tail -n 80 build_output.log
-            exit $BUILD_CODE
-          fi
-          echo "Building Split per ABI APKs..."
-          flutter build apk --release --split-per-abi
+        run: flutter build bundle --release
 
-      - name: Build Android App Bundle (AAB for Google Play Console)
-        working-directory: pharmacode_app
+      - name: Build Android Release APK & AAB via Gradle
+        working-directory: pharmacode_app/android
         run: |
-          echo "Building Signed Release AAB..."
-          flutter build appbundle --release -v
+          chmod +x gradlew
+          ./gradlew assembleRelease bundleRelease --no-daemon --stacktrace
 
       - name: Prepare Release Artifacts
         run: |
           mkdir -p release-assets
-          cp pharmacode_app/build/app/outputs/flutter-apk/app-release.apk release-assets/PharmaCode-v1.0.2-Universal.apk 2>/dev/null || true
-          cp pharmacode_app/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk release-assets/PharmaCode-v1.0.2-arm64.apk 2>/dev/null || true
-          cp pharmacode_app/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk release-assets/PharmaCode-v1.0.2-armv7.apk 2>/dev/null || true
+          find pharmacode_app/build/app/outputs -name "*.apk" -o -name "*.aab"
+          cp pharmacode_app/build/app/outputs/apk/release/app-release.apk release-assets/PharmaCode-v1.0.2-Universal.apk 2>/dev/null || cp pharmacode_app/build/app/outputs/flutter-apk/app-release.apk release-assets/PharmaCode-v1.0.2-Universal.apk 2>/dev/null || true
           cp pharmacode_app/build/app/outputs/bundle/release/app-release.aab release-assets/PharmaCode-v1.0.2-Release.aab 2>/dev/null || true
           ls -la release-assets/
 
@@ -102,13 +83,6 @@ jobs:
           name: PharmaCode-Release-Universal-APK
           path: release-assets/PharmaCode-v1.0.2-Universal.apk
           if-no-files-found: error
-
-      - name: Upload Split APKs (ARM64 & ARMv7)
-        uses: actions/upload-artifact@v4
-        with:
-          name: PharmaCode-Split-APKs
-          path: release-assets/PharmaCode-v1.0.2-arm*.apk
-          if-no-files-found: warn
 
       - name: Upload Release AAB (Play Store)
         uses: actions/upload-artifact@v4
@@ -130,7 +104,6 @@ jobs:
             ### Available Downloads:
             - **Google Play App Bundle**: `PharmaCode-v1.0.2-Release.aab` (Signed with production release keystore for Play Console)
             - **Universal APK**: `PharmaCode-v1.0.2-Universal.apk` (Install directly on any Android device)
-            - **ARM64 APK**: `PharmaCode-v1.0.2-arm64.apk` (Fast & lightweight for modern 64-bit phones)
           files: |
             release-assets/*
           draft: false
