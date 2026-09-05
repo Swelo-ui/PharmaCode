@@ -120,18 +120,18 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v1.0.12
-          name: "PharmaCode v1.0.12 (Build 13) Production Release"
+          tag_name: v1.0.13
+          name: "PharmaCode v1.0.13 (Build 14) Production Release"
           body: |
-            ## PharmaCode v1.0.12 Release (Build 13)
+            ## PharmaCode v1.0.13 Release (Build 14)
             Official production signed release artifacts for **PharmaCode — B.Pharm NEP 2020 Companion with PharmaHelper AI Tutor**.
 
-            ### What's New in v1.0.12:
-            - **Native LaTeX Formula Rendering**: Implemented textbook-quality mathematical formula rendering using `flutter_math_fork` for display math (`\[...\]`, `$$...$$`), inline equations, and fractions.
-            - **Markdown Image Rendering**: Added complete support for educational diagrams and image embeds (`![alt](url)`) with cached network images, loading placeholders, and captions.
-            - **Mandatory LaTeX System Prompt**: Enhanced AI Tutor system instructions to enforce LaTeX math for all pharmacokinetic, pharmaceutics, and dosing calculations.
-            - **Header Truncation Resolved**: Fixed AppBar title spacing so `PharmaHelper` and `AI TUTOR` badge never truncate.
-            - **Professional English Bookmark Modal**: Redesigned the guest bookmarking bottom sheet with clean English copy and cloud benefit highlights.
+            ### What's New in v1.0.13:
+            - **Inline Math in Bullets & Bold**: Fixed recursive tokenization so formulas wrapped in bold markdown (like `• **\(AUC_{po}\)**`) or parentheses render as KaTeX math rather than literal text.
+            - **HTML Subscript & Superscript (`<sub>`/`<sup>`)**: Subscripts like `(F<sub>rel</sub>)` and superscripts render with native typographic alignment and proper sizing.
+            - **Scrollable Table Layout (3+ Columns)**: 3-column and descriptive tables are now horizontally scrollable with comfortable column widths and a swipe hint indicator, preventing narrow vertical text squishing.
+            - **HTML Entities**: Decoded standard pharmaceutical symbols like `&plusmn;` (±), `&times;` (×), and `&mu;g` (µg).
+            - **Heading Rich Formatting**: Headings now support subscripts and mathematical symbols.
 
             ### Available Downloads:
             - **Google Play App Bundle**: `PharmaCode-Release.aab` (Signed with production release keystore for Play Console)

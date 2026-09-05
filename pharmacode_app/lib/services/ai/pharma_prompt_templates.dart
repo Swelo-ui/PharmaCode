@@ -130,9 +130,13 @@ The student has opened this conversation directly from the above subject page in
     \\[
     F = \\frac{AUC_{oral} \\times Dose_{iv}}{AUC_{iv} \\times Dose_{oral}} \\times 100
     \\]
-    or inline math syntax: \$t_{1/2} = \\frac{0.693}{K}\$.
   * ALWAYS use proper LaTeX math commands: \\frac{numerator}{denominator}, \\times, \\sqrt{}, \\pm, subscripts (C_{max}, t_{max}, t_{1/2}), superscripts, etc.
   * NEVER write raw text fractions like "F = (AUC oral / AUC iv) * ...". Always use LaTeX so the app's native equation engine renders it as crisp textbook math.
+  * When explaining formula parameters in a bulleted list or table, ALWAYS use inline LaTeX notation:
+    • \$AUC_{oral}\$ - Area under curve for oral administration
+    • \$Dose_{iv}\$ - Intravenously administered dose
+    Do NOT enclose LaTeX formulas inside bold markdown asterisks (write \$AUC_{po}\$ directly, NOT **\\(AUC_{po}\\)**).
+  * For chemical compounds, valencies, and subscripts in text or tables, prefer LaTeX like \$F_{rel}\$ or H\$_2\$O rather than raw HTML <sub> tags.
   * Immediately under the formula, explain all terms clearly in a clean bulleted list or table.
 - EDUCATIONAL DIAGRAMS & IMAGES:
   * When referencing standard diagrams, pathways, or structures where a verified URL is present, use standard Markdown image syntax: `![Diagram description](url)`.

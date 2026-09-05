@@ -217,65 +217,53 @@ class PharmaMarkdownWidget extends StatelessWidget {
       // 3. Headings
       if (trimmed.startsWith('#### ') || trimmed.startsWith('##### ')) {
         final rawTitle = trimmed.substring(trimmed.indexOf(' ') + 1);
-        final title = rawTitle.replaceAll('**', '').replaceAll('*', '').trim();
         children.add(
           Padding(
             padding: const EdgeInsets.only(top: 8, bottom: 3),
-            child: Text(
-              title,
-              style: GoogleFonts.dmSans(
-                fontSize: 14.5,
-                fontWeight: FontWeight.w800,
-                color: AppTheme.primaryNavy,
-              ),
+            child: _buildRichInlineText(
+              rawTitle,
+              baseFontSize: 14.5,
+              defaultTextColor: AppTheme.primaryNavy,
+              isBold: true,
             ),
           ),
         );
       } else if (trimmed.startsWith('### ')) {
         final rawTitle = trimmed.substring(4);
-        final title = rawTitle.replaceAll('**', '').replaceAll('*', '').trim();
         children.add(
           Padding(
             padding: const EdgeInsets.only(top: 8, bottom: 4),
-            child: Text(
-              title,
-              style: GoogleFonts.dmSans(
-                fontSize: 15.5,
-                fontWeight: FontWeight.w800,
-                color: AppTheme.primaryNavy,
-              ),
+            child: _buildRichInlineText(
+              rawTitle,
+              baseFontSize: 15.5,
+              defaultTextColor: AppTheme.primaryNavy,
+              isBold: true,
             ),
           ),
         );
       } else if (trimmed.startsWith('## ')) {
         final rawTitle = trimmed.substring(3);
-        final title = rawTitle.replaceAll('**', '').replaceAll('*', '').trim();
         children.add(
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 4),
-            child: Text(
-              title,
-              style: GoogleFonts.dmSans(
-                fontSize: 17,
-                fontWeight: FontWeight.w900,
-                color: AppTheme.primaryNavy,
-              ),
+            child: _buildRichInlineText(
+              rawTitle,
+              baseFontSize: 17,
+              defaultTextColor: AppTheme.primaryNavy,
+              isBold: true,
             ),
           ),
         );
       } else if (trimmed.startsWith('# ')) {
         final rawTitle = trimmed.substring(2);
-        final title = rawTitle.replaceAll('**', '').replaceAll('*', '').trim();
         children.add(
           Padding(
             padding: const EdgeInsets.only(top: 12, bottom: 6),
-            child: Text(
-              title,
-              style: GoogleFonts.dmSans(
-                fontSize: 19,
-                fontWeight: FontWeight.w900,
-                color: AppTheme.primaryNavy,
-              ),
+            child: _buildRichInlineText(
+              rawTitle,
+              baseFontSize: 19,
+              defaultTextColor: AppTheme.primaryNavy,
+              isBold: true,
             ),
           ),
         );
@@ -382,55 +370,74 @@ class PharmaMarkdownWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildRichInlineText(String text) {
-    String cleaned = text
-        .replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '\n')
-        .replaceAll(RegExp(r'</p>', caseSensitive: false), '\n')
-        .replaceAll(RegExp(r'<p>', caseSensitive: false), '');
-    cleaned = cleaned.replaceAll(RegExp(r'\*\"(.*?)\"\*'), '"\$1"');
-    cleaned = cleaned.replaceAll(RegExp(r'\"\*(.*?)\*\"'), '"\$1"');
+  Widget _buildRichInlineText(
+    String text, {
+    double? baseFontSize,
+    Color? defaultTextColor,
+    bool isBold = false,
+  }) {
+    final double effectiveFontSize = baseFontSize ?? this.baseFontSize ?? 13.8;
+    final Color effectiveColor = defaultTextColor ?? this.defaultTextColor ?? const Color(0xFF334155);
+    final TextStyle defaultStyle = GoogleFonts.inter(
+      fontSize: effectiveFontSize,
+      height: 1.45,
+      fontWeight: isBold ? FontWeight.w800 : FontWeight.w400,
+      color: isBold ? (defaultTextColor ?? const Color(0xFF0F172A)) : effectiveColor,
+    );
 
-    final double effectiveFontSize = baseFontSize ?? 13.8;
-    final Color effectiveColor = defaultTextColor ?? const Color(0xFF334155);
+    final spans = _buildRichInlineSpans(
+      text,
+      defaultStyle,
+      baseFontSize: effectiveFontSize,
+      defaultTextColor: effectiveColor,
+      depth: 0,
+    );
 
-    // If entire line is wrapped in bold: **Heading text**
-    if (cleaned.startsWith('**') && cleaned.endsWith('**') && cleaned.length > 4 && !cleaned.substring(2, cleaned.length - 2).contains('**')) {
-      return Text(
-        cleaned.substring(2, cleaned.length - 2),
-        style: GoogleFonts.inter(
-          fontSize: effectiveFontSize + 0.2,
-          height: 1.45,
-          fontWeight: FontWeight.w800,
-          color: const Color(0xFF0F172A),
-        ),
-      );
+    return Text.rich(
+      TextSpan(children: spans),
+      style: defaultStyle,
+    );
+  }
+
+  List<InlineSpan> _buildRichInlineSpans(
+    String text,
+    TextStyle currentStyle, {
+    required double baseFontSize,
+    required Color defaultTextColor,
+    int depth = 0,
+  }) {
+    if (text.isEmpty) return [];
+
+    final String cleaned = _preprocessInlineText(text);
+
+    // Recursion guard
+    if (depth > 3) {
+      return [TextSpan(text: cleaned, style: currentStyle)];
     }
 
-    // Tokenise markdown spans: math ($$...$$, $...$, \(...\)), bold (**...**), italic (*...* or _..._), code (`...`)
     final regex = RegExp(
       r'('
-      r'\$\$[^\$]+?\$\$|'
-      r'\$[^\$\s][^\$]*?\$|'
-      r'\\\([^\)]+?\\\)|'
-      r'\*\*[^*]+?\*\*|'
-      r'\*[^*\s][^*]*?\*|'
-      r'`[^`]+?`|'
-      r'_[^_\s][^_]*?_'
-      r')'
+      r'\$\$[\s\S]+?\$\$|'
+      r'\\\[[\s\S]+?\\\]|'
+      r'\\\([\s\S]+?\\\)|'
+      r'\$(?!\$)[^\$\n]+?\$|'
+      r'<sub\b[^>]*>[\s\S]+?</sub>|'
+      r'<sup\b[^>]*>[\s\S]+?</sup>|'
+      r'<mark\b[^>]*>[\s\S]+?</mark>|'
+      r'\*\*(.+?)\*\*|'
+      r'__(.+?)__|'
+      r'\*(?!\*)[^*\n]+?\*|'
+      r'`[^`\n]+?`|'
+      r'(?<=^|\s|[.,;:!?(])_(?!_)([^_\n]+?)_(?=$|\s|[.,;:!?)]|\b)'
+      r')',
+      caseSensitive: false,
     );
-    final matches = regex.allMatches(cleaned);
 
+    final matches = regex.allMatches(cleaned);
     if (matches.isEmpty) {
-      final plainText = cleaned.replaceAll(RegExp(r'^\*+|\*+$'), '').trim();
-      return Text(
-        plainText,
-        style: GoogleFonts.inter(
-          fontSize: effectiveFontSize,
-          height: 1.45,
-          fontWeight: FontWeight.w400,
-          color: effectiveColor,
-        ),
-      );
+      final plainText = cleaned.replaceAll(RegExp(r'^\*+|\*+$'), '');
+      if (plainText.isEmpty) return [];
+      return [TextSpan(text: plainText, style: currentStyle)];
     }
 
     final List<InlineSpan> spans = [];
@@ -440,35 +447,42 @@ class PharmaMarkdownWidget extends StatelessWidget {
       if (match.start > lastIndex) {
         final pre = cleaned.substring(lastIndex, match.start).replaceAll(RegExp(r'^\*+|\*+$'), '');
         if (pre.isNotEmpty) {
-          spans.add(TextSpan(
-            text: pre,
-            style: GoogleFonts.inter(
-              fontSize: effectiveFontSize,
-              height: 1.45,
-              fontWeight: FontWeight.w400,
-              color: effectiveColor,
-            ),
-          ));
+          spans.add(TextSpan(text: pre, style: currentStyle));
         }
       }
 
       final token = match.group(0)!;
-      if (token.startsWith(r'$$') && token.endsWith(r'$$') && token.length > 4) {
-        final mathContent = token.substring(2, token.length - 2).trim();
+
+      // 1. Math Display Delimiters: $$...$$ or \[...\]
+      if ((token.startsWith(r'$$') && token.endsWith(r'$$') && token.length >= 4) ||
+          (token.startsWith(r'\[') && token.endsWith(r'\]') && token.length >= 4)) {
+        final mathContent = _cleanTex(token);
         spans.add(WidgetSpan(
           alignment: PlaceholderAlignment.middle,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 2),
+            padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
             child: Math.tex(
               mathContent,
               mathStyle: MathStyle.display,
-              textStyle: TextStyle(fontSize: effectiveFontSize, color: effectiveColor),
-              onErrorFallback: (_) => Text(mathContent, style: GoogleFonts.jetBrainsMono(fontSize: effectiveFontSize)),
+              textStyle: TextStyle(
+                fontSize: baseFontSize + 0.5,
+                color: currentStyle.color ?? defaultTextColor,
+              ),
+              onErrorFallback: (_) => Text(
+                mathContent,
+                style: GoogleFonts.jetBrainsMono(
+                  fontSize: baseFontSize,
+                  color: currentStyle.color ?? defaultTextColor,
+                ),
+              ),
             ),
           ),
         ));
-      } else if (token.startsWith(r'\(') && token.endsWith(r'\)') && token.length > 4) {
-        final mathContent = token.substring(2, token.length - 2).trim();
+      }
+      // 2. Inline Math Delimiters: \(...\) or $...$
+      else if ((token.startsWith(r'\(') && token.endsWith(r'\)') && token.length >= 4) ||
+               (token.startsWith(r'$') && token.endsWith(r'$') && token.length >= 2)) {
+        final mathContent = _cleanTex(token);
         spans.add(WidgetSpan(
           alignment: PlaceholderAlignment.middle,
           child: Padding(
@@ -476,66 +490,86 @@ class PharmaMarkdownWidget extends StatelessWidget {
             child: Math.tex(
               mathContent,
               mathStyle: MathStyle.text,
-              textStyle: TextStyle(fontSize: effectiveFontSize, color: effectiveColor),
-              onErrorFallback: (_) => Text(mathContent, style: GoogleFonts.jetBrainsMono(fontSize: effectiveFontSize)),
+              textStyle: TextStyle(
+                fontSize: baseFontSize,
+                color: currentStyle.color ?? defaultTextColor,
+              ),
+              onErrorFallback: (_) => Text(
+                mathContent,
+                style: GoogleFonts.jetBrainsMono(
+                  fontSize: baseFontSize,
+                  color: currentStyle.color ?? defaultTextColor,
+                ),
+              ),
             ),
           ),
         ));
-      } else if (token.startsWith(r'$') && token.endsWith(r'$') && token.length > 2) {
-        final mathContent = token.substring(1, token.length - 1).trim();
-        spans.add(WidgetSpan(
-          alignment: PlaceholderAlignment.middle,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 2),
-            child: Math.tex(
-              mathContent,
-              mathStyle: MathStyle.text,
-              textStyle: TextStyle(fontSize: effectiveFontSize, color: effectiveColor),
-              onErrorFallback: (_) => Text(mathContent, style: GoogleFonts.jetBrainsMono(fontSize: effectiveFontSize)),
-            ),
+      }
+      // 3. HTML Subscript: <sub>...</sub>
+      else if (token.toLowerCase().startsWith('<sub') && token.toLowerCase().endsWith('</sub>')) {
+        final innerMatch = RegExp(r'<sub\b[^>]*>([\s\S]*?)</sub>', caseSensitive: false).firstMatch(token);
+        final subText = innerMatch?.group(1) ?? '';
+        spans.add(_buildSubscriptSpan(subText, currentStyle, baseFontSize));
+      }
+      // 4. HTML Superscript: <sup>...</sup>
+      else if (token.toLowerCase().startsWith('<sup') && token.toLowerCase().endsWith('</sup>')) {
+        final innerMatch = RegExp(r'<sup\b[^>]*>([\s\S]*?)</sup>', caseSensitive: false).firstMatch(token);
+        final supText = innerMatch?.group(1) ?? '';
+        spans.add(_buildSuperscriptSpan(supText, currentStyle, baseFontSize));
+      }
+      // 5. Highlight: <mark>...</mark>
+      else if (token.toLowerCase().startsWith('<mark') && token.toLowerCase().endsWith('</mark>')) {
+        final innerMatch = RegExp(r'<mark\b[^>]*>([\s\S]*?)</mark>', caseSensitive: false).firstMatch(token);
+        final markText = innerMatch?.group(1) ?? '';
+        spans.add(TextSpan(
+          text: markText,
+          style: currentStyle.copyWith(
+            backgroundColor: const Color(0xFFFEF08A),
+            color: const Color(0xFF854D0E),
+            fontWeight: FontWeight.w600,
           ),
         ));
-      } else if (token.startsWith('**') && token.endsWith('**') && token.length > 4) {
+      }
+      // 6. Bold: **...** or __...__ (Recursive to support nested math, code, sub/sup)
+      else if ((token.startsWith('**') && token.endsWith('**') && token.length >= 4) ||
+               (token.startsWith('__') && token.endsWith('__') && token.length >= 4)) {
         final inner = token.substring(2, token.length - 2);
-        spans.add(TextSpan(
-          text: inner,
-          style: GoogleFonts.inter(
-            fontSize: effectiveFontSize,
-            height: 1.45,
-            fontWeight: FontWeight.w800,
-            color: const Color(0xFF0F172A),
-          ),
+        final boldStyle = currentStyle.copyWith(
+          fontWeight: FontWeight.w800,
+          color: const Color(0xFF0F172A),
+        );
+        spans.addAll(_buildRichInlineSpans(
+          inner,
+          boldStyle,
+          baseFontSize: baseFontSize,
+          defaultTextColor: defaultTextColor,
+          depth: depth + 1,
         ));
-      } else if (token.startsWith('*') && token.endsWith('*') && token.length > 2) {
+      }
+      // 7. Italic: *...* or _..._
+      else if ((token.startsWith('*') && token.endsWith('*') && token.length >= 2) ||
+               (token.startsWith('_') && token.endsWith('_') && token.length >= 2)) {
         final inner = token.substring(1, token.length - 1);
-        spans.add(TextSpan(
-          text: inner,
-          style: GoogleFonts.inter(
-            fontSize: effectiveFontSize,
-            height: 1.45,
-            fontStyle: FontStyle.italic,
-            fontWeight: FontWeight.w500,
-            color: const Color(0xFF1E293B),
-          ),
+        final italicStyle = currentStyle.copyWith(
+          fontStyle: FontStyle.italic,
+          fontWeight: FontWeight.w500,
+          color: const Color(0xFF1E293B),
+        );
+        spans.addAll(_buildRichInlineSpans(
+          inner,
+          italicStyle,
+          baseFontSize: baseFontSize,
+          defaultTextColor: defaultTextColor,
+          depth: depth + 1,
         ));
-      } else if (token.startsWith('_') && token.endsWith('_') && token.length > 2) {
-        final inner = token.substring(1, token.length - 1);
-        spans.add(TextSpan(
-          text: inner,
-          style: GoogleFonts.inter(
-            fontSize: effectiveFontSize,
-            height: 1.45,
-            fontStyle: FontStyle.italic,
-            fontWeight: FontWeight.w500,
-            color: const Color(0xFF1E293B),
-          ),
-        ));
-      } else if (token.startsWith('`') && token.endsWith('`') && token.length > 2) {
+      }
+      // 8. Inline Code: `...`
+      else if (token.startsWith('`') && token.endsWith('`') && token.length >= 2) {
         final inner = token.substring(1, token.length - 1);
         spans.add(TextSpan(
           text: ' $inner ',
           style: GoogleFonts.jetBrainsMono(
-            fontSize: effectiveFontSize - 1.3,
+            fontSize: baseFontSize - 1.3,
             fontWeight: FontWeight.w600,
             color: const Color(0xFF1E40AF),
             backgroundColor: const Color(0xFFEFF6FF),
@@ -549,19 +583,127 @@ class PharmaMarkdownWidget extends StatelessWidget {
     if (lastIndex < cleaned.length) {
       final post = cleaned.substring(lastIndex).replaceAll(RegExp(r'^\*+|\*+$'), '');
       if (post.isNotEmpty) {
-        spans.add(TextSpan(
-          text: post,
-          style: GoogleFonts.inter(
-            fontSize: effectiveFontSize,
-            height: 1.45,
-            fontWeight: FontWeight.w400,
-            color: effectiveColor,
-          ),
-        ));
+        spans.add(TextSpan(text: post, style: currentStyle));
       }
     }
 
-    return Text.rich(TextSpan(children: spans));
+    return spans;
+  }
+
+  String _preprocessInlineText(String text) {
+    String res = text
+        .replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '\n')
+        .replaceAll(RegExp(r'</p>', caseSensitive: false), '\n')
+        .replaceAll(RegExp(r'<p>', caseSensitive: false), '');
+
+    res = _decodeHtmlEntities(res);
+
+    // Convert <b> and <strong> to **...**
+    res = res.replaceAll(RegExp(r'<b\b[^>]*>(.*?)</b>', caseSensitive: false, dotAll: true), r'**$1**');
+    res = res.replaceAll(RegExp(r'<strong\b[^>]*>(.*?)</strong>', caseSensitive: false, dotAll: true), r'**$1**');
+
+    // Convert <i> and <em> to *...*
+    res = res.replaceAll(RegExp(r'<i\b[^>]*>(.*?)</i>', caseSensitive: false, dotAll: true), r'*$1*');
+    res = res.replaceAll(RegExp(r'<em\b[^>]*>(.*?)</em>', caseSensitive: false, dotAll: true), r'*$1*');
+
+    // Convert <code> to `...`
+    res = res.replaceAll(RegExp(r'<code\b[^>]*>(.*?)</code>', caseSensitive: false, dotAll: true), r'`$1`');
+
+    // Clean quotes with asterisks: *"quote"* -> "quote"
+    res = res.replaceAll(RegExp(r'\*\"(.*?)\"\*'), '"\$1"');
+    res = res.replaceAll(RegExp(r'\"\*(.*?)\*\"'), '"\$1"');
+
+    // If bold wraps pure math like **\(... \)** or **$...$**, normalize delimiters
+    res = res.replaceAllMapped(RegExp(r'\*\*\s*(\\\([\s\S]+?\\\))\s*\*\*'), (m) => m.group(1)!);
+    res = res.replaceAllMapped(RegExp(r'\*\*\s*(\$\$[\s\S]+?\$\$)\s*\*\*'), (m) => m.group(1)!);
+    res = res.replaceAllMapped(RegExp(r'\*\*\s*(\\\[[\s\S]+?\\\])\s*\*\*'), (m) => m.group(1)!);
+    res = res.replaceAllMapped(RegExp(r'\*\*\s*(\$[^\$\n]+?\$)\s*\*\*'), (m) => m.group(1)!);
+
+    return res;
+  }
+
+  String _decodeHtmlEntities(String input) {
+    return input
+        .replaceAll('&nbsp;', ' ')
+        .replaceAll('&amp;', '&')
+        .replaceAll('&lt;', '<')
+        .replaceAll('&gt;', '>')
+        .replaceAll('&quot;', '"')
+        .replaceAll('&apos;', "'")
+        .replaceAll('&plusmn;', '±')
+        .replaceAll('&times;', '×')
+        .replaceAll('&divide;', '÷')
+        .replaceAll('&le;', '≤')
+        .replaceAll('&ge;', '≥')
+        .replaceAll('&ne;', '≠')
+        .replaceAll('&approx;', '≈')
+        .replaceAll('&infin;', '∞')
+        .replaceAll('&alpha;', 'α')
+        .replaceAll('&beta;', 'β')
+        .replaceAll('&gamma;', 'γ')
+        .replaceAll('&delta;', 'δ')
+        .replaceAll('&lambda;', 'λ')
+        .replaceAll('&mu;', 'µ')
+        .replaceAll('&micro;', 'µ')
+        .replaceAll('&pi;', 'π')
+        .replaceAll('&sigma;', 'σ')
+        .replaceAll('&tau;', 'τ')
+        .replaceAll('&omega;', 'ω')
+        .replaceAll('&deg;', '°');
+  }
+
+  InlineSpan _buildSubscriptSpan(String text, TextStyle parentStyle, double baseFontSize) {
+    final cleanSub = text.replaceAll(RegExp(r'<[^>]*>'), '').trim();
+    return WidgetSpan(
+      alignment: PlaceholderAlignment.middle,
+      child: Transform.translate(
+        offset: const Offset(0, 3.5),
+        child: Text(
+          cleanSub,
+          style: parentStyle.copyWith(
+            fontSize: baseFontSize * 0.76,
+            fontWeight: parentStyle.fontWeight ?? FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+
+  InlineSpan _buildSuperscriptSpan(String text, TextStyle parentStyle, double baseFontSize) {
+    final cleanSup = text.replaceAll(RegExp(r'<[^>]*>'), '').trim();
+    return WidgetSpan(
+      alignment: PlaceholderAlignment.middle,
+      child: Transform.translate(
+        offset: const Offset(0, -4.5),
+        child: Text(
+          cleanSup,
+          style: parentStyle.copyWith(
+            fontSize: baseFontSize * 0.76,
+            fontWeight: parentStyle.fontWeight ?? FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _cleanTex(String raw) {
+    String t = raw.trim();
+    if (t.startsWith(r'\[') && t.endsWith(r'\]') && t.length >= 4) {
+      t = t.substring(2, t.length - 2).trim();
+    } else if (t.startsWith(r'$$') && t.endsWith(r'$$') && t.length >= 4) {
+      t = t.substring(2, t.length - 2).trim();
+    } else if (t.startsWith(r'\(') && t.endsWith(r'\)') && t.length >= 4) {
+      t = t.substring(2, t.length - 2).trim();
+    } else if (t.startsWith(r'$') && t.endsWith(r'$') && t.length >= 2) {
+      t = t.substring(1, t.length - 1).trim();
+    }
+    if (t.startsWith('**') && t.endsWith('**') && t.length > 4) {
+      t = t.substring(2, t.length - 2).trim();
+    }
+    t = t.replaceAll(r'\n', ' ');
+    // Escape unescaped % so KaTeX doesn't treat it as a comment
+    t = t.replaceAll(RegExp(r'(?<!\\)%'), r'\%');
+    return t;
   }
 
   bool _isTableSeparator(String line) {
@@ -801,7 +943,21 @@ class PharmaMarkdownWidget extends StatelessWidget {
     }
 
     final colCount = headers.isNotEmpty ? headers.length : (rows.isNotEmpty ? rows.first.length : 1);
-    final isWideTable = colCount >= 4;
+
+    // Detect if any cell has lengthy descriptive text (> 25 characters)
+    bool hasLongContent = false;
+    for (final r in rows) {
+      for (final c in r) {
+        if (c.length > 25) {
+          hasLongContent = true;
+          break;
+        }
+      }
+      if (hasLongContent) break;
+    }
+
+    // Tables with 3+ columns, or 2-column tables with descriptive content, are wide/scrollable
+    final isWideTable = colCount >= 3 || (colCount == 2 && hasLongContent);
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -850,10 +1006,20 @@ class PharmaMarkdownWidget extends StatelessWidget {
                 ),
                 child: Table(
                   defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                  columnWidths: {
-                    for (int c = 0; c < colCount; c++)
-                      c: isWideTable ? const IntrinsicColumnWidth() : const FlexColumnWidth(),
-                  },
+                  columnWidths: isWideTable
+                      ? {
+                          for (int c = 0; c < colCount; c++)
+                            c: const IntrinsicColumnWidth(),
+                        }
+                      : (colCount == 2
+                          ? const {
+                              0: FlexColumnWidth(1.0),
+                              1: FlexColumnWidth(1.8),
+                            }
+                          : {
+                              for (int c = 0; c < colCount; c++)
+                                c: const FlexColumnWidth(),
+                            }),
                   children: [
                     // Header Row
                     if (headers.isNotEmpty)
@@ -866,13 +1032,16 @@ class PharmaMarkdownWidget extends StatelessWidget {
                           return Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                             alignment: Alignment.centerLeft,
-                            child: Text(
-                              h.replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), ' ').replaceAll('**', '').replaceAll('*', '').trim(),
-                              style: GoogleFonts.dmSans(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 12,
-                                color: const Color(0xFF1E3A8A),
-                                letterSpacing: -0.1,
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxWidth: isWideTable ? (colCount >= 4 ? 200 : 250) : 300,
+                                minWidth: isWideTable ? (colCount >= 4 ? 100 : 120) : 60,
+                              ),
+                              child: _buildRichInlineText(
+                                h.replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), ' '),
+                                baseFontSize: 12,
+                                defaultTextColor: const Color(0xFF1E3A8A),
+                                isBold: true,
                               ),
                             ),
                           );
@@ -895,13 +1064,14 @@ class PharmaMarkdownWidget extends StatelessWidget {
                               alignment: Alignment.centerLeft,
                               child: ConstrainedBox(
                                 constraints: BoxConstraints(
-                                  maxWidth: isWideTable ? 220 : 300,
-                                  minWidth: isWideTable ? 70 : 45,
+                                  maxWidth: isWideTable ? (colCount >= 4 ? 200 : 250) : 300,
+                                  minWidth: isWideTable ? (colCount >= 4 ? 100 : 120) : 60,
                                 ),
                                 child: _buildRichInlineText(
                                   (c < rows[r].length ? rows[r][c] : '')
                                       .replaceAll(r'\n', '\n')
                                       .replaceAll(r'\\n', '\n'),
+                                  baseFontSize: 12.5,
                                 ),
                               ),
                             ),
@@ -918,15 +1088,7 @@ class PharmaMarkdownWidget extends StatelessWidget {
   }
 
   Widget _buildDisplayMathWidget(BuildContext context, String rawTex) {
-    String cleanTex = rawTex
-        .replaceAll(r'\[', '')
-        .replaceAll(r'\]', '')
-        .replaceAll(r'$$', '')
-        .replaceAll(r'\n', ' ')
-        .trim();
-
-    // Clean common escaped characters that LLMs produce
-    cleanTex = cleanTex.replaceAll(r'\%', '%');
+    final String cleanTex = _cleanTex(rawTex);
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
