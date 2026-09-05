@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
@@ -126,23 +127,6 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
           child: screens[_currentIndex],
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const PharmaHelperScreen()),
-        ),
-        elevation: 4,
-        backgroundColor: const Color(0xFF1E3A8A),
-        icon: const PharmaMascotWidget(size: 26, showBadge: true),
-        label: Text(
-          'Ask AI Tutor',
-          style: GoogleFonts.dmSans(
-            fontWeight: FontWeight.w800,
-            color: Colors.white,
-            fontSize: 13,
-          ),
-        ),
-      ),
       bottomNavigationBar: _buildBottomNav(),
     );
   }
@@ -217,20 +201,17 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
       actions: [
         IconButton(
           constraints: const BoxConstraints(minWidth: 38, minHeight: 38),
-          padding: const EdgeInsets.all(6),
-          icon: const PharmaMascotWidget(size: 26, showBadge: true),
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const PharmaHelperScreen()),
-          ),
-          tooltip: 'PharmaHelper AI Tutor',
-        ),
-        IconButton(
-          constraints: const BoxConstraints(minWidth: 38, minHeight: 38),
           padding: const EdgeInsets.all(8),
           icon: const Icon(Icons.search_rounded, size: 22),
           onPressed: () => showSearch(context: context, delegate: GlobalSearchDelegate()),
           tooltip: 'Search',
+        ),
+        AnimatedDownloadButton(
+          isActive: _currentIndex == 2,
+          onTap: () {
+            HapticFeedback.selectionClick();
+            setState(() => _currentIndex = 2);
+          },
         ),
         Stack(
           alignment: Alignment.center,
@@ -304,39 +285,107 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
         color: Colors.white,
         border: const Border(top: BorderSide(color: AppTheme.borderSoft, width: 1)),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 12, offset: const Offset(0, -3)),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 12,
+            offset: const Offset(0, -3),
+          ),
         ],
       ),
-      child: NavigationBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (index) => setState(() => _currentIndex = index),
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home_rounded),
-            label: 'Home',
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          height: 62,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _buildNavItem(
+                index: 0,
+                label: 'Home',
+                icon: Icons.home_outlined,
+                selectedIcon: Icons.home_rounded,
+              ),
+              _buildNavItem(
+                index: 1,
+                label: 'Syllabus',
+                icon: Icons.menu_book_outlined,
+                selectedIcon: Icons.menu_book_rounded,
+              ),
+              Expanded(
+                child: AnimatedAiNavButton(
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const PharmaHelperScreen()),
+                    );
+                  },
+                ),
+              ),
+              _buildNavItem(
+                index: 3,
+                label: 'Career',
+                icon: Icons.work_outline_rounded,
+                selectedIcon: Icons.work_rounded,
+              ),
+              _buildNavItem(
+                index: 4,
+                label: 'Saved',
+                icon: Icons.bookmark_outline_rounded,
+                selectedIcon: Icons.bookmark_rounded,
+              ),
+            ],
           ),
-          NavigationDestination(
-            icon: Icon(Icons.menu_book_outlined),
-            selectedIcon: Icon(Icons.menu_book_rounded),
-            label: 'Syllabus',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.download_outlined),
-            selectedIcon: Icon(Icons.download_rounded),
-            label: 'Notes',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.work_outline_rounded),
-            selectedIcon: Icon(Icons.work_rounded),
-            label: 'Career',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.bookmark_outline_rounded),
-            selectedIcon: Icon(Icons.bookmark_rounded),
-            label: 'Saved',
-          ),
-        ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavItem({
+    required int index,
+    required String label,
+    required IconData icon,
+    required IconData selectedIcon,
+  }) {
+    final isSelected = _currentIndex == index;
+    final color = isSelected ? AppTheme.brandBlue : const Color(0xFF64748B);
+
+    return Expanded(
+      child: InkWell(
+        onTap: () {
+          HapticFeedback.selectionClick();
+          setState(() => _currentIndex = index);
+        },
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 180),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 3),
+              decoration: BoxDecoration(
+                color: isSelected ? const Color(0xFFDBEAFE).withValues(alpha: 0.5) : Colors.transparent,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Icon(
+                isSelected ? selectedIcon : icon,
+                color: color,
+                size: 22,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              label,
+              style: GoogleFonts.dmSans(
+                fontSize: 11,
+                fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                color: color,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -763,3 +812,194 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
     );
   }
 }
+
+/// Animated Download button in the AppBar next to Search
+class AnimatedDownloadButton extends StatefulWidget {
+  final bool isActive;
+  final VoidCallback onTap;
+
+  const AnimatedDownloadButton({
+    super.key,
+    required this.isActive,
+    required this.onTap,
+  });
+
+  @override
+  State<AnimatedDownloadButton> createState() => _AnimatedDownloadButtonState();
+}
+
+class _AnimatedDownloadButtonState extends State<AnimatedDownloadButton>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _ctrl;
+  late Animation<double> _bounceAnim;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    )..repeat(reverse: true);
+
+    _bounceAnim = Tween<double>(begin: 0.0, end: 2.5).animate(
+      CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      constraints: const BoxConstraints(minWidth: 38, minHeight: 38),
+      padding: const EdgeInsets.all(8),
+      tooltip: 'Free Notes & Downloads',
+      onPressed: widget.onTap,
+      icon: AnimatedBuilder(
+        animation: _bounceAnim,
+        builder: (context, child) {
+          return Transform.translate(
+            offset: Offset(0, _bounceAnim.value),
+            child: child,
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.all(3),
+          decoration: widget.isActive
+              ? BoxDecoration(
+                  color: const Color(0xFFDBEAFE),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: AppTheme.brandBlue, width: 1.2),
+                )
+              : null,
+          child: Icon(
+            Icons.download_rounded,
+            size: 22,
+            color: widget.isActive ? AppTheme.brandBlue : AppTheme.primaryNavy,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Animated Floating AI Button in the center of Bottom Navigation
+class AnimatedAiNavButton extends StatefulWidget {
+  final VoidCallback onTap;
+
+  const AnimatedAiNavButton({super.key, required this.onTap});
+
+  @override
+  State<AnimatedAiNavButton> createState() => _AnimatedAiNavButtonState();
+}
+
+class _AnimatedAiNavButtonState extends State<AnimatedAiNavButton>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _ctrl;
+  late Animation<double> _pulseAnim;
+  late Animation<double> _glowAnim;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1800),
+    )..repeat(reverse: true);
+
+    _pulseAnim = Tween<double>(begin: 1.0, end: 1.08).animate(
+      CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut),
+    );
+
+    _glowAnim = Tween<double>(begin: 8.0, end: 16.0).animate(
+      CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: widget.onTap,
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          AnimatedBuilder(
+            animation: _ctrl,
+            builder: (context, child) {
+              return Transform.scale(
+                scale: _pulseAnim.value,
+                child: Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF3B82F6), Color(0xFF4F46E5), Color(0xFF6366F1)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF4F46E5).withValues(alpha: 0.4),
+                        blurRadius: _glowAnim.value,
+                        spreadRadius: 1,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: child,
+                ),
+              );
+            },
+            child: Center(
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  // Microchip outline matching design
+                  Container(
+                    width: 22,
+                    height: 22,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white.withValues(alpha: 0.9), width: 1.8),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  // Center glowing sparkles
+                  const Icon(
+                    Icons.auto_awesome,
+                    color: Colors.white,
+                    size: 13,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 3),
+          Text(
+            'AI',
+            style: GoogleFonts.dmSans(
+              fontSize: 11,
+              fontWeight: FontWeight.w900,
+              color: const Color(0xFF3B82F6),
+              letterSpacing: 0.3,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
