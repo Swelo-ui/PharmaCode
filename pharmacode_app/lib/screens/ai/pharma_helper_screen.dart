@@ -5,6 +5,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/theme.dart';
+import '../../models/syllabus_models.dart';
 import '../../services/ai/ai_config.dart';
 import '../../services/ai/ai_key_manager.dart';
 import '../../services/ai/ai_rotation_service.dart';
@@ -14,11 +15,13 @@ import '../../widgets/pharma_mascot_widget.dart';
 class PharmaHelperScreen extends StatefulWidget {
   final String? initialPrompt;
   final String? initialContextTitle;
+  final Subject? attachedSubject;
 
   const PharmaHelperScreen({
     super.key,
     this.initialPrompt,
     this.initialContextTitle,
+    this.attachedSubject,
   });
 
   @override
@@ -35,6 +38,7 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
   bool _isLoading = false;
   PharmaChatMode _selectedMode = PharmaChatMode.tutorHinglish;
   bool _webSearchEnabled = false;
+  Subject? _attachedSubject;
 
   final List<String> _suggestedPrompts = [
     'Bioavailability simple Hinglish me samjhao',
@@ -48,14 +52,54 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
   @override
   void initState() {
     super.initState();
-    _loadInitialGreeting();
+    _attachedSubject = widget.attachedSubject;
 
-    // If an initial prompt was passed (e.g. from Subject or Blog screen)
-    if (widget.initialPrompt != null && widget.initialPrompt!.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _handleSendMessage(widget.initialPrompt!);
-      });
+    if (_attachedSubject != null) {
+      _loadSubjectGreeting(_attachedSubject!);
+    } else {
+      _loadInitialGreeting();
+
+      // If an initial prompt was passed (e.g. from Blog screen)
+      if (widget.initialPrompt != null && widget.initialPrompt!.isNotEmpty) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _handleSendMessage(widget.initialPrompt!);
+        });
+      }
     }
+  }
+
+  void _loadSubjectGreeting(Subject s) {
+    final unitsData = s.units.map((u) => {
+      'num': u.num,
+      'title': u.title,
+      'hours': u.hours,
+    }).toList();
+
+    _messages.add(
+      ChatMessage(
+        id: 'subject_greeting',
+        content: PharmaPromptTemplates.getSubjectInitialGreeting(
+          code: s.code,
+          name: s.name,
+          credits: s.credits,
+          typeLabel: s.typeLabel,
+          units: unitsData,
+        ),
+        isUser: false,
+        timestamp: DateTime.now(),
+        providerUsed: 'PharmaLearn AI • ${s.code} Mentor',
+      ),
+    );
+
+    // Setup dynamic suggestions specifically for this subject
+    _suggestedPrompts.clear();
+    _suggestedPrompts.addAll([
+      '${s.code} ke high-weightage exam topics batao',
+      'Unit 1: ${s.units.isNotEmpty ? s.units.first.title : "Introduction"} samjhao',
+      'Top 5-mark and 10-mark exam questions',
+      'Exam preparation strategy for ${s.code}',
+      'Important definitions and mechanisms',
+    ]);
   }
 
   void _loadInitialGreeting() {
@@ -89,6 +133,36 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
     });
   }
 
+  String? _getSubjectContextString() {
+    final s = _attachedSubject;
+    if (s == null) return null;
+
+    final b = StringBuffer();
+    b.writeln('SUBJECT CODE: ${s.code}');
+    b.writeln('SUBJECT NAME: ${s.name}');
+    b.writeln('CREDITS: ${s.credits} (${s.typeLabel})');
+    if (s.objectives.isNotEmpty) {
+      b.writeln('COURSE OBJECTIVES:');
+      for (final obj in s.objectives) {
+        b.writeln('- $obj');
+      }
+    }
+    b.writeln('PCI NEP 2020 SYLLABUS UNITS & TOPICS:');
+    for (final u in s.units) {
+      b.writeln('• Unit ${u.num}: ${u.title} (${u.hours})');
+      if (u.topics.isNotEmpty) {
+        b.writeln('  Topics: ${u.topics.join(', ')}');
+      }
+    }
+    if (s.references.isNotEmpty) {
+      b.writeln('RECOMMENDED REFERENCE BOOKS:');
+      for (final ref in s.references) {
+        b.writeln('- $ref');
+      }
+    }
+    return b.toString();
+  }
+
   Future<void> _handleSendMessage(String text) async {
     final query = text.trim();
     if (query.isEmpty || _isLoading) return;
@@ -112,9 +186,10 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
     try {
       final response = await _aiService.sendMessage(
         userMessage: query,
-        history: _messages.where((m) => m.id != 'greeting').toList(),
+        history: _messages.where((m) => !m.id.contains('greeting')).toList(),
         mode: _selectedMode,
         forceWebSearch: _webSearchEnabled,
+        subjectContext: _getSubjectContextString(),
       );
 
       if (mounted) {
@@ -184,10 +259,11 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
       body: Column(
         children: [
           _buildModeSelector(),
+          if (_attachedSubject != null) _buildAttachedSubjectBanner(),
           Expanded(
             child: ListView.builder(
               controller: _scrollCtrl,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.fromLTRB(14, 14, 14, 20),
               itemCount: _messages.length + (_isLoading ? 1 : 0),
               itemBuilder: (context, index) {
                 if (index == _messages.length && _isLoading) {
@@ -371,6 +447,286 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
     );
   }
 
+  Widget _buildAttachedSubjectBanner() {
+    final s = _attachedSubject;
+    if (s == null) return const SizedBox.shrink();
+
+    return Container(
+      margin: const EdgeInsets.fromLTRB(14, 8, 14, 4),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF0F1D5C), Color(0xFF1E3A8A)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF0F1D5C).withValues(alpha: 0.18),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Text(
+              s.code,
+              style: GoogleFonts.dmSans(
+                color: Colors.white,
+                fontWeight: FontWeight.w900,
+                fontSize: 11.5,
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  s.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.dmSans(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 13,
+                  ),
+                ),
+                Text(
+                  '${s.credits} Credits · ${s.typeLabel} · ${s.units.length} Units Attached',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.inter(
+                    color: const Color(0xFF93C5FD),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 10.5,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 6),
+          // View Units action
+          InkWell(
+            onTap: () => _showSubjectUnitsModal(s),
+            borderRadius: BorderRadius.circular(8),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: const Color(0xFF38BDF8).withValues(alpha: 0.25),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFF38BDF8).withValues(alpha: 0.5)),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.list_alt_rounded, color: Color(0xFF7DD3FC), size: 13),
+                  const SizedBox(width: 3),
+                  Text(
+                    'Units',
+                    style: GoogleFonts.dmSans(
+                      color: Colors.white,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(width: 6),
+          // Detach / Clear subject context button
+          InkWell(
+            onTap: () {
+              setState(() {
+                _attachedSubject = null;
+                _suggestedPrompts.clear();
+                _suggestedPrompts.addAll([
+                  'Bioavailability simple Hinglish me samjhao',
+                  'Write a 5-mark answer on Tablet Capping & Lamination',
+                  'What are the 4 validity criteria in Pharmacovigilance ICSR?',
+                  'GPCR signaling pathway simple analogy se batao',
+                  'ICH Q1A stability testing guidelines summary',
+                  'Recent FDA approved antibody drugs search karo',
+                ]);
+              });
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    'Subject context detached. PharmaHelper is now in general mode.',
+                    style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                  ),
+                  duration: const Duration(seconds: 2),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+            },
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.15),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.close_rounded, size: 14, color: Colors.white70),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showSubjectUnitsModal(Subject s) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        return Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(ctx).size.height * 0.75,
+          ),
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFCBD5E1),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFEFF6FF),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: const Color(0xFFBFDBFE)),
+                    ),
+                    child: Text(
+                      s.code,
+                      style: GoogleFonts.dmSans(
+                        color: const Color(0xFF1D4ED8),
+                        fontWeight: FontWeight.w900,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Syllabus Units (${s.units.length} Units)',
+                      style: GoogleFonts.dmSans(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 16,
+                        color: AppTheme.primaryNavy,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Text(
+                s.name,
+                style: GoogleFonts.dmSans(
+                  color: AppTheme.textMuted,
+                  fontSize: 12.5,
+                ),
+              ),
+              const SizedBox(height: 14),
+              const Divider(height: 1),
+              Flexible(
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  itemCount: s.units.length,
+                  separatorBuilder: (_, _) => const Divider(height: 1, color: Color(0xFFF1F5F9)),
+                  itemBuilder: (context, idx) {
+                    final u = s.units[idx];
+                    return ListTile(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                      leading: Container(
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFEFF6FF),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          u.num,
+                          style: GoogleFonts.dmSans(
+                            color: const Color(0xFF2563EB),
+                            fontWeight: FontWeight.w900,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                      title: Text(
+                        u.title,
+                        style: GoogleFonts.dmSans(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13.5,
+                          color: const Color(0xFF0F172A),
+                        ),
+                      ),
+                      subtitle: u.hours.isNotEmpty
+                          ? Text(
+                              u.hours,
+                              style: GoogleFonts.inter(fontSize: 11, color: const Color(0xFF64748B)),
+                            )
+                          : null,
+                      trailing: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(ctx);
+                          _handleSendMessage('Explain Unit ${u.num}: ${u.title} in detail with important 5-mark and 10-mark exam questions.');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFEFF6FF),
+                          foregroundColor: const Color(0xFF2563EB),
+                          elevation: 0,
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        ),
+                        child: Text(
+                          'Ask AI',
+                          style: GoogleFonts.dmSans(fontSize: 11.5, fontWeight: FontWeight.w800),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildMessageItem(ChatMessage msg) {
     if (msg.isUser) {
       return Padding(
@@ -478,7 +834,7 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
           const SizedBox(height: 6),
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: const BorderRadius.only(
@@ -775,7 +1131,9 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                   onSubmitted: _handleSendMessage,
                   style: GoogleFonts.inter(fontSize: 13.5, color: const Color(0xFF0F172A)),
                   decoration: InputDecoration(
-                    hintText: 'Ask PharmaHelper (Hinglish/English)...',
+                    hintText: _attachedSubject != null
+                        ? 'Ask about ${_attachedSubject!.code} (Hinglish/English)...'
+                        : 'Ask PharmaHelper (Hinglish/English)...',
                     hintStyle: GoogleFonts.inter(color: const Color(0xFF94A3B8), fontSize: 12.5),
                     border: InputBorder.none,
                     isDense: true,
@@ -814,6 +1172,112 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
     );
   }
 
+  bool _isTableSeparator(String line) {
+    final t = line.trim();
+    if (!t.contains('|') || !t.contains('-')) return false;
+    return RegExp(r'^\|?(\s*:?-{2,}:?\s*\|?)+\s*$').hasMatch(t);
+  }
+
+  bool _isTableRow(String line) {
+    final t = line.trim();
+    if (!t.contains('|')) return false;
+    final pipes = t.split('|').length - 1;
+    return pipes >= 2;
+  }
+
+  List<String> _parseTableCells(String line) {
+    String t = line.trim();
+    if (t.startsWith('|')) t = t.substring(1);
+    if (t.endsWith('|')) t = t.substring(0, t.length - 1);
+    return t.split('|').map((c) => c.trim()).toList();
+  }
+
+  Widget _buildMarkdownTable(List<String> headers, List<List<String>> rows) {
+    if (headers.isEmpty && rows.isEmpty) return const SizedBox.shrink();
+
+    final colCount = headers.isNotEmpty ? headers.length : (rows.isNotEmpty ? rows.first.length : 1);
+
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xFFCBD5E1), width: 1.2),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minWidth: MediaQuery.of(context).size.width - 70,
+          ),
+          child: Table(
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+            columnWidths: {
+              for (int c = 0; c < colCount; c++)
+                c: const IntrinsicColumnWidth(),
+            },
+            children: [
+              // Header Row
+              if (headers.isNotEmpty)
+                TableRow(
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFEFF6FF),
+                    border: Border(bottom: BorderSide(color: Color(0xFF93C5FD), width: 1.5)),
+                  ),
+                  children: headers.map((h) {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        h.replaceAll('**', '').replaceAll('*', '').trim(),
+                        style: GoogleFonts.dmSans(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 13,
+                          color: const Color(0xFF1E3A8A),
+                          letterSpacing: -0.2,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+
+              // Data Rows
+              for (int r = 0; r < rows.length; r++)
+                TableRow(
+                  decoration: BoxDecoration(
+                    color: r % 2 == 1 ? const Color(0xFFF8FAFC) : Colors.white,
+                    border: r < rows.length - 1
+                        ? const Border(bottom: BorderSide(color: Color(0xFFE2E8F0), width: 0.8))
+                        : null,
+                  ),
+                  children: [
+                    for (int c = 0; c < colCount; c++)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                        alignment: Alignment.centerLeft,
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 280, minWidth: 90),
+                          child: _buildRichInlineText(c < rows[r].length ? rows[r][c] : ''),
+                        ),
+                      ),
+                  ],
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   /// Clean formatted text rendering for markdown without extra heavy packages
   Widget _renderFormattedText(String text) {
     final lines = text.split('\n');
@@ -843,9 +1307,31 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
         continue;
       }
 
+      // 2. Markdown Table Detection & Parsing
+      if (_isTableRow(trimmed) && i + 1 < lines.length && _isTableSeparator(lines[i + 1])) {
+        final headers = _parseTableCells(trimmed);
+        i++; // Skip separator line
+
+        final List<List<String>> rows = [];
+        int j = i + 1;
+        while (j < lines.length && _isTableRow(lines[j]) && !_isTableSeparator(lines[j])) {
+          final cells = _parseTableCells(lines[j]);
+          while (cells.length < headers.length) {
+            cells.add('');
+          }
+          rows.add(cells);
+          j++;
+        }
+        i = j - 1; // Advance loop index
+
+        children.add(_buildMarkdownTable(headers, rows));
+        isFirstItem = false;
+        continue;
+      }
+
       isFirstItem = false;
 
-      // 2. Headings
+      // 3. Headings
       if (trimmed.startsWith('#### ') || trimmed.startsWith('##### ')) {
         final rawTitle = trimmed.substring(trimmed.indexOf(' ') + 1);
         final title = rawTitle.replaceAll('**', '').replaceAll('*', '').trim();

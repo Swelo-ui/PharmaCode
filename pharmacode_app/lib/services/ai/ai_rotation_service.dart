@@ -41,6 +41,7 @@ class AiRotationService {
     required List<ChatMessage> history,
     required PharmaChatMode mode,
     bool forceWebSearch = false,
+    String? subjectContext,
   }) async {
     final startTime = DateTime.now();
 
@@ -79,6 +80,7 @@ class AiRotationService {
       mode: mode,
       inAppContext: inAppContext,
       webSearchContext: webContext,
+      subjectContext: subjectContext,
     );
 
     // 4. Format message history

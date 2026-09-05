@@ -85,8 +85,7 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (_) => PharmaHelperScreen(
-                    initialPrompt: 'Please guide me on ${widget.subject.code}: ${widget.subject.name}. Explain the high-weightage units, important 5-mark and 10-mark exam topics, and give study tips in Hinglish.',
-                    initialContextTitle: widget.subject.name,
+                    attachedSubject: widget.subject,
                   ),
                 ),
               );
@@ -236,8 +235,7 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (_) => PharmaHelperScreen(
-                                  initialPrompt: 'Please guide me on ${widget.subject.code}: ${widget.subject.name}. Explain the high-weightage units, important exam topics, and give study tips in Hinglish.',
-                                  initialContextTitle: widget.subject.name,
+                                  attachedSubject: widget.subject,
                                 ),
                               ),
                             );

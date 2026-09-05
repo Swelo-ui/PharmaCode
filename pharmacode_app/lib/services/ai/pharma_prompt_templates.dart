@@ -11,6 +11,7 @@ class PharmaPromptTemplates {
     required PharmaChatMode mode,
     String? inAppContext,
     String? webSearchContext,
+    String? subjectContext,
   }) {
     final buffer = StringBuffer();
 
@@ -89,14 +90,52 @@ Your mission is to empower B.Pharm, M.Pharm, Pharm.D, and Life Sciences students
       buffer.writeln('\n$webSearchContext\n');
     }
 
+    // Injected Attached Subject Context (Locked to specific subject)
+    if (subjectContext != null && subjectContext.isNotEmpty) {
+      buffer.writeln('''
+--- ATTACHED SUBJECT SYLLABUS CONTEXT ---
+$subjectContext
+
+CRITICAL INSTRUCTION FOR ATTACHED SUBJECT:
+The student has opened this conversation directly from the above subject page in PharmaCode.
+1. Strictly focus your explanations, unit breakdowns, important 5-mark and 10-mark questions, and practical pharma insights on this attached subject.
+2. If the student asks open questions like "unit 1 samjhao", "important questions batao", or "give study tips", interpret them specifically for this subject's syllabus units!
+3. If they ask for comparisons or concepts in a table, always format them in a clean Markdown table with headers and dividers.
+''');
+    }
+
     buffer.writeln('''
 --- IMPORTANT FORMATTING & QUALITY GUIDELINES ---
 - STRICTLY NO EMOJIS: Do NOT use any emojis or emoticons in your responses. Keep the output completely professional, authoritative, and academic.
 - NEVER start your response with dashes (---), divider lines, or empty lines. Begin directly with a clean title or direct introductory concept explanation.
 - Use clean Markdown formatting: bold key terms (**term**), bullet points (•), and headers (`###`) where appropriate. Avoid raw `####` or excessive hash symbols.
+- TABLES: When providing comparisons, classifications, formulas, or schedules, ALWAYS format them as structured Markdown tables (| Col 1 | Col 2 |).
 - Educational & Academic Disclaimer: PharmaCode is an educational learning companion for pharmacy students. Remind students where applicable that clinical information is for academic study, not self-medication.
 ''');
 
+    return buffer.toString();
+  }
+
+  /// Initial greeting message when a specific subject is attached
+  static String getSubjectInitialGreeting({
+    required String code,
+    required String name,
+    required int credits,
+    required String typeLabel,
+    required List<Map<String, String>> units,
+  }) {
+    final buffer = StringBuffer();
+    buffer.writeln('Namaste! Main hoon aapka PharmaHelper AI Tutor for **$code: $name**.\n');
+    buffer.writeln('Is subject ka complete PCI NEP 2020 syllabus context (**${units.length} Units**, $credits Credits · $typeLabel) is chat me attached hai.\n');
+    buffer.writeln('**Syllabus Units Breakdown:**');
+    for (final u in units) {
+      final num = u['num'] ?? '';
+      final title = u['title'] ?? '';
+      final hours = u['hours'] ?? '';
+      buffer.writeln('• **Unit $num:** $title ${hours.isNotEmpty ? "($hours)" : ""}');
+    }
+    buffer.writeln('\nAap is subject ke kisi bhi unit ke concepts, important 5 & 10 marks questions, practical applications, ya exam study tips ke bare me pooch sakte hain.');
+    buffer.writeln('Neeche diye quick buttons tap karein ya apna sawal type karein!');
     return buffer.toString();
   }
 
