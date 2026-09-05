@@ -610,6 +610,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     openInAppUrl(context, 'https://pharmacode.vercel.app');
   }
 
+  void _openPrivacyPolicy() {
+    openInAppUrl(context, 'https://pharmacode.vercel.app/privacy-policy.html');
+  }
+
+  void _openTerms() {
+    openInAppUrl(context, 'https://pharmacode.vercel.app/terms.html');
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
@@ -1124,6 +1132,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: AppTheme.textMuted),
             onTap: _shareApp,
+          ),
+          const Divider(height: 1),
+          ListTile(
+            leading: Container(
+              width: 38,
+              height: 38,
+              decoration: BoxDecoration(
+                color: const Color(0xFFF0FDF4),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              alignment: Alignment.center,
+              child: const Icon(Icons.shield_outlined, color: Color(0xFF16A34A), size: 18),
+            ),
+            title: Text(
+              'Privacy Policy & Data Safety',
+              style: GoogleFonts.dmSans(fontWeight: FontWeight.w800, fontSize: 14),
+            ),
+            subtitle: Text(
+              'Google Play 2026 data safety compliance',
+              style: GoogleFonts.dmSans(color: AppTheme.textMuted, fontSize: 12),
+            ),
+            trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: AppTheme.textMuted),
+            onTap: _openPrivacyPolicy,
+          ),
+          const Divider(height: 1),
+          ListTile(
+            leading: Container(
+              width: 38,
+              height: 38,
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFFBEB),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              alignment: Alignment.center,
+              child: const Icon(Icons.gavel_rounded, color: Color(0xFFD97706), size: 18),
+            ),
+            title: Text(
+              'Terms of Service & Disclaimer',
+              style: GoogleFonts.dmSans(fontWeight: FontWeight.w800, fontSize: 14),
+            ),
+            subtitle: Text(
+              'Academic scope & medical disclaimer',
+              style: GoogleFonts.dmSans(color: AppTheme.textMuted, fontSize: 12),
+            ),
+            trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: AppTheme.textMuted),
+            onTap: _openTerms,
           ),
         ],
       ),

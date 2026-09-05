@@ -9,6 +9,7 @@ const RESOURCES = [
     { href: "/career/", label: "Career Guidance" },
     { href: "/contribute/", label: "Contribute" },
     { href: "/privacy-policy/", label: "Privacy" },
+    { href: "/terms/", label: "Terms & Disclaimer" },
 ];
 
 const KEY_SUBJECTS = [

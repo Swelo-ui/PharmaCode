@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy & Data Safety — PharmaCode</title>
+    <title>Privacy Policy &amp; Data Safety — PharmaCode</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -14,7 +14,7 @@
             padding: 24px 16px;
         }
         .container {
-            max-width: 800px;
+            max-width: 820px;
             margin: 0 auto;
             background: #FFFFFF;
             padding: 36px 32px;
@@ -38,8 +38,10 @@
         h2 {
             color: #1E293B;
             font-size: 18px;
-            margin-top: 24px;
+            margin-top: 26px;
             margin-bottom: 8px;
+            border-left: 4px solid #2563EB;
+            padding-left: 8px;
         }
         p, li {
             font-size: 14px;
@@ -47,77 +49,215 @@
         }
         ul {
             padding-left: 20px;
+            margin-top: 6px;
+            margin-bottom: 12px;
+        }
+        li {
+            margin-bottom: 6px;
         }
         .badge {
             display: inline-block;
             background: #DCFCE7;
             color: #166534;
-            padding: 4px 10px;
+            padding: 5px 12px;
             border-radius: 6px;
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 16px;
+            letter-spacing: 0.3px;
+        }
+        .badge-year {
+            display: inline-block;
+            background: #EFF6FF;
+            color: #1D4ED8;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            margin-left: 6px;
+        }
+        .deletion-box {
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 18px 0;
+        }
+        .deletion-box h3 {
+            color: #991B1B;
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-size: 15px;
         }
         .contact-box {
-            background: #F1F5F9;
-            padding: 16px;
-            border-radius: 10px;
-            margin-top: 24px;
+            background: #EEF2FF;
+            border: 1px solid #C7D2FE;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 28px;
+        }
+        .contact-box h2 {
+            border-left: none;
+            padding-left: 0;
+            margin-top: 0;
+            color: #1E3A8A;
         }
         a {
             color: #2563EB;
             text-decoration: none;
+            font-weight: 600;
         }
         a:hover {
             text-decoration: underline;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 13px;
+        }
+        th, td {
+            border: 1px solid #E2E8F0;
+            padding: 10px 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #F1F5F9;
+            color: #1E293B;
+            font-weight: 600;
+        }
+        code {
+            background-color: #F1F5F9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12.5px;
+            color: #0F172A;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <span class="badge">Google Play Data Safety Compliant</span>
-        <h1>Privacy Policy & Data Safety</h1>
+        <div>
+            <span class="badge">Google Play Data Safety Compliant</span>
+            <span class="badge-year">2026 Developer Policy Standards</span>
+        </div>
+        <h1>Privacy Policy &amp; Data Safety</h1>
         <div class="sub">
             Application: <strong>PharmaCode — B.Pharm NEP 2020 Study Companion</strong><br>
-            Package ID: <code>com.pharmacode.bpharm</code> | Last Updated: September 2026
+            Package ID: <code>com.pharmacode.bpharm</code> | Category: <strong>Education</strong><br>
+            Developer Entity: <strong>PharmaCode Team</strong> | Effective Date: <strong>September 2026</strong>
         </div>
 
-        <p>PharmaCode ("we", "our", or "us") provides open-access academic learning resources, syllabus references aligned with PCI NEP 2020, and the PharmaHelper AI tutor. We respect your privacy and are committed to safeguarding user data across our mobile applications and websites (https://pharmacode.vercel.app).</p>
+        <p>PharmaCode (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) provides open-access academic learning materials, Pharmacy Council of India (PCI) NEP 2020 syllabus guides, free downloadable unit notes, GPAT prep kits, and the PharmaHelper AI academic study tutor. This Privacy Policy informs users of our mobile application (Package ID: <code>com.pharmacode.bpharm</code>) and associated web portal (<strong>https://pharmacode.vercel.app</strong>) regarding the collection, handling, storage, and protection of user data.</p>
 
-        <h2>1. Zero Account Registration & No Mandatory Personal Data</h2>
-        <p>PharmaCode does not require registration, login credentials, passwords, phone numbers, or credit cards to view syllabus guides, read pharmaceutical notes, or download PDFs. All core educational study resources are freely available without paywalls.</p>
+        <h2>1. Zero Mandatory Accounts &amp; Free Educational Access</h2>
+        <p>PharmaCode is built upon a philosophy of open academic education for pharmacy students across India. You are <strong>not required</strong> to create an account, provide your real name, submit your phone number, or enter any financial/payment information to access our core features. You can browse all 8 semesters of B.Pharm curricula, read unit notes, and download study PDFs completely anonymously.</p>
 
-        <h2>2. Permissions Requested by the Android App</h2>
+        <h2>2. Optional Account Data (Firebase Authentication)</h2>
+        <p>Students may optionally register or log in using Google Sign-In or Email/Password to sync personal bookmarks and study history across devices. In such cases:</p>
         <ul>
-            <li><strong>INTERNET & ACCESS_NETWORK_STATE</strong>: Strictly used to retrieve online notes, syllabus updates, and query the PharmaHelper AI academic engine.</li>
-            <li><strong>POST_NOTIFICATIONS</strong>: Used optionally to provide daily study reminders and university exam notices. You can disable notifications anytime in your Android settings.</li>
-            <li><strong>SCHEDULE_EXACT_ALARM</strong>: Used for on-device study reminder scheduling.</li>
+            <li><strong>Collected Data:</strong> Basic profile identifiers (Display Name, Email Address, and chosen avatar key).</li>
+            <li><strong>Handling:</strong> Authentication is handled securely through Google Firebase Authentication infrastructure. We never store plain text passwords.</li>
+            <li><strong>No Selling of Data:</strong> User email addresses are never sold, rented, or shared with third-party commercial marketing brokers.</li>
         </ul>
 
-        <h2>3. Third-Party Services & Analytics</h2>
-        <p>To support free hosting and maintain application stability, we utilize trusted industry-standard SDKs:</p>
+        <h2>3. Permissions Requested by the Android Application</h2>
+        <p>In adherence to Google Play&apos;s Principle of Least Privilege, PharmaCode requests only minimal permissions strictly required to deliver core educational functions:</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Permission</th>
+                    <th>Technical Identifier</th>
+                    <th>Exact Purpose &amp; Justification</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Internet Access</strong></td>
+                    <td><code>android.permission.INTERNET</code></td>
+                    <td>Fetches latest syllabus curriculum updates, unit notes, and queries the PharmaHelper AI study tutor.</td>
+                </tr>
+                <tr>
+                    <td><strong>Network State</strong></td>
+                    <td><code>android.permission.ACCESS_NETWORK_STATE</code></td>
+                    <td>Monitors connectivity to serve cached offline study content when no internet connection is detected.</td>
+                </tr>
+                <tr>
+                    <td><strong>Notifications (Optional)</strong></td>
+                    <td><code>android.permission.POST_NOTIFICATIONS</code></td>
+                    <td>Sends voluntary daily PCI revision flashcard reminders and semester exam schedule updates. Can be disabled anytime in app settings.</td>
+                </tr>
+                <tr>
+                    <td><strong>Exact Study Alarms</strong></td>
+                    <td><code>android.permission.SCHEDULE_EXACT_ALARM</code></td>
+                    <td>Schedules local study reminders and revision timers requested directly by the student.</td>
+                </tr>
+                <tr>
+                    <td><strong>Storage Handling</strong></td>
+                    <td><em>Android Scoped Storage</em></td>
+                    <td>Saves downloaded PDF notes directly to the device&apos;s standard Downloads directory. PharmaCode does NOT request broad external storage access (<code>MANAGE_EXTERNAL_STORAGE</code>).</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>4. PharmaHelper AI Study Tutor &amp; Prompt Data Handling</h2>
+        <p>The PharmaCode mobile app features PharmaHelper, an AI tutor designed for pharmacy concept revision and syllabus explanation:</p>
         <ul>
-            <li><strong>Google Mobile Ads (AdMob)</strong>: May display non-invasive banner or interstitial ads. Google AdMob may collect and process anonymous Advertising IDs in accordance with Google Play Developer Policies.</li>
-            <li><strong>Firebase Analytics & Crashlytics</strong>: Collects anonymized crash logs and device models to diagnose software bugs and optimize performance across low-RAM devices.</li>
-            <li><strong>AI Inference APIs (Groq, Google Gemini, NVIDIA NIM)</strong>: Chat queries sent to PharmaHelper are transmitted securely via TLS 1.3 encryption solely for generating academic answers. Conversations are stored strictly on-device in local sandbox storage.</li>
+            <li><strong>Encrypted In-Transit:</strong> User chat questions are transmitted strictly over secure TLS 1.3 encrypted HTTPS connections to enterprise AI inference providers (Groq Inc., Google Gemini, NVIDIA NIM).</li>
+            <li><strong>Purpose Limitation:</strong> Prompts are processed strictly in real-time to generate academic explanations and relevant subject references.</li>
+            <li><strong>No Foundation Model Training:</strong> Your academic chat prompts are not used by PharmaCode to train or fine-tune public foundation AI models.</li>
+            <li><strong>Local Sandbox Storage:</strong> All chat message histories are saved strictly on your device inside the app&apos;s private sandbox. You can permanently wipe your entire chat history at any time using the &quot;Clear Chat&quot; feature in the app.</li>
         </ul>
 
-        <h2>4. Data Retention and Deletion</h2>
-        <p>In accordance with Google Play User Data policies, users have complete control over their data:</p>
+        <h2>5. Third-Party SDKs &amp; Advertising Disclosures</h2>
+        <p>To keep high-quality pharmacy study notes and AI tutoring free for students nationwide, PharmaCode integrates trusted industry-standard SDKs that comply with Google Play Developer Policies:</p>
         <ul>
-            <li>All local chat history, bookmarks, and offline notes can be deleted at any time by clearing the app data in Android <em>Settings &gt; Apps &gt; PharmaCode &gt; Storage &gt; Clear Data</em>, or by uninstalling the app.</li>
-            <li>To request deletion of any support email inquiries, contact us at the developer email below.</li>
+            <li><strong>Google Mobile Ads (AdMob):</strong> May display non-intrusive banner or interstitial advertisements. AdMob may collect and process Google Advertising IDs (AAID) and general device telemetry to deliver contextual ads, cap impression frequencies, and combat ad fraud. For details, review <a href="https://policies.google.com/technologies/ads" target="_blank">Google Advertising Privacy Policy</a>.</li>
+            <li><strong>Google Firebase Analytics &amp; Crashlytics:</strong> Collects aggregated, non-personally identifiable diagnostic information (device models, Android operating system versions, and stack traces) to resolve crashes and optimize performance on low-RAM devices.</li>
         </ul>
 
-        <h2>5. Children's Privacy</h2>
-        <p>PharmaCode is designed for undergraduate pharmacy college students and educational professionals. We do not knowingly collect personally identifiable information from children under 13.</p>
+        <h2>6. Google Play Data Deletion Policy &amp; Procedures</h2>
+        <p>In accordance with Google Play&apos;s 2026 User Data and Data Deletion requirements, users maintain total control over their data:</p>
+        
+        <div class="deletion-box">
+            <h3>How to Delete Your Data</h3>
+            <p><strong>1. Instant Local Data Deletion (On-Device):</strong></p>
+            <ul>
+                <li>To delete chat history: Tap the <em>Clear Chat</em> icon in PharmaHelper.</li>
+                <li>To delete all local data, bookmarks, and cached files: Open your device <em>Settings &gt; Apps &gt; PharmaCode &gt; Storage &amp; Cache &gt; Clear Storage (Clear Data)</em>, or uninstall the application.</li>
+            </ul>
+            <p><strong>2. Cloud Account &amp; Server Data Deletion:</strong></p>
+            <ul>
+                <li>If you signed up with an account, you can initiate account deletion inside the app Profile screen or by sending an email with the subject line <strong>&quot;Data Deletion Request&quot;</strong> to: <a href="mailto:pharmacode.connect@gmail.com">pharmacode.connect@gmail.com</a>.</li>
+                <li>Upon receiving your request, all associated authentication records, bookmarks, and correspondence will be permanently purged from our databases within 30 days.</li>
+            </ul>
+        </div>
+
+        <h2>7. Children&apos;s Privacy &amp; Families Policy</h2>
+        <p>PharmaCode is designed specifically for undergraduate and postgraduate pharmacy university students (B.Pharm, D.Pharm, M.Pharm, Pharm.D), faculty members, and competitive exam (GPAT/NIPER) aspirants. The application is intended for users aged 17 and older. We do not knowingly target, solicit, or collect personal information from children under 13 years of age. If we learn that a user under 13 has provided personal information, we will immediately delete it.</p>
+
+        <h2>8. Data Security Practices</h2>
+        <p>We implement rigorous security safeguards to protect your information:</p>
+        <ul>
+            <li>All network communications between the mobile application and our backend/AI servers are encrypted using TLS 1.3.</li>
+            <li>API credentials and sensitive configurations are obfuscated using bitwise XOR encoding and protected with ProGuard/R8 code minification.</li>
+            <li>Local user preferences and bookmarks are confined to Android sandbox storage, isolated from other apps on your device.</li>
+        </ul>
+
+        <h2>9. Policy Changes &amp; Regulatory Updates</h2>
+        <p>We may update this Privacy Policy periodically to reflect new educational features or changes in Google Play Developer Program Policies. Updates will be published directly on this page with an updated &quot;Effective Date&quot;. Continued use of the app constitutes acknowledgment of the updated terms.</p>
 
         <div class="contact-box">
-            <h2>6. Developer Contact Information</h2>
-            <p>If you have any questions or feedback regarding our privacy practices, please contact:<br>
-            <strong>Developer:</strong> PharmaCode Team<br>
-            <strong>Email:</strong> <a href="mailto:pharmacode.connect@gmail.com">pharmacode.connect@gmail.com</a><br>
-            <strong>Official Website:</strong> <a href="https://pharmacode.vercel.app" target="_blank">https://pharmacode.vercel.app</a></p>
+            <h2>10. Developer Contact &amp; Grievance Officer</h2>
+            <p>If you have any questions, inquiries, or data privacy requests regarding this Privacy Policy or PharmaCode, please contact our team directly:</p>
+            <p>
+                <strong>Developer:</strong> PharmaCode Team<br>
+                <strong>Official Contact Email:</strong> <a href="mailto:pharmacode.connect@gmail.com">pharmacode.connect@gmail.com</a><br>
+                <strong>Official Web Portal:</strong> <a href="https://pharmacode.vercel.app" target="_blank">https://pharmacode.vercel.app</a><br>
+                <strong>Package Name:</strong> <code>com.pharmacode.bpharm</code>
+            </p>
         </div>
     </div>
 </body>
