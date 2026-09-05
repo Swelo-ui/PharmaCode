@@ -63,11 +63,26 @@ jobs:
         working-directory: pharmacode_app
         run: flutter build bundle --release
 
+      - name: Generate Android local.properties
+        working-directory: pharmacode_app/android
+        run: |
+          FLUTTER_DIR=$(which flutter | sed 's|/bin/flutter||')
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+          echo "flutter.sdk=$FLUTTER_DIR" >> local.properties
+          echo "flutter.buildMode=release" >> local.properties
+          echo "flutter.versionName=1.0.2" >> local.properties
+          echo "flutter.versionCode=3" >> local.properties
+          cat local.properties
+
       - name: Build Android Release APK & AAB via Gradle
         working-directory: pharmacode_app/android
         run: |
           chmod +x gradlew
-          ./gradlew assembleRelease bundleRelease --no-daemon --stacktrace
+          ./gradlew assembleRelease bundleRelease --no-daemon --stacktrace 2>&1 | tee gradle_build.log || {
+            echo "=== GRADLE BUILD FAILED ==="
+            tail -n 120 gradle_build.log
+            exit 1
+          }
 
       - name: Prepare Release Artifacts
         run: |
