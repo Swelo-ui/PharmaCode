@@ -20,7 +20,7 @@ void main() {
 
       final groq = AiConfig.providers[AiProvider.groq]!;
       expect(groq.endpoint, contains('api.groq.com'));
-      expect(groq.primaryModel, contains('qwen'));
+      expect(groq.primaryModel, contains('gpt-oss'));
       expect(groq.requiresKey, isFalse);
 
       final gemini = AiConfig.providers[AiProvider.gemini]!;
@@ -208,6 +208,27 @@ void main() {
       expect(answer, contains('Donanemab'));
       expect(answer, contains('Lecanemab'));
       expect(answer, isNot(contains('Scientific Principle: Har pharmaceutical formulation')));
+    });
+
+    test('Tissues answer provides complete Epithelial, Connective, Muscular, Nervous breakdown', () async {
+      final knowledgeService = PharmaKnowledgeService();
+      final ctx = await knowledgeService.retrieveContext('Explain tissues in detail');
+
+      final answer = PharmaConceptSynthesizer.synthesizeAnswer(
+        query: 'Explain tissues in detail',
+        mode: PharmaChatMode.tutorHinglish,
+        ctx: ctx,
+      );
+
+      expect(answer, contains('Epithelial Tissue'));
+      expect(answer, contains('Connective Tissue'));
+      expect(answer, contains('Muscular Tissue'));
+      expect(answer, contains('Nervous Tissue'));
+      expect(answer, contains('Dense Regular Connective Tissue'));
+      expect(answer, contains('Tendons'));
+      expect(answer, contains('Ligaments'));
+      expect(answer, contains('Intercalated discs'));
+      expect(answer, contains('Important University Exam Questions'));
     });
   });
 }

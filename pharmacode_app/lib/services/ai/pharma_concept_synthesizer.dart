@@ -53,6 +53,8 @@ Aap abhi koi bhi question pooch sakte hain, jaise: *"Tell me about bioavailabili
 
     if (_matchesBlood(lower)) {
       conceptBody = _getBloodExplanation();
+    } else if (_matchesTissuesOrAnatomy(lower)) {
+      conceptBody = _getTissuesExplanation();
     } else if (_matchesNewDrugs(lower)) {
       conceptBody = _getNewDrugsExplanation();
     } else if (_matchesBioavailability(lower)) {
@@ -117,6 +119,16 @@ Aap abhi koi bhi question pooch sakte hain, jaise: *"Tell me about bioavailabili
       q.contains('haemoglobin') ||
       q.contains('hematolog') ||
       q.contains('plasma');
+
+  static bool _matchesTissuesOrAnatomy(String q) =>
+      q.contains('tissue') ||
+      q.contains('epithelial') ||
+      q.contains('connective') ||
+      q.contains('muscle tissue') ||
+      q.contains('muscular tissue') ||
+      q.contains('nervous tissue') ||
+      (q.contains('bp104t') && (q.contains('unit 1') || q.contains('tissue') || q.contains('samjhao') || q.contains('explain'))) ||
+      (q.contains('bp101t') && (q.contains('unit 1') || q.contains('tissue')));
 
   static bool _matchesNewDrugs(String q) =>
       q.contains('new drug') ||
@@ -295,6 +307,89 @@ Plasma is a straw-colored liquid consisting of:
 Blood hamare sharir ka ek fluid connective tissue hai jo pure body mein oxygen, nutrients, aur hormones circulate karta hai. Isme do main hisse hote hain:
 1. **Plasma (55%)**: Pani aur proteins (Albumin, Globulin, Fibrinogen).
 2. **Blood Cells (45%)**: **RBC** (jo hemoglobin ke zariye oxygen transport karte hain), **WBC** (jo infection aur bimariyon se ladte hain), aur **Platelets** (jo chot lagne par blood clotting karke bleeding rokte hain).''';
+  }
+
+  static String _getTissuesExplanation() {
+    return '''### Tissues: Definition, Classification & Functions (PCI B.Pharm HAP BP101T / BP104T Unit 1)
+
+**Tissue** is defined as a group or layer of morphologically similar cells and their associated extracellular matrix that work cooperatively to perform one or more specialized physiological functions in the human body.
+
+---
+
+### The 4 Primary Types of Body Tissues
+
+Human organs are built from four fundamental primary tissue types:
+
+A. Epithelial Tissue
+- **Function**: Covering body surfaces, lining hollow visceral cavities, absorption, secretion, and sensory sensation.
+- **Key Characteristics**: Highly cellular with minimal extracellular matrix, avascular (receives nutrients via diffusion from underlying connective tissue), rests on a proteinaceous **basement membrane**, and possesses high regenerative capacity.
+- **Classification**:
+  1. **Simple Epithelium (Single Layer of Cells - Specialized for Diffusion, Filtration, Secretion & Absorption)**:
+     - *Simple Squamous*: Flattened, tile-like cells with central flattened nuclei. Located in lung alveoli (gas exchange) and capillary endothelium.
+     - *Simple Cuboidal*: Cube-shaped cells with central round nuclei. Located in renal tubules (absorption/secretion) and thyroid follicles.
+     - *Simple Columnar*: Tall column-like cells, often with apical microvilli or goblet cells (secreting mucin). Located in the gastrointestinal tract (stomach to rectum).
+     - *Pseudostratified Ciliated Columnar*: Appears multi-layered due to varying nuclear levels, but all cells contact the basement membrane. Located in the upper respiratory tract/trachea (ciliary mucus escalator).
+  2. **Stratified Epithelium (Multiple Cell Layers - Specialized for Mechanical Protection & Resistance to Friction)**:
+     - *Stratified Squamous (Keratinized)*: Dry surface containing tough insoluble keratin protein. Forms the **epidermis of skin**.
+     - *Stratified Squamous (Non-Keratinized)*: Moist surface lining areas subjected to abrasion (oral cavity, pharynx, esophagus, vagina).
+     - *Transitional Epithelium (Urothelium)*: Stratified epithelium with dome-shaped umbrella cells capable of substantial distension and relaxation without cell rupture. Located exclusively in the **urinary bladder, ureters, and renal pelvis**.
+
+B. Connective Tissue
+- **Function**: Binding organs together, structural scaffolding, physical protection, adipose energy storage, and systemic immune defense.
+- **Key Characteristics**: Cells are widely dispersed in an abundant **Extracellular Matrix (ECM)** composed of protein fibers (Collagen, Elastin, Reticular) and ground substance (glycosaminoglycans, proteoglycans).
+- **Classification**:
+  1. **Connective Tissue Proper**:
+     - *Loose Connective Tissue*:
+       - **Areolar Tissue**: Universal packing material beneath epithelia; contains fibroblasts, macrophages, and mast cells.
+       - **Adipose Tissue**: Composed of adipocytes storing triglyceride droplets; provides thermal insulation and organ cushioning.
+       - **Reticular Tissue**: Delicate reticular fiber meshwork forming the internal stroma of lymphoid organs (spleen, lymph nodes).
+     - *Dense Connective Tissue*:
+       - **Dense Regular Connective Tissue**: Parallel collagen fiber bundles offering immense tensile strength in one direction. Forms **Tendons** (attaching muscle to bone) and **Ligaments** (attaching bone to bone).
+       - **Dense Irregular Connective Tissue**: Randomly interwoven thick collagen bundles resisting multi-directional pulling stresses. Forms the **dermis of skin** and fibrous joint capsules.
+  2. **Specialized Connective Tissue**:
+     - *Cartilage*: Avascular and non-innervated resilient tissue composed of chondrocytes within lacunae. Types: **Hyaline cartilage** (articular joints, tracheal rings), **Elastic cartilage** (external ear, epiglottis), and **Fibrocartilage** (intervertebral discs, pubic symphysis).
+     - *Bone (Osseous Tissue)*: Calcified matrix rich in calcium hydroxyapatite crystals and type I collagen fibers; houses osteocytes within Haversian canal systems.
+     - *Fluid Connective Tissue*: **Blood** (plasma with erythrocytes, leukocytes, platelets) and **Lymph**.
+
+C. Muscular Tissue
+- **Function**: Contraction, force generation, body locomotion, and involuntary propulsion of biological fluids.
+- **Comparative Classification**:
+
+| Parameter | Skeletal Muscle | Smooth (Visceral) Muscle | Cardiac Muscle |
+| :--- | :--- | :--- | :--- |
+| **Control** | Voluntary (Somatic NS) | Involuntary (Autonomic NS) | Involuntary (Autonomic / Pacemaker) |
+| **Microscopic Appearance** | Striated (parallel cylindrical fibers) | Non-striated (spindle-shaped, tapered) | Striated (branching fibers) |
+| **Nuclei** | Multinucleated (peripheral) | Single central nucleus | 1-2 central nuclei |
+| **Special Features** | Rapid contraction, fatigue prone | Rhythmic peristalsis, fatigue resistant | **Intercalated discs** (gap junctions) |
+| **Location** | Attached to skeletal skeleton | GI tract, blood vessels, bronchioles | Myocardium (heart wall only) |
+
+D. Nervous Tissue
+- **Function**: Rapid sensing of external/internal stimuli, electrochemical signal transmission, and integration of physiological reflexes.
+- **Cellular Components**:
+  1. **Neurons (Conducting Cells)**: Structural and functional units comprising a **Cell Body (Soma)** with Nissl bodies, receiving **Dendrites**, and a conducting **Axon** terminating at synapses.
+  2. **Neuroglia (Supporting Glial Cells - Non-conducting)**:
+     - *Astrocytes*: Maintain the **Blood-Brain Barrier (BBB)** and regulate extracellular ion balance.
+     - *Oligodendrocytes* (CNS) & *Schwann Cells* (PNS): Form the protective **Myelin Sheath** enabling saltatory nerve conduction.
+     - *Microglia*: Resident phagocytic macrophages of the central nervous system.
+     - *Ependymal Cells*: Line brain ventricles and participate in cerebrospinal fluid (CSF) production and circulation.
+
+---
+
+### Important University Exam Questions (5 & 10 Marks Format)
+
+- **10-Mark Question**: *"Define tissue. Classify Epithelial tissues in detail with neat labeled schematic diagrams and clinical examples of each type."*
+  - **Examiner Tip for 10/10**: Draw simple 2D diagrams showing basement membrane and cell shape for each type (Simple Squamous vs Stratified Squamous vs Transitional). Mention 2 distinct locations for each.
+- **5-Mark Question**: *"Differentiate between Skeletal, Smooth, and Cardiac muscle with a structured comparison table."*
+  - Mention 5 distinct parameters: Striations, Nuclei position, Control mechanism, Intercalated discs, and Location.
+- **5-Mark Question**: *"Describe the cellular components and extracellular matrix of Connective Tissue with examples of Dense Regular tissue."*
+
+---
+
+### Saral Hinglish Summary (Exam Revision)
+- **Epithelial Tissue**: Hamare sharir ki 'boundary cover' hai jo protection aur absorption karti hai (Skin, GI lining, Bladder).
+- **Connective Tissue**: Sharir ko jodti aur support karti hai (Tendons, Ligaments, Bone, Blood).
+- **Muscular Tissue**: Movement aur contraction ke liye hoti hai (Skeletal, Smooth, Cardiac).
+- **Nervous Tissue**: Dimaag aur sharir ke beech electrical signals send karti hai (Neurons & Glial cells).''';
   }
 
   static String _getNewDrugsExplanation() {

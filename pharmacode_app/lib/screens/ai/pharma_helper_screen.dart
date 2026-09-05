@@ -58,13 +58,13 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
       _loadSubjectGreeting(_attachedSubject!);
     } else {
       _loadInitialGreeting();
+    }
 
-      // If an initial prompt was passed (e.g. from Blog screen)
-      if (widget.initialPrompt != null && widget.initialPrompt!.isNotEmpty) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          _handleSendMessage(widget.initialPrompt!);
-        });
-      }
+    // If an initial prompt was passed (e.g. from Unit or Blog screen)
+    if (widget.initialPrompt != null && widget.initialPrompt!.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _handleSendMessage(widget.initialPrompt!);
+      });
     }
   }
 
@@ -133,6 +133,20 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
     });
   }
 
+  void _scrollToNewAiResponse(double prevMax) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollCtrl.hasClients) {
+        final maxOffset = _scrollCtrl.position.maxScrollExtent;
+        final target = (prevMax - 24.0).clamp(0.0, maxOffset);
+        _scrollCtrl.animateTo(
+          target,
+          duration: const Duration(milliseconds: 350),
+          curve: Curves.easeOutCubic,
+        );
+      }
+    });
+  }
+
   String? _getSubjectContextString() {
     final s = _attachedSubject;
     if (s == null) return null;
@@ -193,11 +207,12 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
       );
 
       if (mounted) {
+        final prevMax = _scrollCtrl.hasClients ? _scrollCtrl.position.maxScrollExtent : 0.0;
         setState(() {
           _messages.add(response);
           _isLoading = false;
         });
-        _scrollToBottom();
+        _scrollToNewAiResponse(prevMax);
       }
     } catch (e) {
       if (mounted) {
@@ -370,7 +385,7 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
 
   Widget _buildModeSelector() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: const BoxDecoration(
         color: Colors.white,
         border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
@@ -385,19 +400,19 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
               label: 'Professor (Hinglish)',
               color: const Color(0xFF2563EB),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 6),
             _buildModeChip(
               mode: PharmaChatMode.examPrep,
               label: 'Exam Prep (5/10 Marks)',
               color: const Color(0xFF7C3AED),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 6),
             _buildModeChip(
               mode: PharmaChatMode.mnemonic,
               label: 'Mnemonics & Revision',
               color: const Color(0xFFD97706),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 6),
             _buildModeChip(
               mode: PharmaChatMode.webSearch,
               label: 'Clinical & Web Research',
@@ -424,13 +439,13 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
           }
         });
       },
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(16),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        duration: const Duration(milliseconds: 180),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         decoration: BoxDecoration(
           color: isSelected ? color : const Color(0xFFF1F5F9),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isSelected ? color : const Color(0xFFE2E8F0),
           ),
@@ -438,7 +453,7 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
         child: Text(
           label,
           style: GoogleFonts.inter(
-            fontSize: 12,
+            fontSize: 11.5,
             fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
             color: isSelected ? Colors.white : const Color(0xFF475569),
           ),
@@ -452,41 +467,41 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
     if (s == null) return const SizedBox.shrink();
 
     return Container(
-      margin: const EdgeInsets.fromLTRB(14, 8, 14, 4),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      margin: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [Color(0xFF0F1D5C), Color(0xFF1E3A8A)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF0F1D5C).withValues(alpha: 0.18),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
+            color: const Color(0xFF0F1D5C).withValues(alpha: 0.14),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(6),
+              borderRadius: BorderRadius.circular(5),
             ),
             child: Text(
               s.code,
               style: GoogleFonts.dmSans(
                 color: Colors.white,
                 fontWeight: FontWeight.w900,
-                fontSize: 11.5,
+                fontSize: 11,
               ),
             ),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -499,17 +514,17 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                   style: GoogleFonts.dmSans(
                     color: Colors.white,
                     fontWeight: FontWeight.w800,
-                    fontSize: 13,
+                    fontSize: 12,
                   ),
                 ),
                 Text(
-                  '${s.credits} Credits · ${s.typeLabel} · ${s.units.length} Units Attached',
+                  '${s.credits} Credits · ${s.typeLabel} · ${s.units.length} Units',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.inter(
                     color: const Color(0xFF93C5FD),
                     fontWeight: FontWeight.w600,
-                    fontSize: 10.5,
+                    fontSize: 10,
                   ),
                 ),
               ],
@@ -519,24 +534,24 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
           // View Units action
           InkWell(
             onTap: () => _showSubjectUnitsModal(s),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(6),
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
               decoration: BoxDecoration(
-                color: const Color(0xFF38BDF8).withValues(alpha: 0.25),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: const Color(0xFF38BDF8).withValues(alpha: 0.5)),
+                color: const Color(0xFF38BDF8).withValues(alpha: 0.22),
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: const Color(0xFF38BDF8).withValues(alpha: 0.4)),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.list_alt_rounded, color: Color(0xFF7DD3FC), size: 13),
+                  const Icon(Icons.list_alt_rounded, color: Color(0xFF7DD3FC), size: 12),
                   const SizedBox(width: 3),
                   Text(
                     'Units',
                     style: GoogleFonts.dmSans(
                       color: Colors.white,
-                      fontSize: 11,
+                      fontSize: 10.5,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -1077,13 +1092,13 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
           ],
         ),
         child: Container(
-          constraints: const BoxConstraints(minHeight: 40),
+          constraints: const BoxConstraints(minHeight: 38),
           decoration: BoxDecoration(
             color: const Color(0xFFF8FAFC),
-            borderRadius: BorderRadius.circular(22),
-            border: Border.all(color: const Color(0xFFE2E8F0), width: 0.9),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: const Color(0xFFE2E8F0), width: 0.8),
           ),
-          padding: const EdgeInsets.only(left: 4, right: 4, top: 1, bottom: 1),
+          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -1091,7 +1106,7 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
               Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  borderRadius: BorderRadius.circular(18),
+                  borderRadius: BorderRadius.circular(16),
                   onTap: () {
                     setState(() {
                       _webSearchEnabled = !_webSearchEnabled;
@@ -1108,20 +1123,20 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                     );
                   },
                   child: Container(
-                    padding: const EdgeInsets.all(5),
+                    padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
                       color: _webSearchEnabled ? const Color(0xFFCCFBF1) : Colors.transparent,
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
                       Icons.language_rounded,
-                      size: 18,
+                      size: 17,
                       color: _webSearchEnabled ? const Color(0xFF0D9488) : const Color(0xFF94A3B8),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(width: 2),
+              const SizedBox(width: 4),
               Expanded(
                 child: TextField(
                   controller: _textCtrl,
@@ -1137,14 +1152,14 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                     hintStyle: GoogleFonts.inter(color: const Color(0xFF94A3B8), fontSize: 12.5),
                     border: InputBorder.none,
                     isDense: true,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 5, horizontal: 4),
                   ),
                 ),
               ),
               const SizedBox(width: 4),
               Container(
-                width: 30,
-                height: 30,
+                width: 28,
+                height: 28,
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     colors: [Color(0xFF1E3A8A), Color(0xFF2563EB)],
@@ -1161,7 +1176,7 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                           height: 12,
                           child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                         )
-                      : const Icon(Icons.arrow_upward_rounded, color: Colors.white, size: 16),
+                      : const Icon(Icons.arrow_upward_rounded, color: Colors.white, size: 15),
                   onPressed: _isLoading ? null : () => _handleSendMessage(_textCtrl.text),
                 ),
               ),
@@ -1406,6 +1421,47 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
               children: [
                 const Text('•  ', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF2563EB))),
                 Expanded(child: _buildRichInlineText(content)),
+              ],
+            ),
+          ),
+        );
+      } else if (RegExp(r'^[A-Z]\.\s').hasMatch(trimmed)) {
+        final match = RegExp(r'^([A-Z]\.)\s*(.*)$').firstMatch(trimmed);
+        final letter = match?.group(1) ?? 'A.';
+        final title = (match?.group(2) ?? '').replaceAll('**', '').replaceAll('*', '').trim();
+        children.add(
+          Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 4),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEFF6FF),
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: const Color(0xFFBFDBFE)),
+                  ),
+                  child: Text(
+                    letter,
+                    style: GoogleFonts.dmSans(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w900,
+                      color: const Color(0xFF1E40AF),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: GoogleFonts.dmSans(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                      color: AppTheme.primaryNavy,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

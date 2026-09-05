@@ -91,10 +91,10 @@ class AiRotationService {
     );
 
     // 5. Providers priority order:
-    // Groq (Ultra-fast <1s) -> Google Gemini (Deep reasoning) -> NVIDIA NIM (Thinking tokens) -> OpenRouter -> OVHcloud -> Pollinations
+    // Google Gemini (Deep reasoning & 8K tokens) -> Groq (Ultra-fast LPU) -> NVIDIA NIM -> OpenRouter -> OVHcloud -> Pollinations
     final providerQueue = [
-      AiProvider.groq,
       AiProvider.gemini,
+      AiProvider.groq,
       AiProvider.nvidia,
       AiProvider.openrouter,
       AiProvider.ovhcloud,
@@ -283,7 +283,7 @@ class AiRotationService {
               : contents,
           'generationConfig': {
             'temperature': 0.7,
-            'maxOutputTokens': 2048,
+            'maxOutputTokens': 4096,
           },
         };
 
@@ -340,7 +340,7 @@ class AiRotationService {
           'model': currentModel,
           'messages': messages,
           'temperature': 0.7,
-          'max_tokens': 1500,
+          'max_tokens': 2800,
         });
 
         final res = await http.post(
@@ -354,7 +354,19 @@ class AiRotationService {
           final choices = data['choices'] as List?;
           if (choices != null && choices.isNotEmpty) {
             final msg = choices[0]['message'];
-            return msg['content'] as String?;
+            final finishReason = choices[0]['finish_reason'];
+            String? content = msg['content'] as String?;
+            if (content != null && content.isNotEmpty) {
+              // If the model was stopped mid-sentence due to token budget:
+              if (finishReason == 'length') {
+                final lastSpace = content.lastIndexOf(' ');
+                if (lastSpace > 0 && !RegExp(r'[.!?:;]$').hasMatch(content.trim())) {
+                  content = content.substring(0, lastSpace).trim();
+                }
+                content = '$content\n\n*(Aage ke points janne ke liye "Continue" ya specific topic type karein).*';
+              }
+              return content;
+            }
           }
         }
 
@@ -378,7 +390,7 @@ class AiRotationService {
       if (lastUserMessage.isEmpty) return null;
 
       final prompt = Uri.encodeComponent(lastUserMessage);
-      final uri = Uri.parse('https://text.pollinations.ai/$prompt?model=openai-fast');
+      final uri = Uri.parse('https://text.pollinations.ai/$prompt?model=openai');
 
       final res = await http.get(uri, headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 PharmaCode/1.0',

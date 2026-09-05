@@ -449,6 +449,34 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
                               );
                             }).toList(),
                           ),
+                          const SizedBox(height: 12),
+                          SizedBox(
+                            width: double.infinity,
+                            child: OutlinedButton.icon(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => PharmaHelperScreen(
+                                      attachedSubject: widget.subject,
+                                      initialPrompt: 'Explain Unit ${unit.num}: ${unit.title} in detail with important 5-mark and 10-mark exam questions.',
+                                    ),
+                                  ),
+                                );
+                              },
+                              icon: const PharmaMascotWidget(size: 18, showBadge: false),
+                              label: Text(
+                                'Explain Unit ${unit.num} with AI Tutor',
+                                style: GoogleFonts.dmSans(fontWeight: FontWeight.w800, fontSize: 12),
+                              ),
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: const Color(0xFF2563EB),
+                                side: const BorderSide(color: Color(0xFFBFDBFE)),
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),

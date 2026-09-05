@@ -6,6 +6,7 @@ import '../../../../core/theme.dart';
 import '../../../../models/syllabus_models.dart';
 import '../../../bookmarks/presentation/bookmarks_controller.dart';
 import '../../../../screens/syllabus/subject_detail_screen.dart';
+import '../../../../screens/ai/pharma_helper_screen.dart';
 
 class SubjectCard extends ConsumerWidget {
   final Subject subject;
@@ -211,23 +212,54 @@ class SubjectCard extends ConsumerWidget {
                         ),
                       )),
                   const SizedBox(height: AppSpacing.sm),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => SubjectDetailScreen(subject: subject)),
-                        );
-                      },
-                      icon: const Icon(Icons.arrow_forward_rounded, size: 16),
-                      label: Text('Open Full Subject Details', style: GoogleFonts.dmSans(fontWeight: FontWeight.w800, fontSize: 12.5)),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: color,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => PharmaHelperScreen(attachedSubject: subject),
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.psychology_rounded, size: 16),
+                          label: Text(
+                            'Ask AI Tutor',
+                            style: GoogleFonts.dmSans(fontWeight: FontWeight.w800, fontSize: 12),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: const Color(0xFF2563EB),
+                            side: const BorderSide(color: Color(0xFFBFDBFE)),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          ),
+                        ),
                       ),
-                    ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => SubjectDetailScreen(subject: subject)),
+                            );
+                          },
+                          icon: const Icon(Icons.arrow_forward_rounded, size: 16),
+                          label: Text(
+                            'Full Syllabus',
+                            style: GoogleFonts.dmSans(fontWeight: FontWeight.w800, fontSize: 12),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: color,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ],

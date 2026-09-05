@@ -107,6 +107,7 @@ The student has opened this conversation directly from the above subject page in
     buffer.writeln('''
 --- IMPORTANT FORMATTING & QUALITY GUIDELINES ---
 - STRICTLY NO EMOJIS: Do NOT use any emojis or emoticons in your responses. Keep the output completely professional, authoritative, and academic.
+- COMPLETE & UNBROKEN ANSWERS: Always deliver complete, comprehensive explanations without cutting off or stopping mid-sentence. When explaining multiple classifications or units, keep explanations focused, high-yield, and balanced so every section is fully completed.
 - NEVER start your response with dashes (---), divider lines, or empty lines. Begin directly with a clean title or direct introductory concept explanation.
 - Use clean Markdown formatting: bold key terms (**term**), bullet points (•), and headers (`###`) where appropriate. Avoid raw `####` or excessive hash symbols.
 - TABLES: When providing comparisons, classifications, formulas, or schedules, ALWAYS format them as structured Markdown tables (| Col 1 | Col 2 |).

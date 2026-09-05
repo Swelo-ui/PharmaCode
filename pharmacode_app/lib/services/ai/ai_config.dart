@@ -46,25 +46,25 @@ class AiConfig {
       'NCw7KjN3PTczLGo/HAs8BT5pDhYZb21paggfag4pHG4Ibh4DHy4QERktFy1sFxgMMWweGw8ObWkrOy0qPTgPMDwAGQgwKQ==';
 
   static const Map<AiProvider, AiProviderConfig> providers = {
-    AiProvider.groq: AiProviderConfig(
-      provider: AiProvider.groq,
-      displayName: 'Groq Cloud (Ultra Fast LPU)',
-      endpoint: 'https://api.groq.com/openai/v1/chat/completions',
-      primaryModel: 'qwen/qwen3.8-27b',
-      fallbackModel: 'openai/gpt-oss-120b',
-      requiresKey: false,
-      keySignupUrl: 'https://console.groq.com/keys',
-      description: 'Ultra-low latency inference powered by LPU (<1s response).',
-    ),
     AiProvider.gemini: AiProviderConfig(
       provider: AiProvider.gemini,
       displayName: 'Google Gemini 3.6 Flash',
       endpoint: 'https://generativelanguage.googleapis.com/v1beta/models',
       primaryModel: 'gemini-3.6-flash',
-      fallbackModel: 'gemini-2.5-flash',
+      fallbackModel: 'gemini-2.0-flash',
       requiresKey: false,
       keySignupUrl: 'https://aistudio.google.com/app/apikey',
-      description: 'Advanced reasoning, clinical comprehension, and large context.',
+      description: 'Advanced reasoning, clinical comprehension, and large 8K token context.',
+    ),
+    AiProvider.groq: AiProviderConfig(
+      provider: AiProvider.groq,
+      displayName: 'Groq Cloud (Ultra Fast LPU)',
+      endpoint: 'https://api.groq.com/openai/v1/chat/completions',
+      primaryModel: 'openai/gpt-oss-120b',
+      fallbackModel: 'groq/compound-mini',
+      requiresKey: false,
+      keySignupUrl: 'https://console.groq.com/keys',
+      description: 'Ultra-low latency inference powered by LPU with high output limits.',
     ),
     AiProvider.nvidia: AiProviderConfig(
       provider: AiProvider.nvidia,
@@ -100,8 +100,8 @@ class AiConfig {
       provider: AiProvider.pollinations,
       displayName: 'Pollinations AI (Zero-Key)',
       endpoint: 'https://text.pollinations.ai/',
-      primaryModel: 'openai-fast',
-      fallbackModel: 'openai',
+      primaryModel: 'openai',
+      fallbackModel: '',
       requiresKey: false,
       keySignupUrl: 'https://pollinations.ai',
       description: 'Permanent safety net backup.',
