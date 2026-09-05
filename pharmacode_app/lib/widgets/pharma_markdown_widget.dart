@@ -25,9 +25,19 @@ class PharmaMarkdownWidget extends StatelessWidget {
   }
 
   Widget _renderFormatted(BuildContext context, String rawText) {
-    // 0. Pre-process text to convert HTML line breaks (<br>, <br/>, <br />) into newlines
+    // 0. Unescape literal newlines, escaped backticks, and unicode zero-width spaces
+    final unescapedText = rawText
+        .replaceAll(r'\n', '\n')
+        .replaceAll(r'\\n', '\n')
+        .replaceAll(r'\r', '')
+        .replaceAll(RegExp(r'\\+`'), '`')
+        .replaceAll(RegExp(r'`\s+`\s+`'), '```')
+        .replaceAll(RegExp(r'`\s+`'), '``')
+        .replaceAll(RegExp(r'[\u200B-\u200D\uFEFF]'), '');
+
+    // Convert HTML line breaks (<br>, <br/>, <br />) into newlines
     // Preserve markdown table rows without breaking table structure
-    final rawLines = rawText.split('\n');
+    final rawLines = unescapedText.split('\n');
     final List<String> lines = [];
     for (final rawLine in rawLines) {
       final trimmed = rawLine.trim();
@@ -55,11 +65,14 @@ class PharmaMarkdownWidget extends StatelessWidget {
         continue;
       }
 
-      // 0. Fenced Code Block Detection (```python ... ``` or ` bash ...)
-      if (trimmed.startsWith('```') ||
-          RegExp(r'^`{1,3}\s*(?:python|bash|sh|shell|sql|r|terminal|dart|javascript|json|html|css)', caseSensitive: false).hasMatch(trimmed)) {
+      // 0. Fenced Code Block Detection (```python ... ``` or ` bash ... or ~~~)
+      final isCodeStart = trimmed.startsWith('```') ||
+          trimmed.startsWith('~~~') ||
+          RegExp(r'^`{1,4}\s*(?:python|bash|sh|shell|sql|r|terminal|dart|javascript|json|html|css|cpp|c|java)', caseSensitive: false).hasMatch(trimmed);
+
+      if (isCodeStart) {
         String lang = 'terminal';
-        final langMatch = RegExp(r'^`{1,3}\s*([a-zA-Z0-9_\-]+)?', caseSensitive: false).firstMatch(trimmed);
+        final langMatch = RegExp(r'^[`~]{1,4}\s*([a-zA-Z0-9_\-#+.]+)?', caseSensitive: false).firstMatch(trimmed);
         if (langMatch != null && langMatch.group(1) != null && langMatch.group(1)!.isNotEmpty) {
           lang = langMatch.group(1)!.toLowerCase();
         }
@@ -68,12 +81,15 @@ class PharmaMarkdownWidget extends StatelessWidget {
         int k = i + 1;
         while (k < lines.length &&
             !lines[k].trim().startsWith('```') &&
-            !RegExp(r'^`{1,3}\s*$').hasMatch(lines[k].trim())) {
+            !lines[k].trim().startsWith('~~~') &&
+            !RegExp(r'^[`~]{1,4}\s*$').hasMatch(lines[k].trim())) {
           codeLines.add(lines[k]);
           k++;
         }
         if (k < lines.length &&
-            (lines[k].trim().startsWith('```') || RegExp(r'^`{1,3}\s*$').hasMatch(lines[k].trim()))) {
+            (lines[k].trim().startsWith('```') ||
+             lines[k].trim().startsWith('~~~') ||
+             RegExp(r'^[`~]{1,4}\s*$').hasMatch(lines[k].trim()))) {
           i = k; // Advance past closing backticks
         } else {
           i = k - 1;

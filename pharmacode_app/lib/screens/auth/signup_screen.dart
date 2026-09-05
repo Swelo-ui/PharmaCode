@@ -7,6 +7,7 @@ import '../../core/theme.dart';
 import '../../features/auth/domain/auth_state.dart';
 import '../../features/auth/presentation/auth_controller.dart';
 import '../../services/auth_service.dart';
+import '../main_navigation_screen.dart';
 import 'login_screen.dart';
 
 class SignUpScreen extends ConsumerStatefulWidget {
@@ -65,9 +66,11 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         );
         if (widget.onSignUpSuccess != null) {
           widget.onSignUpSuccess!();
-        } else {
-          Navigator.pop(context);
         }
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const MainNavigationScreen()),
+          (route) => false,
+        );
       } else if (!success && mounted) {
         final authState = ref.read(authControllerProvider);
         setState(() {
@@ -108,9 +111,11 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         );
         if (widget.onSignUpSuccess != null) {
           widget.onSignUpSuccess!();
-        } else {
-          Navigator.pop(context);
         }
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const MainNavigationScreen()),
+          (route) => false,
+        );
       } else if (!success && mounted) {
         final authState = ref.read(authControllerProvider);
         if (authState is AuthError) {
@@ -190,12 +195,13 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 style: GoogleFonts.dmSans(fontSize: 13, color: AppTheme.textBody, height: 1.4),
               ),
               const SizedBox(height: 14),
+              // Release SHA-1 Card (Primary for Release APK)
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF3F4F6),
+                  color: const Color(0xFFEFF6FF),
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: const Color(0xFFE5E7EB)),
+                  border: Border.all(color: const Color(0xFFBFDBFE), width: 1.2),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -203,13 +209,33 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('SHA-1 Fingerprint:',
-                            style: GoogleFonts.dmSans(fontWeight: FontWeight.w800, fontSize: 11, color: AppTheme.primaryNavy)),
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF2563EB),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                'RELEASE BUILD',
+                                style: GoogleFonts.dmSans(
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 9.5,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            Text('SHA-1 (Live App)',
+                                style: GoogleFonts.dmSans(fontWeight: FontWeight.w800, fontSize: 11, color: AppTheme.primaryNavy)),
+                          ],
+                        ),
                         InkWell(
                           onTap: () {
-                            Clipboard.setData(ClipboardData(text: AuthService.debugSha1));
+                            Clipboard.setData(const ClipboardData(text: AuthService.releaseSha1));
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('SHA-1 copied to clipboard!'), duration: Duration(seconds: 2)),
+                              const SnackBar(content: Text('Release SHA-1 copied to clipboard!'), duration: Duration(seconds: 2)),
                             );
                           },
                           child: Container(
@@ -231,14 +257,15 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       ],
                     ),
                     const SizedBox(height: 6),
-                    SelectableText(
-                      AuthService.debugSha1,
-                      style: const TextStyle(fontFamily: 'monospace', fontSize: 11, color: Color(0xFF1F2937), fontWeight: FontWeight.w600),
+                    const SelectableText(
+                      AuthService.releaseSha1,
+                      style: TextStyle(fontFamily: 'monospace', fontSize: 10.5, color: Color(0xFF1E3A8A), fontWeight: FontWeight.w700),
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 10),
+              // Debug SHA-1 Card
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -252,19 +279,19 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('SHA-256 Fingerprint:',
+                        Text('Debug SHA-1 (Dev / Emulators):',
                             style: GoogleFonts.dmSans(fontWeight: FontWeight.w800, fontSize: 11, color: AppTheme.primaryNavy)),
                         InkWell(
                           onTap: () {
-                            Clipboard.setData(ClipboardData(text: AuthService.debugSha256));
+                            Clipboard.setData(const ClipboardData(text: AuthService.debugSha1));
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('SHA-256 copied to clipboard!'), duration: Duration(seconds: 2)),
+                              const SnackBar(content: Text('Debug SHA-1 copied to clipboard!'), duration: Duration(seconds: 2)),
                             );
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                             decoration: BoxDecoration(
-                              color: AppTheme.brandBlue,
+                              color: const Color(0xFF64748B),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Row(
@@ -280,9 +307,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       ],
                     ),
                     const SizedBox(height: 6),
-                    SelectableText(
-                      AuthService.debugSha256,
-                      style: const TextStyle(fontFamily: 'monospace', fontSize: 10, color: Color(0xFF1F2937), fontWeight: FontWeight.w600),
+                    const SelectableText(
+                      AuthService.debugSha1,
+                      style: TextStyle(fontFamily: 'monospace', fontSize: 10, color: Color(0xFF1F2937), fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),
@@ -290,7 +317,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
               const SizedBox(height: 14),
               Text('How to fix in 1 minute:', style: GoogleFonts.dmSans(fontWeight: FontWeight.w800, fontSize: 12, color: AppTheme.primaryNavy)),
               const SizedBox(height: 4),
-              Text('1. Open Firebase Console -> Project Settings (⚙️)\n2. Select "com.pharmacode.bpharm" app\n3. Click "Add fingerprint" & paste the SHA-1\n4. Download new google-services.json',
+              Text('1. Tap "Copy" next to RELEASE BUILD SHA-1\n2. Open Firebase Console -> Project Settings (⚙️)\n3. Select "com.pharmacode.bpharm" app\n4. Click "Add fingerprint" & paste the SHA-1\n5. Google Sign-In will work instantly!',
                   style: GoogleFonts.dmSans(fontSize: 11.5, color: AppTheme.textMuted, height: 1.45)),
               const SizedBox(height: 12),
               Container(
@@ -348,7 +375,12 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         elevation: 0,
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (_) => const MainNavigationScreen()),
+                (route) => false,
+              );
+            },
             child: Text(
               'Skip / Guest',
               style: GoogleFonts.dmSans(

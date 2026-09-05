@@ -38,11 +38,22 @@ class AiBookmark {
   }
 
   factory AiBookmark.fromMap(Map<String, dynamic> map) {
+    final rawAnswer = map['answer'] as String? ?? '';
+    final rawQuestion = map['question'] as String? ?? '';
+    final cleanAnswer = rawAnswer
+        .replaceAll(r'\n', '\n')
+        .replaceAll(r'\\n', '\n')
+        .replaceAll(r'\r', '');
+    final cleanQuestion = rawQuestion
+        .replaceAll(r'\n', '\n')
+        .replaceAll(r'\\n', '\n')
+        .replaceAll(r'\r', '');
+
     return AiBookmark(
       id: map['id'] as String? ?? '',
       userId: map['userId'] as String? ?? '',
-      question: map['question'] as String? ?? '',
-      answer: map['answer'] as String? ?? '',
+      question: cleanQuestion,
+      answer: cleanAnswer,
       subjectCode: map['subjectCode'] as String?,
       subjectName: map['subjectName'] as String?,
       mode: map['mode'] as String? ?? 'tutorHinglish',
@@ -99,8 +110,17 @@ class AiBookmark {
 
     final id = extractString('id', docId);
     final userId = extractString('userId');
-    final question = extractString('question');
-    final answer = extractString('answer');
+    final rawQuestion = extractString('question');
+    final rawAnswer = extractString('answer');
+    final cleanAnswer = rawAnswer
+        .replaceAll(r'\n', '\n')
+        .replaceAll(r'\\n', '\n')
+        .replaceAll(r'\r', '');
+    final cleanQuestion = rawQuestion
+        .replaceAll(r'\n', '\n')
+        .replaceAll(r'\\n', '\n')
+        .replaceAll(r'\r', '');
+
     final subjectCode = extractString('subjectCode');
     final subjectName = extractString('subjectName');
     final mode = extractString('mode', 'tutorHinglish');
@@ -110,8 +130,8 @@ class AiBookmark {
     return AiBookmark(
       id: id,
       userId: userId,
-      question: question,
-      answer: answer,
+      question: cleanQuestion,
+      answer: cleanAnswer,
       subjectCode: subjectCode.isNotEmpty ? subjectCode : null,
       subjectName: subjectName.isNotEmpty ? subjectName : null,
       mode: mode,

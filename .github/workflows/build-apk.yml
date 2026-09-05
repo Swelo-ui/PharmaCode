@@ -120,19 +120,18 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v1.0.7
-          name: "PharmaCode v1.0.7 (Build 8) Production Release"
+          tag_name: v1.0.8
+          name: "PharmaCode v1.0.8 (Build 9) Production Release"
           body: |
-            ## PharmaCode v1.0.7 Release (Build 8)
+            ## PharmaCode v1.0.8 Release (Build 9)
             Official production signed release artifacts for **PharmaCode — B.Pharm NEP 2020 Companion with PharmaHelper AI Tutor**.
 
-            ### What's New in v1.0.7:
-            - **Google Play R8 Code Optimization**: Enabled full R8 code shrinking, dead code removal, and resource shrinking (`isMinifyEnabled = true`, `isShrinkResources = true`).
-            - **Google Play Target SDK 36**: Built on target API level 36 (Android 16) complying with Google Play requirements.
-            - **Obfuscation & Security**: Included ProGuard/R8 deobfuscation mappings, hardened against decompilation.
-            - **Bookmark Cloud Sync**: AI Tutor response bookmarks now persist to Firebase user account across devices.
-            - **Code & Table Formatting**: Terminal-styled code blocks and clean tables in AI responses without `<br>` artifacts.
-            - **AdMob Integration**: Non-intrusive banner and interstitial ads with smart frequency capping.
+            ### What's New in v1.0.8:
+            - **Seamless Home Screen Redirection**: Logging in or signing up now navigates directly to the Home screen instantly.
+            - **Cloud Bookmark Account Protection**: Prompting user login before saving AI notes to ensure permanent sync with Firebase Cloud without data loss on app reinstallation.
+            - **Rich AI Bookmark UI/UX**: AI notes in Saved Bookmarks now render identical to the AI Tutor screen with terminal code blocks, copy buttons, line numbers, and clean tables.
+            - **Google Sign-In Release SHA-1 Guidance**: Added release keystore SHA-1 copy tool for 100% resolution of `ApiException: 10`.
+            - **Target SDK 36 & Minification**: Fully verified with Android 16 (API 36) and R8 shrinking.
 
             ### Available Downloads:
             - **Google Play App Bundle**: `PharmaCode-Release.aab` (Signed with production release keystore for Play Console)
