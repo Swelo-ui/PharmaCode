@@ -1,13 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_spacing.dart';
+import '../../core/notification_service.dart';
 import '../../core/theme.dart';
 import '../../core/widgets/empty_state_view.dart';
 import '../../features/notifications/presentation/notification_controller.dart';
 
 class NotificationsScreen extends ConsumerWidget {
   const NotificationsScreen({super.key});
+
+  void _copyFcmToken(BuildContext context) async {
+    final token = await NotificationService().getFcmToken();
+    if (token != null && token.isNotEmpty) {
+      Clipboard.setData(ClipboardData(text: token));
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              '🔑 FCM Token copied! Firebase Console "Send test message" me paste karein.',
+              style: GoogleFonts.dmSans(fontWeight: FontWeight.w700),
+            ),
+            backgroundColor: const Color(0xFF047857),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+        );
+      }
+    } else {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Token generate ho raha he, internet check karein ya thoda wait karein.',
+              style: GoogleFonts.dmSans(),
+            ),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    }
+  }
 
   void _triggerTest(BuildContext context, WidgetRef ref) async {
     await ref.read(notificationsListProvider.notifier).triggerTest();
@@ -191,6 +225,35 @@ class NotificationsScreen extends ConsumerWidget {
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(height: 10),
+                InkWell(
+                  onTap: () => _copyFcmToken(context),
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: AppTheme.brandBlue.withValues(alpha: 0.3)),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.vpn_key_rounded, size: 14, color: AppTheme.brandBlue),
+                        const SizedBox(width: 6),
+                        Text(
+                          'Copy Device FCM Token (Firebase Direct Push)',
+                          style: GoogleFonts.dmSans(
+                            fontSize: 11.5,
+                            fontWeight: FontWeight.w700,
+                            color: AppTheme.brandBlue,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),

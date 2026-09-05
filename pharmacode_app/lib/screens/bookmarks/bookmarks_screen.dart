@@ -15,6 +15,7 @@ import '../../widgets/pharma_markdown_widget.dart';
 import '../../widgets/pharma_mascot_widget.dart';
 import '../ai/pharma_helper_screen.dart';
 import '../syllabus/subject_detail_screen.dart';
+import 'ai_note_detail_screen.dart';
 
 class BookmarksScreen extends ConsumerStatefulWidget {
   const BookmarksScreen({super.key});
@@ -446,39 +447,52 @@ class _BookmarksScreenState extends ConsumerState<BookmarksScreen>
                           ],
                         ),
 
-                        // Question Banner
+                        // Question Banner (Tap to open full reader view)
                         if (item.question.trim().isNotEmpty) ...[
                           const SizedBox(height: 10),
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF8FAFC),
-                              borderRadius: BorderRadius.circular(10),
-                              border: const Border(
-                                left: BorderSide(color: Color(0xFF2563EB), width: 3),
-                              ),
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(top: 2),
-                                  child: Icon(Icons.psychology_alt_rounded, size: 15, color: Color(0xFF2563EB)),
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => AiNoteDetailScreen(bookmark: item),
                                 ),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  child: Text(
-                                    item.question,
-                                    style: GoogleFonts.dmSans(
-                                      color: AppTheme.primaryNavy,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 13.5,
-                                      height: 1.35,
+                              );
+                            },
+                            borderRadius: BorderRadius.circular(10),
+                            child: Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFF8FAFC),
+                                borderRadius: BorderRadius.circular(10),
+                                border: const Border(
+                                  left: BorderSide(color: Color(0xFF2563EB), width: 3),
+                                ),
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.only(top: 2),
+                                    child: Icon(Icons.psychology_alt_rounded, size: 15, color: Color(0xFF2563EB)),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      item.question,
+                                      style: GoogleFonts.dmSans(
+                                        color: AppTheme.primaryNavy,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 13.5,
+                                        height: 1.35,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                  const SizedBox(width: 4),
+                                  const Icon(Icons.open_in_new_rounded, size: 14, color: Color(0xFF94A3B8)),
+                                ],
+                              ),
                             ),
                           ),
                         ],
@@ -561,6 +575,43 @@ class _BookmarksScreenState extends ConsumerState<BookmarksScreen>
                                         fontSize: 11,
                                         fontWeight: FontWeight.w700,
                                         color: const Color(0xFF1D4ED8),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+
+                            // Open Dedicated Full-Screen View
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => AiNoteDetailScreen(bookmark: item),
+                                  ),
+                                );
+                              },
+                              borderRadius: BorderRadius.circular(6),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4.5),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFF0FDF4),
+                                  borderRadius: BorderRadius.circular(6),
+                                  border: Border.all(color: const Color(0xFFBBF7D0)),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(Icons.fullscreen_rounded, size: 14, color: Color(0xFF16A34A)),
+                                    const SizedBox(width: 3),
+                                    Text(
+                                      'Full View',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w700,
+                                        color: const Color(0xFF16A34A),
                                       ),
                                     ),
                                   ],

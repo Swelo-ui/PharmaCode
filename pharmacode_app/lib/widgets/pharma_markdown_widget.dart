@@ -676,88 +676,118 @@ class PharmaMarkdownWidget extends StatelessWidget {
     }
 
     final colCount = headers.isNotEmpty ? headers.length : (rows.isNotEmpty ? rows.first.length : 1);
+    final isWideTable = colCount >= 4;
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFCBD5E1), width: 1.2),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            minWidth: MediaQuery.of(context).size.width - 70,
-          ),
-          child: Table(
-            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-            columnWidths: {
-              for (int c = 0; c < colCount; c++)
-                c: const IntrinsicColumnWidth(),
-            },
-            children: [
-              // Header Row
-              if (headers.isNotEmpty)
-                TableRow(
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFEFF6FF),
-                    border: Border(bottom: BorderSide(color: Color(0xFF93C5FD), width: 1.5)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (isWideTable)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 4, left: 2),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.swipe_rounded, size: 13, color: Color(0xFF2563EB)),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Scrollable Table (Swipe ↔ to view all $colCount columns)',
+                    style: GoogleFonts.inter(
+                      fontSize: 10.5,
+                      color: const Color(0xFF2563EB),
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
-                  children: headers.map((h) {
-                    return Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        h.replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), ' ').replaceAll('**', '').replaceAll('*', '').trim(),
-                        style: GoogleFonts.dmSans(
-                          fontWeight: FontWeight.w900,
-                          fontSize: 13,
-                          color: const Color(0xFF1E3A8A),
-                          letterSpacing: -0.2,
-                        ),
-                      ),
-                    );
-                  }).toList(),
+                ],
+              ),
+            ),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: const Color(0xFFCBD5E1), width: 1.1),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.03),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
                 ),
-
-              // Data Rows
-              for (int r = 0; r < rows.length; r++)
-                TableRow(
-                  decoration: BoxDecoration(
-                    color: r % 2 == 1 ? const Color(0xFFF8FAFC) : Colors.white,
-                    border: r < rows.length - 1
-                        ? const Border(bottom: BorderSide(color: Color(0xFFE2E8F0), width: 0.8))
-                        : null,
-                  ),
-                  children: [
+              ],
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minWidth: MediaQuery.of(context).size.width - 48,
+                ),
+                child: Table(
+                  defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                  columnWidths: {
                     for (int c = 0; c < colCount; c++)
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                        alignment: Alignment.centerLeft,
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 280, minWidth: 90),
-                          child: _buildRichInlineText(
-                            (c < rows[r].length ? rows[r][c] : '')
-                                .replaceAll(r'\n', '\n')
-                                .replaceAll(r'\\n', '\n'),
-                          ),
+                      c: isWideTable ? const IntrinsicColumnWidth() : const FlexColumnWidth(),
+                  },
+                  children: [
+                    // Header Row
+                    if (headers.isNotEmpty)
+                      TableRow(
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFEFF6FF),
+                          border: Border(bottom: BorderSide(color: Color(0xFF93C5FD), width: 1.5)),
                         ),
+                        children: headers.map((h) {
+                          return Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              h.replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), ' ').replaceAll('**', '').replaceAll('*', '').trim(),
+                              style: GoogleFonts.dmSans(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 12,
+                                color: const Color(0xFF1E3A8A),
+                                letterSpacing: -0.1,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+
+                    // Data Rows
+                    for (int r = 0; r < rows.length; r++)
+                      TableRow(
+                        decoration: BoxDecoration(
+                          color: r % 2 == 1 ? const Color(0xFFF8FAFC) : Colors.white,
+                          border: r < rows.length - 1
+                              ? const Border(bottom: BorderSide(color: Color(0xFFE2E8F0), width: 0.8))
+                              : null,
+                        ),
+                        children: [
+                          for (int c = 0; c < colCount; c++)
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+                              alignment: Alignment.centerLeft,
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: isWideTable ? 220 : 300,
+                                  minWidth: isWideTable ? 70 : 45,
+                                ),
+                                child: _buildRichInlineText(
+                                  (c < rows[r].length ? rows[r][c] : '')
+                                      .replaceAll(r'\n', '\n')
+                                      .replaceAll(r'\\n', '\n'),
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                   ],
                 ),
-            ],
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

@@ -120,18 +120,19 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v1.0.8
-          name: "PharmaCode v1.0.8 (Build 9) Production Release"
+          tag_name: v1.0.9
+          name: "PharmaCode v1.0.9 (Build 10) Production Release"
           body: |
-            ## PharmaCode v1.0.8 Release (Build 9)
+            ## PharmaCode v1.0.9 Release (Build 10)
             Official production signed release artifacts for **PharmaCode — B.Pharm NEP 2020 Companion with PharmaHelper AI Tutor**.
 
-            ### What's New in v1.0.8:
-            - **Seamless Home Screen Redirection**: Logging in or signing up now navigates directly to the Home screen instantly.
-            - **Cloud Bookmark Account Protection**: Prompting user login before saving AI notes to ensure permanent sync with Firebase Cloud without data loss on app reinstallation.
-            - **Rich AI Bookmark UI/UX**: AI notes in Saved Bookmarks now render identical to the AI Tutor screen with terminal code blocks, copy buttons, line numbers, and clean tables.
-            - **Google Sign-In Release SHA-1 Guidance**: Added release keystore SHA-1 copy tool for 100% resolution of `ApiException: 10`.
-            - **Target SDK 36 & Minification**: Fully verified with Android 16 (API 36) and R8 shrinking.
+            ### What's New in v1.0.9:
+            - **Firebase Direct Push Notifications**: Full support for direct push notifications sent from Firebase Console (FCM), arriving in system status bar even when the app is completely closed/killed.
+            - **Broadcast Topic Subscriptions & FCM Token Copy**: Auto-subscribed to `all_students`, `all`, `updates`, `general`, and `announcements` topics. Device FCM Token copy button added to Notification Center for instant test pushes.
+            - **Full-Screen AI Note Reader Screen**: Dedicated reader screen (`AiNoteDetailScreen`) for saved bookmarks with dynamic font resizing (`A-` / `A+`), full-width layout, copy, share, and ask follow-up.
+            - **Responsive Table Layouts in Markdown**: Tables with up to 3 columns auto-fit comfortably to screen width (`FlexColumnWidth`), compact cell padding, and 4+ column tables feature a clear swipe indicator.
+            - **Hardened ProGuard / R8 Rules**: Explicit keep rules for `io.flutter.plugins.firebase.messaging.**` preventing background service pruning.
+            - **Production Signed**: Release APK and Play Store AAB built with production keystore.
 
             ### Available Downloads:
             - **Google Play App Bundle**: `PharmaCode-Release.aab` (Signed with production release keystore for Play Console)

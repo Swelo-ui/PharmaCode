@@ -80,4 +80,6 @@
 -keep class dev.fluttercommunity.plus.share.** { *; }
 -keep class io.flutter.plugins.sharedpreferences.** { *; }
 -keep class com.google.android.gms.auth.api.signin.** { *; }
+-keep class io.flutter.plugins.firebase.messaging.** { *; }
+-dontwarn io.flutter.plugins.firebase.messaging.**
 

@@ -44,7 +44,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>();
 
-  // Re-create channel in background isolate (safe / idempotent)
+  // Re-create channels in background isolate (safe / idempotent)
   const channel = AndroidNotificationChannel(
     _kChannelId,
     _kChannelName,
@@ -56,6 +56,18 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     enableLights: true,
   );
   await androidPlugin?.createNotificationChannel(channel);
+
+  const fallbackChannel = AndroidNotificationChannel(
+    'fcm_fallback_notification_channel',
+    'PharmaCode Broadcast',
+    description: _kChannelDesc,
+    importance: Importance.max,
+    sound: RawResourceAndroidNotificationSound(_kSoundName),
+    playSound: true,
+    enableVibration: true,
+    enableLights: true,
+  );
+  await androidPlugin?.createNotificationChannel(fallbackChannel);
 
   const androidDetails = AndroidNotificationDetails(
     _kChannelId,
@@ -167,6 +179,15 @@ class NotificationService {
   int get unreadCount => _notificationsHistory.where((n) => !n.isRead).length;
   String? get fcmToken => _fcmToken;
 
+  Future<String?> getFcmToken() async {
+    try {
+      _fcmToken ??= await FirebaseMessaging.instance.getToken();
+    } catch (e) {
+      debugPrint('getFcmToken error: $e');
+    }
+    return _fcmToken;
+  }
+
   void _updateUnreadCount() {
     unreadCountNotifier.value = _notificationsHistory.where((n) => !n.isRead).length;
   }
@@ -208,8 +229,20 @@ class NotificationService {
         enableVibration: true,
         enableLights: true,
       );
-
       await androidPlugin?.createNotificationChannel(channel);
+
+      // Create fallback channels for FCM (ensures all FCM pushes get highest priority even if channel unspecified)
+      const AndroidNotificationChannel fallbackChannel = AndroidNotificationChannel(
+        'fcm_fallback_notification_channel',
+        'PharmaCode Broadcast',
+        description: _kChannelDesc,
+        importance: Importance.max,
+        sound: RawResourceAndroidNotificationSound(soundResourceName),
+        playSound: true,
+        enableVibration: true,
+        enableLights: true,
+      );
+      await androidPlugin?.createNotificationChannel(fallbackChannel);
 
       // Request runtime notification permission (Android 13+)
       final granted =
@@ -250,9 +283,12 @@ class NotificationService {
         sound: true,
       );
 
-      // Subscribe to topics for broadcast alerts
+      // Subscribe to topics for broadcast alerts (delivers reliably when app is killed/closed)
       await messaging.subscribeToTopic('all_students');
+      await messaging.subscribeToTopic('all');
       await messaging.subscribeToTopic('updates');
+      await messaging.subscribeToTopic('general');
+      await messaging.subscribeToTopic('announcements');
 
       // Fetch FCM Token
       _fcmToken = await messaging.getToken();

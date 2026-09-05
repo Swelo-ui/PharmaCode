@@ -23,12 +23,14 @@ void main() async {
     ),
   );
 
-  // Initialize Firebase
+  // Initialize Firebase & Push Notifications
   try {
     await Firebase.initializeApp();
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    // Initialize notification channels & topic subscriptions immediately
+    await NotificationService().initialize();
   } catch (e) {
-    debugPrint('Firebase initialization notice: $e');
+    debugPrint('Firebase/Notification initialization notice: $e');
   }
 
   // Initialize Google AdMob SDK
