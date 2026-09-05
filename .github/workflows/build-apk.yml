@@ -27,14 +27,16 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
-      - name: Setup Android SDK 37 & Licenses
+      - name: Setup Android SDK 37 Platform & Licenses
         run: |
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --channel=3 "platforms;android-37.0" "platforms;android-37" || true
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-37.0" "platforms;android-37" || true
-          if [ -d "$ANDROID_HOME/platforms/android-37.0" ] && [ ! -d "$ANDROID_HOME/platforms/android-37" ]; then
-            cp -r "$ANDROID_HOME/platforms/android-37.0" "$ANDROID_HOME/platforms/android-37"
-          fi
+          echo "Downloading official Android 37 Platform directly from Google..."
+          curl -sL "https://dl.google.com/android/repository/platform-37.0_r02.zip" -o /tmp/platform-37.zip
+          mkdir -p /tmp/p37 && unzip -q /tmp/platform-37.zip -d /tmp/p37
+          mkdir -p "$ANDROID_HOME/platforms/android-37" "$ANDROID_HOME/platforms/android-37.0"
+          cp -r /tmp/p37/*/* "$ANDROID_HOME/platforms/android-37/"
+          cp -r /tmp/p37/*/* "$ANDROID_HOME/platforms/android-37.0/"
+          echo "Installed platforms:"
           ls -la "$ANDROID_HOME/platforms"
 
       - name: Set up Flutter
@@ -62,11 +64,7 @@ jobs:
         run: |
           set -e
           echo "Building Universal Release APK..."
-          flutter build apk --release -v 2>&1 | tee ../flutter_apk_build.log || {
-            echo "::error::Flutter build APK failed"
-            tail -n 150 ../flutter_apk_build.log
-            exit 1
-          }
+          flutter build apk --release -v
           echo "Building Split per ABI APKs..."
           flutter build apk --release --split-per-abi
 
@@ -74,11 +72,7 @@ jobs:
         working-directory: pharmacode_app
         run: |
           echo "Building Signed Release AAB..."
-          flutter build appbundle --release -v 2>&1 | tee ../flutter_aab_build.log || {
-            echo "::error::Flutter build AAB failed"
-            tail -n 150 ../flutter_aab_build.log
-            exit 1
-          }
+          flutter build appbundle --release -v
 
       - name: Prepare Release Artifacts
         run: |
