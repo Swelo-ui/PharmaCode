@@ -120,17 +120,16 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v1.0.10
-          name: "PharmaCode v1.0.10 (Build 11) Production Release"
+          tag_name: v1.0.11
+          name: "PharmaCode v1.0.11 (Build 12) Production Release"
           body: |
-            ## PharmaCode v1.0.10 Release (Build 11)
+            ## PharmaCode v1.0.11 Release (Build 12)
             Official production signed release artifacts for **PharmaCode — B.Pharm NEP 2020 Companion with PharmaHelper AI Tutor**.
 
-            ### What's New in v1.0.10:
-            - **Notification Center Overhaul**: Removed all developer test buttons, test triggers, and internal tokens. Users now get a clean, secure, and professional notification feed.
-            - **Eliminated Duplicate "Saved Bookmarks" Header**: Removed redundant second AppBar in bookmarks screen, reclaiming vertical space and presenting a clean pill tab bar directly below the main navigation.
-            - **AI Note Reader Screen Polish**: Restored full title visibility in AppBar, repositioned font zoom controls (`A-` / `A+`) adjacent to content, and resolved date and provider chip clipping.
-            - **Zero-Overflow Bookmark Action Row**: Replaced cramped multi-button card layout with balanced, responsive actions (Full View pill, Ask AI pill, Copy, and Share icons) that never truncate or clip on any display.
+            ### What's New in v1.0.11:
+            - **Complete Security & Privacy Hardening**: Fully eliminated all developer SHA-1 setup dialogs, internal keystore fingerprints, and test UI from authentication screens.
+            - **Clean Authentication UX**: Replaced internal developer error dialogues with sleek, user-friendly dismissible notices.
+            - **Google Play App Signing Alignment**: Cleaned Google Sign-In pipeline for production Play Store releases.
             - **Production Signed**: Release APK and Play Store AAB compiled with production keystore.
 
             ### Available Downloads:

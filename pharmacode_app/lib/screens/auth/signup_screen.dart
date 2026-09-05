@@ -6,7 +6,6 @@ import '../../core/in_app_browser.dart';
 import '../../core/theme.dart';
 import '../../features/auth/domain/auth_state.dart';
 import '../../features/auth/presentation/auth_controller.dart';
-import '../../services/auth_service.dart';
 import '../main_navigation_screen.dart';
 import 'login_screen.dart';
 
@@ -126,7 +125,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       }
     } catch (e) {
       setState(() {
-        _errorMessage = e.toString();
+        final msg = e.toString();
+        _errorMessage = msg.startsWith('Exception: ') ? msg.substring(11) : msg;
       });
     } finally {
       if (mounted) {
@@ -157,214 +157,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     );
   }
 
-  void _showSha1HelperDialog() {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFEF3C7),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Icon(Icons.key_rounded, color: Color(0xFFD97706), size: 22),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                'Google Sign-In SHA-1 Setup',
-                style: GoogleFonts.dmSans(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 16,
-                  color: AppTheme.primaryNavy,
-                ),
-              ),
-            ),
-          ],
-        ),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Google Play Services requires registering your app\'s SHA-1 fingerprint in Firebase Console:',
-                style: GoogleFonts.dmSans(fontSize: 13, color: AppTheme.textBody, height: 1.4),
-              ),
-              const SizedBox(height: 14),
-              // Release SHA-1 Card (Primary for Release APK)
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFEFF6FF),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: const Color(0xFFBFDBFE), width: 1.2),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF2563EB),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: Text(
-                                'RELEASE BUILD',
-                                style: GoogleFonts.dmSans(
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 9.5,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 6),
-                            Text('SHA-1 (Live App)',
-                                style: GoogleFonts.dmSans(fontWeight: FontWeight.w800, fontSize: 11, color: AppTheme.primaryNavy)),
-                          ],
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Clipboard.setData(const ClipboardData(text: AuthService.releaseSha1));
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Release SHA-1 copied to clipboard!'), duration: Duration(seconds: 2)),
-                            );
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                            decoration: BoxDecoration(
-                              color: AppTheme.brandBlue,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(Icons.copy_rounded, color: Colors.white, size: 12),
-                                const SizedBox(width: 4),
-                                Text('Copy', style: GoogleFonts.dmSans(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w700)),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    const SelectableText(
-                      AuthService.releaseSha1,
-                      style: TextStyle(fontFamily: 'monospace', fontSize: 10.5, color: Color(0xFF1E3A8A), fontWeight: FontWeight.w700),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 10),
-              // Debug SHA-1 Card
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF3F4F6),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: const Color(0xFFE5E7EB)),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Debug SHA-1 (Dev / Emulators):',
-                            style: GoogleFonts.dmSans(fontWeight: FontWeight.w800, fontSize: 11, color: AppTheme.primaryNavy)),
-                        InkWell(
-                          onTap: () {
-                            Clipboard.setData(const ClipboardData(text: AuthService.debugSha1));
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Debug SHA-1 copied to clipboard!'), duration: Duration(seconds: 2)),
-                            );
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF64748B),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(Icons.copy_rounded, color: Colors.white, size: 12),
-                                const SizedBox(width: 4),
-                                Text('Copy', style: GoogleFonts.dmSans(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w700)),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    const SelectableText(
-                      AuthService.debugSha1,
-                      style: TextStyle(fontFamily: 'monospace', fontSize: 10, color: Color(0xFF1F2937), fontWeight: FontWeight.w600),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 14),
-              Text('How to fix in 1 minute:', style: GoogleFonts.dmSans(fontWeight: FontWeight.w800, fontSize: 12, color: AppTheme.primaryNavy)),
-              const SizedBox(height: 4),
-              Text('1. Tap "Copy" next to RELEASE BUILD SHA-1\n2. Open Firebase Console -> Project Settings (⚙️)\n3. Select "com.pharmacode.bpharm" app\n4. Click "Add fingerprint" & paste the SHA-1\n5. Google Sign-In will work instantly!',
-                  style: GoogleFonts.dmSans(fontSize: 11.5, color: AppTheme.textMuted, height: 1.45)),
-              const SizedBox(height: 12),
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFECFDF5),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: const Color(0xFFA7F3D0)),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.check_circle_outline_rounded, color: Color(0xFF059669), size: 18),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        'Email & Password registration is active! You can sign up with email below right now.',
-                        style: GoogleFonts.dmSans(color: const Color(0xFF065F46), fontSize: 11.5, fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text('Close', style: GoogleFonts.dmSans(fontWeight: FontWeight.w700, color: AppTheme.textMuted)),
-          ),
-          ElevatedButton.icon(
-            onPressed: () {
-              const url = 'https://console.firebase.google.com/project/pharmacode-f95c9/settings/general';
-              openInAppUrl(context, url);
-            },
-            icon: const Icon(Icons.open_in_browser_rounded, size: 16),
-            label: Text('Open Firebase Console', style: GoogleFonts.dmSans(fontWeight: FontWeight.w700, fontSize: 12)),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.primaryNavy,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -423,54 +215,34 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   if (_errorMessage != null) ...[
                     Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.all(14),
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                       decoration: BoxDecoration(
                         color: const Color(0xFFFEF2F2),
-                        borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: const Color(0xFFFCA5A5), width: 1.5),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: const Color(0xFFFCA5A5), width: 1.2),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Row(
                         children: [
-                          Row(
-                            children: [
-                              const Icon(Icons.error_outline_rounded, color: Color(0xFFDC2626), size: 20),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  _errorMessage!.contains('SHA1') || _errorMessage!.contains('SHA-1') || _errorMessage!.contains('10')
-                                      ? 'Google Sign-Up: SHA-1 Setup Needed'
-                                      : 'Sign Up Notice',
-                                  style: GoogleFonts.dmSans(color: const Color(0xFF991B1B), fontSize: 13, fontWeight: FontWeight.w900),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            _errorMessage!,
-                            style: GoogleFonts.dmSans(color: const Color(0xFF7F1D1D), fontSize: 12, height: 1.4),
-                          ),
-                          if (_errorMessage!.contains('SHA1') || _errorMessage!.contains('SHA-1') || _errorMessage!.contains('10')) ...[
-                            const SizedBox(height: 10),
-                            SizedBox(
-                              width: double.infinity,
-                              child: OutlinedButton.icon(
-                                onPressed: _showSha1HelperDialog,
-                                icon: const Icon(Icons.copy_rounded, size: 14),
-                                label: Text(
-                                  'Fix SHA-1 Keys & Instructions',
-                                  style: GoogleFonts.dmSans(fontWeight: FontWeight.w800, fontSize: 12),
-                                ),
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: const Color(0xFF991B1B),
-                                  side: const BorderSide(color: Color(0xFFDC2626)),
-                                  padding: const EdgeInsets.symmetric(vertical: 8),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
+                          const Icon(Icons.info_outline_rounded, color: Color(0xFFDC2626), size: 18),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              _errorMessage!,
+                              style: GoogleFonts.dmSans(
+                                color: const Color(0xFF991B1B),
+                                fontSize: 12.5,
+                                fontWeight: FontWeight.w600,
+                                height: 1.3,
                               ),
                             ),
-                          ],
+                          ),
+                          InkWell(
+                            onTap: () => setState(() => _errorMessage = null),
+                            child: const Padding(
+                              padding: EdgeInsets.all(4),
+                              child: Icon(Icons.close_rounded, color: Color(0xFF991B1B), size: 16),
+                            ),
+                          ),
                         ],
                       ),
                     ),

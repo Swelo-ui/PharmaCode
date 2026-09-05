@@ -9,12 +9,7 @@ class AuthService {
   factory AuthService() => _instance;
   AuthService._internal();
 
-  /// SHA fingerprints extracted from app signing keystores
   static const String appPackageName = 'com.pharmacode.bpharm';
-  static const String releaseSha1 = 'A2:DE:DC:55:4F:C8:D9:67:56:F4:CE:42:44:D2:06:0D:A8:94:78:09';
-  static const String releaseSha256 = '1A:70:6F:88:A8:29:78:CB:82:5C:82:B8:C3:9E:43:69:82:0A:C5:76:E3:94:C6:20:49:78:0B:30:90:CB:58:68';
-  static const String debugSha1 = '96:81:77:58:CE:7C:F2:81:C4:BF:23:42:F2:27:DB:2C:81:CD:BC:7A';
-  static const String debugSha256 = '90:33:A4:C5:35:AF:6F:A8:82:9C:05:0D:CB:E8:E5:A0:C9:A8:10:86:E9:3E:2F:80:40:32:EA:E0:57:C4:C7:51';
   static const String webClientId = '1072247356262-g5ftdn1lh52uell7kfdhgo7ud1o59pll.apps.googleusercontent.com';
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -145,19 +140,13 @@ class AuthService {
 
       return await _auth.signInWithCredential(credential);
     } on PlatformException catch (e) {
-      // Error code 10 = DEVELOPER_ERROR (SHA-1 fingerprint not added in Firebase Console)
-      if (e.code == 'sign_in_failed' || e.message?.contains('10') == true || e.toString().contains('10')) {
-        throw 'SHA1_CONFIG_REQUIRED: Firebase Console me SHA-1 fingerprint add karna hoga. (Neeche diye "Fix SHA-1" par tap karein ya Email se Sign In karein).';
-      }
-      throw 'Google Sign-In failed (${e.code}): ${e.message ?? 'Unknown error'}';
+      debugPrint('AuthService Google Sign-In PlatformException: ${e.code} - ${e.message}');
+      throw 'Unable to complete Google Sign-In. Please try again or sign in with email.';
     } on FirebaseAuthException catch (e) {
       throw _handleAuthException(e);
     } catch (e) {
-      final str = e.toString();
-      if (str.contains('10') || str.contains('sign_in_failed')) {
-        throw 'SHA1_CONFIG_REQUIRED: Firebase Console me SHA-1 fingerprint add karna hoga. (Neeche diye "Fix SHA-1" par tap karein ya Email se Sign In karein).';
-      }
-      throw 'Google Sign-In could not complete: $e';
+      debugPrint('AuthService Google Sign-In Error: $e');
+      throw 'Unable to complete Google Sign-In. Please try again or sign in with email.';
     }
   }
 

@@ -101,13 +101,7 @@ class AuthRepository {
       return await getCurrentUserEntity();
     } catch (e) {
       debugPrint('Google Sign In Error: $e');
-      final errorStr = e.toString();
-      if (errorStr.contains('ApiException: 10') || errorStr.contains('sign_in_failed')) {
-        throw Exception(
-          'Google Sign-In SHA-1 missing in Firebase Console (ApiException: 10). Please tap "Fix SHA-1 Keys" to copy Release SHA-1 and add it to Firebase Console.',
-        );
-      }
-      rethrow;
+      throw Exception('Unable to complete Google Sign-In. Please try again or sign in with email.');
     }
   }
 
