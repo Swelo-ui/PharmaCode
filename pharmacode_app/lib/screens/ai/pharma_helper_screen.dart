@@ -560,13 +560,13 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
       title: Row(
         children: [
           PharmaMascotWidget(
-            size: 38,
+            size: 34,
             state: _isLoading
                 ? (_webSearchEnabled ? MascotState.searchingWeb : MascotState.thinking)
                 : MascotState.idle,
             showBadge: true,
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -575,32 +575,28 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Flexible(
-                      child: Text(
-                        'PharmaHelper',
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: GoogleFonts.dmSans(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 16.5,
-                          color: AppTheme.primaryNavy,
-                        ),
+                    Text(
+                      'PharmaHelper',
+                      style: GoogleFonts.dmSans(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 15,
+                        color: AppTheme.primaryNavy,
                       ),
                     ),
-                    const SizedBox(width: 6),
+                    const SizedBox(width: 5),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                      padding: const EdgeInsets.symmetric(horizontal: 4.5, vertical: 1.5),
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
                           colors: [Color(0xFF2563EB), Color(0xFF4F46E5)],
                         ),
-                        borderRadius: BorderRadius.circular(6),
+                        borderRadius: BorderRadius.circular(5),
                       ),
                       child: Text(
                         'AI TUTOR',
                         style: GoogleFonts.inter(
                           color: Colors.white,
-                          fontSize: 9,
+                          fontSize: 8.5,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
@@ -614,7 +610,7 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.inter(
-                    fontSize: 11,
+                    fontSize: 10.5,
                     color: _isLoading ? AppTheme.brandBlue : AppTheme.brandGreen,
                     fontWeight: FontWeight.w600,
                   ),
@@ -632,21 +628,23 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
               alignment: Alignment.center,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.bookmarks_rounded, size: 22),
+                  padding: const EdgeInsets.all(8),
+                  constraints: const BoxConstraints(minWidth: 38, minHeight: 38),
+                  icon: const Icon(Icons.bookmarks_rounded, size: 21),
                   tooltip: 'Saved AI Notes',
                   onPressed: _openSavedNotesSheet,
                 ),
                 if (bookmarks.isNotEmpty)
                   Positioned(
-                    top: 8,
-                    right: 8,
+                    top: 6,
+                    right: 6,
                     child: Container(
-                      padding: const EdgeInsets.all(3),
+                      padding: const EdgeInsets.all(2.5),
                       decoration: const BoxDecoration(
                         color: Color(0xFFD97706),
                         shape: BoxShape.circle,
                       ),
-                      constraints: const BoxConstraints(minWidth: 15, minHeight: 15),
+                      constraints: const BoxConstraints(minWidth: 14, minHeight: 14),
                       child: Text(
                         '${bookmarks.length}',
                         style: const TextStyle(
@@ -663,7 +661,9 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
           },
         ),
         IconButton(
-          icon: const Icon(Icons.tune_rounded, size: 22),
+          padding: const EdgeInsets.all(8),
+          constraints: const BoxConstraints(minWidth: 38, minHeight: 38),
+          icon: const Icon(Icons.tune_rounded, size: 21),
           tooltip: 'AI Engine Settings',
           onPressed: _openSettingsDialog,
         ),
@@ -1367,11 +1367,11 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
         return Container(
           decoration: const BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
           ),
           padding: EdgeInsets.fromLTRB(
             24,
-            16,
+            14,
             24,
             MediaQuery.of(ctx).padding.bottom + 20,
           ),
@@ -1379,17 +1379,17 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 40,
+                width: 38,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFCBD5E1),
+                  color: const Color(0xFFE2E8F0),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
               const SizedBox(height: 20),
               Container(
-                width: 64,
-                height: 64,
+                width: 60,
+                height: 60,
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
                     colors: [Color(0xFFEFF6FF), Color(0xFFDBEAFE)],
@@ -1398,25 +1398,33 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                   ),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(color: const Color(0xFFBFDBFE), width: 1.5),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF2563EB).withValues(alpha: 0.08),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
                 child: const Icon(
-                  Icons.cloud_sync_rounded,
+                  Icons.bookmark_add_rounded,
                   color: Color(0xFF2563EB),
-                  size: 34,
+                  size: 30,
                 ),
               ),
               const SizedBox(height: 16),
               Text(
-                'Account Me Save Karein',
+                'Sign In to Save Notes',
                 style: GoogleFonts.dmSans(
-                  fontSize: 19,
+                  fontSize: 20,
                   fontWeight: FontWeight.w900,
                   color: AppTheme.primaryNavy,
+                  letterSpacing: -0.3,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
-                'AI Notes ko permanently save rakhne ke liye pehle Login / Sign Up karein. Isse aapke notes Firebase Cloud par hamesha safe rahenge aur phone switch ya app update par bhi kabhi delete nahi honge jab tak aap khud na hatayein!',
+                'Save your AI study notes, formulas, and explanations securely to the cloud. Access your revision bookmarks across any device anytime without losing your progress.',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.dmSans(
                   fontSize: 13,
@@ -1424,7 +1432,81 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                   height: 1.45,
                 ),
               ),
-              const SizedBox(height: 22),
+              const SizedBox(height: 18),
+              // Feature Benefits Card
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF8FAFC),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: const Color(0xFFE2E8F0)),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFEFF6FF),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Icon(Icons.cloud_done_rounded, size: 16, color: Color(0xFF2563EB)),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Cloud Backup',
+                                style: GoogleFonts.dmSans(fontSize: 12.5, fontWeight: FontWeight.w800, color: AppTheme.primaryNavy),
+                              ),
+                              Text(
+                                'Study notes remain permanently safe in your account',
+                                style: GoogleFonts.inter(fontSize: 11, color: AppTheme.textMuted, height: 1.25),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      child: Divider(height: 1, color: Color(0xFFF1F5F9)),
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFEFF6FF),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Icon(Icons.devices_rounded, size: 16, color: Color(0xFF2563EB)),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Cross-Device Sync',
+                                style: GoogleFonts.dmSans(fontSize: 12.5, fontWeight: FontWeight.w800, color: AppTheme.primaryNavy),
+                              ),
+                              Text(
+                                'Seamless access across all your phones & tablets',
+                                style: GoogleFonts.inter(fontSize: 11, color: AppTheme.textMuted, height: 1.25),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
@@ -1446,7 +1528,7 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                             if (mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                  content: Text('Note permanently saved to your Firebase account!'),
+                                  content: Text('Note saved to your cloud account!'),
                                   backgroundColor: AppTheme.brandGreen,
                                   behavior: SnackBarBehavior.floating,
                                 ),
@@ -1457,11 +1539,11 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                       ),
                     );
                   },
-                  icon: const Icon(Icons.login_rounded, size: 18),
+                  icon: const Icon(Icons.arrow_forward_rounded, size: 18),
                   label: Text(
-                    'Login / Sign Up to Save',
+                    'Sign In or Create Account',
                     style: GoogleFonts.dmSans(
-                      fontSize: 14,
+                      fontSize: 14.5,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
@@ -1476,11 +1558,11 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
               TextButton(
                 onPressed: () => Navigator.pop(ctx),
                 child: Text(
-                  'Cancel',
+                  'Maybe Later',
                   style: GoogleFonts.dmSans(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,

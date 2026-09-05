@@ -120,17 +120,18 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v1.0.11
-          name: "PharmaCode v1.0.11 (Build 12) Production Release"
+          tag_name: v1.0.12
+          name: "PharmaCode v1.0.12 (Build 13) Production Release"
           body: |
-            ## PharmaCode v1.0.11 Release (Build 12)
+            ## PharmaCode v1.0.12 Release (Build 13)
             Official production signed release artifacts for **PharmaCode — B.Pharm NEP 2020 Companion with PharmaHelper AI Tutor**.
 
-            ### What's New in v1.0.11:
-            - **Complete Security & Privacy Hardening**: Fully eliminated all developer SHA-1 setup dialogs, internal keystore fingerprints, and test UI from authentication screens.
-            - **Clean Authentication UX**: Replaced internal developer error dialogues with sleek, user-friendly dismissible notices.
-            - **Google Play App Signing Alignment**: Cleaned Google Sign-In pipeline for production Play Store releases.
-            - **Production Signed**: Release APK and Play Store AAB compiled with production keystore.
+            ### What's New in v1.0.12:
+            - **Native LaTeX Formula Rendering**: Implemented textbook-quality mathematical formula rendering using `flutter_math_fork` for display math (`\[...\]`, `$$...$$`), inline equations, and fractions.
+            - **Markdown Image Rendering**: Added complete support for educational diagrams and image embeds (`![alt](url)`) with cached network images, loading placeholders, and captions.
+            - **Mandatory LaTeX System Prompt**: Enhanced AI Tutor system instructions to enforce LaTeX math for all pharmacokinetic, pharmaceutics, and dosing calculations.
+            - **Header Truncation Resolved**: Fixed AppBar title spacing so `PharmaHelper` and `AI TUTOR` badge never truncate.
+            - **Professional English Bookmark Modal**: Redesigned the guest bookmarking bottom sheet with clean English copy and cloud benefit highlights.
 
             ### Available Downloads:
             - **Google Play App Bundle**: `PharmaCode-Release.aab` (Signed with production release keystore for Play Console)

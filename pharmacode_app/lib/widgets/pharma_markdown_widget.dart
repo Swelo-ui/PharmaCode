@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../core/theme.dart';
@@ -65,10 +67,74 @@ class PharmaMarkdownWidget extends StatelessWidget {
         continue;
       }
 
-      // 0. Fenced Code Block Detection (```python ... ``` or ` bash ... or ~~~)
+      // 0A. Markdown Image Detection (![alt](url))
+      final imageMatch = RegExp(r'^!\[(.*?)\]\((https?://[^\s)]+)\)$').firstMatch(trimmed);
+      if (imageMatch != null) {
+        final alt = imageMatch.group(1) ?? '';
+        final url = imageMatch.group(2) ?? '';
+        children.add(_buildMarkdownImage(context, alt, url));
+        isFirstItem = false;
+        continue;
+      }
+
+      // 0B. Standalone / Block LaTeX Math Detection (\[ ... \] or $$ ... $$)
+      if (trimmed.startsWith(r'\[') || trimmed.startsWith(r'$$')) {
+        final isBracket = trimmed.startsWith(r'\[');
+        final closingToken = isBracket ? r'\]' : r'$$';
+
+        // Check if single-line display math: e.g. \[ F = \frac{...}{...} \]
+        if (trimmed.endsWith(closingToken) && trimmed.length > 4) {
+          final eq = trimmed.substring(2, trimmed.length - 2).trim();
+          children.add(_buildDisplayMathWidget(context, eq));
+          isFirstItem = false;
+          continue;
+        }
+
+        // Multi-line math block
+        final mathLines = <String>[];
+        final openingRest = trimmed.substring(2).trim();
+        if (openingRest.isNotEmpty && !openingRest.contains(closingToken)) {
+          mathLines.add(openingRest);
+        }
+
+        int k = i + 1;
+        while (k < lines.length && !lines[k].trim().contains(closingToken)) {
+          mathLines.add(lines[k].trim());
+          k++;
+        }
+        if (k < lines.length) {
+          final lastLine = lines[k].trim();
+          final beforeClosing = lastLine.replaceAll(closingToken, '').trim();
+          if (beforeClosing.isNotEmpty) {
+            mathLines.add(beforeClosing);
+          }
+          i = k; // Advance past closing delimiter
+        } else {
+          i = k - 1;
+        }
+
+        children.add(_buildDisplayMathWidget(context, mathLines.join(' ')));
+        isFirstItem = false;
+        continue;
+      }
+
+      // 0C. Raw Standalone LaTeX Formula (e.g. \frac{...}{...} or \text{...} = \frac{...})
+      if ((trimmed.startsWith(r'\frac') ||
+           trimmed.startsWith(r'\text{') ||
+           trimmed.startsWith(r'\left(') ||
+           (trimmed.contains(r'\frac{') && trimmed.contains('='))) &&
+          !trimmed.contains('http') &&
+          !trimmed.startsWith('- ') &&
+          !trimmed.startsWith('• ')) {
+        children.add(_buildDisplayMathWidget(context, trimmed));
+        isFirstItem = false;
+        continue;
+      }
+
+      // 0D. Fenced Code Block Detection (```python ... ``` or ` bash ... or ~~~)
       final isCodeStart = trimmed.startsWith('```') ||
           trimmed.startsWith('~~~') ||
-          RegExp(r'^`{1,4}\s*(?:python|bash|sh|shell|sql|r|terminal|dart|javascript|json|html|css|cpp|c|java)', caseSensitive: false).hasMatch(trimmed);
+          RegExp(r'^`{1,4}\s*(?:python|bash|sh|shell|sql|r|terminal|dart|javascript|json|html|css|cpp|c|java|latex|math|tex)', caseSensitive: false).hasMatch(trimmed);
 
       if (isCodeStart) {
         String lang = 'terminal';
@@ -93,6 +159,13 @@ class PharmaMarkdownWidget extends StatelessWidget {
           i = k; // Advance past closing backticks
         } else {
           i = k - 1;
+        }
+
+        // If fenced code is labeled latex/math/tex, render as display math
+        if (lang == 'latex' || lang == 'math' || lang == 'tex') {
+          children.add(_buildDisplayMathWidget(context, codeLines.join(' ')));
+          isFirstItem = false;
+          continue;
         }
 
         children.add(_buildTerminalCodeWidget(
@@ -333,8 +406,18 @@ class PharmaMarkdownWidget extends StatelessWidget {
       );
     }
 
-    // Tokenise markdown spans: bold (**...**), italic (*...* or _..._), code (`...`)
-    final regex = RegExp(r'(\*\*[^*]+?\*\*|\*[^*\s][^*]*?\*|`[^`]+?`|_[^_\s][^_]*?_)');
+    // Tokenise markdown spans: math ($$...$$, $...$, \(...\)), bold (**...**), italic (*...* or _..._), code (`...`)
+    final regex = RegExp(
+      r'('
+      r'\$\$[^\$]+?\$\$|'
+      r'\$[^\$\s][^\$]*?\$|'
+      r'\\\([^\)]+?\\\)|'
+      r'\*\*[^*]+?\*\*|'
+      r'\*[^*\s][^*]*?\*|'
+      r'`[^`]+?`|'
+      r'_[^_\s][^_]*?_'
+      r')'
+    );
     final matches = regex.allMatches(cleaned);
 
     if (matches.isEmpty) {
@@ -350,7 +433,7 @@ class PharmaMarkdownWidget extends StatelessWidget {
       );
     }
 
-    final List<TextSpan> spans = [];
+    final List<InlineSpan> spans = [];
     int lastIndex = 0;
 
     for (final match in matches) {
@@ -370,7 +453,49 @@ class PharmaMarkdownWidget extends StatelessWidget {
       }
 
       final token = match.group(0)!;
-      if (token.startsWith('**') && token.endsWith('**') && token.length > 4) {
+      if (token.startsWith(r'$$') && token.endsWith(r'$$') && token.length > 4) {
+        final mathContent = token.substring(2, token.length - 2).trim();
+        spans.add(WidgetSpan(
+          alignment: PlaceholderAlignment.middle,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 2),
+            child: Math.tex(
+              mathContent,
+              mathStyle: MathStyle.display,
+              textStyle: TextStyle(fontSize: effectiveFontSize, color: effectiveColor),
+              onErrorFallback: (_) => Text(mathContent, style: GoogleFonts.jetBrainsMono(fontSize: effectiveFontSize)),
+            ),
+          ),
+        ));
+      } else if (token.startsWith(r'\(') && token.endsWith(r'\)') && token.length > 4) {
+        final mathContent = token.substring(2, token.length - 2).trim();
+        spans.add(WidgetSpan(
+          alignment: PlaceholderAlignment.middle,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 2),
+            child: Math.tex(
+              mathContent,
+              mathStyle: MathStyle.text,
+              textStyle: TextStyle(fontSize: effectiveFontSize, color: effectiveColor),
+              onErrorFallback: (_) => Text(mathContent, style: GoogleFonts.jetBrainsMono(fontSize: effectiveFontSize)),
+            ),
+          ),
+        ));
+      } else if (token.startsWith(r'$') && token.endsWith(r'$') && token.length > 2) {
+        final mathContent = token.substring(1, token.length - 1).trim();
+        spans.add(WidgetSpan(
+          alignment: PlaceholderAlignment.middle,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 2),
+            child: Math.tex(
+              mathContent,
+              mathStyle: MathStyle.text,
+              textStyle: TextStyle(fontSize: effectiveFontSize, color: effectiveColor),
+              onErrorFallback: (_) => Text(mathContent, style: GoogleFonts.jetBrainsMono(fontSize: effectiveFontSize)),
+            ),
+          ),
+        ));
+      } else if (token.startsWith('**') && token.endsWith('**') && token.length > 4) {
         final inner = token.substring(2, token.length - 2);
         spans.add(TextSpan(
           text: inner,
@@ -787,6 +912,177 @@ class PharmaMarkdownWidget extends StatelessWidget {
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDisplayMathWidget(BuildContext context, String rawTex) {
+    String cleanTex = rawTex
+        .replaceAll(r'\[', '')
+        .replaceAll(r'\]', '')
+        .replaceAll(r'$$', '')
+        .replaceAll(r'\n', ' ')
+        .trim();
+
+    // Clean common escaped characters that LLMs produce
+    cleanTex = cleanTex.replaceAll(r'\%', '%');
+
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFBFDBFE), width: 1.2),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF2563EB).withValues(alpha: 0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Header pill
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+            decoration: const BoxDecoration(
+              color: Color(0xFFEFF6FF),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(10.8)),
+              border: Border(bottom: BorderSide(color: Color(0xFFDBEAFE), width: 1)),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.functions_rounded, size: 14, color: Color(0xFF2563EB)),
+                    const SizedBox(width: 6),
+                    Text(
+                      'FORMULA',
+                      style: GoogleFonts.inter(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800,
+                        color: const Color(0xFF1E40AF),
+                        letterSpacing: 0.8,
+                      ),
+                    ),
+                  ],
+                ),
+                InkWell(
+                  onTap: () {
+                    Clipboard.setData(ClipboardData(text: cleanTex));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Formula copied to clipboard!'),
+                        duration: Duration(seconds: 1),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.all(2),
+                    child: Icon(Icons.copy_rounded, size: 13, color: Color(0xFF64748B)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Math Formula Render
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              child: Math.tex(
+                cleanTex,
+                mathStyle: MathStyle.display,
+                textStyle: const TextStyle(
+                  fontSize: 15.5,
+                  color: Color(0xFF0F172A),
+                ),
+                onErrorFallback: (err) {
+                  return SelectableText(
+                    cleanTex,
+                    style: GoogleFonts.jetBrainsMono(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFF1E293B),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMarkdownImage(BuildContext context, String alt, String url) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      alignment: Alignment.center,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              constraints: const BoxConstraints(maxHeight: 340),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF8FAFC),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFFE2E8F0)),
+              ),
+              child: CachedNetworkImage(
+                imageUrl: url,
+                fit: BoxFit.contain,
+                placeholder: (context, _) => Container(
+                  height: 160,
+                  color: const Color(0xFFF1F5F9),
+                  child: const Center(
+                    child: SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(strokeWidth: 2.5),
+                    ),
+                  ),
+                ),
+                errorWidget: (context, _, error) => Container(
+                  padding: const EdgeInsets.all(14),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.broken_image_rounded, color: Color(0xFF94A3B8), size: 20),
+                      const SizedBox(width: 8),
+                      Flexible(
+                        child: Text(
+                          alt.isNotEmpty ? alt : 'Image preview unavailable',
+                          style: GoogleFonts.inter(fontSize: 12, color: const Color(0xFF64748B)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          if (alt.trim().isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Text(
+              alt.trim(),
+              style: GoogleFonts.inter(
+                fontSize: 11.5,
+                fontStyle: FontStyle.italic,
+                color: const Color(0xFF64748B),
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ],
       ),
     );
