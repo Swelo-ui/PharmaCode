@@ -19,7 +19,6 @@ import 'bookmarks/bookmarks_screen.dart';
 import 'notifications/notifications_screen.dart';
 import 'search/global_search_delegate.dart';
 import 'ai/pharma_helper_screen.dart';
-import '../widgets/pharma_mascot_widget.dart';
 
 class MainNavigationScreen extends ConsumerStatefulWidget {
   const MainNavigationScreen({super.key});
@@ -294,10 +293,10 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        border: const Border(top: BorderSide(color: AppTheme.borderSoft, width: 1)),
+        border: const Border(top: BorderSide(color: Color(0xFFE2E8F0), width: 1)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 12,
             offset: const Offset(0, -3),
           ),
@@ -306,7 +305,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
       child: SafeArea(
         top: false,
         child: SizedBox(
-          height: 62,
+          height: 64,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -323,7 +322,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
                 selectedIcon: Icons.menu_book_rounded,
               ),
               Expanded(
-                child: AnimatedAiNavButton(
+                child: AiNavButton(
                   onTap: () {
                     HapticFeedback.lightImpact();
                     Navigator.push(
@@ -359,7 +358,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
     required IconData selectedIcon,
   }) {
     final isSelected = _currentIndex == index;
-    final color = isSelected ? AppTheme.brandBlue : const Color(0xFF64748B);
+    final color = isSelected ? const Color(0xFF1D4ED8) : const Color(0xFF64748B);
 
     return Expanded(
       child: InkWell(
@@ -375,9 +374,9 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
           children: [
             AnimatedContainer(
               duration: const Duration(milliseconds: 180),
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 3),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 3.5),
               decoration: BoxDecoration(
-                color: isSelected ? const Color(0xFFDBEAFE).withValues(alpha: 0.5) : Colors.transparent,
+                color: isSelected ? const Color(0xFFEFF6FF) : Colors.transparent,
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Icon(
@@ -389,9 +388,9 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
             const SizedBox(height: 2),
             Text(
               label,
-              style: GoogleFonts.dmSans(
-                fontSize: 11,
-                fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+              style: GoogleFonts.inter(
+                fontSize: 10.8,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 color: color,
               ),
             ),
@@ -629,58 +628,6 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
               padding: const EdgeInsets.symmetric(vertical: 8),
               children: [
                 _drawerItem(Icons.home_rounded, 'Home', 0),
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFFEEF2FF), Color(0xFFE0E7FF)],
-                    ),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: const Color(0xFFC7D2FE)),
-                  ),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-                    leading: const PharmaMascotWidget(size: 32, showBadge: true),
-                    title: Text(
-                      'PharmaHelper AI',
-                      style: GoogleFonts.dmSans(
-                        fontWeight: FontWeight.w800,
-                        color: AppTheme.primaryNavy,
-                        fontSize: 14,
-                      ),
-                    ),
-                    subtitle: Text(
-                      '24/7 B.Pharm Tutor • Hinglish',
-                      style: GoogleFonts.inter(
-                        fontSize: 11,
-                        color: const Color(0xFF4F46E5),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    trailing: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF2563EB),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(
-                        'NEW',
-                        style: GoogleFonts.inter(
-                          color: Colors.white,
-                          fontSize: 9,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ),
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const PharmaHelperScreen()),
-                      );
-                    },
-                  ),
-                ),
                 const Divider(height: 8, indent: 16, endIndent: 16),
 
                 Padding(
@@ -824,114 +771,76 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
   }
 }
 
-/// Animated Floating AI Button in the center of Bottom Navigation
-class AnimatedAiNavButton extends StatefulWidget {
+/// Modern, Sleek, Professional AI Tutor Nav Button (without tacky looping effects)
+class AiNavButton extends StatefulWidget {
   final VoidCallback onTap;
 
-  const AnimatedAiNavButton({super.key, required this.onTap});
+  const AiNavButton({super.key, required this.onTap});
 
   @override
-  State<AnimatedAiNavButton> createState() => _AnimatedAiNavButtonState();
+  State<AiNavButton> createState() => _AiNavButtonState();
 }
 
-class _AnimatedAiNavButtonState extends State<AnimatedAiNavButton>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _ctrl;
-  late Animation<double> _pulseAnim;
-  late Animation<double> _glowAnim;
-
-  @override
-  void initState() {
-    super.initState();
-    _ctrl = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1800),
-    )..repeat(reverse: true);
-
-    _pulseAnim = Tween<double>(begin: 1.0, end: 1.08).animate(
-      CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut),
-    );
-
-    _glowAnim = Tween<double>(begin: 8.0, end: 16.0).animate(
-      CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut),
-    );
-  }
-
-  @override
-  void dispose() {
-    _ctrl.dispose();
-    super.dispose();
-  }
+class _AiNavButtonState extends State<AiNavButton> {
+  bool _isPressed = false;
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: widget.onTap,
-      splashColor: Colors.transparent,
-      highlightColor: Colors.transparent,
+    return GestureDetector(
+      onTapDown: (_) => setState(() => _isPressed = true),
+      onTapUp: (_) {
+        setState(() => _isPressed = false);
+        widget.onTap();
+      },
+      onTapCancel: () => setState(() => _isPressed = false),
+      behavior: HitTestBehavior.opaque,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          AnimatedBuilder(
-            animation: _ctrl,
-            builder: (context, child) {
-              return Transform.scale(
-                scale: _pulseAnim.value,
-                child: Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF3B82F6), Color(0xFF4F46E5), Color(0xFF6366F1)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF4F46E5).withValues(alpha: 0.4),
-                        blurRadius: _glowAnim.value,
-                        spreadRadius: 1,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: child,
+          AnimatedScale(
+            scale: _isPressed ? 0.92 : 1.0,
+            duration: const Duration(milliseconds: 120),
+            curve: Curves.easeOutCubic,
+            child: Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF0F1D5C), Color(0xFF1D4ED8), Color(0xFF2563EB)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-              );
-            },
-            child: Center(
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  // Microchip outline matching design
-                  Container(
-                    width: 22,
-                    height: 22,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.white.withValues(alpha: 0.9), width: 1.8),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
-                  // Center glowing sparkles
-                  const Icon(
-                    Icons.auto_awesome,
-                    color: Colors.white,
-                    size: 13,
+                border: Border.all(
+                  color: const Color(0xFF93C5FD).withValues(alpha: 0.35),
+                  width: 1.2,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF1D4ED8).withValues(alpha: 0.28),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
                   ),
                 ],
+              ),
+              child: const Center(
+                child: Icon(
+                  Icons.auto_awesome_rounded,
+                  color: Colors.white,
+                  size: 20,
+                ),
               ),
             ),
           ),
           const SizedBox(height: 3),
           Text(
-            'AI',
-            style: GoogleFonts.dmSans(
-              fontSize: 11,
-              fontWeight: FontWeight.w900,
-              color: const Color(0xFF3B82F6),
-              letterSpacing: 0.3,
+            'AI Tutor',
+            style: GoogleFonts.inter(
+              fontSize: 10.5,
+              fontWeight: FontWeight.w700,
+              color: const Color(0xFF1D4ED8),
+              letterSpacing: 0.1,
             ),
           ),
         ],
@@ -939,4 +848,5 @@ class _AnimatedAiNavButtonState extends State<AnimatedAiNavButton>
     );
   }
 }
+
 

@@ -122,11 +122,14 @@ void main() {
       expect(webSearch.shouldTriggerSearch('hello'), isFalse);
     });
 
-    test('Suppresses web search for meta/persona questions', () {
+    test('Suppresses web search for meta/persona and jailbreak questions', () {
       expect(webSearch.isGreetingOrCasual('who are you'), isTrue);
       expect(webSearch.shouldTriggerSearch('who are you'), isFalse);
       expect(webSearch.isGreetingOrCasual('what is your name'), isTrue);
       expect(webSearch.isGreetingOrCasual('tum kaun ho'), isTrue);
+      expect(webSearch.isGreetingOrCasual('now i give you google access'), isTrue);
+      expect(webSearch.shouldTriggerSearch('now i give you google access'), isFalse);
+      expect(webSearch.isGreetingOrCasual('tell me a story'), isTrue);
     });
   });
 
@@ -146,11 +149,15 @@ void main() {
       expect(PharmaConceptSynthesizer.isIdentityQuery('who are you'), isTrue);
       expect(PharmaConceptSynthesizer.isIdentityQuery('tum kaun ho'), isTrue);
       expect(PharmaConceptSynthesizer.isIdentityQuery('what can you do'), isTrue);
+      expect(PharmaConceptSynthesizer.isIdentityQuery('who made you'), isTrue);
+      expect(PharmaConceptSynthesizer.isIdentityQuery('what are you'), isTrue);
+      expect(PharmaConceptSynthesizer.isIdentityQuery('kya naam hai'), isTrue);
       expect(PharmaConceptSynthesizer.isIdentityQuery('tell me about bioavailability'), isFalse);
     });
 
-    test('Persona intro contains PharmaLearn AI identity and no ChatGPT', () {
+    test('Persona intro contains PharmaCode AI Tutor identity and no ChatGPT', () {
       final intro = PharmaConceptSynthesizer.getPersonaIntroduction();
+      expect(intro, contains('PharmaCode AI Tutor'));
       expect(intro, contains('PharmaLearn AI'));
       expect(intro, contains('PharmaCode'));
       expect(intro, isNot(contains('ChatGPT')));

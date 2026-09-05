@@ -148,6 +148,37 @@ class AiRotationService {
       successfulProvider = 'PharmaCode Academic Engine';
     }
 
+    // Check for generic model refusal or apologies
+    final lowerAnswer = generatedAnswer.trim().toLowerCase();
+    final isGenericRefusal = lowerAnswer.startsWith("i'm sorry") ||
+        lowerAnswer.startsWith("i am sorry") ||
+        lowerAnswer.startsWith("sorry, but") ||
+        lowerAnswer.startsWith("i cannot help") ||
+        lowerAnswer.startsWith("i can't help") ||
+        lowerAnswer.contains("cannot help with that") ||
+        lowerAnswer.contains("unable to help with that") ||
+        lowerAnswer.contains("as an ai language model");
+
+    if (isGenericRefusal) {
+      // Never show search citations on a refusal or apology
+      citations = const [];
+
+      // If user attempted prompt jailbreaks or asked for casual off-topic stories
+      final lowerMsg = userMessage.toLowerCase();
+      if (lowerMsg.contains('story') ||
+          lowerMsg.contains('access') ||
+          lowerMsg.contains('jailbreak') ||
+          lowerMsg.contains('dan mode')) {
+        generatedAnswer = '''Namaste! Main hoon aapka **PharmaCode AI Tutor** (PharmaHelper).
+
+Main strictly **PCI NEP 2020 B.Pharm curriculum**, pharmaceutical sciences, aur exam/career preparation ke liye specially design kiya gaya hoon.
+
+General stories ya off-topic content ke bajaye, main aapko pharmacy ke kisi interesting topic (jaise *Discovery of Penicillin*, *How Aspirin was discovered*, *Receptor-Ligand lock-and-key concept*, ya *Pharmacovigilance Thalidomide tragedy*) ki real scientific story bohot engaging Hinglish me samjha sakta hoon!
+
+Aap pharmacy ka kaunsa topic seekhna chahenge?''';
+      }
+    }
+
     final elapsed = DateTime.now().difference(startTime).inMilliseconds;
     debugPrint('[AiRotationService] Response complete in ${elapsed}ms via $successfulProvider');
 

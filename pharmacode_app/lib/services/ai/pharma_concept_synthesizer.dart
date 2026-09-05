@@ -10,28 +10,28 @@ class PharmaConceptSynthesizer {
   static bool isIdentityQuery(String query) {
     final lower = query.trim().toLowerCase();
     final pattern = RegExp(
-      r'\b(who are you|who r u|what is your name|who made you|who created you|what can you do|what are your features|tum kaun ho|aap kaun ho|kya kar sakte ho|introduce yourself|tell me about yourself|your identity|bot identity)\b',
+      r'\b(who are you|who r u|what is your name|who made you|who created you|what can you do|what are your features|tum kaun ho|aap kaun ho|kya kar sakte ho|introduce yourself|tell me about yourself|your identity|bot identity|who developed you|what are you|apna intro|kya naam hai|are you chatgpt|are you gemini)\b',
       caseSensitive: false,
     );
     return pattern.hasMatch(lower);
   }
 
-  /// Official PharmaLearn AI Persona Introduction
+  /// Official PharmaCode AI Tutor Persona Introduction
   static String getPersonaIntroduction() {
-    return '''### PharmaLearn AI (PharmaCode)
+    return '''### PharmaCode AI Tutor (PharmaHelper / PharmaLearn AI)
 
-Main **PharmaLearn AI** hoon — PharmaCode ka official pharmacy academic mentor aur tutor!
+Main hoon aapka **PharmaCode AI Tutor** (PharmaHelper) — PharmaCode ka dedicated pharmacy academic professor aur mentor!
 
-Mera mission B.Pharm aur allied pharmacy students ko PCI NEP 2020 syllabus ke according padhana, doubts clear karna aur university exams va GPAT/NIPER ke liye prepare karana hai.
+Mera mission B.Pharm aur allied pharmacy students ko strictly **PCI NEP 2020 syllabus (Semesters 1 to 8)** ke according padhana, tough doubts crystal-clear karna aur university exams va GPAT/NIPER ke liye prepare karana hai.
 
-**Main aapki in areas me help kar sakta hoon:**
-- **Core Concepts & Mechanisms**: Pharmacology (Receptors, GPCR, MOA), Pharmaceutics (Formulation, Tablet defects, NDDS), Medicinal Chemistry (SAR), Pharmacognosy aur Biopharmaceutics.
+**Main aapki in areas me full support karta hoon:**
+- **Core Concepts & Mechanisms**: Pharmacology (Receptors, GPCR signaling, Drug Classifications, MOA), Pharmaceutics (Formulation, Tablet defects, NDDS), Medicinal Chemistry (SAR), Pharmacognosy aur Biopharmaceutics.
 - **Formulas & Calculations**: Bioavailability (\$F\$), Pharmacokinetics (\$C_{max}, t_{1/2}, V_d, Cl\$), Henderson-Hasselbalch equation aur Noyes-Whitney dissolution rate.
-- **University Exam Preparation**: 2-Mark, 5-Mark aur 10-Mark questions ka structured format (Definition, Classification, MOA, Clinical Pointers).
+- **University Exam Preparation**: 2-Mark, 5-Mark aur 10-Mark structured exam answers (Definition, Classification, MOA, Clinical pointers).
 - **Pharma Industry Careers**: Pharmacovigilance (ICSR, MedDRA), Regulatory Affairs (eCTD dossiers), aur QA/QC.
-- **Bilingual Hinglish & English**: Kisi bhi complex concept ko easy Hinglish ya formal English me samajhna.
+- **Natural Hinglish & English**: Kisi bhi tough concept ko aasan Hinglish analogy ya formal English me samajhna.
 
-Aap abhi koi bhi question pooch sakte hain, jaise: *"Tell me about bioavailability"*, *"Blood ki definition kya hai?"*, ya *"New drugs names batao"*!''';
+Aap abhi koi bhi question pooch sakte hain, jaise: *"Bioavailability simple Hinglish me samjhao"*, *"Blood ki definition kya hai?"*, ya *"Tablet capping kyu hoti hai?"*!''';
   }
 
   /// Comprehensive concept answer synthesizer

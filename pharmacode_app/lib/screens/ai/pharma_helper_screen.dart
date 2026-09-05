@@ -5,6 +5,8 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/theme.dart';
+import '../../core/ads/ad_service.dart';
+import '../../core/widgets/ad_banner_widget.dart';
 import '../../models/syllabus_models.dart';
 import '../../services/ai/ai_config.dart';
 import '../../services/ai/ai_key_manager.dart';
@@ -39,6 +41,7 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
   PharmaChatMode _selectedMode = PharmaChatMode.tutorHinglish;
   bool _webSearchEnabled = false;
   Subject? _attachedSubject;
+  int _queryCounter = 0;
 
   final List<String> _suggestedPrompts = [
     'Bioavailability simple Hinglish me samjhao',
@@ -184,6 +187,11 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
     _textCtrl.clear();
     FocusScope.of(context).unfocus();
 
+    _queryCounter++;
+    if (_queryCounter % 4 == 0) {
+      AdService.instance.showInterstitialAd();
+    }
+
     final userMsg = ChatMessage(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       content: query,
@@ -289,6 +297,7 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
             ),
           ),
           if (_messages.length <= 1 && !_isLoading) _buildSuggestionsCarousel(),
+          const AdBannerWidget(padding: EdgeInsets.symmetric(vertical: 2)),
           _buildInputBar(),
         ],
       ),
@@ -871,7 +880,11 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _renderFormattedText(msg.content),
-                if (msg.citations.isNotEmpty) ...[
+                if (msg.citations.isNotEmpty &&
+                    !msg.content.toLowerCase().startsWith("i'm sorry") &&
+                    !msg.content.toLowerCase().startsWith("i am sorry") &&
+                    !msg.content.toLowerCase().contains("cannot help with that") &&
+                    msg.content.trim().length >= 60) ...[
                   const SizedBox(height: 14),
                   const Divider(color: Color(0xFFE2E8F0)),
                   Text(
@@ -1253,7 +1266,7 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        h.replaceAll('**', '').replaceAll('*', '').trim(),
+                        h.replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), ' ').replaceAll('**', '').replaceAll('*', '').trim(),
                         style: GoogleFonts.dmSans(
                           fontWeight: FontWeight.w900,
                           fontSize: 13,
@@ -1295,7 +1308,23 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
 
   /// Clean formatted text rendering for markdown without extra heavy packages
   Widget _renderFormattedText(String text) {
-    final lines = text.split('\n');
+    // 0. Pre-process text to convert HTML line breaks (<br>, <br/>, <br />) into newlines
+    // Preserve markdown table rows without breaking table structure
+    final rawLines = text.split('\n');
+    final List<String> lines = [];
+    for (final rawLine in rawLines) {
+      final trimmed = rawLine.trim();
+      if (_isTableRow(trimmed)) {
+        lines.add(rawLine);
+      } else {
+        final normalized = rawLine
+            .replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '\n')
+            .replaceAll(RegExp(r'</p>', caseSensitive: false), '\n')
+            .replaceAll(RegExp(r'<p>', caseSensitive: false), '');
+        lines.addAll(normalized.split('\n'));
+      }
+    }
+
     final List<Widget> children = [];
     bool isFirstItem = true;
 
@@ -1515,8 +1544,11 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
   }
 
   Widget _buildRichInlineText(String text) {
-    // Clean unwanted raw patterns like *"quote"* or "*quote*"
-    String cleaned = text;
+    // Clean unwanted raw patterns like *"quote"* or "*quote*", and convert any leftover <br> to \n
+    String cleaned = text
+        .replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '\n')
+        .replaceAll(RegExp(r'</p>', caseSensitive: false), '\n')
+        .replaceAll(RegExp(r'<p>', caseSensitive: false), '');
     cleaned = cleaned.replaceAll(RegExp(r'\*\"(.*?)\"\*'), '"\$1"');
     cleaned = cleaned.replaceAll(RegExp(r'\"\*(.*?)\*\"'), '"\$1"');
 

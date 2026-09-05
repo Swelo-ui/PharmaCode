@@ -1,4 +1,4 @@
-﻿name: Build & Release PharmaCode Android APK & AAB
+name: Build & Release PharmaCode Android APK & AAB
 
 on:
   push:
@@ -67,11 +67,15 @@ jobs:
         working-directory: pharmacode_app/android
         run: |
           FLUTTER_DIR=$(which flutter | sed 's|/bin/flutter||')
+          VERSION_LINE=$(grep '^version:' ../pubspec.yaml | head -n 1 | awk '{print $2}')
+          VERSION_NAME=$(echo "$VERSION_LINE" | cut -d '+' -f 1)
+          VERSION_CODE=$(echo "$VERSION_LINE" | cut -d '+' -f 2)
+          echo "Extracted Version: $VERSION_NAME+$VERSION_CODE"
           echo "sdk.dir=$ANDROID_HOME" > local.properties
           echo "flutter.sdk=$FLUTTER_DIR" >> local.properties
           echo "flutter.buildMode=release" >> local.properties
-          echo "flutter.versionName=1.0.2" >> local.properties
-          echo "flutter.versionCode=3" >> local.properties
+          echo "flutter.versionName=$VERSION_NAME" >> local.properties
+          echo "flutter.versionCode=$VERSION_CODE" >> local.properties
           cat local.properties
 
       - name: Build Android Release APK & AAB via Gradle
@@ -100,37 +104,44 @@ jobs:
         run: |
           mkdir -p release-assets
           find pharmacode_app/build/app/outputs -name "*.apk" -o -name "*.aab"
-          cp pharmacode_app/build/app/outputs/apk/release/app-release.apk release-assets/PharmaCode-v1.0.2-Universal.apk 2>/dev/null || cp pharmacode_app/build/app/outputs/flutter-apk/app-release.apk release-assets/PharmaCode-v1.0.2-Universal.apk 2>/dev/null || true
-          cp pharmacode_app/build/app/outputs/bundle/release/app-release.aab release-assets/PharmaCode-v1.0.2-Release.aab 2>/dev/null || true
+          cp pharmacode_app/build/app/outputs/apk/release/app-release.apk release-assets/PharmaCode-Universal.apk 2>/dev/null || cp pharmacode_app/build/app/outputs/flutter-apk/app-release.apk release-assets/PharmaCode-Universal.apk 2>/dev/null || true
+          cp pharmacode_app/build/app/outputs/bundle/release/app-release.aab release-assets/PharmaCode-Release.aab 2>/dev/null || true
           ls -la release-assets/
 
       - name: Upload Universal APK
         uses: actions/upload-artifact@v4
         with:
           name: PharmaCode-Release-Universal-APK
-          path: release-assets/PharmaCode-v1.0.2-Universal.apk
+          path: release-assets/PharmaCode-Universal.apk
           if-no-files-found: error
 
       - name: Upload Release AAB (Play Store)
         uses: actions/upload-artifact@v4
         with:
           name: PharmaCode-Release-AAB
-          path: release-assets/PharmaCode-v1.0.2-Release.aab
+          path: release-assets/PharmaCode-Release.aab
           if-no-files-found: error
 
       - name: Create or Update GitHub Release
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v1.0.2
-          name: "PharmaCode v1.0.2 Production Release"
+          tag_name: v1.0.5
+          name: "PharmaCode v1.0.5 (Build 6) Production Release"
           body: |
-            ## PharmaCode v1.0.2 Release
+            ## PharmaCode v1.0.5 Release (Build 6)
             Official signed release artifacts for **PharmaCode — B.Pharm NEP 2020 Companion with PharmaHelper AI Tutor**.
 
+            ### What's New in v1.0.5:
+            - **Web Citations Fix**: Extracted real page titles and clean URLs instead of duplicate search queries.
+            - **Output Formatting**: Fixed `<br>` tags in explanations and tables into clean native line breaks.
+            - **AI Persona Hardening**: Strict PharmaCode AI Tutor identity preservation across queries and jailbreak prompts.
+            - **AI Tutor Ads**: Integrated non-intrusive AdMob banner and frequency-capped interstitial ads.
+            - **Navigation Polish**: Removed duplicate AI item from Drawer; redesigned Center AI Tutor button with sleek, modern UI/UX.
+
             ### Available Downloads:
-            - **Google Play App Bundle**: `PharmaCode-v1.0.2-Release.aab` (Signed with production release keystore for Play Console)
-            - **Universal APK**: `PharmaCode-v1.0.2-Universal.apk` (Install directly on any Android device)
+            - **Google Play App Bundle**: `PharmaCode-Release.aab` (Signed with production release keystore for Play Console)
+            - **Universal APK**: `PharmaCode-Universal.apk` (Install directly on any Android device)
           files: |
             release-assets/*
           draft: false
