@@ -155,11 +155,11 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    width: 28,
-                    height: 28,
-                    margin: const EdgeInsets.only(right: 6),
+                    width: 36,
+                    height: 36,
+                    margin: const EdgeInsets.only(right: 7),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(9),
                       child: Image.asset(
                         'assets/images/app_icon.png',
                         fit: BoxFit.contain,
@@ -175,8 +175,8 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
                           style: GoogleFonts.dmSans(
                             color: AppTheme.primaryNavy,
                             fontWeight: FontWeight.w900,
-                            fontSize: 18,
-                            letterSpacing: -0.4,
+                            fontSize: 22.5,
+                            letterSpacing: -0.5,
                           ),
                         ),
                         TextSpan(
@@ -184,8 +184,8 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
                           style: GoogleFonts.dmSans(
                             color: AppTheme.brandBlue,
                             fontWeight: FontWeight.w900,
-                            fontSize: 18,
-                            letterSpacing: -0.4,
+                            fontSize: 22.5,
+                            letterSpacing: -0.5,
                           ),
                         ),
                       ],
@@ -199,23 +199,23 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
               style: GoogleFonts.dmSans(
                 color: AppTheme.primaryNavy,
                 fontWeight: FontWeight.w900,
-                fontSize: 18,
+                fontSize: 19,
               ),
             ),
       actions: [
         IconButton(
-          constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
-          padding: const EdgeInsets.all(6),
-          icon: const Icon(Icons.search_rounded, size: 21),
+          constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+          padding: const EdgeInsets.all(4),
+          icon: const Icon(Icons.search_rounded, size: 20),
           onPressed: () => showSearch(context: context, delegate: GlobalSearchDelegate()),
           tooltip: 'Search',
         ),
         IconButton(
-          constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
-          padding: const EdgeInsets.all(6),
+          constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+          padding: const EdgeInsets.all(4),
           icon: Icon(
             _currentIndex == 2 ? Icons.file_download_rounded : Icons.file_download_outlined,
-            size: 21,
+            size: 20,
             color: _currentIndex == 2 ? AppTheme.brandBlue : AppTheme.primaryNavy,
           ),
           onPressed: () {
@@ -228,9 +228,9 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
           alignment: Alignment.center,
           children: [
             IconButton(
-              constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
-              padding: const EdgeInsets.all(6),
-              icon: const Icon(Icons.notifications_outlined, size: 21),
+              constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+              padding: const EdgeInsets.all(4),
+              icon: const Icon(Icons.notifications_outlined, size: 20),
               onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const NotificationsScreen()),
@@ -239,8 +239,8 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
             ),
             if (unreadCount > 0)
               Positioned(
-                top: 5,
-                right: 5,
+                top: 3,
+                right: 3,
                 child: Container(
                   width: 14,
                   height: 14,
@@ -258,7 +258,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
           GestureDetector(
             onTap: _onProfileButtonTapped,
             child: Container(
-              margin: const EdgeInsets.only(right: 8, left: 2),
+              margin: const EdgeInsets.only(right: 4, left: 2),
               padding: const EdgeInsets.all(1.5),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
@@ -268,19 +268,19 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
                 avatarKey: avatarKey,
                 photoUrl: photoUrl,
                 name: displayName,
-                size: 26,
+                size: 25,
                 showOnlineDot: true,
               ),
             ),
           )
         else
           IconButton(
-            constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
-            padding: const EdgeInsets.all(6),
+            constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+            padding: const EdgeInsets.all(4),
             icon: const Icon(
               Icons.account_circle_outlined,
               color: AppTheme.primaryNavy,
-              size: 22,
+              size: 21,
             ),
             onPressed: _onProfileButtonTapped,
             tooltip: 'Sign In',

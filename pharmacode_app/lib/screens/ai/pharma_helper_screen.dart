@@ -1121,14 +1121,18 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                       border: Border.all(color: const Color(0xFFE2E8F0)),
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          AiConfig.providers[entry.key]?.displayName ?? entry.key.name,
-                          style: GoogleFonts.inter(fontSize: 12.5, fontWeight: FontWeight.w600),
+                        Expanded(
+                          child: Text(
+                            AiConfig.providers[entry.key]?.displayName ?? entry.key.name,
+                            style: GoogleFonts.inter(fontSize: 12.5, fontWeight: FontWeight.w600),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
+                        const SizedBox(width: 8),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                           decoration: BoxDecoration(
                             color: entry.value.contains('Online') || entry.value.contains('Active')
                                 ? const Color(0xFFDCFCE7)
@@ -1167,7 +1171,9 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                 TextField(
                   controller: groqCtrl,
                   decoration: InputDecoration(
-                    labelText: 'Groq Cloud API Key (Free at console.groq.com)',
+                    labelText: 'Groq Cloud API Key',
+                    helperText: 'Free at console.groq.com (No card needed)',
+                    helperStyle: GoogleFonts.inter(fontSize: 10.5, color: const Color(0xFF64748B)),
                     hintText: 'gsk_...',
                     isDense: true,
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
@@ -1177,7 +1183,9 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                 TextField(
                   controller: geminiCtrl,
                   decoration: InputDecoration(
-                    labelText: 'Google Gemini API Key (Free at aistudio.google.com)',
+                    labelText: 'Google Gemini API Key',
+                    helperText: 'Free at aistudio.google.com (No card needed)',
+                    helperStyle: GoogleFonts.inter(fontSize: 10.5, color: const Color(0xFF64748B)),
                     hintText: 'AIzaSy...',
                     isDense: true,
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
@@ -1187,7 +1195,9 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                 TextField(
                   controller: openRouterCtrl,
                   decoration: InputDecoration(
-                    labelText: 'OpenRouter API Key (Free at openrouter.ai)',
+                    labelText: 'OpenRouter API Key',
+                    helperText: 'Free tier at openrouter.ai/keys',
+                    helperStyle: GoogleFonts.inter(fontSize: 10.5, color: const Color(0xFF64748B)),
                     hintText: 'sk-or-v1-...',
                     isDense: true,
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),

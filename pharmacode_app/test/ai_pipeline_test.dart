@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pharmacode_app/services/ai/ai_config.dart';
 import 'package:pharmacode_app/services/ai/ai_key_manager.dart';
+import 'package:pharmacode_app/services/ai/pharma_concept_synthesizer.dart';
 import 'package:pharmacode_app/services/ai/pharma_knowledge_service.dart';
 import 'package:pharmacode_app/services/ai/pharma_prompt_templates.dart';
 import 'package:pharmacode_app/services/ai/web_search_service.dart';
@@ -48,8 +49,9 @@ void main() {
     test('Zero-key providers report online', () {
       final statuses = keyManager.getProviderStatuses();
       expect(statuses.containsKey(AiProvider.groq), isTrue);
-      expect(statuses[AiProvider.ovhcloud], contains('Online'));
-      expect(statuses[AiProvider.pollinations], contains('Online'));
+      expect(statuses[AiProvider.ovhcloud], equals('Online'));
+      expect(statuses[AiProvider.pollinations], equals('Online'));
+      expect(statuses[AiProvider.groq], equals('Add Key'));
     });
 
     test('Custom key handling works seamlessly', () async {
@@ -99,6 +101,13 @@ void main() {
       expect(webSearch.shouldTriggerSearch('hi'), isFalse);
       expect(webSearch.shouldTriggerSearch('hello'), isFalse);
     });
+
+    test('Suppresses web search for meta/persona questions', () {
+      expect(webSearch.isGreetingOrCasual('who are you'), isTrue);
+      expect(webSearch.shouldTriggerSearch('who are you'), isFalse);
+      expect(webSearch.isGreetingOrCasual('what is your name'), isTrue);
+      expect(webSearch.isGreetingOrCasual('tum kaun ho'), isTrue);
+    });
   });
 
   group('Pharma Knowledge Service (RAG)', () {
@@ -109,6 +118,42 @@ void main() {
       final formatted = knowledgeService.formatForPrompt(ctx);
       expect(formatted, isNotEmpty);
       expect(formatted.toLowerCase(), contains('pharmacode'));
+    });
+  });
+
+  group('Pharma Concept Synthesizer & Answering Engine', () {
+    test('Correctly identifies identity queries', () {
+      expect(PharmaConceptSynthesizer.isIdentityQuery('who are you'), isTrue);
+      expect(PharmaConceptSynthesizer.isIdentityQuery('tum kaun ho'), isTrue);
+      expect(PharmaConceptSynthesizer.isIdentityQuery('what can you do'), isTrue);
+      expect(PharmaConceptSynthesizer.isIdentityQuery('tell me about bioavailability'), isFalse);
+    });
+
+    test('Persona intro contains PharmaLearn AI identity and no ChatGPT', () {
+      final intro = PharmaConceptSynthesizer.getPersonaIntroduction();
+      expect(intro, contains('PharmaLearn AI'));
+      expect(intro, contains('PharmaCode'));
+      expect(intro, isNot(contains('ChatGPT')));
+      expect(intro, isNot(contains('OpenAI')));
+    });
+
+    test('Bioavailability answer provides full academic explanation with formulas and suggestions', () async {
+      final knowledgeService = PharmaKnowledgeService();
+      final ctx = await knowledgeService.retrieveContext('Bioavailability');
+
+      final answer = PharmaConceptSynthesizer.synthesizeAnswer(
+        query: 'tell me about bioavailability',
+        mode: PharmaChatMode.tutorHinglish,
+        ctx: ctx,
+      );
+
+      // Must actually answer the question with academic depth
+      expect(answer, contains('rate and extent'));
+      expect(answer, contains('Absolute Bioavailability'));
+      expect(answer, contains('AUC'));
+      expect(answer, contains('First-Pass'));
+      expect(answer, contains('Bioequivalence'));
+      expect(answer, contains('Suggested In-App Syllabus & Study Links:'));
     });
   });
 }

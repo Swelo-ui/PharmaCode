@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'ai_config.dart';
 import 'ai_key_manager.dart';
+import 'pharma_concept_synthesizer.dart';
 import 'pharma_knowledge_service.dart';
 import 'pharma_prompt_templates.dart';
 import 'web_search_service.dart';
@@ -42,6 +43,18 @@ class AiRotationService {
     bool forceWebSearch = false,
   }) async {
     final startTime = DateTime.now();
+
+    // 0. Intercept assistant identity questions immediately (0ms latency, 100% accurate persona)
+    if (PharmaConceptSynthesizer.isIdentityQuery(userMessage)) {
+      return ChatMessage(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        content: PharmaConceptSynthesizer.getPersonaIntroduction(),
+        isUser: false,
+        timestamp: DateTime.now(),
+        providerUsed: 'PharmaLearn AI',
+        citations: const [],
+      );
+    }
 
     // 1. Gather in-app context (Syllabus, Blogs, FAQs)
     final knowledgeCtx = await _knowledgeService.retrieveContext(userMessage);
@@ -124,7 +137,7 @@ class AiRotationService {
     // Final safety fallback if all networks faced harsh timeouts
     if (generatedAnswer == null || generatedAnswer.isEmpty) {
       generatedAnswer = _generateLocalSafetyResponse(userMessage, knowledgeCtx, mode);
-      successfulProvider = 'PharmaCode Local Engine';
+      successfulProvider = 'PharmaCode Academic Engine';
     }
 
     final elapsed = DateTime.now().difference(startTime).inMilliseconds;
@@ -265,7 +278,11 @@ class AiRotationService {
 
       if (res.statusCode == 200) {
         final text = utf8.decode(res.bodyBytes).trim();
-        if (text.isNotEmpty && !text.startsWith('{') && !text.contains('"error"')) {
+        if (text.isNotEmpty &&
+            !text.startsWith('{') &&
+            !text.contains('"error"') &&
+            !text.contains('OpenAI') &&
+            !text.contains("ChatGPT")) {
           return text;
         }
       }
@@ -299,39 +316,16 @@ class AiRotationService {
     return result;
   }
 
-  /// Local intelligent response if user is completely offline without internet
+  /// Local intelligent academic response
   String _generateLocalSafetyResponse(
     String query,
     PharmaKnowledgeContext ctx,
     PharmaChatMode mode,
   ) {
-    final buffer = StringBuffer();
-    buffer.writeln('### PharmaHelper (Offline Study Guide)\n');
-    buffer.writeln('Main abhi aapke device ke offline database se information retrieve kar raha hoon:\n');
-
-    if (!ctx.isEmpty) {
-      if (ctx.syllabusMatches.isNotEmpty) {
-        buffer.writeln('**Aapke B.Pharm NEP 2020 Syllabus me yeh topic yahan hai:**');
-        for (final s in ctx.syllabusMatches) {
-          buffer.writeln('$s\n');
-        }
-      }
-      if (ctx.blogMatches.isNotEmpty) {
-        buffer.writeln('**PharmaCode Career & Study Kits:**');
-        for (final b in ctx.blogMatches) {
-          buffer.writeln('$b\n');
-        }
-      }
-      if (ctx.faqMatches.isNotEmpty) {
-        buffer.writeln('**Related Q&A:**');
-        for (final f in ctx.faqMatches) {
-          buffer.writeln('$f\n');
-        }
-      }
-    } else {
-      buffer.writeln('Aapka question study material me match hua hai! Detailed AI explanation ke liye kripya internet connection check karein ya AI Settings se apna custom Groq/Gemini key connect karein.');
-    }
-
-    return buffer.toString();
+    return PharmaConceptSynthesizer.synthesizeAnswer(
+      query: query,
+      mode: mode,
+      ctx: ctx,
+    );
   }
 }

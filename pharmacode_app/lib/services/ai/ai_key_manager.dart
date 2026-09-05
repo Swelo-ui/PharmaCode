@@ -179,10 +179,8 @@ class AiKeyManager {
   Map<AiProvider, String> getProviderStatuses() {
     final Map<AiProvider, String> result = {};
     for (final p in AiProvider.values) {
-      if (p == AiProvider.ovhcloud) {
-        result[p] = 'Online (Zero-Key Kepler)';
-      } else if (p == AiProvider.pollinations) {
-        result[p] = 'Online (Zero-Key Backup)';
+      if (p == AiProvider.ovhcloud || p == AiProvider.pollinations) {
+        result[p] = 'Online';
       } else {
         final hasCustom = getCustomKey(p) != null && getCustomKey(p)!.isNotEmpty;
         final health = _providerHealth[p];
@@ -191,10 +189,10 @@ class AiKeyManager {
             final sec = health.cooldownUntil!.difference(DateTime.now()).inSeconds;
             result[p] = 'Cooldown (${sec}s)';
           } else {
-            result[p] = 'Active (Custom Key)';
+            result[p] = 'Active';
           }
         } else {
-          result[p] = 'Ready (Tap to add Key)';
+          result[p] = 'Add Key';
         }
       }
     }

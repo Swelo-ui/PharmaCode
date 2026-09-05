@@ -19,7 +19,7 @@ class WebSearchService {
   factory WebSearchService() => _instance;
   WebSearchService._internal();
 
-  /// Check if query is a greeting or casual chat
+  /// Check if query is a greeting, casual chat, or bot identity question
   bool isGreetingOrCasual(String query) {
     final lower = query.trim().toLowerCase();
     if (lower.length < 5) return true;
@@ -27,7 +27,13 @@ class WebSearchService {
       r'^(hi|hello|hey|namaste|hlo|heya|hola|kaise ho|kese ho|good morning|good evening|good afternoon|test|ok|okay|bye|thanks|thank you)\b',
       caseSensitive: false,
     );
-    return greetings.hasMatch(lower);
+    if (greetings.hasMatch(lower)) return true;
+
+    final metaQuestions = RegExp(
+      r'^(who are you|who r u|what is your name|who made you|who created you|what can you do|what are your features|tum kaun ho|aap kaun ho|kya kar sakte ho|tell me about yourself|introduce yourself|help|menu)\b',
+      caseSensitive: false,
+    );
+    return metaQuestions.hasMatch(lower);
   }
 
   /// Check if query likely needs live web search
@@ -49,7 +55,7 @@ class WebSearchService {
       'trending',
       'new drug',
       'approved in',
-      'who update',
+      'world health organization update',
       'search web',
     ];
     return triggers.any((t) => lower.contains(t));
@@ -58,6 +64,13 @@ class WebSearchService {
   /// Check if result is relevant to medical/pharmaceutical context or query
   bool _isRelevantResult(String title, String snippet, String query) {
     final combined = '$title $snippet'.toLowerCase();
+
+    // Reject obvious music/entertainment false positives
+    final blacklistedEntertainment = ['album', 'lyrics', 'the who', 'song', 'billboard', 'tracklist'];
+    if (blacklistedEntertainment.any((b) => combined.contains(b))) {
+      return false;
+    }
+
     final queryTokens = query.toLowerCase().split(RegExp(r'\s+')).where((t) => t.length > 2);
 
     // Matches any query keyword
@@ -84,7 +97,8 @@ class WebSearchService {
       'patient',
       'trial',
       'guideline',
-      'who',
+      'world health organization',
+      'who guideline',
     ];
     final hasPharmaRelevance = pharmaTerms.any((p) => combined.contains(p));
 
