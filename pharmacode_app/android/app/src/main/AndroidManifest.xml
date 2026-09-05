@@ -57,14 +57,6 @@
             android:name="com.google.android.gms.ads.DELAY_APP_MEASUREMENT_INIT"
             android:value="true" />
 
-        <!-- FCM: Ensures high-priority messages wake the app even when killed -->
-        <service
-            android:name="com.google.firebase.messaging.FirebaseMessagingService"
-            android:exported="false">
-            <intent-filter android:priority="1">
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
 
         <!-- Scheduled Notifications (fires even when app is killed/offline/after reboot) -->
         <receiver
