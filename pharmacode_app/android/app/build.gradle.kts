@@ -19,15 +19,30 @@ android {
     defaultConfig {
         applicationId = "com.pharmacode.bpharm"
         minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        targetSdk = 35
         versionCode = flutter.versionCode
         versionName = flutter.versionName
         multiDexEnabled = true
     }
 
+    val keystorePropertiesFile = rootProject.file("key.properties")
+    val keystoreProperties = java.util.Properties()
+    if (keystorePropertiesFile.exists()) {
+        keystorePropertiesFile.inputStream().use { keystoreProperties.load(it) }
+    }
+
+    signingConfigs {
+        create("release") {
+            keyAlias = keystoreProperties.getProperty("keyAlias") ?: "pharmacode"
+            keyPassword = keystoreProperties.getProperty("keyPassword") ?: "pharmacode2026"
+            storeFile = rootProject.file("upload-keystore.jks")
+            storePassword = keystoreProperties.getProperty("storePassword") ?: "pharmacode2026"
+        }
+    }
+
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             isShrinkResources = false
         }

@@ -1,4 +1,4 @@
-name: Build & Release PharmaCode Android APK
+﻿name: Build & Release PharmaCode Android APK & AAB
 
 on:
   push:
@@ -8,9 +8,12 @@ on:
       - '.github/workflows/build-apk.yml'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
-    name: Build Android Release APK
+    name: Build Signed Android Release APK & AAB
     runs-on: ubuntu-latest
 
     steps:
@@ -23,6 +26,14 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           cache: 'gradle'
+
+      - name: Setup Android SDK 37 & Licenses
+        run: |
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-37.0" "platforms;android-37" || true
+          if [ -d "$ANDROID_HOME/platforms/android-37.0" ] && [ ! -d "$ANDROID_HOME/platforms/android-37" ]; then
+            ln -s "$ANDROID_HOME/platforms/android-37.0" "$ANDROID_HOME/platforms/android-37"
+          fi
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -50,16 +61,58 @@ jobs:
           flutter build apk --release
           flutter build apk --release --split-per-abi
 
+      - name: Build Android App Bundle (AAB for Google Play Console)
+        working-directory: pharmacode_app
+        run: |
+          flutter build appbundle --release
+
+      - name: Prepare Release Artifacts
+        run: |
+          mkdir -p release-assets
+          cp pharmacode_app/build/app/outputs/flutter-apk/app-release.apk release-assets/PharmaCode-v1.0.2-Universal.apk
+          cp pharmacode_app/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk release-assets/PharmaCode-v1.0.2-arm64.apk 2>/dev/null || true
+          cp pharmacode_app/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk release-assets/PharmaCode-v1.0.2-armv7.apk 2>/dev/null || true
+          cp pharmacode_app/build/app/outputs/bundle/release/app-release.aab release-assets/PharmaCode-v1.0.2-Release.aab 2>/dev/null || true
+          ls -la release-assets/
+
       - name: Upload Universal APK
         uses: actions/upload-artifact@v4
         with:
           name: PharmaCode-Release-Universal-APK
-          path: pharmacode_app/build/app/outputs/flutter-apk/app-release.apk
+          path: release-assets/PharmaCode-v1.0.2-Universal.apk
           if-no-files-found: error
 
-      - name: Upload Split ABIs (ARM64 & ARMv7)
+      - name: Upload Split APKs (ARM64 & ARMv7)
         uses: actions/upload-artifact@v4
         with:
           name: PharmaCode-Split-APKs
-          path: pharmacode_app/build/app/outputs/flutter-apk/app-*-release.apk
+          path: release-assets/PharmaCode-v1.0.2-arm*.apk
           if-no-files-found: warn
+
+      - name: Upload Release AAB (Play Store)
+        uses: actions/upload-artifact@v4
+        with:
+          name: PharmaCode-Release-AAB
+          path: release-assets/PharmaCode-v1.0.2-Release.aab
+          if-no-files-found: error
+
+      - name: Create or Update GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        with:
+          tag_name: v1.0.2
+          name: "PharmaCode v1.0.2 Production Release"
+          body: |
+            ## PharmaCode v1.0.2 Release
+            Official signed release artifacts for **PharmaCode — B.Pharm NEP 2020 Companion with PharmaHelper AI Tutor**.
+
+            ### Available Downloads:
+            - **Google Play App Bundle**: `PharmaCode-v1.0.2-Release.aab` (Signed with release keystore for Play Console)
+            - **Universal APK**: `PharmaCode-v1.0.2-Universal.apk` (Install directly on any Android device)
+            - **ARM64 APK**: `PharmaCode-v1.0.2-arm64.apk` (Fast & lightweight for modern 64-bit phones)
+          files: |
+            release-assets/*
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
