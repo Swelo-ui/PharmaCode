@@ -3,14 +3,14 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
 import { absUrl } from "@/lib/site";
-import { ShieldCheck, Lock, EyeOff, FileText } from "lucide-react";
+import { ShieldCheck, Lock, EyeOff, FileText, Smartphone, Trash2, Mail } from "lucide-react";
 
 export const metadata: Metadata = {
     title: "Privacy Policy — PharmaCode",
     description:
-        "PharmaCode Privacy Policy — transparent information on data protection, zero registration policy, and analytics.",
+        "PharmaCode Privacy Policy — transparent information on data protection, zero registration policy, Google Play Data Safety, and analytics.",
     alternates: { canonical: absUrl("/privacy-policy/") },
-    keywords: ["PharmaCode privacy policy", "data protection B.Pharm platform"],
+    keywords: ["PharmaCode privacy policy", "data protection B.Pharm platform", "Google Play Data Safety"],
     openGraph: {
         title: "Privacy Policy — PharmaCode",
         description: "Zero registration required. Completely free access to B.Pharm notes.",
@@ -37,16 +37,16 @@ export default function PrivacyPolicyPage() {
                     </div>
                     <div>
                         <h1 className="font-display text-[22px] sm:text-[30px] font-black text-[#1A2B6B] leading-tight">
-                            Privacy Policy
+                            Privacy Policy &amp; Google Play Data Safety
                         </h1>
                         <p className="font-[DM_Sans] text-[11.5px] sm:text-[12px] text-[#9CA3AF]">
-                            Last updated: August 2026
+                            Effective Date: September 2026 | Application: PharmaCode (com.pharmacode.bpharm)
                         </p>
                     </div>
                 </div>
 
                 <p className="font-[DM_Sans] text-[13px] sm:text-[14px] text-[#4B5563] leading-relaxed mb-6">
-                    At PharmaCode, we believe that educational resources should be openly accessible without harvesting personal data. This Privacy Policy outlines how we treat information on our website.
+                    PharmaCode (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) provides educational pharmaceutical reference materials, PCI B.Pharm curriculum guides, and the PharmaHelper AI study tutor. This Privacy Policy details our privacy practices for both the <strong>PharmaCode Website</strong> (https://pharmacode.vercel.app) and the <strong>PharmaCode Android Mobile Application</strong>.
                 </p>
 
                 <div className="space-y-5 sm:space-y-6 border-t border-[#F0F4FF] pt-5 sm:pt-6">
@@ -56,38 +56,78 @@ export default function PrivacyPolicyPage() {
                         </div>
                         <div>
                             <h2 className="font-display text-[15px] sm:text-[16px] font-bold text-[#1A2B6B] mb-1">
-                                1. Zero Account Registration &amp; No Paywalls
+                                1. Information Collection &amp; Zero Mandatory Accounts
                             </h2>
                             <p className="font-[DM_Sans] text-[12.5px] sm:text-[13px] text-[#6B7FA3] leading-relaxed">
-                                We do not require users to register, log in, or provide personal details such as names, phone numbers, or passwords to view syllabus guides or download PDF notes.
+                                We do not require students to create accounts, provide passwords, or submit phone numbers to access syllabus guides, view subject notes, or download PDF study materials. You can use all core features completely anonymously.
                             </p>
                         </div>
                     </section>
 
                     <section className="flex items-start gap-3 sm:gap-4">
                         <div className="p-2 sm:p-2.5 rounded-[10px] bg-[#EFF6FF] text-[#1D4ED8] shrink-0 mt-0.5">
-                            <EyeOff size={18} />
+                            <Smartphone size={18} />
                         </div>
                         <div>
                             <h2 className="font-display text-[15px] sm:text-[16px] font-bold text-[#1A2B6B] mb-1">
-                                2. Anonymized Analytics
+                                2. Mobile App Permissions &amp; Third-Party Services
                             </h2>
-                            <p className="font-[DM_Sans] text-[12.5px] sm:text-[13px] text-[#6B7FA3] leading-relaxed">
-                                We use privacy-friendly site analytics to understand total page views and popular subjects across semesters. This data is fully aggregated and anonymized, without personal identifier tracking or invasive advertising cookies.
+                            <p className="font-[DM_Sans] text-[12.5px] sm:text-[13px] text-[#6B7FA3] leading-relaxed mb-2">
+                                The PharmaCode Android application uses standard permissions strictly required for educational delivery:
                             </p>
+                            <ul className="list-disc pl-5 font-[DM_Sans] text-[12px] sm:text-[12.5px] text-[#6B7FA3] space-y-1">
+                                <li><strong>INTERNET &amp; ACCESS_NETWORK_STATE</strong>: Used to fetch live curriculum notes, syllabus updates, and query the PharmaHelper AI API.</li>
+                                <li><strong>POST_NOTIFICATIONS</strong>: Used optionally to send daily pharmaceutical revision reminders and exam alerts.</li>
+                                <li><strong>Google Mobile Ads (AdMob)</strong>: May display non-personalized or contextual ads to keep notes completely free. AdMob may process advertising IDs in compliance with Google Play Developer Program Policies.</li>
+                                <li><strong>Firebase Cloud Messaging &amp; Analytics</strong>: Used to deliver syllabus notifications and track aggregated app stability and crashes.</li>
+                            </ul>
                         </div>
                     </section>
 
                     <section className="flex items-start gap-3 sm:gap-4">
                         <div className="p-2 sm:p-2.5 rounded-[10px] bg-[#FAF5FF] text-[#6B21A8] shrink-0 mt-0.5">
-                            <FileText size={18} />
+                            <EyeOff size={18} />
                         </div>
                         <div>
                             <h2 className="font-display text-[15px] sm:text-[16px] font-bold text-[#1A2B6B] mb-1">
-                                3. Direct PDF Downloads
+                                3. PharmaHelper AI Tutor Interactions
                             </h2>
                             <p className="font-[DM_Sans] text-[12.5px] sm:text-[13px] text-[#6B7FA3] leading-relaxed">
-                                All PDF downloads are delivered directly through fast content delivery networks (CDNs). We do not install third-party trackers inside PDF files or inject unwanted popups.
+                                Chat prompts sent to PharmaHelper are transmitted securely via TLS encryption to state-of-the-art inference engines (Groq, Google Gemini, NVIDIA NIM) solely to synthesize academic answers. We do not sell your academic prompts, and chat histories are stored locally on your device in secure sandbox storage.
+                            </p>
+                        </div>
+                    </section>
+
+                    <section className="flex items-start gap-3 sm:gap-4">
+                        <div className="p-2 sm:p-2.5 rounded-[10px] bg-[#FEF2F2] text-[#991B1B] shrink-0 mt-0.5">
+                            <Trash2 size={18} />
+                        </div>
+                        <div>
+                            <h2 className="font-display text-[15px] sm:text-[16px] font-bold text-[#1A2B6B] mb-1">
+                                4. Data Retention &amp; Data Deletion Policy
+                            </h2>
+                            <p className="font-[DM_Sans] text-[12.5px] sm:text-[13px] text-[#6B7FA3] leading-relaxed mb-2">
+                                In compliance with Google Play User Data policies:
+                            </p>
+                            <p className="font-[DM_Sans] text-[12.5px] sm:text-[13px] text-[#6B7FA3] leading-relaxed">
+                                All local chat history, bookmarks, and saved API keys can be deleted immediately by clearing app storage in your Android device settings or by uninstalling the application. To request deletion of any support correspondence or analytics logs, please contact us at the developer address below.
+                            </p>
+                        </div>
+                    </section>
+
+                    <section className="flex items-start gap-3 sm:gap-4">
+                        <div className="p-2 sm:p-2.5 rounded-[10px] bg-[#FFFBEB] text-[#92400E] shrink-0 mt-0.5">
+                            <Mail size={18} />
+                        </div>
+                        <div>
+                            <h2 className="font-display text-[15px] sm:text-[16px] font-bold text-[#1A2B6B] mb-1">
+                                5. Developer Contact &amp; Grievances
+                            </h2>
+                            <p className="font-[DM_Sans] text-[12.5px] sm:text-[13px] text-[#6B7FA3] leading-relaxed">
+                                For any questions regarding this Privacy Policy or Google Play compliance, reach out directly:<br />
+                                <strong>Email:</strong> sweloui.contact@gmail.com<br />
+                                <strong>Website:</strong> https://pharmacode.vercel.app<br />
+                                <strong>Developer:</strong> Swelo-UI / PharmaCode Team
                             </p>
                         </div>
                     </section>

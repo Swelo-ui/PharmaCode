@@ -708,25 +708,26 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
       top: false,
       bottom: true,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         decoration: BoxDecoration(
           color: Colors.white,
-          border: const Border(top: BorderSide(color: Color(0xFFE2E8F0))),
+          border: const Border(top: BorderSide(color: Color(0xFFE2E8F0), width: 0.8)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 8,
+              color: Colors.black.withValues(alpha: 0.02),
+              blurRadius: 6,
               offset: const Offset(0, -2),
             ),
           ],
         ),
         child: Container(
+          constraints: const BoxConstraints(minHeight: 40),
           decoration: BoxDecoration(
-            color: const Color(0xFFF1F5F9),
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: const Color(0xFFE2E8F0)),
+            color: const Color(0xFFF8FAFC),
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(color: const Color(0xFFE2E8F0), width: 0.9),
           ),
-          padding: const EdgeInsets.only(left: 4, right: 6, top: 3, bottom: 3),
+          padding: const EdgeInsets.only(left: 4, right: 4, top: 1, bottom: 1),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -734,7 +735,7 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
               Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(18),
                   onTap: () {
                     setState(() {
                       _webSearchEnabled = !_webSearchEnabled;
@@ -751,20 +752,20 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                     );
                   },
                   child: Container(
-                    padding: const EdgeInsets.all(6),
+                    padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
                       color: _webSearchEnabled ? const Color(0xFFCCFBF1) : Colors.transparent,
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
                       Icons.language_rounded,
-                      size: 20,
+                      size: 18,
                       color: _webSearchEnabled ? const Color(0xFF0D9488) : const Color(0xFF94A3B8),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(width: 4),
+              const SizedBox(width: 2),
               Expanded(
                 child: TextField(
                   controller: _textCtrl,
@@ -772,22 +773,22 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                   maxLines: 4,
                   textInputAction: TextInputAction.send,
                   onSubmitted: _handleSendMessage,
-                  style: GoogleFonts.inter(fontSize: 14, color: const Color(0xFF0F172A)),
+                  style: GoogleFonts.inter(fontSize: 13.5, color: const Color(0xFF0F172A)),
                   decoration: InputDecoration(
-                    hintText: 'Ask PharmaHelper in Hinglish or English...',
-                    hintStyle: GoogleFonts.inter(color: const Color(0xFF94A3B8), fontSize: 13),
+                    hintText: 'Ask PharmaHelper (Hinglish/English)...',
+                    hintStyle: GoogleFonts.inter(color: const Color(0xFF94A3B8), fontSize: 12.5),
                     border: InputBorder.none,
                     isDense: true,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
                   ),
                 ),
               ),
               const SizedBox(width: 4),
               Container(
-                width: 34,
-                height: 34,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
+                width: 30,
+                height: 30,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
                     colors: [Color(0xFF1E3A8A), Color(0xFF2563EB)],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -798,11 +799,11 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                   padding: EdgeInsets.zero,
                   icon: _isLoading
                       ? const SizedBox(
-                          width: 14,
-                          height: 14,
+                          width: 12,
+                          height: 12,
                           child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                         )
-                      : const Icon(Icons.arrow_upward_rounded, color: Colors.white, size: 18),
+                      : const Icon(Icons.arrow_upward_rounded, color: Colors.white, size: 16),
                   onPressed: _isLoading ? null : () => _handleSendMessage(_textCtrl.text),
                 ),
               ),
@@ -817,21 +818,58 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
   Widget _renderFormattedText(String text) {
     final lines = text.split('\n');
     final List<Widget> children = [];
+    bool isFirstItem = true;
 
-    for (final line in lines) {
-      final trimmed = line.trim();
+    for (int i = 0; i < lines.length; i++) {
+      final trimmed = lines[i].trim();
 
       if (trimmed.isEmpty) {
-        children.add(const SizedBox(height: 6));
+        if (!isFirstItem) {
+          children.add(const SizedBox(height: 5));
+        }
         continue;
       }
 
-      if (trimmed.startsWith('### ')) {
+      // 1. Divider handling (---, ***, ___)
+      if (trimmed == '---' || trimmed == '***' || trimmed == '___' || (trimmed.startsWith('---') && trimmed.length <= 5)) {
+        if (!isFirstItem && children.isNotEmpty) {
+          children.add(
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 6),
+              child: Divider(height: 1, thickness: 0.8, color: Color(0xFFE2E8F0)),
+            ),
+          );
+        }
+        continue;
+      }
+
+      isFirstItem = false;
+
+      // 2. Headings
+      if (trimmed.startsWith('#### ') || trimmed.startsWith('##### ')) {
+        final rawTitle = trimmed.substring(trimmed.indexOf(' ') + 1);
+        final title = rawTitle.replaceAll('**', '').replaceAll('*', '').trim();
+        children.add(
+          Padding(
+            padding: const EdgeInsets.only(top: 8, bottom: 3),
+            child: Text(
+              title,
+              style: GoogleFonts.dmSans(
+                fontSize: 14.5,
+                fontWeight: FontWeight.w800,
+                color: AppTheme.primaryNavy,
+              ),
+            ),
+          ),
+        );
+      } else if (trimmed.startsWith('### ')) {
+        final rawTitle = trimmed.substring(4);
+        final title = rawTitle.replaceAll('**', '').replaceAll('*', '').trim();
         children.add(
           Padding(
             padding: const EdgeInsets.only(top: 8, bottom: 4),
             child: Text(
-              trimmed.substring(4),
+              title,
               style: GoogleFonts.dmSans(
                 fontSize: 15.5,
                 fontWeight: FontWeight.w800,
@@ -841,11 +879,13 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
           ),
         );
       } else if (trimmed.startsWith('## ')) {
+        final rawTitle = trimmed.substring(3);
+        final title = rawTitle.replaceAll('**', '').replaceAll('*', '').trim();
         children.add(
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 4),
             child: Text(
-              trimmed.substring(3),
+              title,
               style: GoogleFonts.dmSans(
                 fontSize: 17,
                 fontWeight: FontWeight.w900,
@@ -855,11 +895,13 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
           ),
         );
       } else if (trimmed.startsWith('# ')) {
+        final rawTitle = trimmed.substring(2);
+        final title = rawTitle.replaceAll('**', '').replaceAll('*', '').trim();
         children.add(
           Padding(
             padding: const EdgeInsets.only(top: 12, bottom: 6),
             child: Text(
-              trimmed.substring(2),
+              title,
               style: GoogleFonts.dmSans(
                 fontSize: 19,
                 fontWeight: FontWeight.w900,
@@ -935,6 +977,19 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
     String cleaned = text;
     cleaned = cleaned.replaceAll(RegExp(r'\*\"(.*?)\"\*'), '"\$1"');
     cleaned = cleaned.replaceAll(RegExp(r'\"\*(.*?)\*\"'), '"\$1"');
+
+    // If entire line is wrapped in bold: **Heading text**
+    if (cleaned.startsWith('**') && cleaned.endsWith('**') && cleaned.length > 4 && !cleaned.substring(2, cleaned.length - 2).contains('**')) {
+      return Text(
+        cleaned.substring(2, cleaned.length - 2),
+        style: GoogleFonts.inter(
+          fontSize: 14,
+          height: 1.45,
+          fontWeight: FontWeight.w800,
+          color: const Color(0xFF0F172A),
+        ),
+      );
+    }
 
     // Tokenise markdown spans: bold (**...**), italic (*...* or _..._), code (`...`)
     final regex = RegExp(r'(\*\*[^*]+?\*\*|\*[^*\s][^*]*?\*|`[^`]+?`|_[^_\s][^_]*?_)');
