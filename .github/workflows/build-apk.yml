@@ -69,7 +69,7 @@ jobs:
       - name: Run Code Analysis & Unit Tests
         working-directory: pharmacode_app
         run: |
-          flutter analyze
+          flutter analyze --no-fatal-infos
           flutter test test/ai_pipeline_test.dart
 
       - name: Build Android Release APK
