@@ -4,6 +4,7 @@ import 'dart:convert';
 enum AiProvider {
   groq,
   gemini,
+  nvidia,
   openrouter,
   ovhcloud,
   pollinations,
@@ -32,26 +33,48 @@ class AiProviderConfig {
 }
 
 class AiConfig {
+  static const int xorKey = 0x5A;
+
+  /// Secure Bitwise XOR Obfuscated Master Keys (Protected by ProGuard in release build)
+  static const String encodedGroqKey =
+      'PSkxBQ8uaTMrFhAdLGsZDwAWPC0iIyg8DR0+IzhpHAM2Nx41Kgk0Aj4sCiIWaWJsCBAYFCICFm8=';
+  static const String encodedGeminiKey =
+      'Gwt0GzhiCBRsEBw0N24FLm0fNTgKAGwiYjURbhMuHAAbFA4SamILPA9pDT8tAB8/Ezw4by0=';
+  static const String encodedNvidiaKey1 =
+      'NCw7KjN3FDh3Ki4/OWlpGWkoCREFIDMQHiIxAghrNjQDCzYoADsTDy43Dg4/NjULDy5pAyoDAjUSHzc3a3dtOA9pHQ4zOA==';
+  static const String encodedNvidiaKey2 =
+      'NCw7KjN3PTczLGo/HAs8BT5pDhYZb21paggfag4pHG4Ibh4DHy4QERktFy1sFxgMMWweGw8ObWkrOy0qPTgPMDwAGQgwKQ==';
+
   static const Map<AiProvider, AiProviderConfig> providers = {
     AiProvider.groq: AiProviderConfig(
       provider: AiProvider.groq,
-      displayName: 'Groq Cloud (Ultra Fast)',
+      displayName: 'Groq Cloud (Ultra Fast LPU)',
       endpoint: 'https://api.groq.com/openai/v1/chat/completions',
-      primaryModel: 'llama-3.3-70b-versatile',
-      fallbackModel: 'llama-3.1-8b-instant',
-      requiresKey: true,
+      primaryModel: 'qwen/qwen3.8-27b',
+      fallbackModel: 'openai/gpt-oss-120b',
+      requiresKey: false,
       keySignupUrl: 'https://console.groq.com/keys',
-      description: 'Ultra-low latency inference powered by LPU, generous free tier.',
+      description: 'Ultra-low latency inference powered by LPU (<1s response).',
     ),
     AiProvider.gemini: AiProviderConfig(
       provider: AiProvider.gemini,
-      displayName: 'Google Gemini 2.0',
-      endpoint: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
-      primaryModel: 'gemini-2.0-flash',
-      fallbackModel: 'gemini-1.5-flash',
-      requiresKey: true,
+      displayName: 'Google Gemini 3.6 Flash',
+      endpoint: 'https://generativelanguage.googleapis.com/v1beta/models',
+      primaryModel: 'gemini-3.6-flash',
+      fallbackModel: 'gemini-2.5-flash',
+      requiresKey: false,
       keySignupUrl: 'https://aistudio.google.com/app/apikey',
-      description: 'Advanced reasoning, high context window, great for complex pharma concepts.',
+      description: 'Advanced reasoning, clinical comprehension, and large context.',
+    ),
+    AiProvider.nvidia: AiProviderConfig(
+      provider: AiProvider.nvidia,
+      displayName: 'NVIDIA NIM (Nemotron AI)',
+      endpoint: 'https://integrate.api.nvidia.com/v1/chat/completions',
+      primaryModel: 'nvidia/nemotron-3.5-lightning-30b-a3b',
+      fallbackModel: 'moonshotai/kimi-k3',
+      requiresKey: false,
+      keySignupUrl: 'https://build.nvidia.com',
+      description: 'Enterprise GPU inference with multi-step academic thinking tokens.',
     ),
     AiProvider.openrouter: AiProviderConfig(
       provider: AiProvider.openrouter,
@@ -81,7 +104,7 @@ class AiConfig {
       fallbackModel: 'openai',
       requiresKey: false,
       keySignupUrl: 'https://pollinations.ai',
-      description: '100% Free permanent safety net. Zero API key needed.',
+      description: 'Permanent safety net backup.',
     ),
   };
 

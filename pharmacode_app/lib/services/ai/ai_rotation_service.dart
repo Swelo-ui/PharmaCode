@@ -89,16 +89,17 @@ class AiRotationService {
     );
 
     // 5. Providers priority order:
-    // Custom Keys (Groq / Gemini / OpenRouter) -> OVHcloud Kepler (Zero-Key) -> Pollinations (Zero-Key)
+    // Groq (Ultra-fast <1s) -> Google Gemini (Deep reasoning) -> NVIDIA NIM (Thinking tokens) -> OpenRouter -> OVHcloud -> Pollinations
     final providerQueue = [
       AiProvider.groq,
       AiProvider.gemini,
+      AiProvider.nvidia,
       AiProvider.openrouter,
       AiProvider.ovhcloud,
       AiProvider.pollinations,
     ];
 
-    // Priority: Providers with active custom keys -> Keyless providers -> Inactive providers
+    // Priority: Providers with active custom keys -> Providers with online system keys -> Inactive/Cooldown providers
     providerQueue.sort((a, b) {
       final aHasCustom = _keyManager.getCustomKey(a) != null && _keyManager.getCustomKey(a)!.isNotEmpty;
       final bHasCustom = _keyManager.getCustomKey(b) != null && _keyManager.getCustomKey(b)!.isNotEmpty;
@@ -175,7 +176,7 @@ class AiRotationService {
       case AiProvider.groq:
         return _callOpenAiCompatible(
           endpoint: config.endpoint,
-          apiKey: apiKey!,
+          apiKey: apiKey ?? '',
           model: config.primaryModel,
           fallbackModel: config.fallbackModel,
           messages: messages,
@@ -183,9 +184,17 @@ class AiRotationService {
         );
 
       case AiProvider.gemini:
+        return _callGeminiNative(
+          config: config,
+          apiKey: apiKey ?? '',
+          messages: messages,
+          provider: provider,
+        );
+
+      case AiProvider.nvidia:
         return _callOpenAiCompatible(
           endpoint: config.endpoint,
-          apiKey: apiKey!,
+          apiKey: apiKey ?? '',
           model: config.primaryModel,
           fallbackModel: config.fallbackModel,
           messages: messages,
@@ -195,7 +204,7 @@ class AiRotationService {
       case AiProvider.openrouter:
         return _callOpenAiCompatible(
           endpoint: config.endpoint,
-          apiKey: apiKey!,
+          apiKey: apiKey ?? '',
           model: config.primaryModel,
           fallbackModel: config.fallbackModel,
           messages: messages,
@@ -221,7 +230,91 @@ class AiRotationService {
     }
   }
 
-  /// Standard OpenAI-compatible Chat Completions API
+  /// Native Google Gemini REST API call
+  Future<String?> _callGeminiNative({
+    required AiProviderConfig config,
+    required String apiKey,
+    required List<Map<String, String>> messages,
+    required AiProvider provider,
+  }) async {
+    final modelsToTry = [config.primaryModel, config.fallbackModel];
+
+    for (final model in modelsToTry) {
+      try {
+        final uri = Uri.parse(
+          'https://generativelanguage.googleapis.com/v1beta/models/$model:generateContent?key=$apiKey',
+        );
+
+        final contents = <Map<String, dynamic>>[];
+        String? systemInstructionText;
+
+        for (final m in messages) {
+          if (m['role'] == 'system') {
+            systemInstructionText = m['content'];
+            continue;
+          }
+          final role = m['role'] == 'assistant' ? 'model' : 'user';
+          contents.add({
+            'role': role,
+            'parts': [
+              {'text': m['content'] ?? ''}
+            ]
+          });
+        }
+
+        final payload = <String, dynamic>{
+          if (systemInstructionText != null && systemInstructionText.isNotEmpty)
+            'systemInstruction': {
+              'parts': [
+                {'text': systemInstructionText}
+              ]
+            },
+          'contents': contents.isEmpty
+              ? [
+                  {
+                    'role': 'user',
+                    'parts': [
+                      {'text': 'Hello'}
+                    ]
+                  }
+                ]
+              : contents,
+          'generationConfig': {
+            'temperature': 0.7,
+            'maxOutputTokens': 2048,
+          },
+        };
+
+        final res = await http.post(
+          uri,
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode(payload),
+        ).timeout(const Duration(seconds: 14));
+
+        if (res.statusCode == 200) {
+          final data = jsonDecode(utf8.decode(res.bodyBytes));
+          final candidates = data['candidates'] as List?;
+          if (candidates != null && candidates.isNotEmpty) {
+            final parts = candidates[0]['content']?['parts'] as List?;
+            if (parts != null && parts.isNotEmpty) {
+              return parts[0]['text'] as String?;
+            }
+          }
+        }
+
+        if (res.statusCode == 429) {
+          _keyManager.markProviderFailure(provider, statusCode: 429);
+          throw Exception('Gemini HTTP 429 rate limit');
+        }
+      } catch (e) {
+        debugPrint('[AiRotationService] Gemini $model attempt notice: $e');
+      }
+    }
+
+    throw Exception('Gemini failed across all attempted models');
+  }
+
+  /// Standard OpenAI-compatible Chat Completions API with automatic fallback model
   Future<String?> _callOpenAiCompatible({
     required String endpoint,
     required String apiKey,
@@ -237,35 +330,43 @@ class AiRotationService {
       ...?extraHeaders,
     };
 
-    final body = jsonEncode({
-      'model': model,
-      'messages': messages,
-      'temperature': 0.7,
-      'max_tokens': 1500,
-    });
+    final modelsToTry = [model, if (fallbackModel.isNotEmpty && fallbackModel != model) fallbackModel];
 
-    final res = await http.post(
-      Uri.parse(endpoint),
-      headers: headers,
-      body: body,
-    ).timeout(const Duration(seconds: 14));
+    for (final currentModel in modelsToTry) {
+      try {
+        final body = jsonEncode({
+          'model': currentModel,
+          'messages': messages,
+          'temperature': 0.7,
+          'max_tokens': 1500,
+        });
 
-    if (res.statusCode == 200) {
-      final data = jsonDecode(utf8.decode(res.bodyBytes));
-      final choices = data['choices'] as List?;
-      if (choices != null && choices.isNotEmpty) {
-        final msg = choices[0]['message'];
-        return msg['content'] as String?;
+        final res = await http.post(
+          Uri.parse(endpoint),
+          headers: headers,
+          body: body,
+        ).timeout(const Duration(seconds: 14));
+
+        if (res.statusCode == 200) {
+          final data = jsonDecode(utf8.decode(res.bodyBytes));
+          final choices = data['choices'] as List?;
+          if (choices != null && choices.isNotEmpty) {
+            final msg = choices[0]['message'];
+            return msg['content'] as String?;
+          }
+        }
+
+        // On 429 (Rate Limit), notify key manager and break
+        if (res.statusCode == 429) {
+          _keyManager.markProviderFailure(provider, statusCode: res.statusCode);
+          throw Exception('Provider $provider returned HTTP 429');
+        }
+      } catch (e) {
+        debugPrint('[AiRotationService] $provider model $currentModel notice: $e');
       }
     }
 
-    // On 429 (Rate Limit), notify key manager and throw
-    if (res.statusCode == 429) {
-      _keyManager.markProviderFailure(provider, statusCode: res.statusCode);
-      throw Exception('Provider $provider returned HTTP 429');
-    }
-
-    throw Exception('Provider $provider failed with HTTP ${res.statusCode}: ${res.body}');
+    throw Exception('Provider $provider failed on all model tiers');
   }
 
   /// Pollinations Zero-Key Serverless Fallback
@@ -291,29 +392,28 @@ class AiRotationService {
           return text;
         }
       }
-    } catch (e) {
-      debugPrint('[AiRotationService] Pollinations fallback notice: $e');
+      return null;
+    } catch (_) {
+      return null;
     }
-
-    return null;
   }
 
-  /// Format last 6 messages into API format
+  /// Format messages array for chat completions API
   List<Map<String, String>> _formatHistoryForApi({
     required String systemPrompt,
     required List<ChatMessage> history,
     required String currentMessage,
   }) {
-    final List<Map<String, String>> result = [
-      {'role': 'system', 'content': systemPrompt},
-    ];
+    final result = <Map<String, String>>[];
 
-    // Take last 4 messages to preserve tokens & latency
-    final recent = history.length > 4 ? history.sublist(history.length - 4) : history;
-    for (final msg in recent) {
+    result.add({'role': 'system', 'content': systemPrompt});
+
+    // Take last 6 messages to stay within token budgets
+    final recentHistory = history.length > 6 ? history.sublist(history.length - 6) : history;
+    for (final m in recentHistory) {
       result.add({
-        'role': msg.isUser ? 'user' : 'assistant',
-        'content': msg.content,
+        'role': m.isUser ? 'user' : 'assistant',
+        'content': m.content,
       });
     }
 

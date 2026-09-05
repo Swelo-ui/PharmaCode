@@ -13,14 +13,22 @@ void main() {
     test('Providers are correctly configured with models and endpoints', () {
       expect(AiConfig.providers.containsKey(AiProvider.groq), isTrue);
       expect(AiConfig.providers.containsKey(AiProvider.gemini), isTrue);
+      expect(AiConfig.providers.containsKey(AiProvider.nvidia), isTrue);
       expect(AiConfig.providers.containsKey(AiProvider.openrouter), isTrue);
       expect(AiConfig.providers.containsKey(AiProvider.ovhcloud), isTrue);
       expect(AiConfig.providers.containsKey(AiProvider.pollinations), isTrue);
 
       final groq = AiConfig.providers[AiProvider.groq]!;
       expect(groq.endpoint, contains('api.groq.com'));
-      expect(groq.primaryModel, contains('llama'));
-      expect(groq.requiresKey, isTrue);
+      expect(groq.primaryModel, contains('qwen'));
+      expect(groq.requiresKey, isFalse);
+
+      final gemini = AiConfig.providers[AiProvider.gemini]!;
+      expect(gemini.primaryModel, contains('gemini'));
+
+      final nvidia = AiConfig.providers[AiProvider.nvidia]!;
+      expect(nvidia.endpoint, contains('integrate.api.nvidia.com'));
+      expect(nvidia.primaryModel, contains('nemotron'));
 
       final ovh = AiConfig.providers[AiProvider.ovhcloud]!;
       expect(ovh.requiresKey, isFalse);
@@ -36,6 +44,16 @@ void main() {
       final encoded = AiConfig.encodeSecret(plain, 0x5A);
       final decoded = AiConfig.decodeSecret(encoded, 0x5A);
       expect(decoded, equals(plain));
+
+      // Verify system keys decode to valid prefixes
+      final groqKey = AiConfig.decodeSecret(AiConfig.encodedGroqKey, AiConfig.xorKey);
+      expect(groqKey.startsWith('gsk_'), isTrue);
+
+      final geminiKey = AiConfig.decodeSecret(AiConfig.encodedGeminiKey, AiConfig.xorKey);
+      expect(geminiKey.startsWith('AQ.'), isTrue);
+
+      final nvKey1 = AiConfig.decodeSecret(AiConfig.encodedNvidiaKey1, AiConfig.xorKey);
+      expect(nvKey1.startsWith('nvapi-'), isTrue);
     });
   });
 
@@ -46,12 +64,14 @@ void main() {
       keyManager = AiKeyManager();
     });
 
-    test('Zero-key providers report online', () {
+    test('Zero-key and built-in system providers report online', () {
       final statuses = keyManager.getProviderStatuses();
       expect(statuses.containsKey(AiProvider.groq), isTrue);
+      expect(statuses[AiProvider.groq], equals('Online'));
+      expect(statuses[AiProvider.gemini], equals('Online'));
+      expect(statuses[AiProvider.nvidia], equals('Online'));
       expect(statuses[AiProvider.ovhcloud], equals('Online'));
       expect(statuses[AiProvider.pollinations], equals('Online'));
-      expect(statuses[AiProvider.groq], equals('Add Key'));
     });
 
     test('Custom key handling works seamlessly', () async {

@@ -1046,6 +1046,7 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
     final statuses = _keyManager.getProviderStatuses();
     final groqCtrl = TextEditingController(text: _keyManager.getCustomKey(AiProvider.groq) ?? '');
     final geminiCtrl = TextEditingController(text: _keyManager.getCustomKey(AiProvider.gemini) ?? '');
+    final nvidiaCtrl = TextEditingController(text: _keyManager.getCustomKey(AiProvider.nvidia) ?? '');
     final openRouterCtrl = TextEditingController(text: _keyManager.getCustomKey(AiProvider.openrouter) ?? '');
 
     return StatefulBuilder(
@@ -1097,7 +1098,7 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'PharmaCode uses awesome-freellm-apis with automatic multi-tier fallback so students never see rate limit errors.',
+                  'PharmaCode comes with pre-configured high-speed AI (Groq + Gemini + NVIDIA NIM). All students get instant intelligent responses out-of-the-box! Optional personal keys can be configured below as backups.',
                   style: GoogleFonts.inter(fontSize: 12, color: const Color(0xFF64748B)),
                 ),
                 const SizedBox(height: 16),
@@ -1159,7 +1160,7 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                   ),
                 const SizedBox(height: 16),
                 Text(
-                  'CUSTOM FREE KEYS (OPTIONAL)',
+                  'CUSTOM BACKUP KEYS (OPTIONAL OVERRIDES)',
                   style: GoogleFonts.inter(
                     fontSize: 11,
                     fontWeight: FontWeight.w800,
@@ -1172,7 +1173,7 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                   controller: groqCtrl,
                   decoration: InputDecoration(
                     labelText: 'Groq Cloud API Key',
-                    helperText: 'Free at console.groq.com (No card needed)',
+                    helperText: 'Default active. Free at console.groq.com',
                     helperStyle: GoogleFonts.inter(fontSize: 10.5, color: const Color(0xFF64748B)),
                     hintText: 'gsk_...',
                     isDense: true,
@@ -1184,9 +1185,21 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                   controller: geminiCtrl,
                   decoration: InputDecoration(
                     labelText: 'Google Gemini API Key',
-                    helperText: 'Free at aistudio.google.com (No card needed)',
+                    helperText: 'Default active. Free at aistudio.google.com',
                     helperStyle: GoogleFonts.inter(fontSize: 10.5, color: const Color(0xFF64748B)),
-                    hintText: 'AIzaSy...',
+                    hintText: 'AQ... or AIza...',
+                    isDense: true,
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: nvidiaCtrl,
+                  decoration: InputDecoration(
+                    labelText: 'NVIDIA NIM API Key',
+                    helperText: 'Default active. Free at build.nvidia.com',
+                    helperStyle: GoogleFonts.inter(fontSize: 10.5, color: const Color(0xFF64748B)),
+                    hintText: 'nvapi-...',
                     isDense: true,
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                   ),
@@ -1196,7 +1209,7 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                   controller: openRouterCtrl,
                   decoration: InputDecoration(
                     labelText: 'OpenRouter API Key',
-                    helperText: 'Free tier at openrouter.ai/keys',
+                    helperText: 'Optional tier at openrouter.ai/keys',
                     helperStyle: GoogleFonts.inter(fontSize: 10.5, color: const Color(0xFF64748B)),
                     hintText: 'sk-or-v1-...',
                     isDense: true,
@@ -1218,12 +1231,13 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                           final messenger = ScaffoldMessenger.of(context);
                           await _keyManager.setCustomKey(AiProvider.groq, groqCtrl.text);
                           await _keyManager.setCustomKey(AiProvider.gemini, geminiCtrl.text);
+                          await _keyManager.setCustomKey(AiProvider.nvidia, nvidiaCtrl.text);
                           await _keyManager.setCustomKey(AiProvider.openrouter, openRouterCtrl.text);
                           if (ctx.mounted) {
                             Navigator.pop(ctx);
                             messenger.showSnackBar(
                               const SnackBar(
-                                content: Text('API Keys saved securely!'),
+                                content: Text('API Keys updated successfully!'),
                                 backgroundColor: Color(0xFF10B981),
                               ),
                             );
