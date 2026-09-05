@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
@@ -45,7 +45,7 @@ class _AiNoteDetailScreenState extends State<AiNoteDetailScreen> {
           'Note copied to clipboard!',
           style: GoogleFonts.dmSans(fontWeight: FontWeight.w600),
         ),
-        backgroundColor: AppTheme.brandNavy,
+        backgroundColor: AppTheme.primaryNavy,
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 1),
       ),
@@ -276,7 +276,7 @@ class _AiNoteDetailScreenState extends State<AiNoteDetailScreen> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: const Color(0xFFE2E8F0)),
-              ],
+              ),
               child: Row(
                 children: [
                   const Icon(Icons.verified_rounded, size: 14, color: Color(0xFF10B981)),
