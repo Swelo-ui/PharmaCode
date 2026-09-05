@@ -3,6 +3,7 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbSchema } from "@/lib/schema";
 import { absUrl } from "@/lib/site";
+import { CopyEmailBox } from "@/components/CopyEmailBox";
 import { ShieldCheck, Lock, EyeOff, FileText, Smartphone, Trash2, Mail } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -119,16 +120,17 @@ export default function PrivacyPolicyPage() {
                         <div className="p-2 sm:p-2.5 rounded-[10px] bg-[#FFFBEB] text-[#92400E] shrink-0 mt-0.5">
                             <Mail size={18} />
                         </div>
-                        <div>
+                        <div className="w-full">
                             <h2 className="font-display text-[15px] sm:text-[16px] font-bold text-[#1A2B6B] mb-1">
                                 5. Developer Contact &amp; Grievances
                             </h2>
-                            <p className="font-[DM_Sans] text-[12.5px] sm:text-[13px] text-[#6B7FA3] leading-relaxed">
+                            <p className="font-[DM_Sans] text-[12.5px] sm:text-[13px] text-[#6B7FA3] leading-relaxed mb-3">
                                 For any questions regarding this Privacy Policy or Google Play compliance, reach out directly:<br />
-                                <strong>Email:</strong> sweloui.contact@gmail.com<br />
-                                <strong>Website:</strong> https://pharmacode.vercel.app<br />
-                                <strong>Developer:</strong> Swelo-UI / PharmaCode Team
+                                <strong>Email:</strong> <a href="mailto:pharmacode.connect@gmail.com" className="text-[#2563EB] hover:underline font-semibold">pharmacode.connect@gmail.com</a><br />
+                                <strong>Website:</strong> <a href="https://pharmacode.vercel.app" className="text-[#2563EB] hover:underline">https://pharmacode.vercel.app</a><br />
+                                <strong>Developer:</strong> PharmaCode Team
                             </p>
+                            <CopyEmailBox email="pharmacode.connect@gmail.com" label="OFFICIAL DEVELOPER EMAIL" />
                         </div>
                     </section>
                 </div>
