@@ -27,16 +27,20 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
-      - name: Setup Android SDK 37 Platform & Licenses
+      - name: Setup Android SDK Platform & Licenses
         run: |
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
-          echo "Downloading official Android 37 Platform directly from Google..."
-          curl -sL "https://dl.google.com/android/repository/platform-37.0_r02.zip" -o /tmp/platform-37.zip
-          mkdir -p /tmp/p37 && unzip -q /tmp/platform-37.zip -d /tmp/p37
-          mkdir -p "$ANDROID_HOME/platforms/android-37" "$ANDROID_HOME/platforms/android-37.0"
-          cp -r /tmp/p37/*/* "$ANDROID_HOME/platforms/android-37/"
-          cp -r /tmp/p37/*/* "$ANDROID_HOME/platforms/android-37.0/"
-          echo "Installed platforms:"
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;36.0.0" || true
+          # Pre-cache Android 37 platform if available
+          echo "Ensuring platform 37 availability..."
+          curl -sL "https://dl.google.com/android/repository/platform-37.0_r02.zip" -o /tmp/platform-37.zip 2>/dev/null || true
+          if [ -s /tmp/platform-37.zip ]; then
+            mkdir -p /tmp/p37 && unzip -qo /tmp/platform-37.zip -d /tmp/p37 2>/dev/null || true
+            mkdir -p "$ANDROID_HOME/platforms/android-37" "$ANDROID_HOME/platforms/android-37.0"
+            cp -r /tmp/p37/*/* "$ANDROID_HOME/platforms/android-37/" 2>/dev/null || true
+            cp -r /tmp/p37/*/* "$ANDROID_HOME/platforms/android-37.0/" 2>/dev/null || true
+          fi
+          echo "Installed Android SDK Platforms:"
           ls -la "$ANDROID_HOME/platforms"
 
       - name: Set up Flutter
@@ -59,53 +63,27 @@ jobs:
           flutter analyze
           flutter test test/ai_pipeline_test.dart
 
-      - name: Compile Flutter Assets & Bundle
+      - name: Build Android Release APK
         working-directory: pharmacode_app
-        run: flutter build bundle --release
+        run: flutter build apk --release
 
-      - name: Generate Android local.properties
-        working-directory: pharmacode_app/android
-        run: |
-          FLUTTER_DIR=$(which flutter | sed 's|/bin/flutter||')
-          VERSION_LINE=$(grep '^version:' ../pubspec.yaml | head -n 1 | awk '{print $2}')
-          VERSION_NAME=$(echo "$VERSION_LINE" | cut -d '+' -f 1)
-          VERSION_CODE=$(echo "$VERSION_LINE" | cut -d '+' -f 2)
-          echo "Extracted Version: $VERSION_NAME+$VERSION_CODE"
-          echo "sdk.dir=$ANDROID_HOME" > local.properties
-          echo "flutter.sdk=$FLUTTER_DIR" >> local.properties
-          echo "flutter.buildMode=release" >> local.properties
-          echo "flutter.versionName=$VERSION_NAME" >> local.properties
-          echo "flutter.versionCode=$VERSION_CODE" >> local.properties
-          cat local.properties
-
-      - name: Build Android Release APK & AAB via Gradle
-        working-directory: pharmacode_app/android
-        run: |
-          chmod +x gradlew
-          ./gradlew assembleRelease bundleRelease --no-daemon --stacktrace 2>&1 | tee gradle_build.log
+      - name: Build Android Release AAB (Play Store)
+        working-directory: pharmacode_app
+        run: flutter build appbundle --release
 
       - name: Output Error to Summary
         if: failure()
         run: |
-          echo "## Gradle Failure Output" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          tail -n 80 pharmacode_app/android/gradle_build.log >> $GITHUB_STEP_SUMMARY || true
-          echo '```' >> $GITHUB_STEP_SUMMARY
-
-      - name: Upload Build Failure Logs
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: Build-Failure-Logs
-          path: pharmacode_app/android/gradle_build.log
-          if-no-files-found: ignore
+          echo "## Build Failure" >> $GITHUB_STEP_SUMMARY
+          echo "Flutter build failed. Check the detailed step logs above." >> $GITHUB_STEP_SUMMARY
 
       - name: Prepare Release Artifacts
         run: |
           mkdir -p release-assets
-          find pharmacode_app/build/app/outputs -name "*.apk" -o -name "*.aab"
-          cp pharmacode_app/build/app/outputs/apk/release/app-release.apk release-assets/PharmaCode-Universal.apk 2>/dev/null || cp pharmacode_app/build/app/outputs/flutter-apk/app-release.apk release-assets/PharmaCode-Universal.apk 2>/dev/null || true
-          cp pharmacode_app/build/app/outputs/bundle/release/app-release.aab release-assets/PharmaCode-Release.aab 2>/dev/null || true
+          find pharmacode_app/build/app/outputs -name "*.apk" -o -name "*.aab" -o -name "mapping.txt"
+          find pharmacode_app/build/app/outputs -name "app-release.apk" -exec cp {} release-assets/PharmaCode-Universal.apk \; 2>/dev/null || true
+          find pharmacode_app/build/app/outputs -name "app-release.aab" -exec cp {} release-assets/PharmaCode-Release.aab \; 2>/dev/null || true
+          find pharmacode_app/build/app/outputs -name "mapping.txt" -exec cp {} release-assets/mapping.txt \; 2>/dev/null || true
           ls -la release-assets/
 
       - name: Upload Universal APK
@@ -122,26 +100,35 @@ jobs:
           path: release-assets/PharmaCode-Release.aab
           if-no-files-found: error
 
+      - name: Upload Deobfuscation Mapping File
+        uses: actions/upload-artifact@v4
+        with:
+          name: PharmaCode-mapping-txt
+          path: release-assets/mapping.txt
+          if-no-files-found: ignore
+
       - name: Create or Update GitHub Release
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v1.0.5
-          name: "PharmaCode v1.0.5 (Build 6) Production Release"
+          tag_name: v1.0.7
+          name: "PharmaCode v1.0.7 (Build 8) Production Release"
           body: |
-            ## PharmaCode v1.0.5 Release (Build 6)
-            Official signed release artifacts for **PharmaCode — B.Pharm NEP 2020 Companion with PharmaHelper AI Tutor**.
+            ## PharmaCode v1.0.7 Release (Build 8)
+            Official production signed release artifacts for **PharmaCode — B.Pharm NEP 2020 Companion with PharmaHelper AI Tutor**.
 
-            ### What's New in v1.0.5:
-            - **Web Citations Fix**: Extracted real page titles and clean URLs instead of duplicate search queries.
-            - **Output Formatting**: Fixed `<br>` tags in explanations and tables into clean native line breaks.
-            - **AI Persona Hardening**: Strict PharmaCode AI Tutor identity preservation across queries and jailbreak prompts.
-            - **AI Tutor Ads**: Integrated non-intrusive AdMob banner and frequency-capped interstitial ads.
-            - **Navigation Polish**: Removed duplicate AI item from Drawer; redesigned Center AI Tutor button with sleek, modern UI/UX.
+            ### What's New in v1.0.7:
+            - **Google Play R8 Code Optimization**: Enabled full R8 code shrinking, dead code removal, and resource shrinking (`isMinifyEnabled = true`, `isShrinkResources = true`).
+            - **Google Play Target SDK 36**: Built on target API level 36 (Android 16) complying with Google Play requirements.
+            - **Obfuscation & Security**: Included ProGuard/R8 deobfuscation mappings, hardened against decompilation.
+            - **Bookmark Cloud Sync**: AI Tutor response bookmarks now persist to Firebase user account across devices.
+            - **Code & Table Formatting**: Terminal-styled code blocks and clean tables in AI responses without `<br>` artifacts.
+            - **AdMob Integration**: Non-intrusive banner and interstitial ads with smart frequency capping.
 
             ### Available Downloads:
             - **Google Play App Bundle**: `PharmaCode-Release.aab` (Signed with production release keystore for Play Console)
             - **Universal APK**: `PharmaCode-Universal.apk` (Install directly on any Android device)
+            - **Deobfuscation File**: `mapping.txt` (Upload to Google Play Console for crash deobfuscation)
           files: |
             release-assets/*
           draft: false

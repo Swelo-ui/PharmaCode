@@ -4,9 +4,11 @@
 # ==============================================================================
 
 # ─── Optimization & Obfuscation Controls ─────────────────────────────────────
--dontoptimize
 -dontusemixedcaseclassnames
 -dontskipnonpubliclibraryclasses
+-optimizationpasses 5
+-renamesourcefileattribute SourceFile
+-keepattributes SourceFile,LineNumberTable
 -verbose
 
 # ─── Strip Sensitive Debugging Logs in Release Builds ─────────────────────────
@@ -70,3 +72,12 @@
 -keepattributes InnerClasses
 -dontwarn sun.misc.**
 -dontwarn java.lang.invoke.**
+
+# ─── Plugins & MainActivity Keep Rules ────────────────────────────────────────
+-keep class com.pharmacode.bpharm.MainActivity { *; }
+-keep class com.dexterous.flutterlocalnotifications.** { *; }
+-keep class io.flutter.plugins.urllauncher.** { *; }
+-keep class dev.fluttercommunity.plus.share.** { *; }
+-keep class io.flutter.plugins.sharedpreferences.** { *; }
+-keep class com.google.android.gms.auth.api.signin.** { *; }
+
