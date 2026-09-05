@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,7 +29,6 @@ class _BookmarksScreenState extends ConsumerState<BookmarksScreen>
   late TabController _tabController;
   final TextEditingController _searchCtrl = TextEditingController();
   String _searchQuery = '';
-  final Set<String> _expandedBookmarkIds = {};
 
   @override
   void initState() {
@@ -42,6 +41,15 @@ class _BookmarksScreenState extends ConsumerState<BookmarksScreen>
     _tabController.dispose();
     _searchCtrl.dispose();
     super.dispose();
+  }
+
+  String _cleanProvider(String? raw) {
+    if (raw == null || raw.trim().isEmpty) return 'AI Tutor';
+    final lower = raw.toLowerCase();
+    if (lower.contains('groq')) return 'Groq AI';
+    if (lower.contains('gemini')) return 'Gemini AI';
+    if (lower.contains('gpt') || lower.contains('openai')) return 'ChatGPT';
+    return raw.split(' ').first;
   }
 
   void _copyToClipboard(String text) {
@@ -70,83 +78,79 @@ class _BookmarksScreenState extends ConsumerState<BookmarksScreen>
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
-      appBar: AppBar(
-        title: Text(
-          'Saved Bookmarks',
-          style: GoogleFonts.dmSans(
-            fontWeight: FontWeight.w800,
-            fontSize: 18,
-            color: AppTheme.primaryNavy,
-          ),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: false,
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(48),
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-            padding: const EdgeInsets.all(3),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF1F5F9),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: ValueListenableBuilder<List<AiBookmark>>(
-              valueListenable: AiBookmarkService.instance.bookmarksNotifier,
-              builder: (context, aiBookmarks, _) {
-                return TabBar(
-                  controller: _tabController,
-                  indicator: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(9),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.05),
-                        blurRadius: 4,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
-                  ),
-                  labelColor: AppTheme.brandBlue,
-                  unselectedLabelColor: const Color(0xFF64748B),
-                  labelStyle: GoogleFonts.dmSans(fontSize: 13, fontWeight: FontWeight.w700),
-                  unselectedLabelStyle: GoogleFonts.dmSans(fontSize: 13, fontWeight: FontWeight.w600),
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  dividerColor: Colors.transparent,
-                  tabs: [
-                    Tab(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.book_rounded, size: 16),
-                          const SizedBox(width: 6),
-                          Text('Syllabus (${bookmarkedSubjects.length})'),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Pill TabBar Header (Eliminates redundant "Saved Bookmarks" duplicate AppBar)
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+              child: Container(
+                padding: const EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF1F5F9),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: ValueListenableBuilder<List<AiBookmark>>(
+                  valueListenable: AiBookmarkService.instance.bookmarksNotifier,
+                  builder: (context, aiBookmarks, _) {
+                    return TabBar(
+                      controller: _tabController,
+                      indicator: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(9),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.05),
+                            blurRadius: 4,
+                            offset: const Offset(0, 1),
+                          ),
                         ],
                       ),
-                    ),
-                    Tab(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.auto_awesome_rounded, size: 15),
-                          const SizedBox(width: 6),
-                          Text('AI Notes (${aiBookmarks.length})'),
-                        ],
-                      ),
-                    ),
-                  ],
-                );
-              },
+                      labelColor: AppTheme.brandBlue,
+                      unselectedLabelColor: const Color(0xFF64748B),
+                      labelStyle: GoogleFonts.dmSans(fontSize: 13, fontWeight: FontWeight.w700),
+                      unselectedLabelStyle: GoogleFonts.dmSans(fontSize: 13, fontWeight: FontWeight.w600),
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      dividerColor: Colors.transparent,
+                      tabs: [
+                        Tab(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.book_rounded, size: 16),
+                              const SizedBox(width: 6),
+                              Text('Syllabus (${bookmarkedSubjects.length})'),
+                            ],
+                          ),
+                        ),
+                        Tab(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.auto_awesome_rounded, size: 15),
+                              const SizedBox(width: 6),
+                              Text('AI Notes (${aiBookmarks.length})'),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
             ),
-          ),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildSyllabusTab(bookmarkedSubjects),
+                  _buildAiNotesTab(),
+                ],
+              ),
+            ),
+          ],
         ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildSyllabusTab(bookmarkedSubjects),
-          _buildAiNotesTab(),
-        ],
       ),
     );
   }
@@ -248,6 +252,7 @@ class _BookmarksScreenState extends ConsumerState<BookmarksScreen>
                                           'Removed from Bookmarks',
                                           style: GoogleFonts.dmSans(fontWeight: FontWeight.w700),
                                         ),
+                                        backgroundColor: AppTheme.primaryNavy,
                                         behavior: SnackBarBehavior.floating,
                                         duration: const Duration(seconds: 1),
                                       ),
@@ -347,8 +352,6 @@ class _BookmarksScreenState extends ConsumerState<BookmarksScreen>
                 separatorBuilder: (ctx, idx) => const SizedBox(height: 14),
                 itemBuilder: (context, index) {
                   final item = filtered[index];
-                  final isExpanded = _expandedBookmarkIds.contains(item.id);
-                  final isLongContent = item.answer.length > 500;
 
                   return Container(
                     decoration: BoxDecoration(
@@ -367,7 +370,7 @@ class _BookmarksScreenState extends ConsumerState<BookmarksScreen>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Card Header: PharmaHelper Branding & Subject Badge (Matching AI Tutor)
+                        // Card Header: PharmaHelper Branding & Clean Provider Badge
                         Row(
                           children: [
                             const PharmaMascotWidget(
@@ -403,24 +406,20 @@ class _BookmarksScreenState extends ConsumerState<BookmarksScreen>
                                 ),
                               ),
                             ],
-                            if (item.providerUsed != null) ...[
+                            if (item.providerUsed != null && item.providerUsed!.isNotEmpty) ...[
                               const SizedBox(width: 6),
-                              Flexible(
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFF1F5F9),
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
-                                  child: Text(
-                                    item.providerUsed!,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.inter(
-                                      fontSize: 9,
-                                      fontWeight: FontWeight.w600,
-                                      color: const Color(0xFF475569),
-                                    ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFF1F5F9),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Text(
+                                  _cleanProvider(item.providerUsed),
+                                  style: GoogleFonts.inter(
+                                    fontSize: 9.5,
+                                    fontWeight: FontWeight.w700,
+                                    color: const Color(0xFF475569),
                                   ),
                                 ),
                               ),
@@ -499,26 +498,33 @@ class _BookmarksScreenState extends ConsumerState<BookmarksScreen>
 
                         const SizedBox(height: 12),
 
-                        // Formatted Answer (Same UI/UX as AI Tutor with Terminal Code Blocks & Tables)
-                        Stack(
-                          children: [
-                            ConstrainedBox(
-                              constraints: BoxConstraints(
-                                maxHeight: (!isExpanded && isLongContent) ? 260 : double.infinity,
+                        // Formatted Answer Preview (Tap opens full reader)
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => AiNoteDetailScreen(bookmark: item),
                               ),
-                              child: ClipRect(
-                                child: PharmaMarkdownWidget(
-                                  text: item.answer,
-                                  baseFontSize: 13.5,
+                            );
+                          },
+                          borderRadius: BorderRadius.circular(12),
+                          child: Stack(
+                            children: [
+                              ConstrainedBox(
+                                constraints: const BoxConstraints(maxHeight: 220),
+                                child: ClipRect(
+                                  child: PharmaMarkdownWidget(
+                                    text: item.answer,
+                                    baseFontSize: 13.5,
+                                  ),
                                 ),
                               ),
-                            ),
-                            if (!isExpanded && isLongContent)
                               Positioned(
                                 left: 0,
                                 right: 0,
                                 bottom: 0,
-                                height: 70,
+                                height: 60,
                                 child: Container(
                                   decoration: BoxDecoration(
                                     gradient: LinearGradient(
@@ -533,16 +539,54 @@ class _BookmarksScreenState extends ConsumerState<BookmarksScreen>
                                   ),
                                 ),
                               ),
-                          ],
+                            ],
+                          ),
                         ),
 
                         const SizedBox(height: 10),
                         const Divider(color: Color(0xFFF1F5F9), height: 1),
                         const SizedBox(height: 10),
 
-                        // Actions Row: Open in AI, Copy, Share, Expand/Collapse
+                        // Actions Row: Full View, Ask AI, Copy, Share (Zero overflow layout)
                         Row(
                           children: [
+                            // Full View (Primary action - opens immersive reader)
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => AiNoteDetailScreen(bookmark: item),
+                                  ),
+                                );
+                              },
+                              borderRadius: BorderRadius.circular(8),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFEFF6FF),
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: const Color(0xFFBFDBFE)),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(Icons.fullscreen_rounded, size: 15, color: Color(0xFF1D4ED8)),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      'Full View',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 11.5,
+                                        fontWeight: FontWeight.w700,
+                                        color: const Color(0xFF1D4ED8),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+
                             // Ask follow-up in AI Tutor
                             InkWell(
                               onTap: () {
@@ -556,160 +600,50 @@ class _BookmarksScreenState extends ConsumerState<BookmarksScreen>
                                   ),
                                 );
                               },
-                              borderRadius: BorderRadius.circular(6),
+                              borderRadius: BorderRadius.circular(8),
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4.5),
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFEFF6FF),
-                                  borderRadius: BorderRadius.circular(6),
-                                  border: Border.all(color: const Color(0xFFBFDBFE)),
+                                  color: const Color(0xFFF1F5F9),
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: const Color(0xFFE2E8F0)),
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    const Icon(Icons.auto_awesome_rounded, size: 12, color: Color(0xFF1D4ED8)),
+                                    const Icon(Icons.auto_awesome_rounded, size: 13, color: Color(0xFF475569)),
                                     const SizedBox(width: 4),
                                     Text(
                                       'Ask AI',
                                       style: GoogleFonts.inter(
-                                        fontSize: 11,
+                                        fontSize: 11.5,
                                         fontWeight: FontWeight.w700,
-                                        color: const Color(0xFF1D4ED8),
+                                        color: const Color(0xFF475569),
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 8),
-
-                            // Open Dedicated Full-Screen View
-                            InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => AiNoteDetailScreen(bookmark: item),
-                                  ),
-                                );
-                              },
-                              borderRadius: BorderRadius.circular(6),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4.5),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFF0FDF4),
-                                  borderRadius: BorderRadius.circular(6),
-                                  border: Border.all(color: const Color(0xFFBBF7D0)),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(Icons.fullscreen_rounded, size: 14, color: Color(0xFF16A34A)),
-                                    const SizedBox(width: 3),
-                                    Text(
-                                      'Full View',
-                                      style: GoogleFonts.inter(
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w700,
-                                        color: const Color(0xFF16A34A),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-
-                            // Read Full / Show Less button
-                            if (isLongContent)
-                              InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    if (isExpanded) {
-                                      _expandedBookmarkIds.remove(item.id);
-                                    } else {
-                                      _expandedBookmarkIds.add(item.id);
-                                    }
-                                  });
-                                },
-                                borderRadius: BorderRadius.circular(6),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        isExpanded ? 'Show Less' : 'Read More',
-                                        style: GoogleFonts.inter(
-                                          fontSize: 11.5,
-                                          fontWeight: FontWeight.w700,
-                                          color: AppTheme.brandBlue,
-                                        ),
-                                      ),
-                                      Icon(
-                                        isExpanded ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
-                                        size: 16,
-                                        color: AppTheme.brandBlue,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
 
                             const Spacer(),
 
-                            // Copy
-                            InkWell(
-                              onTap: () => _copyToClipboard(item.answer),
-                              borderRadius: BorderRadius.circular(6),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4.5),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFF1F5F9),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                child: Row(
-                                  children: [
-                                    const Icon(Icons.copy_rounded, size: 12, color: Color(0xFF475569)),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      'Copy',
-                                      style: GoogleFonts.inter(
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w600,
-                                        color: const Color(0xFF475569),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                            // Copy button
+                            IconButton(
+                              constraints: const BoxConstraints(minWidth: 34, minHeight: 34),
+                              padding: EdgeInsets.zero,
+                              icon: const Icon(Icons.copy_rounded, size: 17, color: Color(0xFF64748B)),
+                              tooltip: 'Copy Note',
+                              onPressed: () => _copyToClipboard(item.answer),
                             ),
-                            const SizedBox(width: 8),
 
-                            // Share
-                            InkWell(
-                              onTap: () => _shareContent(item.question, item.answer),
-                              borderRadius: BorderRadius.circular(6),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4.5),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFF1F5F9),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                child: Row(
-                                  children: [
-                                    const Icon(Icons.share_rounded, size: 12, color: Color(0xFF475569)),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      'Share',
-                                      style: GoogleFonts.inter(
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w600,
-                                        color: const Color(0xFF475569),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                            // Share button
+                            IconButton(
+                              constraints: const BoxConstraints(minWidth: 34, minHeight: 34),
+                              padding: EdgeInsets.zero,
+                              icon: const Icon(Icons.share_rounded, size: 17, color: Color(0xFF64748B)),
+                              tooltip: 'Share Note',
+                              onPressed: () => _shareContent(item.question, item.answer),
                             ),
                           ],
                         ),

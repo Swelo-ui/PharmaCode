@@ -120,19 +120,18 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v1.0.9
-          name: "PharmaCode v1.0.9 (Build 10) Production Release"
+          tag_name: v1.0.10
+          name: "PharmaCode v1.0.10 (Build 11) Production Release"
           body: |
-            ## PharmaCode v1.0.9 Release (Build 10)
+            ## PharmaCode v1.0.10 Release (Build 11)
             Official production signed release artifacts for **PharmaCode — B.Pharm NEP 2020 Companion with PharmaHelper AI Tutor**.
 
-            ### What's New in v1.0.9:
-            - **Firebase Direct Push Notifications**: Full support for direct push notifications sent from Firebase Console (FCM), arriving in system status bar even when the app is completely closed/killed.
-            - **Broadcast Topic Subscriptions & FCM Token Copy**: Auto-subscribed to `all_students`, `all`, `updates`, `general`, and `announcements` topics. Device FCM Token copy button added to Notification Center for instant test pushes.
-            - **Full-Screen AI Note Reader Screen**: Dedicated reader screen (`AiNoteDetailScreen`) for saved bookmarks with dynamic font resizing (`A-` / `A+`), full-width layout, copy, share, and ask follow-up.
-            - **Responsive Table Layouts in Markdown**: Tables with up to 3 columns auto-fit comfortably to screen width (`FlexColumnWidth`), compact cell padding, and 4+ column tables feature a clear swipe indicator.
-            - **Hardened ProGuard / R8 Rules**: Explicit keep rules for `io.flutter.plugins.firebase.messaging.**` preventing background service pruning.
-            - **Production Signed**: Release APK and Play Store AAB built with production keystore.
+            ### What's New in v1.0.10:
+            - **Notification Center Overhaul**: Removed all developer test buttons, test triggers, and internal tokens. Users now get a clean, secure, and professional notification feed.
+            - **Eliminated Duplicate "Saved Bookmarks" Header**: Removed redundant second AppBar in bookmarks screen, reclaiming vertical space and presenting a clean pill tab bar directly below the main navigation.
+            - **AI Note Reader Screen Polish**: Restored full title visibility in AppBar, repositioned font zoom controls (`A-` / `A+`) adjacent to content, and resolved date and provider chip clipping.
+            - **Zero-Overflow Bookmark Action Row**: Replaced cramped multi-button card layout with balanced, responsive actions (Full View pill, Ask AI pill, Copy, and Share icons) that never truncate or clip on any display.
+            - **Production Signed**: Release APK and Play Store AAB compiled with production keystore.
 
             ### Available Downloads:
             - **Google Play App Bundle**: `PharmaCode-Release.aab` (Signed with production release keystore for Play Console)

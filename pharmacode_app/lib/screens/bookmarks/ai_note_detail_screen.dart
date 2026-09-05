@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
@@ -34,6 +34,15 @@ class _AiNoteDetailScreenState extends State<AiNoteDetailScreen> {
     if (_baseFontSize > _minFontSize) {
       setState(() => _baseFontSize -= 1.5);
     }
+  }
+
+  String _cleanProvider(String? raw) {
+    if (raw == null || raw.trim().isEmpty) return 'AI Tutor';
+    final lower = raw.toLowerCase();
+    if (lower.contains('groq')) return 'Groq AI';
+    if (lower.contains('gemini')) return 'Gemini AI';
+    if (lower.contains('gpt') || lower.contains('openai')) return 'ChatGPT';
+    return raw.split(' ').first;
   }
 
   void _copyAll(BuildContext context) {
@@ -74,7 +83,7 @@ class _AiNoteDetailScreenState extends State<AiNoteDetailScreen> {
           style: GoogleFonts.dmSans(fontWeight: FontWeight.w800, color: AppTheme.primaryNavy),
         ),
         content: Text(
-          'Are you sure you want to remove this saved AI note from your bookmarks?',
+          'Are you sure you want to remove this saved note from your bookmarks?',
           style: GoogleFonts.inter(fontSize: 13, color: const Color(0xFF475569)),
         ),
         actions: [
@@ -113,6 +122,9 @@ class _AiNoteDetailScreenState extends State<AiNoteDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final bm = widget.bookmark;
+    final titleText = (bm.subjectCode != null && bm.subjectCode!.isNotEmpty)
+        ? bm.subjectCode!
+        : 'AI Note Reader';
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
@@ -127,43 +139,28 @@ class _AiNoteDetailScreenState extends State<AiNoteDetailScreen> {
           children: [
             const PharmaMascotWidget(size: 24, state: MascotState.idle, showBadge: false),
             const SizedBox(width: 8),
-            Flexible(
+            Expanded(
               child: Text(
-                bm.subjectCode != null && bm.subjectCode!.isNotEmpty
-                    ? bm.subjectCode!
-                    : 'AI Note Reader',
+                titleText,
+                maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.dmSans(
                   color: AppTheme.primaryNavy,
                   fontWeight: FontWeight.w800,
-                  fontSize: 16,
+                  fontSize: 16.5,
                 ),
               ),
             ),
           ],
         ),
         actions: [
-          // Zoom Out button
           IconButton(
-            icon: const Icon(Icons.text_decrease_rounded, size: 20, color: Color(0xFF475569)),
-            tooltip: 'Decrease font size',
-            onPressed: _zoomOut,
-          ),
-          // Zoom In button
-          IconButton(
-            icon: const Icon(Icons.text_increase_rounded, size: 20, color: Color(0xFF475569)),
-            tooltip: 'Increase font size',
-            onPressed: _zoomIn,
-          ),
-          // Copy button
-          IconButton(
-            icon: const Icon(Icons.copy_rounded, size: 19, color: Color(0xFF475569)),
+            icon: const Icon(Icons.copy_rounded, size: 20, color: Color(0xFF475569)),
             tooltip: 'Copy Note',
             onPressed: () => _copyAll(context),
           ),
-          // Share button
           IconButton(
-            icon: const Icon(Icons.share_rounded, size: 19, color: Color(0xFF475569)),
+            icon: const Icon(Icons.share_rounded, size: 20, color: Color(0xFF475569)),
             tooltip: 'Share Note',
             onPressed: _shareContent,
           ),
@@ -171,7 +168,7 @@ class _AiNoteDetailScreenState extends State<AiNoteDetailScreen> {
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -188,27 +185,27 @@ class _AiNoteDetailScreenState extends State<AiNoteDetailScreen> {
                   border: Border.all(color: const Color(0xFFBFDBFE), width: 1.2),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF2563EB).withValues(alpha: 0.06),
-                      blurRadius: 10,
-                      offset: const Offset(0, 3),
+                      color: const Color(0xFF2563EB).withValues(alpha: 0.05),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
                     ),
                   ],
                 ),
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(14),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(6),
+                          padding: const EdgeInsets.all(5),
                           decoration: BoxDecoration(
                             color: const Color(0xFF2563EB),
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(6),
                           ),
                           child: const Icon(
                             Icons.psychology_rounded,
-                            size: 16,
+                            size: 15,
                             color: Colors.white,
                           ),
                         ),
@@ -218,14 +215,14 @@ class _AiNoteDetailScreenState extends State<AiNoteDetailScreen> {
                           style: GoogleFonts.dmSans(
                             color: const Color(0xFF1E40AF),
                             fontWeight: FontWeight.w800,
-                            fontSize: 12.5,
-                            letterSpacing: 0.3,
+                            fontSize: 12,
+                            letterSpacing: 0.2,
                           ),
                         ),
                         const Spacer(),
                         if (bm.subjectCode != null && bm.subjectCode!.isNotEmpty)
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(6),
@@ -236,29 +233,29 @@ class _AiNoteDetailScreenState extends State<AiNoteDetailScreen> {
                               style: GoogleFonts.dmSans(
                                 color: const Color(0xFF1D4ED8),
                                 fontWeight: FontWeight.w800,
-                                fontSize: 11,
+                                fontSize: 10.5,
                               ),
                             ),
                           ),
                       ],
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 8),
                     SelectableText(
                       bm.question,
                       style: GoogleFonts.dmSans(
                         color: AppTheme.primaryNavy,
                         fontWeight: FontWeight.w700,
-                        fontSize: 15,
+                        fontSize: 14.5,
                         height: 1.35,
                       ),
                     ),
                     if (bm.subjectName != null && bm.subjectName!.isNotEmpty) ...[
-                      const SizedBox(height: 6),
+                      const SizedBox(height: 4),
                       Text(
                         bm.subjectName!,
                         style: GoogleFonts.inter(
                           color: const Color(0xFF475569),
-                          fontSize: 11.5,
+                          fontSize: 11,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -266,15 +263,15 @@ class _AiNoteDetailScreenState extends State<AiNoteDetailScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: 12),
             ],
 
-            // Note Meta Bar: Mode, Provider & Date
+            // Note Meta Bar with Responsive Layout + Font Zoom Pill
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: const Color(0xFFE2E8F0)),
               ),
               child: Row(
@@ -282,45 +279,88 @@ class _AiNoteDetailScreenState extends State<AiNoteDetailScreen> {
                   const Icon(Icons.verified_rounded, size: 14, color: Color(0xFF10B981)),
                   const SizedBox(width: 6),
                   Text(
-                    'AI Tutor Response',
+                    'AI Tutor',
                     style: GoogleFonts.dmSans(
                       fontSize: 11.5,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w800,
                       color: const Color(0xFF0F172A),
                     ),
                   ),
-                  if (bm.providerUsed != null && bm.providerUsed!.isNotEmpty) ...[
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF1F5F9),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        bm.providerUsed!,
-                        style: GoogleFonts.inter(
-                          fontSize: 9.5,
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFF475569),
-                        ),
+                  const SizedBox(width: 6),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1.5),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF1F5F9),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      _cleanProvider(bm.providerUsed),
+                      style: GoogleFonts.inter(
+                        fontSize: 9.5,
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF475569),
                       ),
                     ),
-                  ],
-                  const Spacer(),
+                  ),
+                  const SizedBox(width: 8),
                   Text(
                     '${bm.timestamp.day}/${bm.timestamp.month}/${bm.timestamp.year}',
                     style: GoogleFonts.inter(
-                      fontSize: 11,
+                      fontSize: 10.5,
                       color: const Color(0xFF94A3B8),
                       fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const Spacer(),
+                  // Zoom Controls (Pill with A- / A+)
+                  Container(
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF1F5F9),
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: const Color(0xFFE2E8F0)),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        InkWell(
+                          onTap: _zoomOut,
+                          borderRadius: const BorderRadius.horizontal(left: Radius.circular(6)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
+                            child: Text(
+                              'A-',
+                              style: GoogleFonts.dmSans(
+                                fontSize: 11.5,
+                                fontWeight: FontWeight.w800,
+                                color: const Color(0xFF475569),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(width: 1, height: 14, color: const Color(0xFFCBD5E1)),
+                        InkWell(
+                          onTap: _zoomIn,
+                          borderRadius: const BorderRadius.horizontal(right: Radius.circular(6)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
+                            child: Text(
+                              'A+',
+                              style: GoogleFonts.dmSans(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w800,
+                                color: const Color(0xFF2563EB),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
 
-            const SizedBox(height: 14),
+            const SizedBox(height: 12),
 
             // AI Answer Full-Width Card (Supports Markdown, Formatted Tables, Terminal Code Blocks)
             Container(
@@ -331,8 +371,8 @@ class _AiNoteDetailScreenState extends State<AiNoteDetailScreen> {
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.03),
-                    blurRadius: 12,
-                    offset: const Offset(0, 3),
+                    blurRadius: 10,
+                    offset: const Offset(0, 2),
                   ),
                 ],
               ),
@@ -343,14 +383,13 @@ class _AiNoteDetailScreenState extends State<AiNoteDetailScreen> {
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 18),
 
             // Action Buttons at Bottom
             Row(
               children: [
                 // Ask follow-up
                 Expanded(
-                  flex: 2,
                   child: ElevatedButton.icon(
                     onPressed: () {
                       Navigator.push(
@@ -391,7 +430,6 @@ class _AiNoteDetailScreenState extends State<AiNoteDetailScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 24),
           ],
         ),
       ),
