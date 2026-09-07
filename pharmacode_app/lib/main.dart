@@ -1,16 +1,12 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'core/ads/ad_service.dart';
-import 'core/notification_service.dart';
 import 'core/theme.dart';
 import 'screens/splash_screen.dart';
 
 final themeModeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.light);
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Set status bar styling
@@ -23,23 +19,7 @@ void main() async {
     ),
   );
 
-  // Initialize Firebase & Push Notifications
-  try {
-    await Firebase.initializeApp();
-    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-    // Initialize notification channels & topic subscriptions immediately
-    await NotificationService().initialize();
-  } catch (e) {
-    debugPrint('Firebase/Notification initialization notice: $e');
-  }
-
-  // Initialize Google AdMob SDK
-  try {
-    await AdService.instance.initialize();
-  } catch (e) {
-    debugPrint('AdMob initialization notice: $e');
-  }
-
+  // Render UI IMMEDIATELY on frame 0 - zero blank screen
   runApp(
     const ProviderScope(
       child: PharmaCodeApp(),

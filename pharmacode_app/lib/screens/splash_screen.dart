@@ -1,6 +1,10 @@
+import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../core/ads/ad_service.dart';
 import '../core/theme.dart';
 import '../core/tour/guided_tour_service.dart';
 import '../services/syllabus_service.dart';
@@ -22,6 +26,7 @@ class _SplashScreenState extends State<SplashScreen>
   late Animation<double> _scale;
   late Animation<double> _taglineFade;
   late Animation<Offset> _taglineSlide;
+  Timer? _delayTimer;
 
   @override
   void initState() {
@@ -53,14 +58,22 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> _initApp() async {
     final sw = Stopwatch()..start();
-    await Future.wait([
-      SyllabusService().initialize(),
-      NotificationService().initialize(),
-    ]);
-    final elapsed = sw.elapsedMilliseconds;
-    if (elapsed < 1800) {
-      await Future.delayed(Duration(milliseconds: 1800 - elapsed));
+
+    // Fast-path initialization: load syllabus and core services concurrently
+    try {
+      await Future.wait([
+        SyllabusService().initialize(),
+        _initCoreServices(),
+      ]);
+    } catch (e) {
+      debugPrint('Startup initialization note: $e');
     }
+
+    final elapsed = sw.elapsedMilliseconds;
+    if (elapsed < 1400 && mounted) {
+      await _safeDelay(1400 - elapsed);
+    }
+    if (!mounted) return;
     final onboardingCompleted = await GuidedTourService().isOnboardingCompleted();
 
     if (mounted) {
@@ -70,14 +83,35 @@ class _SplashScreenState extends State<SplashScreen>
               onboardingCompleted ? const MainNavigationScreen() : const OnboardingScreen(),
           transitionsBuilder: (context, anim, _, child) =>
               FadeTransition(opacity: anim, child: child),
-          transitionDuration: const Duration(milliseconds: 500),
+          transitionDuration: const Duration(milliseconds: 400),
         ),
       );
     }
   }
 
+  Future<void> _safeDelay(int ms) {
+    final completer = Completer<void>();
+    _delayTimer = Timer(Duration(milliseconds: ms), () {
+      if (!completer.isCompleted) completer.complete();
+    });
+    return completer.future;
+  }
+
+  Future<void> _initCoreServices() async {
+    try {
+      await Firebase.initializeApp().timeout(const Duration(seconds: 2));
+      FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+      // Run heavy push notifications and AdMob in background without delaying splash
+      unawaited(NotificationService().initialize());
+      unawaited(AdService.instance.initialize());
+    } catch (e) {
+      debugPrint('Core services initialization notice: $e');
+    }
+  }
+
   @override
   void dispose() {
+    _delayTimer?.cancel();
     _ctrl.dispose();
     super.dispose();
   }

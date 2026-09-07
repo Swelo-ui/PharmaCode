@@ -6,5 +6,6 @@ void main() {
   testWidgets('PharmaCode App smoke test', (WidgetTester tester) async {
     await tester.pumpWidget(const ProviderScope(child: PharmaCodeApp()));
     expect(find.byType(PharmaCodeApp), findsOneWidget);
+    await tester.pump(const Duration(seconds: 2));
   });
 }
