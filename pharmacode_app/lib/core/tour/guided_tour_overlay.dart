@@ -110,35 +110,38 @@ class _GuidedTourOverlayState extends State<GuidedTourOverlay>
         if (didPop) return;
         widget.onSkip();
       },
-      child: FadeTransition(
-        opacity: _fadeAnim,
-        child: Stack(
-          children: [
-            // 1. Semi-transparent backdrop with spotlight cutout
-            Positioned.fill(
-              child: CustomPaint(
-                painter: _SpotlightPainter(
-                  targetRect: targetRect,
-                  borderRadius: step.borderRadius,
-                  overlayColor: const Color(0xC70A1128), // 78% opacity dark navy
+      child: Material(
+        type: MaterialType.transparency,
+        child: FadeTransition(
+          opacity: _fadeAnim,
+          child: Stack(
+            children: [
+              // 1. Semi-transparent backdrop with spotlight cutout
+              Positioned.fill(
+                child: CustomPaint(
+                  painter: _SpotlightPainter(
+                    targetRect: targetRect,
+                    borderRadius: step.borderRadius,
+                    overlayColor: const Color(0xC70A1128), // 78% opacity dark navy
+                  ),
                 ),
               ),
-            ),
 
-            // 2. Absorb taps outside card to prevent background mis-clicks
-            Positioned.fill(
-              child: GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: () {},
+              // 2. Absorb taps outside card to prevent background mis-clicks
+              Positioned.fill(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () {},
+                ),
               ),
-            ),
 
-            // 3. Tooltip Card
-            if (targetRect == null || isFinal)
-              _buildCenteredCard(context, step, isFinal)
-            else
-              _buildTargetedCard(context, step, targetRect, placeAbove, isFinal),
-          ],
+              // 3. Tooltip Card
+              if (targetRect == null || isFinal)
+                _buildCenteredCard(context, step, isFinal)
+              else
+                _buildTargetedCard(context, step, targetRect, placeAbove, isFinal),
+            ],
+          ),
         ),
       ),
     );
@@ -223,159 +226,173 @@ class _GuidedTourOverlayState extends State<GuidedTourOverlay>
     final stepNumber = _currentIndex + 1;
     final totalSteps = widget.steps.length;
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.25),
-            blurRadius: 24,
-            offset: const Offset(0, 8),
-          ),
-          BoxShadow(
-            color: AppTheme.brandBlue.withValues(alpha: 0.15),
-            blurRadius: 12,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header: Step pill & Skip button
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                decoration: BoxDecoration(
-                  color: AppTheme.brandBlue.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (step.icon != null) ...[
-                      Icon(step.icon, size: 12, color: AppTheme.brandBlue),
-                      const SizedBox(width: 4),
-                    ],
-                    Text(
-                      isFinal ? 'Tour Complete' : 'Step $stepNumber of $totalSteps',
-                      style: GoogleFonts.dmSans(
-                        color: AppTheme.brandBlue,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 11,
-                        letterSpacing: 0.3,
-                      ),
-                    ),
-                  ],
-                ),
+    return Material(
+      color: Colors.transparent,
+      child: DefaultTextStyle(
+        style: GoogleFonts.dmSans(
+          decoration: TextDecoration.none,
+        ),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.25),
+                blurRadius: 24,
+                offset: const Offset(0, 8),
               ),
-              if (!isFinal)
-                TextButton(
-                  onPressed: widget.onSkip,
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    minimumSize: Size.zero,
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                  child: Text(
-                    'Skip Tour',
-                    style: GoogleFonts.dmSans(
-                      color: AppTheme.textMuted,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-            ],
-          ),
-
-          const SizedBox(height: 12),
-
-          // Title
-          Text(
-            step.title,
-            style: GoogleFonts.dmSans(
-              color: AppTheme.primaryNavy,
-              fontWeight: FontWeight.w900,
-              fontSize: 18,
-              letterSpacing: -0.3,
-            ),
-          ),
-
-          const SizedBox(height: 8),
-
-          // Description
-          Text(
-            step.description,
-            style: GoogleFonts.dmSans(
-              color: AppTheme.textBody,
-              fontSize: 13.5,
-              height: 1.45,
-            ),
-          ),
-
-          const SizedBox(height: 18),
-
-          // Navigation buttons
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              if (_currentIndex > 0 && !isFinal)
-                OutlinedButton(
-                  onPressed: _previousStep,
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: AppTheme.borderSoft),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  ),
-                  child: Text(
-                    'Back',
-                    style: GoogleFonts.dmSans(
-                      color: AppTheme.textDark,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 13,
-                    ),
-                  ),
-                )
-              else
-                const SizedBox.shrink(),
-
-              ElevatedButton(
-                onPressed: _nextStep,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.primaryNavy,
-                  foregroundColor: Colors.white,
-                  elevation: 2,
-                  padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      step.nextButtonText ?? (isFinal ? 'Finish & Explore' : 'Next'),
-                      style: GoogleFonts.dmSans(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 13.5,
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    Icon(
-                      isFinal ? Icons.check_circle_rounded : Icons.arrow_forward_rounded,
-                      size: 15,
-                    ),
-                  ],
-                ),
+              BoxShadow(
+                color: AppTheme.brandBlue.withValues(alpha: 0.15),
+                blurRadius: 12,
+                offset: const Offset(0, 2),
               ),
             ],
           ),
-        ],
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header: Step pill & Skip button
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: AppTheme.brandBlue.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (step.icon != null) ...[
+                          Icon(step.icon, size: 12, color: AppTheme.brandBlue),
+                          const SizedBox(width: 4),
+                        ],
+                        Text(
+                          isFinal ? 'Tour Complete' : 'Step $stepNumber of $totalSteps',
+                          style: GoogleFonts.dmSans(
+                            color: AppTheme.brandBlue,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 11,
+                            letterSpacing: 0.3,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (!isFinal)
+                    TextButton(
+                      onPressed: widget.onSkip,
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      child: Text(
+                        'Skip Tour',
+                        style: GoogleFonts.dmSans(
+                          color: AppTheme.textMuted,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 12,
+                          decoration: TextDecoration.none,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+
+              const SizedBox(height: 12),
+
+              // Title
+              Text(
+                step.title,
+                style: GoogleFonts.dmSans(
+                  color: AppTheme.primaryNavy,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 18,
+                  letterSpacing: -0.3,
+                  decoration: TextDecoration.none,
+                ),
+              ),
+
+              const SizedBox(height: 8),
+
+              // Description
+              Text(
+                step.description,
+                style: GoogleFonts.dmSans(
+                  color: AppTheme.textBody,
+                  fontSize: 13.5,
+                  height: 1.45,
+                  decoration: TextDecoration.none,
+                ),
+              ),
+
+              const SizedBox(height: 18),
+
+              // Navigation buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  if (_currentIndex > 0 && !isFinal)
+                    OutlinedButton(
+                      onPressed: _previousStep,
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: AppTheme.borderSoft),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      ),
+                      child: Text(
+                        'Back',
+                        style: GoogleFonts.dmSans(
+                          color: AppTheme.textDark,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13,
+                          decoration: TextDecoration.none,
+                        ),
+                      ),
+                    )
+                  else
+                    const SizedBox.shrink(),
+
+                  ElevatedButton(
+                    onPressed: _nextStep,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primaryNavy,
+                      foregroundColor: Colors.white,
+                      elevation: 2,
+                      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          step.nextButtonText ?? (isFinal ? 'Finish & Explore' : 'Next'),
+                          style: GoogleFonts.dmSans(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 13.5,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Icon(
+                          isFinal ? Icons.check_circle_rounded : Icons.arrow_forward_rounded,
+                          size: 15,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
