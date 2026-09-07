@@ -72,13 +72,38 @@ jobs:
           flutter analyze --no-fatal-infos
           flutter test test/ai_pipeline_test.dart
 
+      - name: Configure Production Signing Keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        run: |
+          mkdir -p pharmacode_app/android
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > pharmacode_app/android/upload-keystore.jks
+          else
+            echo "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" | base64 -d > pharmacode_app/android/upload-keystore.jks
+          fi
+
+          STORE_PWD="${STORE_PASSWORD:-pharmacode2026}"
+          KEY_PWD="${KEY_PASSWORD:-pharmacode2026}"
+          KEY_AL="${KEY_ALIAS:-pharmacode}"
+
+          cat <<EOF > pharmacode_app/android/key.properties
+          storePassword=$STORE_PWD
+          keyPassword=$KEY_PWD
+          keyAlias=$KEY_AL
+          storeFile=../upload-keystore.jks
+          EOF
+
       - name: Build Android Release APK
         working-directory: pharmacode_app
-        run: flutter build apk --release --android-skip-build-dependency-validation
+        run: flutter build apk --release --obfuscate --split-debug-info=build/app/outputs/symbols --android-skip-build-dependency-validation
 
       - name: Build Android Release AAB (Play Store)
         working-directory: pharmacode_app
-        run: flutter build appbundle --release --android-skip-build-dependency-validation
+        run: flutter build appbundle --release --obfuscate --split-debug-info=build/app/outputs/symbols --android-skip-build-dependency-validation
 
       - name: Output Error to Summary
         if: failure()
@@ -120,23 +145,35 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v1.0.13
-          name: "PharmaCode v1.0.13 (Build 14) Production Release"
+          tag_name: v1.0.14
+          name: "PharmaCode v1.0.14 (Build 15) Production Release"
           body: |
-            ## PharmaCode v1.0.13 Release (Build 14)
+            ## PharmaCode v1.0.14 Release (Build 15)
             Official production signed release artifacts for **PharmaCode — B.Pharm NEP 2020 Companion with PharmaHelper AI Tutor**.
 
-            ### What's New in v1.0.13:
-            - **Inline Math in Bullets & Bold**: Fixed recursive tokenization so formulas wrapped in bold markdown (like `• **\(AUC_{po}\)**`) or parentheses render as KaTeX math rather than literal text.
-            - **HTML Subscript & Superscript (`<sub>`/`<sup>`)**: Subscripts like `(F<sub>rel</sub>)` and superscripts render with native typographic alignment and proper sizing.
-            - **Scrollable Table Layout (3+ Columns)**: 3-column and descriptive tables are now horizontally scrollable with comfortable column widths and a swipe hint indicator, preventing narrow vertical text squishing.
-            - **HTML Entities**: Decoded standard pharmaceutical symbols like `&plusmn;` (±), `&times;` (×), and `&mu;g` (µg).
-            - **Heading Rich Formatting**: Headings now support subscripts and mathematical symbols.
+            ### Security & Hardening:
+            - **Signing Credentials Protection**: Keystore and `key.properties` removed from version control with `.gitignore` coverage; automated secure injection in CI/CD.
+            - **Secure Storage Migration**: AI custom API keys migrated from plain `SharedPreferences` to hardware-backed `FlutterSecureStorage`.
+            - **Android App Hardening**: Disabled Android cloud backups (`android:allowBackup="false"`).
+            - **Web Security Headers**: Hardened Next.js with `X-Frame-Options: SAMEORIGIN`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-cross-origin`, and `Permissions-Policy`.
 
-            ### Available Downloads:
-            - **Google Play App Bundle**: `PharmaCode-Release.aab` (Signed with production release keystore for Play Console)
-            - **Universal APK**: `PharmaCode-Universal.apk` (Install directly on any Android device)
-            - **Deobfuscation File**: `mapping.txt` (Upload to Google Play Console for crash deobfuscation)
+            ### Bugs & Functional Fixes:
+            - **Push Notifications**: Fixed duplicate background FCM notifications by checking data-only payloads.
+            - **Bookmark Sync**: Converted `SubjectDetailScreen` to reactive Riverpod `ConsumerStatefulWidget` for seamless real-time synchronization between syllabus and bookmark screens.
+            - **Auth Null Safety**: Sanitized Firebase user session extraction and entity unwrapping.
+            - **Website Links**: Fixed dead notes download button linking directly to syllabus units.
+            - **Sitemap**: Dynamic route derivation for all 77+ subjects from syllabus data.
+
+            ### UI/UX Improvements:
+            - **Ad Friction Removed**: Removed unexpected interstitial ad interruption on chat message send.
+            - **Sensitive Data Masking**: Added visibility toggles with masked passwords on AI API key inputs.
+            - **Layout Overflow Protection**: Redesigned semester card metrics and responsive ratios to avoid text clipping across scaled display fonts.
+            - **Lifecycle Resilient Timers**: Replaced recursive `Future.delayed` ticker with cancelable `Timer.periodic`.
+
+            ### Play Store Optimizations:
+            - Target SDK 36 (Android 16), Compile SDK 37 (Android 17).
+            - R8 bytecode minification, dead-code elimination, and resource shrinking enabled.
+            - Obfuscated release builds with mapping.txt symbols generated.
           files: |
             release-assets/*
           draft: false

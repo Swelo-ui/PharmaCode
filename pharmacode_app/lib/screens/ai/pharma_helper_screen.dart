@@ -5,7 +5,6 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/theme.dart';
-import '../../core/ads/ad_service.dart';
 import '../../core/widgets/ad_banner_widget.dart';
 import '../../models/syllabus_models.dart';
 import '../../models/ai_bookmark_model.dart';
@@ -46,7 +45,6 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
   PharmaChatMode _selectedMode = PharmaChatMode.tutorHinglish;
   bool _webSearchEnabled = false;
   Subject? _attachedSubject;
-  int _queryCounter = 0;
 
   final List<String> _suggestedPrompts = [
     'Bioavailability simple Hinglish me samjhao',
@@ -191,11 +189,6 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
 
     _textCtrl.clear();
     FocusScope.of(context).unfocus();
-
-    _queryCounter++;
-    if (_queryCounter % 4 == 0) {
-      AdService.instance.showInterstitialAd();
-    }
 
     final userMsg = ChatMessage(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -1796,6 +1789,8 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
     final nvidiaCtrl = TextEditingController(text: _keyManager.getCustomKey(AiProvider.nvidia) ?? '');
     final openRouterCtrl = TextEditingController(text: _keyManager.getCustomKey(AiProvider.openrouter) ?? '');
 
+    bool obscureKeys = true;
+
     return StatefulBuilder(
       builder: (context, setSheetState) {
         return ConstrainedBox(
@@ -1906,18 +1901,31 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                     ),
                   ),
                 const SizedBox(height: 16),
-                Text(
-                  'CUSTOM BACKUP KEYS (OPTIONAL OVERRIDES)',
-                  style: GoogleFonts.inter(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w800,
-                    color: const Color(0xFF94A3B8),
-                    letterSpacing: 0.5,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'CUSTOM BACKUP KEYS (OPTIONAL)',
+                      style: GoogleFonts.inter(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                        color: const Color(0xFF94A3B8),
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(obscureKeys ? Icons.visibility_off_outlined : Icons.visibility_outlined, size: 18, color: const Color(0xFF64748B)),
+                      tooltip: obscureKeys ? 'Show keys' : 'Hide keys',
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                      onPressed: () => setSheetState(() => obscureKeys = !obscureKeys),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 8),
                 TextField(
                   controller: groqCtrl,
+                  obscureText: obscureKeys,
                   decoration: InputDecoration(
                     labelText: 'Groq Cloud API Key',
                     helperText: 'Default active. Free at console.groq.com',
@@ -1930,6 +1938,7 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                 const SizedBox(height: 10),
                 TextField(
                   controller: geminiCtrl,
+                  obscureText: obscureKeys,
                   decoration: InputDecoration(
                     labelText: 'Google Gemini API Key',
                     helperText: 'Default active. Free at aistudio.google.com',
@@ -1942,6 +1951,7 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                 const SizedBox(height: 10),
                 TextField(
                   controller: nvidiaCtrl,
+                  obscureText: obscureKeys,
                   decoration: InputDecoration(
                     labelText: 'NVIDIA NIM API Key',
                     helperText: 'Default active. Free at build.nvidia.com',
@@ -1954,6 +1964,7 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                 const SizedBox(height: 10),
                 TextField(
                   controller: openRouterCtrl,
+                  obscureText: obscureKeys,
                   decoration: InputDecoration(
                     labelText: 'OpenRouter API Key',
                     helperText: 'Optional tier at openrouter.ai/keys',

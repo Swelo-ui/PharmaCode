@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.pharmacode.bpharm"
-    compileSdk = 36
+    compileSdk = 37
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -38,10 +38,10 @@ android {
 
     signingConfigs {
         create("release") {
-            keyAlias = keystoreProperties.getProperty("keyAlias") ?: "pharmacode"
-            keyPassword = keystoreProperties.getProperty("keyPassword") ?: "pharmacode2026"
+            keyAlias = keystoreProperties.getProperty("keyAlias") ?: System.getenv("KEY_ALIAS") ?: "pharmacode"
+            keyPassword = keystoreProperties.getProperty("keyPassword") ?: System.getenv("KEY_PASSWORD") ?: "pharmacode2026"
             storeFile = rootProject.file("upload-keystore.jks")
-            storePassword = keystoreProperties.getProperty("storePassword") ?: "pharmacode2026"
+            storePassword = keystoreProperties.getProperty("storePassword") ?: System.getenv("STORE_PASSWORD") ?: "pharmacode2026"
         }
     }
 

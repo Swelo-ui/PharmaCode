@@ -86,8 +86,8 @@ export default function SemesterPage({
             <div className="max-w-[960px] mx-auto px-4 sm:px-6 py-6 sm:py-8">
                 <Breadcrumb items={[
                     { name: "Home", href: "/" },
-                    { name: "Syllabus", href: "/syllabus" },
-                    { name: `Semester ${sem.num}`, href: `/syllabus/semester-${sem.num}` },
+                    { name: "Syllabus", href: "/syllabus/" },
+                    { name: `Semester ${sem.num}`, href: `/syllabus/semester-${sem.num}/` },
                 ]} />
 
                 {/* ── Header Card ──────────────────────────────── */}

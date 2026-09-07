@@ -126,14 +126,14 @@ export default function NotesPage() {
                                             1.4k downloads
                                         </span>
                                     </div>
-                                    <button
-                                        type="button"
+                                    <Link
+                                        href={`/syllabus/semester-${sem.num}/${s.slug}/`}
                                         className="flex w-full items-center justify-center gap-2 rounded-[10px] py-2.5 text-[12px] font-bold text-white transition-all duration-150 hover:opacity-90 hover:shadow-sm active:scale-[0.98]"
                                         style={{ background: sem.color }}
                                     >
                                         <Download size={13} strokeWidth={2.5} />
-                                        Download Free
-                                    </button>
+                                        Download Notes &amp; Units
+                                    </Link>
                                 </div>
                             </article>
                         )),

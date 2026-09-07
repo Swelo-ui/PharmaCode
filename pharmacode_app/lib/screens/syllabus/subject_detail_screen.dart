@@ -1,36 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../core/in_app_browser.dart';
 import '../../core/theme.dart';
+import '../../features/bookmarks/presentation/bookmarks_controller.dart';
 import '../../models/syllabus_models.dart';
-import '../../services/syllabus_service.dart';
 import '../ai/pharma_helper_screen.dart';
 import '../../widgets/pharma_mascot_widget.dart';
 
-class SubjectDetailScreen extends StatefulWidget {
+class SubjectDetailScreen extends ConsumerStatefulWidget {
   final Subject subject;
 
   const SubjectDetailScreen({super.key, required this.subject});
 
   @override
-  State<SubjectDetailScreen> createState() => _SubjectDetailScreenState();
+  ConsumerState<SubjectDetailScreen> createState() => _SubjectDetailScreenState();
 }
 
-class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
-  late bool _isBookmarked;
-
-  @override
-  void initState() {
-    super.initState();
-    _isBookmarked = SyllabusService().isBookmarked(widget.subject.code);
-  }
-
+class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
   void _toggleBookmark() async {
-    final status = await SyllabusService().toggleBookmark(widget.subject.code);
-    setState(() {
-      _isBookmarked = status;
-    });
+    final status = await ref.read(bookmarksProvider.notifier).toggleBookmark(widget.subject.code);
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -65,6 +55,7 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final s = widget.subject;
+    final isBookmarked = ref.watch(bookmarksProvider).contains(s.code);
 
     return Scaffold(
       backgroundColor: AppTheme.background,
@@ -94,8 +85,8 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
           ),
           IconButton(
             icon: Icon(
-              _isBookmarked ? Icons.bookmark_rounded : Icons.bookmark_outline_rounded,
-              color: _isBookmarked ? AppTheme.brandAmber : AppTheme.primaryNavy,
+              isBookmarked ? Icons.bookmark_rounded : Icons.bookmark_outline_rounded,
+              color: isBookmarked ? AppTheme.brandAmber : AppTheme.primaryNavy,
             ),
             onPressed: _toggleBookmark,
             tooltip: 'Bookmark Subject',

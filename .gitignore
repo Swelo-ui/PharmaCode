@@ -40,3 +40,13 @@ next-env.d.ts
 
 # sitemap & robots are now manually maintained — tracked in git
 # (next-sitemap generateRobotsTxt is disabled)
+
+# Android keystore & signing secrets
+*.jks
+*.keystore
+key.properties
+
+# Android build outputs & large binaries
+*.apk
+*.aab
+mapping.txt

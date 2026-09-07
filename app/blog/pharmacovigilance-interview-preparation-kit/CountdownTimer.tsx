@@ -9,8 +9,8 @@ const LINKEDIN_POST_URL = "https://www.linkedin.com/posts/pharmacode-edu_pharmac
 const OFFER_EXPIRY_TIMESTAMP = new Date("2026-08-11T01:00:00+05:30").getTime();
 
 function useCountdown() {
-    const [timeLeft, setTimeLeft] = useState({ hours: 13, minutes: 36, seconds: 0 });
-    const [isExpired, setIsExpired] = useState(false);
+    const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
+    const [isExpired, setIsExpired] = useState(true);
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -253,8 +253,21 @@ export function CopyEmailBox() {
     const [copied, setCopied] = useState(false);
     const email = "pharmacode.connect@gmail.com";
 
-    const handleCopy = () => {
-        navigator.clipboard.writeText(email);
+    const handleCopy = async () => {
+        try {
+            if (typeof navigator !== "undefined" && navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(email);
+            } else {
+                throw new Error("Clipboard API not available");
+            }
+        } catch {
+            const textArea = document.createElement("textarea");
+            textArea.value = email;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textArea);
+        }
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
@@ -288,8 +301,21 @@ export function CopyUpiBox() {
     const [copied, setCopied] = useState(false);
     const upiId = "pharmacode@ybl";
 
-    const handleCopy = () => {
-        navigator.clipboard.writeText(upiId);
+    const handleCopy = async () => {
+        try {
+            if (typeof navigator !== "undefined" && navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(upiId);
+            } else {
+                throw new Error("Clipboard API not available");
+            }
+        } catch {
+            const textArea = document.createElement("textarea");
+            textArea.value = upiId;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textArea);
+        }
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };

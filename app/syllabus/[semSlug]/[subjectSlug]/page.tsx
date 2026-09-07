@@ -242,8 +242,8 @@ export default function SubjectPage({
                 <Breadcrumb
                     items={[
                         { name: "Home", href: "/" },
-                        { name: "Syllabus", href: "/syllabus" },
-                        { name: `Semester ${sem.num}`, href: `/syllabus/semester-${sem.num}` },
+                        { name: "Syllabus", href: "/syllabus/" },
+                        { name: `Semester ${sem.num}`, href: `/syllabus/semester-${sem.num}/` },
                         { name: subject.code, href: canonical },
                     ]}
                 />
@@ -301,15 +301,16 @@ export default function SubjectPage({
 
                 {/* ── CTA Buttons — full width, outside card ───── */}
                 <div className="flex flex-col gap-2.5 mt-3 mb-6">
-                    <button
+                    <a
+                        href="#units"
                         className="w-full flex items-center justify-center gap-2 py-3.5 rounded-[14px] text-white text-[14px] font-bold font-[DM_Sans] transition-all duration-150 hover:opacity-90 hover:shadow-lg active:scale-[0.98]"
                         style={{ background: sem.color }}
                     >
                         <Download size={16} />
-                        Download {subject.code} Notes PDF
-                    </button>
+                        Explore &amp; Download {subject.code} Unit Notes
+                    </a>
                     <Link
-                        href={`/syllabus/semester-${sem.num}`}
+                        href={`/syllabus/semester-${sem.num}/`}
                         className="w-full flex items-center justify-center gap-2 py-3 rounded-[14px] text-[14px] font-semibold font-[DM_Sans] bg-white transition-all duration-150 hover:shadow-sm"
                         style={{ border: `1.5px solid ${sem.color}55`, color: sem.color }}
                     >
@@ -329,7 +330,7 @@ export default function SubjectPage({
 
                 {/* ── Unit-wise Detailed Syllabus ───────────────── */}
                 {subject.units.length > 0 ? (
-                    <section>
+                    <section id="units">
                         <div className="flex items-center gap-3 mb-5">
                             <h2 className="font-[Nunito] font-extrabold text-[18px] sm:text-[20px] text-[#1A2B6B]">
                                 Unit-wise Syllabus

@@ -55,10 +55,16 @@ class AuthRepository {
       email: email.trim(),
       password: password,
     );
-    final user = cred.user!;
+    final user = cred.user;
+    if (user == null) {
+      throw Exception('Authentication succeeded but user record was not found.');
+    }
     await _secureStorage.saveUserSession(uid: user.uid, email: user.email ?? '');
     final entity = await getCurrentUserEntity();
-    return entity!;
+    if (entity == null) {
+      throw Exception('Failed to load user profile after sign-in.');
+    }
+    return entity;
   }
 
   Future<UserEntity> signUpWithEmail({
@@ -71,7 +77,10 @@ class AuthRepository {
       email: email.trim(),
       password: password,
     );
-    final user = cred.user!;
+    final user = cred.user;
+    if (user == null) {
+      throw Exception('Account creation succeeded but user record was not found.');
+    }
     await user.updateDisplayName(name.trim());
     await user.reload();
 
@@ -80,7 +89,10 @@ class AuthRepository {
     await _secureStorage.saveUserSession(uid: user.uid, email: user.email ?? '');
 
     final entity = await getCurrentUserEntity();
-    return entity!;
+    if (entity == null) {
+      throw Exception('Failed to load user profile after registration.');
+    }
+    return entity;
   }
 
   Future<UserEntity?> signInWithGoogle() async {
@@ -95,8 +107,10 @@ class AuthRepository {
       );
 
       final cred = await _firebaseAuth.signInWithCredential(credential);
-      final user = cred.user!;
-      await _secureStorage.saveUserSession(uid: user.uid, email: user.email ?? '');
+      final user = cred.user;
+      if (user != null) {
+        await _secureStorage.saveUserSession(uid: user.uid, email: user.email ?? '');
+      }
 
       return await getCurrentUserEntity();
     } catch (e) {

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/animations.dart';
@@ -32,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late Animation<double> _tickerFade;
   int _currentTicker = 0;
   int _expandedFaq = -1;
+  Timer? _tickerTimer;
 
   @override
   void initState() {
@@ -39,23 +41,27 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     _tickerCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 600));
     _tickerFade = CurvedAnimation(parent: _tickerCtrl, curve: Curves.easeInOut);
     _tickerCtrl.forward();
-    _nextTicker();
+    _startTicker();
   }
 
-  void _nextTicker() {
-    Future.delayed(const Duration(seconds: 4), () {
-      if (!mounted) return;
+  void _startTicker() {
+    _tickerTimer?.cancel();
+    _tickerTimer = Timer.periodic(const Duration(seconds: 4), (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
       _tickerCtrl.reverse().then((_) {
         if (!mounted) return;
         setState(() => _currentTicker = (_currentTicker + 1) % tickerItems.length);
         _tickerCtrl.forward();
-        _nextTicker();
       });
     });
   }
 
   @override
   void dispose() {
+    _tickerTimer?.cancel();
     _tickerCtrl.dispose();
     super.dispose();
   }
@@ -218,7 +224,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   children: [
                     _statChip('8', 'Semesters'),
                     const SizedBox(width: 8),
-                    _statChip('212', 'Credits'),
+                    _statChip('193', 'Credits'),
                     const SizedBox(width: 8),
                     _statChip('77+', 'Subjects'),
                     const SizedBox(width: 8),
@@ -526,7 +532,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           crossAxisCount: 2,
           crossAxisSpacing: 12,
           mainAxisSpacing: 12,
-          childAspectRatio: 1.55,
+          childAspectRatio: 1.4,
         ),
         itemCount: semesters.length,
         itemBuilder: (context, i) {
@@ -539,7 +545,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           return BouncingCard(
             onTap: () => widget.onNavigateToSemester(sem.num),
             child: Container(
-              padding: const EdgeInsets.all(14),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
@@ -554,11 +560,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
                       Container(
-                        width: 38, height: 38,
+                        width: 36, height: 36,
                         decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(10)),
                         alignment: Alignment.center,
                         child: Text('${sem.num}', style: GoogleFonts.dmSans(
@@ -573,15 +580,20 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       ),
                     ],
                   ),
-                  const Spacer(),
-                  Text('Semester ${sem.num}', style: GoogleFonts.dmSans(
-                    color: AppTheme.textDark, fontWeight: FontWeight.w800, fontSize: 13)),
-                  const SizedBox(height: 4),
-                  Row(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      if (tCount > 0) _miniBadge('${tCount}T', const Color(0xFFEEF2FF), const Color(0xFF3730A3)),
-                      if (tCount > 0 && pCount > 0) const SizedBox(width: 4),
-                      if (pCount > 0) _miniBadge('${pCount}P', const Color(0xFFECFDF5), const Color(0xFF14532D)),
+                      Text('Semester ${sem.num}', style: GoogleFonts.dmSans(
+                        color: AppTheme.textDark, fontWeight: FontWeight.w800, fontSize: 13)),
+                      const SizedBox(height: 3),
+                      Row(
+                        children: [
+                          if (tCount > 0) _miniBadge('${tCount}T', const Color(0xFFEEF2FF), const Color(0xFF3730A3)),
+                          if (tCount > 0 && pCount > 0) const SizedBox(width: 4),
+                          if (pCount > 0) _miniBadge('${pCount}P', const Color(0xFFECFDF5), const Color(0xFF14532D)),
+                        ],
+                      ),
                     ],
                   ),
                 ],

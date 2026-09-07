@@ -83,19 +83,19 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     visibility: NotificationVisibility.public,
   );
 
-  // ✅ FIX: Always show via flutter_local_notifications with our custom channel.
-  // When FCM sends a notification-payload, Android OS auto-shows it on the
-  // DEFAULT channel (no custom sound). By always calling plugin.show() here,
-  // we ensure our custom channel + sound is used every time.
-  final notifId =
-      (DateTime.now().millisecondsSinceEpoch ~/ 100) % 2147483647;
-  await plugin.show(
-    id: notifId,
-    title: title,
-    body: body,
-    notificationDetails: const NotificationDetails(android: androidDetails),
-    payload: payload,
-  );
+  // Only show local notification if it was a data-only payload.
+  // If message.notification != null, Google Play Services / Android OS already displays it.
+  if (message.notification == null) {
+    final notifId =
+        (DateTime.now().millisecondsSinceEpoch ~/ 100) % 2147483647;
+    await plugin.show(
+      id: notifId,
+      title: title,
+      body: body,
+      notificationDetails: const NotificationDetails(android: androidDetails),
+      payload: payload,
+    );
+  }
 
   // Persist to SharedPreferences for in-app notification center
   try {

@@ -52,12 +52,15 @@ class AiKeyManager {
       _customNvidiaKey = await _secureStorage.read(key: 'custom_nvidia_key');
       _customOpenRouterKey = await _secureStorage.read(key: 'custom_openrouter_key');
 
-      // Fallback check SharedPreferences if secure storage is unavailable on some devices
+      // Migrate any legacy plaintext keys from SharedPreferences to SecureStorage and purge
       final prefs = await SharedPreferences.getInstance();
-      _customGroqKey ??= prefs.getString('custom_groq_key');
-      _customGeminiKey ??= prefs.getString('custom_gemini_key');
-      _customNvidiaKey ??= prefs.getString('custom_nvidia_key');
-      _customOpenRouterKey ??= prefs.getString('custom_openrouter_key');
+      for (final p in ['groq', 'gemini', 'nvidia', 'openrouter']) {
+        final legacyKey = prefs.getString('custom_${p}_key');
+        if (legacyKey != null && legacyKey.isNotEmpty) {
+          await _secureStorage.write(key: 'custom_${p}_key', value: legacyKey);
+          await prefs.remove('custom_${p}_key');
+        }
+      }
     } catch (e) {
       debugPrint('AiKeyManager init notice: $e');
     }
@@ -125,11 +128,7 @@ class AiKeyManager {
 
     try {
       final prefs = await SharedPreferences.getInstance();
-      if (cleaned != null) {
-        await prefs.setString(keyName, cleaned);
-      } else {
-        await prefs.remove(keyName);
-      }
+      await prefs.remove(keyName);
     } catch (_) {}
 
     switch (provider) {

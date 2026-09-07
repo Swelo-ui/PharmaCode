@@ -20,10 +20,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       badge: 'PCI NEP 2020 CURRICULUM',
       badgeColor: AppTheme.brandBlue,
       title: 'Complete B.Pharm\nSyllabus & Units',
-      description: 'All 8 Semesters, 77+ Subjects, and 212 Credits mapped unit-by-unit with official PCI learning objectives and reference textbooks.',
+      description: 'All 8 Semesters, 77+ Subjects, and 193 Credits mapped unit-by-unit with official PCI learning objectives and reference textbooks.',
       icon: Icons.menu_book_rounded,
       iconColor: AppTheme.brandBlue,
-      tags: ['8 Semesters', '212 Credits', 'Unit-wise Breakdown', 'GPAT Aligned'],
+      tags: ['8 Semesters', '193 Credits', 'Unit-wise Breakdown', 'GPAT Aligned'],
     ),
     _OnboardingData(
       badge: '100% FREE ACCESS',
