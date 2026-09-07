@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/animations.dart';
 import '../../core/in_app_browser.dart';
 import '../../core/theme.dart';
+import '../../core/tour/guided_tour_service.dart';
 import '../../services/auth_service.dart';
 import '../../widgets/user_avatar.dart';
 
@@ -1071,6 +1072,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
               await prefs.setBool('pref_haptic', val);
               setState(() => _hapticEnabled = val);
               if (val) HapticFeedback.mediumImpact();
+            },
+          ),
+          const Divider(height: 1),
+          ListTile(
+            leading: Container(
+              width: 38,
+              height: 38,
+              decoration: BoxDecoration(
+                color: const Color(0xFFEFF6FF),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              alignment: Alignment.center,
+              child: const Icon(Icons.explore_rounded, color: AppTheme.brandBlue, size: 18),
+            ),
+            title: Text(
+              'App Feature Tour',
+              style: GoogleFonts.dmSans(fontWeight: FontWeight.w800, fontSize: 14),
+            ),
+            subtitle: Text(
+              'Re-run guided tour of key app features',
+              style: GoogleFonts.dmSans(color: AppTheme.textMuted, fontSize: 12),
+            ),
+            trailing: const Icon(Icons.chevron_right_rounded, color: AppTheme.textMuted),
+            onTap: () async {
+              await GuidedTourService().resetGuidedTour();
+              if (mounted) {
+                Navigator.pop(context, true);
+              }
             },
           ),
         ],

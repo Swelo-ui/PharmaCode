@@ -5,6 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
 import '../core/in_app_browser.dart';
 import '../core/theme.dart';
+import '../core/tour/guided_tour_model.dart';
+import '../core/tour/guided_tour_service.dart';
+import '../core/tour/guided_tour_overlay.dart';
 import '../features/auth/domain/user_entity.dart';
 import '../features/auth/presentation/auth_controller.dart';
 import '../features/notifications/presentation/notification_controller.dart';
@@ -33,6 +36,105 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
   int _targetSemester = 1;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  final GlobalKey _keyAiNav = GlobalKey();
+  final GlobalKey _keySyllabusTab = GlobalKey();
+  final GlobalKey _keySearchAction = GlobalKey();
+  final GlobalKey _keyDrawerMenu = GlobalKey();
+
+  bool _isTourActive = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAndLaunchGuidedTour();
+    });
+  }
+
+  Future<void> _checkAndLaunchGuidedTour() async {
+    final isTourDone = await GuidedTourService().isGuidedTourCompleted();
+    if (!isTourDone && mounted) {
+      setState(() {
+        _currentIndex = 0;
+        _isTourActive = true;
+      });
+    }
+  }
+
+  void _startGuidedTour() {
+    setState(() {
+      _currentIndex = 0;
+      _isTourActive = true;
+    });
+  }
+
+  void _finishGuidedTour() {
+    GuidedTourService().setGuidedTourCompleted(true);
+    setState(() {
+      _isTourActive = false;
+    });
+  }
+
+  void _skipGuidedTour() {
+    GuidedTourService().setGuidedTourCompleted(true);
+    setState(() {
+      _isTourActive = false;
+    });
+  }
+
+  List<TourStep> _buildTourSteps() {
+    return [
+      TourStep(
+        id: 'ai_tutor',
+        title: 'PharmaHelper AI Tutor',
+        description: 'Your 24/7 B.Pharm study mentor. Tap here anytime to get instant 5-mark exam answers, understand pharmacology mechanisms, and clear doubts in Hinglish & English.',
+        targetKey: _keyAiNav,
+        targetPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        borderRadius: 22,
+        preferredPosition: TourTooltipPosition.above,
+        icon: Icons.smart_toy_rounded,
+      ),
+      TourStep(
+        id: 'syllabus_tab',
+        title: 'PCI NEP 2020 Syllabus',
+        description: 'Explore all 8 semesters, 77+ subjects, and 193 credits mapped unit-by-unit with official learning objectives and reference textbooks.',
+        targetKey: _keySyllabusTab,
+        targetPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        borderRadius: 16,
+        preferredPosition: TourTooltipPosition.above,
+        icon: Icons.menu_book_rounded,
+      ),
+      TourStep(
+        id: 'search_action',
+        title: 'Global Search & Quick Find',
+        description: 'Search any drug name, chemical structure, topic, or subject code across the entire syllabus in milliseconds.',
+        targetKey: _keySearchAction,
+        targetPadding: const EdgeInsets.all(4),
+        borderRadius: 12,
+        preferredPosition: TourTooltipPosition.below,
+        icon: Icons.search_rounded,
+      ),
+      TourStep(
+        id: 'drawer_menu',
+        title: 'All Semesters & Career Kits',
+        description: 'Open the menu to jump directly to any semester, view free study downloads, and access industry career interview kits.',
+        targetKey: _keyDrawerMenu,
+        targetPadding: const EdgeInsets.all(4),
+        borderRadius: 12,
+        preferredPosition: TourTooltipPosition.below,
+        icon: Icons.menu_rounded,
+      ),
+      const TourStep(
+        id: 'tour_finish',
+        title: "You're All Set! 🎓",
+        description: "You're ready to explore PharmaCode. You can restart this guided tour anytime from your Profile or the Drawer menu.",
+        isFinalStep: true,
+        nextButtonText: 'Start Learning',
+        icon: Icons.verified_rounded,
+      ),
+    ];
+  }
+
   void _navigateToSemester(int semNum) {
     setState(() {
       _targetSemester = semNum;
@@ -56,7 +158,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
   void _onProfileButtonTapped() {
     final isLoggedIn = ref.read(isLoggedInProvider);
     if (isLoggedIn) {
-      Navigator.push(
+      Navigator.push<bool>(
         context,
         MaterialPageRoute(
           builder: (_) => ProfileScreen(
@@ -65,8 +167,13 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
             },
           ),
         ),
-      ).then((_) {
+      ).then((result) {
         ref.read(authControllerProvider.notifier).refreshUser();
+        if (result == true && mounted) {
+          Future.delayed(const Duration(milliseconds: 250), () {
+            if (mounted) _startGuidedTour();
+          });
+        }
       });
     } else {
       Navigator.push(
@@ -102,31 +209,41 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
       const BookmarksScreen(),
     ];
 
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: AppTheme.background,
-      appBar: _buildAppBar(
-        isLoggedIn: isLoggedIn,
-        avatarKey: user?.avatarKey ?? 'mascot',
-        photoUrl: user?.photoUrl ?? '',
-        displayName: user?.displayName ?? 'Student',
-        unreadCount: unreadCount,
-      ),
-      drawer: _buildDrawer(isLoggedIn: isLoggedIn, user: user, unreadCount: unreadCount),
-      body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 250),
-        switchInCurve: Curves.easeOutCubic,
-        switchOutCurve: Curves.easeInCubic,
-        transitionBuilder: (child, animation) => FadeTransition(
-          opacity: animation,
-          child: child,
+    return Stack(
+      children: [
+        Scaffold(
+          key: _scaffoldKey,
+          backgroundColor: AppTheme.background,
+          appBar: _buildAppBar(
+            isLoggedIn: isLoggedIn,
+            avatarKey: user?.avatarKey ?? 'mascot',
+            photoUrl: user?.photoUrl ?? '',
+            displayName: user?.displayName ?? 'Student',
+            unreadCount: unreadCount,
+          ),
+          drawer: _buildDrawer(isLoggedIn: isLoggedIn, user: user, unreadCount: unreadCount),
+          body: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 250),
+            switchInCurve: Curves.easeOutCubic,
+            switchOutCurve: Curves.easeInCubic,
+            transitionBuilder: (child, animation) => FadeTransition(
+              opacity: animation,
+              child: child,
+            ),
+            child: KeyedSubtree(
+              key: ValueKey<int>(_currentIndex),
+              child: screens[_currentIndex],
+            ),
+          ),
+          bottomNavigationBar: _buildBottomNav(),
         ),
-        child: KeyedSubtree(
-          key: ValueKey<int>(_currentIndex),
-          child: screens[_currentIndex],
-        ),
-      ),
-      bottomNavigationBar: _buildBottomNav(),
+        if (_isTourActive)
+          GuidedTourOverlay(
+            steps: _buildTourSteps(),
+            onComplete: _finishGuidedTour,
+            onSkip: _skipGuidedTour,
+          ),
+      ],
     );
   }
 
@@ -142,6 +259,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
     return AppBar(
       titleSpacing: 0,
       leading: IconButton(
+        key: _keyDrawerMenu,
         icon: const Icon(Icons.menu_rounded),
         onPressed: () => _scaffoldKey.currentState?.openDrawer(),
         tooltip: 'Menu',
@@ -203,6 +321,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
             ),
       actions: [
         IconButton(
+          key: _keySearchAction,
           constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
           padding: const EdgeInsets.all(4),
           icon: const Icon(Icons.search_rounded, size: 20),
@@ -316,6 +435,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
                 selectedIcon: Icons.home_rounded,
               ),
               _buildNavItem(
+                key: _keySyllabusTab,
                 index: 1,
                 label: 'Syllabus',
                 icon: Icons.menu_book_outlined,
@@ -323,6 +443,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
               ),
               Expanded(
                 child: AiNavButton(
+                  key: _keyAiNav,
                   onTap: () {
                     HapticFeedback.lightImpact();
                     Navigator.push(
@@ -352,6 +473,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
   }
 
   Widget _buildNavItem({
+    Key? key,
     required int index,
     required String label,
     required IconData icon,
@@ -362,6 +484,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
 
     return Expanded(
       child: InkWell(
+        key: key,
         onTap: () {
           HapticFeedback.selectionClick();
           setState(() => _currentIndex = index);
@@ -686,6 +809,17 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen()));
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.explore_rounded, color: AppTheme.brandBlue, size: 22),
+                  title: Text('App Feature Tour', style: GoogleFonts.dmSans(fontWeight: FontWeight.w700, fontSize: 14)),
+                  subtitle: Text('Re-explore key features', style: GoogleFonts.dmSans(color: AppTheme.textMuted, fontSize: 11)),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Future.delayed(const Duration(milliseconds: 250), () {
+                      if (mounted) _startGuidedTour();
+                    });
                   },
                 ),
                 ListTile(

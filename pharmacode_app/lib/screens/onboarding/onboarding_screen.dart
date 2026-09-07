@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/theme.dart';
+import '../../core/tour/guided_tour_service.dart';
 import '../main_navigation_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -16,7 +16,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   int _currentPage = 0;
 
   final List<_OnboardingData> _pages = [
-    _OnboardingData(
+    const _OnboardingData(
       badge: 'PCI NEP 2020 CURRICULUM',
       badgeColor: AppTheme.brandBlue,
       title: 'Complete B.Pharm\nSyllabus & Units',
@@ -25,7 +25,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       iconColor: AppTheme.brandBlue,
       tags: ['8 Semesters', '193 Credits', 'Unit-wise Breakdown', 'GPAT Aligned'],
     ),
-    _OnboardingData(
+    const _OnboardingData(
       badge: '100% FREE ACCESS',
       badgeColor: AppTheme.brandGreen,
       title: 'Unit-Wise Notes &\nDirect Downloads',
@@ -34,26 +34,35 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       iconColor: AppTheme.brandGreen,
       tags: ['Free PDF Notes', 'Offline Study', 'No Paywall', 'One-Tap Download'],
     ),
-    _OnboardingData(
-      badge: 'TECH & CAREER ROADMAPS',
+    const _OnboardingData(
+      badge: '24/7 AI MENTOR',
+      badgeColor: Color(0xFF6366F1),
+      title: 'PharmaHelper\nAI Study Tutor',
+      description: 'Tough pharmacology and chemistry concepts simplified in Hinglish & English. Generate structured 5-mark exam answers in seconds.',
+      icon: Icons.smart_toy_rounded,
+      iconColor: Color(0xFF6366F1),
+      tags: ['Hinglish & English', '5-Mark Answers', 'Failover AI', 'Zero Cost'],
+    ),
+    const _OnboardingData(
+      badge: 'CAREER & FUTURE TECH',
       badgeColor: AppTheme.brandPurple,
-      title: 'Python, AI &\nCareer Guidance Kits',
-      description: 'Master new NEP subjects like Python Programming (BP101T) and AI in Pharma (BP604T), plus complete interview guides for Regulatory Affairs & QA.',
+      title: 'Python, AI &\nIndustry Roadmaps',
+      description: 'Master NEP subjects like Python Programming (BP101T) and AI in Pharma, plus complete interview guides for Pharmacovigilance & QA.',
       icon: Icons.psychology_rounded,
       iconColor: AppTheme.brandPurple,
-      tags: ['Python BP101T', 'AI in Pharma', 'Regulatory Affairs', 'Internship Kit'],
+      tags: ['Python BP101T', 'Pharmacovigilance', 'Regulatory Affairs', 'Interview Kits'],
     ),
   ];
 
-  Future<void> _completeOnboarding() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('seen_onboarding', true);
+  Future<void> _completeOnboarding({required bool skipTour}) async {
+    await GuidedTourService().setOnboardingCompleted(skipTour: skipTour);
 
     if (mounted) {
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
           pageBuilder: (context, anim, _) => const MainNavigationScreen(),
-          transitionsBuilder: (context, anim, _, child) => FadeTransition(opacity: anim, child: child),
+          transitionsBuilder: (context, anim, _, child) =>
+              FadeTransition(opacity: anim, child: child),
           transitionDuration: const Duration(milliseconds: 400),
         ),
       );
@@ -69,6 +78,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     final isLastPage = _currentPage == _pages.length - 1;
+    final screenH = MediaQuery.of(context).size.height;
+    final isCompactScreen = screenH < 700;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -76,31 +87,32 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
-          TextButton(
-            onPressed: _completeOnboarding,
-            child: Text(
-              'Skip',
-              style: GoogleFonts.dmSans(
-                color: AppTheme.textMuted,
-                fontWeight: FontWeight.w700,
-                fontSize: 14,
+          if (!isLastPage)
+            TextButton(
+              onPressed: () => _completeOnboarding(skipTour: true),
+              child: Text(
+                'Skip',
+                style: GoogleFonts.dmSans(
+                  color: AppTheme.textMuted,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 14,
+                ),
               ),
             ),
-          ),
           const SizedBox(width: 8),
         ],
       ),
       body: SafeArea(
         child: Column(
           children: [
-            // Branding Header
+            // Top Branding Header
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
               child: Row(
                 children: [
                   Container(
-                    width: 42,
-                    height: 42,
+                    width: 40,
+                    height: 40,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
@@ -130,7 +142,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           text: 'Pharma',
                           style: GoogleFonts.dmSans(
                             color: AppTheme.primaryNavy,
-                            fontSize: 20,
+                            fontSize: 21,
                             fontWeight: FontWeight.w900,
                             letterSpacing: -0.4,
                           ),
@@ -139,7 +151,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           text: 'Code',
                           style: GoogleFonts.dmSans(
                             color: AppTheme.brandBlue,
-                            fontSize: 20,
+                            fontSize: 21,
                             fontWeight: FontWeight.w900,
                             letterSpacing: -0.4,
                           ),
@@ -160,7 +172,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 itemBuilder: (context, i) {
                   final page = _pages[i];
                   return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -169,24 +181,35 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         // Hero Icon Card
                         Center(
                           child: Container(
-                            width: 120,
-                            height: 120,
+                            width: isCompactScreen ? 96 : 116,
+                            height: isCompactScreen ? 96 : 116,
                             decoration: BoxDecoration(
                               color: page.badgeColor.withValues(alpha: 0.08),
                               shape: BoxShape.circle,
                               border: Border.all(
-                                color: page.badgeColor.withValues(alpha: 0.2),
+                                color: page.badgeColor.withValues(alpha: 0.22),
                                 width: 2,
                               ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: page.badgeColor.withValues(alpha: 0.1),
+                                  blurRadius: 20,
+                                  offset: const Offset(0, 8),
+                                ),
+                              ],
                             ),
                             alignment: Alignment.center,
-                            child: Icon(page.icon, size: 56, color: page.iconColor),
+                            child: Icon(
+                              page.icon,
+                              size: isCompactScreen ? 44 : 54,
+                              color: page.iconColor,
+                            ),
                           ),
                         ),
 
                         const Spacer(),
 
-                        // Badge
+                        // Category Badge
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                           decoration: BoxDecoration(
@@ -205,33 +228,33 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           ),
                         ),
 
-                        const SizedBox(height: 14),
+                        const SizedBox(height: 12),
 
                         // Title
                         Text(
                           page.title,
                           style: GoogleFonts.dmSans(
                             color: AppTheme.primaryNavy,
-                            fontSize: 28,
+                            fontSize: isCompactScreen ? 24 : 28,
                             fontWeight: FontWeight.w900,
-                            height: 1.2,
+                            height: 1.18,
                             letterSpacing: -0.6,
                           ),
                         ),
 
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 10),
 
                         // Description
                         Text(
                           page.description,
                           style: GoogleFonts.dmSans(
                             color: AppTheme.textBody,
-                            fontSize: 14,
-                            height: 1.55,
+                            fontSize: isCompactScreen ? 13 : 14,
+                            height: 1.5,
                           ),
                         ),
 
-                        const SizedBox(height: 18),
+                        const SizedBox(height: 16),
 
                         // Tags
                         Wrap(
@@ -293,7 +316,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ElevatedButton(
                     onPressed: () {
                       if (isLastPage) {
-                        _completeOnboarding();
+                        _completeOnboarding(skipTour: false);
                       } else {
                         _pageCtrl.nextPage(
                           duration: const Duration(milliseconds: 350),
@@ -304,6 +327,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.primaryNavy,
                       foregroundColor: Colors.white,
+                      elevation: 2,
                       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                     ),
@@ -316,7 +340,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         ),
                         const SizedBox(width: 6),
                         Icon(
-                          isLastPage ? Icons.check_rounded : Icons.arrow_forward_rounded,
+                          isLastPage ? Icons.check_circle_rounded : Icons.arrow_forward_rounded,
                           size: 16,
                         ),
                       ],

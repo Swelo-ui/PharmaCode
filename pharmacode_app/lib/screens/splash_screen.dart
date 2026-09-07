@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../core/theme.dart';
+import '../core/tour/guided_tour_service.dart';
 import '../services/syllabus_service.dart';
 import '../core/notification_service.dart';
 import 'main_navigation_screen.dart';
@@ -61,14 +61,13 @@ class _SplashScreenState extends State<SplashScreen>
     if (elapsed < 1800) {
       await Future.delayed(Duration(milliseconds: 1800 - elapsed));
     }
-    final prefs = await SharedPreferences.getInstance();
-    final seenOnboarding = prefs.getBool('seen_onboarding') ?? false;
+    final onboardingCompleted = await GuidedTourService().isOnboardingCompleted();
 
     if (mounted) {
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
           pageBuilder: (context, anim, _) =>
-              seenOnboarding ? const MainNavigationScreen() : const OnboardingScreen(),
+              onboardingCompleted ? const MainNavigationScreen() : const OnboardingScreen(),
           transitionsBuilder: (context, anim, _, child) =>
               FadeTransition(opacity: anim, child: child),
           transitionDuration: const Duration(milliseconds: 500),
