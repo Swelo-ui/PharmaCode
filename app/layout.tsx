@@ -55,17 +55,21 @@ export const metadata: Metadata = {
     /* ── Favicon — feviicon 2 (cute pill character) ── */
     icons: {
         icon: [
+            // favicon.ico: browsers + Google SERP identity fallback
+            { url: "/favicon.ico" },
             { url: "/favicon.png", type: "image/png", sizes: "32x32" },
             { url: "/favicon.png", type: "image/png", sizes: "16x16" },
-            { url: "/favicon.png", type: "image/png", sizes: "192x192" },
+            { url: "/icon-192.png", type: "image/png", sizes: "192x192" },
+            { url: "/icon-512.png", type: "image/png", sizes: "512x512" },
             { url: "/favicon.svg", type: "image/svg+xml" },
         ],
         apple: [
-            { url: "/favicon.png", sizes: "180x180", type: "image/png" },
+            { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
         ],
-        shortcut: "/favicon.png",
+        shortcut: "/favicon.ico",
         other: [
             { rel: "mask-icon", url: "/favicon.svg" },
+            { rel: "manifest", url: "/site.webmanifest" },
         ],
     },
     /* ── Open Graph — og-image.png (PharmaCode logo with text) Google Images mein dikhega ── */
@@ -109,9 +113,9 @@ export const metadata: Metadata = {
         },
     },
     alternates: {
-        canonical: "./",
+        canonical: absUrl("/"),
         languages: {
-            "en-IN": "./",
+            "en-IN": absUrl("/"),
         },
     },
     verification: {

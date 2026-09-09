@@ -29,7 +29,10 @@ export function organizationSchema() {
         url: SITE.url,
         logo: absUrl("/logo.png"),
         description: "Free B.Pharm study material, NEP 2020 syllabus, unit-wise notes and PDF downloads for pharmacy students in India.",
-        sameAs: [],
+        sameAs: [
+            "https://www.linkedin.com/company/pharmacode-edu/",
+            "https://github.com/Swelo-ui",
+        ],
         knowsAbout: [
             "B.Pharm NEP 2020 Syllabus",
             "Pharmacy Education India",
