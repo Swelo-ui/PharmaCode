@@ -11,53 +11,61 @@ import { SEMESTERS } from "@/lib/syllabus";
 
 const BASE_URL = SITE.url;
 
+const buildDate = new Date();
+
 // ─── 1. STATIC / CORE PAGES ──────────────────────────────────
 const staticRoutes: MetadataRoute.Sitemap = [
   {
     url: `${BASE_URL}/`,
-    lastModified: new Date("2026-08-13"),
+    lastModified: buildDate,
     changeFrequency: "weekly",
     priority: 1.0,
   },
   {
     url: `${BASE_URL}/syllabus/`,
-    lastModified: new Date("2026-08-13"),
+    lastModified: buildDate,
     changeFrequency: "monthly",
     priority: 0.9,
   },
   {
     url: `${BASE_URL}/notes/`,
-    lastModified: new Date("2026-08-13"),
+    lastModified: buildDate,
     changeFrequency: "weekly",
     priority: 0.9,
   },
   {
     url: `${BASE_URL}/blog/`,
-    lastModified: new Date("2026-08-13"),
+    lastModified: buildDate,
     changeFrequency: "weekly",
     priority: 0.8,
   },
   {
     url: `${BASE_URL}/about/`,
-    lastModified: new Date("2026-08-13"),
+    lastModified: buildDate,
     changeFrequency: "yearly",
     priority: 0.6,
   },
   {
     url: `${BASE_URL}/career/`,
-    lastModified: new Date("2026-08-13"),
+    lastModified: buildDate,
     changeFrequency: "weekly",
     priority: 0.85,
   },
   {
     url: `${BASE_URL}/contribute/`,
-    lastModified: new Date("2026-08-13"),
+    lastModified: buildDate,
     changeFrequency: "yearly",
     priority: 0.5,
   },
   {
     url: `${BASE_URL}/privacy-policy/`,
-    lastModified: new Date("2026-08-13"),
+    lastModified: buildDate,
+    changeFrequency: "yearly",
+    priority: 0.4,
+  },
+  {
+    url: `${BASE_URL}/terms/`,
+    lastModified: buildDate,
     changeFrequency: "yearly",
     priority: 0.4,
   },
@@ -90,7 +98,7 @@ const staticRoutes: MetadataRoute.Sitemap = [
 // ─── 2. SEMESTER LANDING PAGES ───────────────────────────────
 const semesterRoutes: MetadataRoute.Sitemap = SEMESTERS.map((sem) => ({
   url: `${BASE_URL}/syllabus/semester-${sem.num}/`,
-  lastModified: new Date("2026-08-13"),
+  lastModified: buildDate,
   changeFrequency: "monthly" as const,
   priority: 0.85,
 }));
@@ -101,7 +109,7 @@ const subjectRoutes: MetadataRoute.Sitemap = SEMESTERS.flatMap((sem) =>
     .filter((s) => s.type === "T" || s.units.length > 0)
     .map((sub) => ({
       url: `${BASE_URL}/syllabus/semester-${sem.num}/${sub.slug}/`,
-      lastModified: new Date("2026-08-13"),
+      lastModified: buildDate,
       changeFrequency: "monthly" as const,
       priority: 0.80,
     }))
