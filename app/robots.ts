@@ -14,13 +14,13 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/_next/", "/404", "/500"],
+        disallow: ["/api/"],
       },
       // Explicitly allow Google AI & LLM Search crawlers for AI Overviews & Citations
       {
         userAgent: ["Google-Extended", "GPTBot", "PerplexityBot", "ClaudeBot", "Applebot-Extended"],
         allow: "/",
-        disallow: ["/api/", "/_next/"],
+        disallow: ["/api/"],
       },
     ],
     sitemap: `${SITE.url}/sitemap.xml`,
