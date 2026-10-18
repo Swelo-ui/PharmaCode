@@ -612,11 +612,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _openPrivacyPolicy() {
-    openInAppUrl(context, 'https://pharmacode.vercel.app/privacy-policy.html');
+    openInAppUrl(context, 'https://pharmacode.vercel.app/privacy-policy/');
   }
 
   void _openTerms() {
-    openInAppUrl(context, 'https://pharmacode.vercel.app/terms.html');
+    openInAppUrl(context, 'https://pharmacode.vercel.app/terms/');
   }
 
   @override
@@ -712,7 +712,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // Footer
             Center(
               child: Text(
-                'PharmaCode v1.0.1 • B.Pharm PCI NEP 2020\nCrafted with ❤️ for Pharmacy Students',
+                'PharmaCode v1.0.15 • B.Pharm PCI NEP 2020\nCrafted with ❤️ for Pharmacy Students',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.dmSans(color: AppTheme.textMuted, fontSize: 11, height: 1.5),
               ),

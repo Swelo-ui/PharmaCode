@@ -142,7 +142,10 @@ class _NotesScreenState extends State<NotesScreen> {
                         Navigator.pop(context);
                         AdService.instance.showInterstitialAd(
                           onDismissed: () {
-                            openInAppUrl(context, 'https://pharmacode.vercel.app/notes/');
+                            final targetUrl = subject.slug.isNotEmpty
+                                ? 'https://pharmacode.vercel.app/syllabus/semester-$semNum/${subject.slug}/'
+                                : 'https://pharmacode.vercel.app/notes/';
+                            openInAppUrl(context, targetUrl);
                           },
                         );
                       },

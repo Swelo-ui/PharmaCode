@@ -249,9 +249,6 @@ class NotificationService {
           await androidPlugin?.requestNotificationsPermission() ?? false;
       debugPrint('Notification permission granted: $granted');
 
-      // Request exact alarm permission (Android 12+) for reliable closed/background firing
-      await androidPlugin?.requestExactAlarmsPermission();
-
       // Initialize Firebase Cloud Messaging
       await _initializeFirebaseMessaging();
 
@@ -510,7 +507,7 @@ class NotificationService {
         scheduledDate: scheduledTime,
         notificationDetails: const NotificationDetails(android: androidDetails),
         payload: payload,
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
       );
 
       final notif = AppNotification(

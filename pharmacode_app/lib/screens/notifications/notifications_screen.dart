@@ -1,7 +1,8 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/theme.dart';
+import '../../core/in_app_browser.dart';
 import '../../core/widgets/empty_state_view.dart';
 import '../../features/notifications/presentation/notification_controller.dart';
 
@@ -80,6 +81,13 @@ class NotificationsScreen extends ConsumerWidget {
                     child: InkWell(
                       onTap: () {
                         ref.read(notificationsListProvider.notifier).markAsRead(notif.id);
+                        if (notif.deepLink != null && notif.deepLink!.trim().isNotEmpty) {
+                          final link = notif.deepLink!.trim();
+                          final fullUrl = link.startsWith('http')
+                              ? link
+                              : 'https://pharmacode.vercel.app${link.startsWith('/') ? link : '/$link'}';
+                          openInAppUrl(context, fullUrl);
+                        }
                       },
                       borderRadius: BorderRadius.circular(14),
                       child: Padding(

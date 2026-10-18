@@ -209,41 +209,50 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
       const BookmarksScreen(),
     ];
 
-    return Stack(
-      children: [
-        Scaffold(
-          key: _scaffoldKey,
-          backgroundColor: AppTheme.background,
-          appBar: _buildAppBar(
-            isLoggedIn: isLoggedIn,
-            avatarKey: user?.avatarKey ?? 'mascot',
-            photoUrl: user?.photoUrl ?? '',
-            displayName: user?.displayName ?? 'Student',
-            unreadCount: unreadCount,
-          ),
-          drawer: _buildDrawer(isLoggedIn: isLoggedIn, user: user, unreadCount: unreadCount),
-          body: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 250),
-            switchInCurve: Curves.easeOutCubic,
-            switchOutCurve: Curves.easeInCubic,
-            transitionBuilder: (child, animation) => FadeTransition(
-              opacity: animation,
-              child: child,
+    return PopScope(
+      canPop: _currentIndex == 0,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        if (_currentIndex != 0) {
+          setState(() => _currentIndex = 0);
+        }
+      },
+      child: Stack(
+        children: [
+          Scaffold(
+            key: _scaffoldKey,
+            backgroundColor: AppTheme.background,
+            appBar: _buildAppBar(
+              isLoggedIn: isLoggedIn,
+              avatarKey: user?.avatarKey ?? 'mascot',
+              photoUrl: user?.photoUrl ?? '',
+              displayName: user?.displayName ?? 'Student',
+              unreadCount: unreadCount,
             ),
-            child: KeyedSubtree(
-              key: ValueKey<int>(_currentIndex),
-              child: screens[_currentIndex],
+            drawer: _buildDrawer(isLoggedIn: isLoggedIn, user: user, unreadCount: unreadCount),
+            body: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 250),
+              switchInCurve: Curves.easeOutCubic,
+              switchOutCurve: Curves.easeInCubic,
+              transitionBuilder: (child, animation) => FadeTransition(
+                opacity: animation,
+                child: child,
+              ),
+              child: KeyedSubtree(
+                key: ValueKey<int>(_currentIndex),
+                child: screens[_currentIndex],
+              ),
             ),
+            bottomNavigationBar: _buildBottomNav(),
           ),
-          bottomNavigationBar: _buildBottomNav(),
-        ),
-        if (_isTourActive)
-          GuidedTourOverlay(
-            steps: _buildTourSteps(),
-            onComplete: _finishGuidedTour,
-            onSkip: _skipGuidedTour,
-          ),
-      ],
+          if (_isTourActive)
+            GuidedTourOverlay(
+              steps: _buildTourSteps(),
+              onComplete: _finishGuidedTour,
+              onSkip: _skipGuidedTour,
+            ),
+        ],
+      ),
     );
   }
 
@@ -258,12 +267,18 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
 
     return AppBar(
       titleSpacing: 0,
-      leading: IconButton(
-        key: _keyDrawerMenu,
-        icon: const Icon(Icons.menu_rounded),
-        onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-        tooltip: 'Menu',
-      ),
+      leading: _currentIndex == 2
+          ? IconButton(
+              icon: const Icon(Icons.arrow_back_rounded),
+              onPressed: () => setState(() => _currentIndex = 0),
+              tooltip: 'Back to Home',
+            )
+          : IconButton(
+              key: _keyDrawerMenu,
+              icon: const Icon(Icons.menu_rounded),
+              onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+              tooltip: 'Menu',
+            ),
       title: _currentIndex == 0
           ? FittedBox(
               fit: BoxFit.scaleDown,
@@ -840,7 +855,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
           // Footer
           Container(
             padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 12, top: 12),
-            child: Text('PharmaCode v1.0.1 · PCI NEP 2020',
+            child: Text('PharmaCode v1.0.15 · PCI NEP 2020',
               style: GoogleFonts.dmSans(color: AppTheme.textMuted, fontSize: 11)),
           ),
         ],
