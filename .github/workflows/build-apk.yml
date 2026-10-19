@@ -128,17 +128,18 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v1.0.15
-          name: "PharmaCode v1.0.15 (Build 17) — Critical Crash Fix Release"
+          tag_name: v1.0.16
+          name: "PharmaCode v1.0.16 (Build 18) — Critical Crash Fix Release"
           body: |
-            ## PharmaCode v1.0.15 Release (Build 17)
+            ## PharmaCode v1.0.16 Release (Build 18)
             Official production signed release artifacts for **PharmaCode — B.Pharm NEP 2020 Companion with PharmaHelper AI Tutor**.
 
             ### 🔴 Critical Crash Fixes (APK Instant Close — Root Causes):
-            - **Firebase Init Crash [#1 Fix]**: Moved `Firebase.initializeApp()` to `main()` before `runApp()`. Previously Firebase was initialized inside `SyllabusService.initialize()` concurrently causing race condition crash on cold start.
-            - **R8 ProGuard Crash [#2 Fix]**: Added comprehensive `-keep` rules for Firebase, Google Play Services, AdMob, Google Sign-In, Flutter Secure Storage, and Kotlin classes. R8 fullMode was aggressively stripping runtime-required classes causing release APK crash.
-            - **SecureStorage Crash Fix**: Enabled `encryptedSharedPreferences: true` in `AndroidOptions` to prevent KeyStore failures on older/OEM Android devices.
-            - **compileSdk Fix**: Changed `compileSdk` from fake `37` to real `36`. Removed SDK-37 copy hack from CI that was causing build inconsistency.
+            - **MainActivity Resources$NotFoundException Crash [PLAY CONSOLE #1 CRASH FIX]**: Removed broken `<bitmap android:src="@mipmap/ic_launcher" />` from `launch_background.xml`. On Android 8.0+ (API 26+), `ic_launcher` is an `<adaptive-icon>` XML which caused `BitmapDrawable` to crash with `Resources$NotFoundException` on 100% of devices during `MainActivity.onCreate`.
+            - **R8 Resource Shrinker Protection**: Added `res/raw/keep.xml` to prevent R8 resource shrinker from stripping launcher icons, notification icons, or audio assets.
+            - **Firebase Init Crash**: Initialized `Firebase.initializeApp()` in `main()` before `runApp()` to eliminate cold-start race conditions.
+            - **R8 ProGuard Rules**: Added comprehensive `-keep` rules for Firebase, Google Play Services, AdMob, Google Sign-In, and SecureStorage.
+            - **Android 15 Edge-to-Edge**: Full support for Android 15 edge-to-edge layout without deprecated window color APIs.
 
             ### Security & Hardening:
             - **Signing Credentials Protection**: Keystore and `key.properties` removed from version control with `.gitignore` coverage.
