@@ -7,8 +7,10 @@ class SecureStorageService {
   factory SecureStorageService() => _instance;
   SecureStorageService._internal();
 
+  // Note: flutter_secure_storage v11 uses default AndroidOptions.
+  // Crash protection is handled via try-catch in all read/write methods below.
   final FlutterSecureStorage _storage = const FlutterSecureStorage(
-    aOptions: AndroidOptions(),
+    aOptions: AndroidOptions.defaultOptions,
   );
 
   static const String _keyAuthToken = 'secure_auth_token';

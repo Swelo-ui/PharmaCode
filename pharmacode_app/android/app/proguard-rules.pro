@@ -1,6 +1,6 @@
 # ==============================================================================
-# PharmaCode ProGuard / R8 Hardened Security & Obfuscation Rules
-# Full R8 optimization compliant with Google Play DEX code optimization thresholds
+# PharmaCode ProGuard / R8 Hardened Rules
+# Fixes crash caused by R8 fullMode stripping runtime-required classes
 # ==============================================================================
 
 # ─── Optimization & Obfuscation Controls ─────────────────────────────────────
@@ -9,7 +9,7 @@
 -optimizationpasses 5
 -renamesourcefileattribute SourceFile
 -keepattributes SourceFile,LineNumberTable
--verbose
+-keepattributes *Annotation*,Signature,InnerClasses,EnclosingMethod
 
 # ─── Strip Sensitive Debugging Logs in Release Builds ─────────────────────────
 -assumenosideeffects class android.util.Log {
@@ -21,8 +21,6 @@
 }
 
 # ─── Flutter Engine & Plugin Registrants ──────────────────────────────────────
-# Retain only plugin registrant interfaces and essential embedding entry points.
-# Internal Flutter classes are allowed to be freely obfuscated by R8.
 -keep class io.flutter.app.** { *; }
 -keep class io.flutter.plugin.** { *; }
 -keep class io.flutter.util.** { *; }
@@ -36,23 +34,57 @@
 -keep class io.flutter.embedding.android.FlutterActivity { *; }
 -keep class io.flutter.embedding.android.FlutterFragmentActivity { *; }
 
-# ─── Google Play Services, Firebase & AdMob ───────────────────────────────────
-# Note: Firebase and Play Services AARs supply their own consumer ProGuard rules.
-# Blanket -keep rules have been removed to ensure DEX obfuscation > 25% threshold.
--dontwarn com.google.android.gms.**
+# ─── Firebase Core & Auth ─────────────────────────────────────────────────────
+# CRITICAL: R8 fullMode strips these without explicit keeps causing runtime crash
+-keep class com.google.firebase.** { *; }
+-keep class com.google.android.gms.internal.firebase_auth.** { *; }
+-keep class com.google.android.gms.auth.** { *; }
+-keepnames class com.google.firebase.** { *; }
 -dontwarn com.google.firebase.**
+
+# ─── Google Play Services & Sign-In ──────────────────────────────────────────
+-keep class com.google.android.gms.** { *; }
+-keep class com.google.android.gms.common.** { *; }
+-keep class com.google.android.gms.auth.api.** { *; }
+-keep class com.google.android.gms.signin.** { *; }
+-keepnames class com.google.android.gms.** { *; }
+-dontwarn com.google.android.gms.**
+
+# ─── Google AdMob / Mobile Ads ────────────────────────────────────────────────
+-keep class com.google.android.gms.ads.** { *; }
+-keep class com.google.ads.** { *; }
+-keep class com.google.android.ump.** { *; }
 -dontwarn com.google.android.ump.**
+
+# ─── Firebase Cloud Messaging ─────────────────────────────────────────────────
+-keep class com.google.firebase.messaging.** { *; }
+-keep class io.flutter.plugins.firebase.messaging.** { *; }
 
 # ─── AndroidX & Lifecycle ─────────────────────────────────────────────────────
 -keep class androidx.multidex.** { *; }
 -keep class androidx.security.crypto.** { *; }
+-keep class androidx.lifecycle.** { *; }
 -dontwarn androidx.**
 
 # ─── Flutter Local Notifications & Background Receivers ───────────────────────
 -keep class com.dexterous.flutterlocalnotifications.** { *; }
+-keep class com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver { *; }
+-keep class com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver { *; }
 
-# ─── Attributes & Reflection Protection ───────────────────────────────────────
--keepattributes *Annotation*,Signature,InnerClasses,EnclosingMethod
+# ─── Flutter Secure Storage ───────────────────────────────────────────────────
+-keep class com.it_nomads.fluttersecurestorage.** { *; }
+
+# ─── Kotlin Metadata & Reflection ─────────────────────────────────────────────
+-keep class kotlin.** { *; }
+-keep class kotlin.Metadata { *; }
+-dontwarn kotlin.**
+-keepclassmembers class **$WhenMappings { <fields>; }
+-keepclassmembers class kotlin.Lazy { *; }
+
+# ─── Prevent stripping of enum values ─────────────────────────────────────────
+-keepclassmembers enum * { *; }
+
+# ─── General Reflection Protection ───────────────────────────────────────────
 -dontwarn sun.misc.**
 -dontwarn java.lang.invoke.**
--dontwarn kotlin.**
+

@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.pharmacode.bpharm"
-    compileSdk = 37
+    compileSdk = 36  // ✅ Fixed: SDK 36 is the real latest. SDK 37 does not exist officially.
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

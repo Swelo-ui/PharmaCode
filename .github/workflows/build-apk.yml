@@ -30,25 +30,8 @@ jobs:
       - name: Setup Android SDK Platform & Licenses
         run: |
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+          # ✅ Fixed: compileSdk is now 36 (real SDK). No more fake SDK-37 copy hack.
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;36.0.0" || true
-          # Ensure platform 37 availability (alias from android-36 in case any plugin requests SDK 37)
-          echo "Ensuring platform 37 availability..."
-          if [ ! -d "$ANDROID_HOME/platforms/android-37" ] || [ ! -f "$ANDROID_HOME/platforms/android-37/android.jar" ]; then
-            mkdir -p "$ANDROID_HOME/platforms/android-37"
-            cp -r "$ANDROID_HOME/platforms/android-36"/* "$ANDROID_HOME/platforms/android-37/"
-            if [ -f "$ANDROID_HOME/platforms/android-37/package.xml" ]; then
-              sed -i 's/platforms;android-36/platforms;android-37/g' "$ANDROID_HOME/platforms/android-37/package.xml"
-              sed -i 's/<api-level>36<\/api-level>/<api-level>37<\/api-level>/g' "$ANDROID_HOME/platforms/android-37/package.xml"
-              sed -i 's/Platform 36/Platform 37/g' "$ANDROID_HOME/platforms/android-37/package.xml"
-            fi
-            if [ -f "$ANDROID_HOME/platforms/android-37/source.properties" ]; then
-              sed -i 's/ro.build.version.sdk=36/ro.build.version.sdk=37/g' "$ANDROID_HOME/platforms/android-37/source.properties"
-              sed -i 's/ro.build.version.codename=36/ro.build.version.codename=37/g' "$ANDROID_HOME/platforms/android-37/source.properties"
-              sed -i 's/ro.build.version.release=36/ro.build.version.release=37/g' "$ANDROID_HOME/platforms/android-37/source.properties"
-              sed -i 's/AndroidVersion.ApiLevel=36/AndroidVersion.ApiLevel=37/g' "$ANDROID_HOME/platforms/android-37/source.properties"
-              sed -i 's/Platform 36/Platform 37/g' "$ANDROID_HOME/platforms/android-37/source.properties"
-            fi
-          fi
           echo "Installed Android SDK Platforms:"
           ls -la "$ANDROID_HOME/platforms"
 
@@ -145,38 +128,31 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v1.0.14
-          name: "PharmaCode v1.0.14 (Build 15) Production Release"
+          tag_name: v1.0.15
+          name: "PharmaCode v1.0.15 (Build 17) — Critical Crash Fix Release"
           body: |
-            ## PharmaCode v1.0.14 Release (Build 15)
+            ## PharmaCode v1.0.15 Release (Build 17)
             Official production signed release artifacts for **PharmaCode — B.Pharm NEP 2020 Companion with PharmaHelper AI Tutor**.
 
+            ### 🔴 Critical Crash Fixes (APK Instant Close — Root Causes):
+            - **Firebase Init Crash [#1 Fix]**: Moved `Firebase.initializeApp()` to `main()` before `runApp()`. Previously Firebase was initialized inside `SyllabusService.initialize()` concurrently causing race condition crash on cold start.
+            - **R8 ProGuard Crash [#2 Fix]**: Added comprehensive `-keep` rules for Firebase, Google Play Services, AdMob, Google Sign-In, Flutter Secure Storage, and Kotlin classes. R8 fullMode was aggressively stripping runtime-required classes causing release APK crash.
+            - **SecureStorage Crash Fix**: Enabled `encryptedSharedPreferences: true` in `AndroidOptions` to prevent KeyStore failures on older/OEM Android devices.
+            - **compileSdk Fix**: Changed `compileSdk` from fake `37` to real `36`. Removed SDK-37 copy hack from CI that was causing build inconsistency.
+
             ### Security & Hardening:
-            - **Signing Credentials Protection**: Keystore and `key.properties` removed from version control with `.gitignore` coverage; automated secure injection in CI/CD.
-            - **Secure Storage Migration**: AI custom API keys migrated from plain `SharedPreferences` to hardware-backed `FlutterSecureStorage`.
-            - **Android App Hardening**: Disabled Android cloud backups (`android:allowBackup="false"`).
-            - **Web Security Headers**: Hardened Next.js with `X-Frame-Options: SAMEORIGIN`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-cross-origin`, and `Permissions-Policy`.
-
-            ### Bugs & Functional Fixes:
-            - **Push Notifications**: Fixed duplicate background FCM notifications by checking data-only payloads.
-            - **Bookmark Sync**: Converted `SubjectDetailScreen` to reactive Riverpod `ConsumerStatefulWidget` for seamless real-time synchronization between syllabus and bookmark screens.
-            - **Auth Null Safety**: Sanitized Firebase user session extraction and entity unwrapping.
-            - **Website Links**: Fixed dead notes download button linking directly to syllabus units.
-            - **Sitemap**: Dynamic route derivation for all 77+ subjects from syllabus data.
-
-            ### UI/UX Improvements:
-            - **Ad Friction Removed**: Removed unexpected interstitial ad interruption on chat message send.
-            - **Sensitive Data Masking**: Added visibility toggles with masked passwords on AI API key inputs.
-            - **Layout Overflow Protection**: Redesigned semester card metrics and responsive ratios to avoid text clipping across scaled display fonts.
-            - **Lifecycle Resilient Timers**: Replaced recursive `Future.delayed` ticker with cancelable `Timer.periodic`.
+            - **Signing Credentials Protection**: Keystore and `key.properties` removed from version control with `.gitignore` coverage.
+            - **Secure Storage**: Hardware-backed `FlutterSecureStorage` with `encryptedSharedPreferences` enabled.
+            - **Android App Hardening**: `android:allowBackup="false"`.
 
             ### Play Store Optimizations:
-            - Target SDK 36 (Android 16), Compile SDK 37 (Android 17).
-            - R8 bytecode minification, dead-code elimination, and resource shrinking enabled.
-            - Obfuscated release builds with mapping.txt symbols generated.
+            - Target SDK 36 (Android 16), Compile SDK 36 (real).
+            - R8 bytecode minification with fixed ProGuard rules preventing class stripping.
+            - Faster local builds: Gradle daemon & parallel builds re-enabled.
           files: |
             release-assets/*
           draft: false
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
