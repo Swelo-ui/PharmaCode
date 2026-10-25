@@ -564,11 +564,15 @@ THEORY_COURSES = [
         "sem": 8, "code": "BP802T", "name": "Clinical Pharmacotherapeutics", "credits": 2, "type": "T", "highlight": False,
         "start": 253, "end": 254,
         "unit_titles": [
-            "Principles of Pharmacotherapeutics and Cardiovascular Disorders",
-            "Pharmacotherapy of Respiratory and Renal Disorders",
-            "Pharmacotherapy of Endocrine and Nervous System Disorders",
-            "Pharmacotherapy of Gastrointestinal and Joint Disorders",
-            "Pharmacotherapy of Infectious and Hematological Diseases"
+            "Cardiovascular System",
+            "Respiratory System",
+            "Renal System",
+            "Endocrine System",
+            "Nervous System",
+            "Gastrointestinal System",
+            "Diseases of Bones and Joints",
+            "Infectious Diseases",
+            "Hematological Diseases"
         ]
     },
     {

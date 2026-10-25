@@ -114,8 +114,11 @@ def format_unit_topics(lines, unit_title):
             cur_topic = l_clean
         else:
             if cur_topic:
+                had_c = cur_topic.endswith(":")
                 if cur_topic.endswith((".", ";", ":", "-")) or len(l_clean) < 40:
                     cur_topic = re.sub(r"[,;:\s]+$", "", cur_topic).strip()
+                    if had_c:
+                        cur_topic += ":"
                     topics.append(cur_topic)
                     cur_topic = l_clean
                 else:
@@ -124,7 +127,10 @@ def format_unit_topics(lines, unit_title):
                 cur_topic = l_clean
 
     if cur_topic:
+        had_c = cur_topic.endswith(":")
         cur_topic = re.sub(r"[,;:\s]+$", "", cur_topic).strip()
+        if had_c:
+            cur_topic += ":"
         topics.append(cur_topic)
 
     formatted = []
@@ -132,19 +138,22 @@ def format_unit_topics(lines, unit_title):
         t = " ".join(t.split())
         if len(t) < 4:
             continue
+        had_colon = t.endswith(":")
         t = re.sub(r"[,;:\s]+$", "", t).strip()
         # Clean any trailing dangling conjunction
         for dend in dangling_ends:
-            if t.lower().endswith(dend):
+            if t.lower().endswith(dend) and not t.lower().endswith("associated with"):
                 t = t[:-len(dend)].rstrip()
                 break
         t = re.sub(r"[,;:\s]+$", "", t).strip()
-        if not t.endswith((".", "?", "!")):
+        if had_colon:
+            t += ":"
+        elif not t.endswith((".", "?", "!")):
             t += "."
 
         # Format major topic headings before colon/dash in UPPERCASE
         m = re.match(r"^([A-Za-z0-9\s,\/\-]+?)(?:\s*[:–]\s*|\s+-\s+)(.*)$", t)
-        if m and len(m.group(1).split()) <= 4 and not m.group(1).isupper():
+        if m and len(m.group(1).split()) <= 5 and not m.group(1).isupper() and not "definition" in m.group(1).lower():
             prefix = m.group(1).strip().upper()
             rest = m.group(2).strip()
             if rest:
@@ -169,17 +178,17 @@ def extract_theory(c):
     raw = re.sub(r"^\s*Unit[\s\S]*?Lectures\s*\n", "", raw, flags=re.IGNORECASE)
     raw_lines = [l.strip() for l in raw.split("\n") if l.strip()]
 
-    while raw_lines and ("study of the development" in raw_lines[0].lower() or "chemical classification" in raw_lines[0].lower() or "superscripted" in raw_lines[0].lower()):
+    while raw_lines and any(w in raw_lines[0].lower() for w in ["topics", "no. of lectures", "lectures", "unit no", "study of the development", "chemical classification", "superscripted"]):
         raw_lines.pop(0)
 
     # Clean Roman numerals and hours from lines
     cleaned = []
     for l in raw_lines:
-        if re.match(r"^(?:I|II|III|IV|V)\s*(?:\d+\s*(?:hours|hrs))?$", l, re.IGNORECASE):
+        if re.match(r"^(?:I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII)\s*(?:\d+\s*(?:hours|hrs))?$", l, re.IGNORECASE):
             continue
         if re.match(r"^\d+\s*(?:hours|hrs)$", l, re.IGNORECASE):
             continue
-        l = re.sub(r"^(?:I|II|III|IV|V)\s+", "", l)
+        l = re.sub(r"^(?:I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII)\s+", "", l)
         l = re.sub(r"\s+\d+\s*(?:hours|hrs)$", "", l, flags=re.IGNORECASE)
         cleaned.append(l)
 
@@ -190,6 +199,9 @@ def extract_theory(c):
         is_bullet_lead = bool(re.match(r"^(?:•|o\s+|-|\*|\d+\.|\d+\)|\([a-z0-9]+\)|[a-z][\.\)])\s*", l))
         is_marker_start = any(m in l.lower() for m in markers_set)
         is_continuation = not is_marker_start and ((not is_bullet_lead and re.match(r"^[a-z]", l)) or bool(re.match(r"^[,;]", l)))
+        if c["code"] == "BP802T" and "hypertension" in l.lower() and stitched:
+            stitched[-1] = stitched[-1].rstrip() + ", " + l
+            continue
         if stitched and is_continuation:
             stitched[-1] = re.sub(r"\.\s*$", ",", stitched[-1])
             stitched[-1] = stitched[-1].rstrip() + " " + l
@@ -207,36 +219,51 @@ def extract_theory(c):
         indices.append(found if found != -1 else cur)
         cur = (found + 1) if found != -1 else cur
 
+    num_units = len(markers)
+    romans = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"]
     raw_hours = re.findall(r"\b(\d+)\s*(?:hours|hrs)\b", raw, re.IGNORECASE)
-    if len(raw_hours) < 5:
+    if len(raw_hours) < num_units:
         def_h = "9" if c["credits"] == 3 else ("12" if c["credits"] == 4 else "6")
-        while len(raw_hours) < 5:
+        while len(raw_hours) < num_units:
             raw_hours.append(def_h)
 
-    romans = ["I", "II", "III", "IV", "V"]
     units = []
-    for u_idx in range(5):
+    for u_idx in range(num_units):
         s_idx = indices[u_idx]
-        e_idx = indices[u_idx + 1] if u_idx + 1 < 5 else len(stitched)
+        if u_idx == 0:
+            s_idx = 0
+        e_idx = indices[u_idx + 1] if u_idx + 1 < num_units else len(stitched)
         u_lines = list(stitched[s_idx:e_idx])
         
         u_title = ""
         u_content = list(u_lines)
-        if u_content:
-            first_l = u_content[0]
-            m_split = re.match(r"^(.*?)\s+([a-z0-9][\.\)]\s+.*)$", first_l)
-            if m_split and len(m_split.group(1).split()) <= 8:
-                u_title = to_title_case(m_split.group(1))
-                u_content[0] = m_split.group(2)
-            elif not re.match(r"^(?:•|o\s+|-|\*|\d+\.|\d+\))\s*", first_l) and len(first_l) < 80:
-                u_title = to_title_case(first_l)
-                u_content.pop(0)
-        
-        if not u_title:
-            if u_idx < len(c["unit_titles"]):
-                u_title = c["unit_titles"][u_idx]
-            else:
-                u_title = f"Unit {romans[u_idx]}"
+        if c["code"] == "BP802T" and u_idx < len(c["unit_titles"]):
+            u_title = c["unit_titles"][u_idx]
+            new_lines = []
+            for line in u_content:
+                if "ischemic heart disease" in line.lower():
+                    new_lines.append(f"Cardiovascular System: {line}")
+                elif "definition" in line.lower():
+                    new_lines.append("Definition, etiopathogenesis, clinical manifestations, overview of management of the diseases associated with:")
+                else:
+                    new_lines.append(line)
+            u_content = new_lines
+        else:
+            if u_content:
+                first_l = u_content[0]
+                m_split = re.match(r"^(.*?)\s+([a-z0-9][\.\)]\s+.*)$", first_l)
+                if m_split and len(m_split.group(1).split()) <= 8:
+                    u_title = to_title_case(m_split.group(1))
+                    u_content[0] = m_split.group(2)
+                elif not re.match(r"^(?:•|o\s+|-|\*|\d+\.|\d+\))\s*", first_l) and len(first_l) < 80:
+                    u_title = to_title_case(first_l)
+                    u_content.pop(0)
+            
+            if not u_title:
+                if u_idx < len(c["unit_titles"]):
+                    u_title = c["unit_titles"][u_idx]
+                else:
+                    u_title = f"Unit {romans[u_idx]}"
 
         u_hours = f"{raw_hours[u_idx]} Hours"
         clean_topics = format_unit_topics(u_content, u_title)
