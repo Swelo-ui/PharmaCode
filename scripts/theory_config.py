@@ -564,33 +564,33 @@ THEORY_COURSES = [
         "sem": 8, "code": "BP802T", "name": "Clinical Pharmacotherapeutics", "credits": 2, "type": "T", "highlight": False,
         "start": 253, "end": 254,
         "unit_titles": [
-            "Principles of Pharmacotherapeutics and Evidence-Based Medicine",
-            "Pharmacotherapy of Cardiovascular and Renal Disorders",
-            "Pharmacotherapy of Endocrine and Metabolic Disorders",
-            "Pharmacotherapy of Respiratory and Gastrointestinal Disorders",
-            "Pharmacotherapy of Infectious and Oncological Diseases"
+            "Principles of Pharmacotherapeutics and Cardiovascular Disorders",
+            "Pharmacotherapy of Respiratory and Renal Disorders",
+            "Pharmacotherapy of Endocrine and Nervous System Disorders",
+            "Pharmacotherapy of Gastrointestinal and Joint Disorders",
+            "Pharmacotherapy of Infectious and Hematological Diseases"
         ]
     },
     {
         "sem": 8, "code": "BP803T", "name": "Industrial Pharmacy and Facility Design", "credits": 3, "type": "T", "highlight": False,
         "start": 255, "end": 257,
         "unit_titles": [
-            "Pharmaceutical Facility Design and Plant Layout",
-            "HVAC Systems, Cleanroom Technology and Utilities",
-            "Pilot Plant Scale-Up Techniques (SUPAC)",
-            "Aseptic Facility Engineering and Containment",
-            "cGMP Facility Validation and Environmental Controls"
+            "Regulatory Guidelines for Formulation Development",
+            "Technology Development and Transfer",
+            "Facility Considerations: Non-Sterile",
+            "Facility Considerations: Sterile",
+            "Advances in Facility Design"
         ]
     },
     {
         "sem": 8, "code": "BP804T", "name": "Pharmaceutical Management", "credits": 2, "type": "T", "highlight": False,
         "start": 258, "end": 259,
         "unit_titles": [
-            "Principles of Management in Pharmaceutical Organizations",
-            "Human Resource Management and Organizational Behavior",
-            "Pharmaceutical Supply Chain and Inventory Management",
-            "Pharmaceutical Marketing and Product Management",
-            "Pharmaceutical Entrepreneurship and Business Strategy"
+            "Introduction to Pharmaceutical Management",
+            "Marketing Management in Pharmaceuticals",
+            "Pharmaceutical Product Management",
+            "Financial Planning and Human Resource Management",
+            "Operations & Supply Chain Management in Pharmaceuticals"
         ]
     },
     {

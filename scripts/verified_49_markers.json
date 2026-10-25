@@ -1,94 +1,101 @@
 {
   "BP101T": [
     "Introduction to Python programming",
-    "\u2022 Conditional statements (if, if-else, if-elif-els",
-    "\u2022 Indexing and slicing lists, basic operations on ",
-    "\u2022 Reading CSV and Excel files-PK study datasets an",
-    "\u2022 Creating line plots, histograms, scatter plots, "
+    "Control Structures & Functions",
+    "Data Structures & File Handling",
+    "Data Handling with Pandas",
+    "Data Visualization with Matplotlib"
   ],
   "BP102T": [
     "Introduction to the Profession of Pharmacy",
-    "\u2022 Metric system of weights and measures; calculati",
-    "\u2022 Powders: Classification, advantages and disadvan",
+    "Introduction to Pharmaceutical Calculations and Dosage Forms",
+    "Solid Dosage Forms",
     "Monophasic and Biphasic Liquids",
-    "\u2022 Definitions, classification, advantages and disa"
+    "Semisolid Dosage Forms"
   ],
   "BP103T": [
     "Introduction to Psychology in Healthcare",
-    "Human developmental stages and healthcare needs. P",
-    "Elements and models of communication in healthcare",
-    "Delivering difficult news and handling emotionally",
-    "Health belief models and illness behaviour. Psycho"
+    "Developmental and Behavioural Psychology",
+    "Foundations of Health Communication",
+    "Professional Communication in Healthcare Settings",
+    "Health Psychology and Behavioural Interventions"
   ],
   "BP104T": [
     "Introduction to human body",
-    "Divisions of skeletal system, types of bones, sali",
-    "Lymphatic organs and tissues, lymphatic vessels, l",
-    "Classification of peripheral nervous system: struc",
-    "Anatomy of heart, blood circulation, blood vessels"
+    "Integumentary system and wound healing",
+    "Body fluids, blood and lymphatic system",
+    "Peripheral nervous system",
+    "Cardiovascular system"
   ],
   "BP105T": [
     "Fundamentals of Pharmacognosy",
-    "GAP / GCP guidelines) for medicinal plants. Factor",
-    "Adulteration of drugs of natural origin. Evaluatio",
-    "Definition and general properties of plant metabol",
-    "Hepatoprotectives: Milk thistle, Kutki \u2022 Cardiovas"
+    "Cultivation, Collection, Processing and Storage of Drugs of Natural Origin",
+    "Quality Control of Drugs of Natural Origin",
+    "Introduction to Metabolites of Plant Origin",
+    "Phyto-therapeutic Agents"
   ],
   "BP106T": [
     "Introduction to pharmaceutical analysis",
-    "Definition of acids, bases, buffers, pH Scale and ",
-    "Types of solvents used, acidimetric and alkalimetr",
-    "Antimicrobials: Mechanism, classification, Potassi",
-    "Basics of radioactivity, applications of radioisot"
+    "Acid-Base Chemistry and Buffer Systems in Pharmacy",
+    "Precipitation titrations and gravimetry",
+    "Redox titrations",
+    "Radiopharmaceuticals"
   ],
   "BP201T": [
     "Descriptive Statistics",
-    "\u2022 Basic probability concepts and laws (addition an",
-    "\u2022 Population versus sample, sampling techniques us",
-    "\u2022 Confidence intervals and their interpretation",
-    "\u2022 Demonstration of descriptive statistics, correla"
+    "Probability & Statistical Distributions in Healthcare",
+    "Sampling & Statistical Inference",
+    "Basics of Correlation & Regression",
+    "Statistical Analysis Using Python – Case based learning"
   ],
   "BP202T": [
-    "Enzymology a. Introduction, properties, nomenclatu",
-    "c. Carbohydrate Metabolism and their role in diabe",
-    "synthesis, utilization, and clinical significance ",
-    "Amino acids and protein metabolism a. Classificati",
-    "b. Genome Structure and Central Dogma: Organizatio"
+    "Enzymology",
+    "Introduction about biomolecules",
+    "Lipid metabolism",
+    "Amino acids and protein metabolism",
+    "Nucleic acid metabolism and genetic information transfer"
   ],
   "BP203T": [
     "Nervous System",
     "Gastrointestinal System",
-    "Urinary System",
+    "Anatomy of respiratory system",
     "Endocrine System",
-    "Reproductive System"
+    "Reproductive System and Cancer"
   ],
   "BP204T": [
-    "Aliphatic Saturated Hydrocarbons \u2013",
-    "Alkenes",
-    "\u2022   Nucleophilic substitution reactions: SN1 and S",
-    ": Benzene and Its Derivatives \u2013 -",
-    "Aldehydes and Ketones"
+    "Aliphatic Saturated Hydrocarbons",
+    "Aliphatic Unsaturated Hydrocarbons",
+    "Alkyl Halides",
+    "Benzene and Its Derivatives",
+    "Carbonyl Compounds"
   ],
   "BP205T": [
-    "Metabolic Pathways and Biogenetic Studies \u2013",
-    "Proteins and Enzymes:",
-    "Pharmacognostic study (biological source, distribu",
-    "Conventional Methods of Extraction:",
-    "Overview of Isolation, Identification and Characte"
+    "Metabolic Pathways and Biogenetic Studies",
+    "Primary Metabolites",
+    "Secondary Metabolites",
+    "Extraction Methods for Medicinal Plants",
+    "Overview of Isolation, Identification and Characterization"
+  ],
+  "BP206T": [
+    "Solubility distribution phenomenon & buffers",
+    "Interfacial phenomenon",
+    "Colloidal and Coarse Dispersion",
+    "Rheological studies",
+    "Micromeritics"
   ],
   "BP301T": [
     "Foundations of Machine Learning",
-    "Overview of the concepts in predictive modeling fo",
-    "Overview of the following ML models used for categ",
-    "Overview of the following ML models with emphasis ",
-    "Overview of the unsupervised learning with emphasi"
+    "Regression Models in Healthcare",
+    "Classification Models in Clinical Applications",
+    "Tree-Based Models & Ensemble Learning",
+    "Unsupervised Learning & Practical Case Studies"
   ],
   "BP302T": [
     "Environmental Pollution",
-    "\u2022   Types of pharmaceutical waste: chemical, expir",
-    "Environmental Impact of the Pharmaceutical Industr",
+    "Pharmaceutical Waste and Effluent Management",
+    "Environmental Impact of the Pharmaceutical Industry",
     "Sustainability in the Pharmaceutical Sector",
-    "SPCB)"
+    "Government Policies, Compliance, and Practical Exposure"
   ],
   "BP303T": [
     "Introduction to Value Education",
@@ -98,25 +105,25 @@
     "Harmony in Society and Nature"
   ],
   "BP304T": [
-    "Introduction to Pharmacology a)    Definition, his",
-    "b) Drug distribution in different compartments, vo",
-    "b) Receptor theories, structure of receptors, clas",
-    "Overview of drug discovery and evaluation of new d",
-    "b) General principles of treatment of acute poison"
+    "Introduction to Pharmacology",
+    "Pharmacokinetics",
+    "Pharmacodynamics",
+    "Overview of drug discovery and evaluation of new drug",
+    "Toxicology"
   ],
   "BP305T": [
-    "Chemistry of Carboxylic acids, Phenols, Amines and",
-    "\u2022 Definition of stereoisomerism and types of stere",
-    "Anti system)",
-    "\u2022 IUPAC nomenclature and classification of heteroc",
-    "\u2022 Chemical structures of Indole, pyrimidine, benzi"
+    "Chemistry of Carboxylic acids, Phenols, Amines and Polynuclear",
+    "Optical isomerism",
+    "Geometrical isomerism",
+    "Chemistry of five membered heterocycles",
+    "Chemistry of other heterocycles"
   ],
   "BP306T": [
-    "No.",
-    "manufacturing methods and equipment; tablet defect",
-    "Gelatin and non-gelatin shells: composition, empty",
-    "Concept, need, advantages, and disadvantages.",
-    "Methods of microencapsulation: spray drying, spray"
+    "Fundamentals of Dosage Form Development",
+    "Compressed Solids",
+    "Finely Divided and Filled Solids",
+    "Modified-Release Solids",
+    "Microencapsulation"
   ],
   "BP307T": [
     "Unit operations associated with solids",
@@ -126,39 +133,39 @@
     "Flow of fluids"
   ],
   "BP308T": [
-    "Introduction and role of microorganisms in pharmac",
-    "(including Aseptic area), control of Atmosphere,",
-    "Designing of aseptic area. Laminar flow equipment\u2019",
-    "Validation of sterilization procedures and Sterili",
-    "\u2022 Microbial limit tests and Microbial assay (antib"
+    "Introduction and role of microorganisms in pharmaceutical industry",
+    "Evaluation of microbiological contamination",
+    "Microbial control and evaluation",
+    "Sterilization procedures, assurance and evaluation",
+    "Microbiological quality control"
   ],
   "BP401T": [
-    "Plant Tissue Culture and Standardized Extracts:",
-    "Herbal cosmetics:",
-    "\u2022 Approaches for standardisation and quality contr",
-    "Cytochrome P450, and P-gp",
-    "Board) c) ASU DCC (Drugs Consultative Committee fo"
+    "Plant Tissue Culture and Standardized Extracts",
+    "Herbal Formulations, Excipients and Cosmetics",
+    "Quality Control and Standardisation of Herbal Medicines",
+    "Herb–Drug / Food / Herb Interactions",
+    "Regulatory Requirements of Herbal Drugs and Botanicals"
   ],
   "BP402T": [
-    "Classification, Structure, uses of drugs mentioned",
-    "Physostigmine, Neostigmine, Pyridostigmine, Edroph",
+    "Fundamentals of Medicinal Chemistry",
+    "Drugs Acting on the Autonomic Nervous System",
     "Drugs Acting on the Cardiovascular System",
-    "Warfarin, Anisindione, clopidogrel.",
-    "Astemizole, Loratadine, Cetirizine, Levocetrizine "
+    "Drugs acting on blood and Renal System",
+    "Autacoids and related drugs"
   ],
   "BP403T": [
     "Introduction to Pharmaceutical Biotechnology",
-    "production of interferons, hepatitis-B vaccine, an",
-    "Microbial biotransformation; fermentation principl",
-    "Gene therapy\u2014types and methodologies; delivery sys",
-    "Basics of immunology; types and generations of vac"
+    "Genetic Engineering and Recombinant DNA Technology",
+    "Microbial Biotransformation and Fermentation Technology",
+    "Gene Therapy, Genomics and Personalized Medicine",
+    "Immunology, Vaccines and Sera"
   ],
   "BP404T": [
-    "Introduction to Social Pharmacy",
-    "Health Systems, Policy",
-    "Preventive Healthcare",
-    "Non-Communicable Diseases",
-    "Pharmacoeconomics, Rational Use"
+    "Introduction to Social Pharmacy and Public Health",
+    "Health Systems, Policy, and Pharmacoepidemiology",
+    "Preventive Healthcare, Health Promotion, and Communicable",
+    "Non-Communicable Diseases, Nutrition, Mental Health, and National",
+    "Pharmacoeconomics, Rational Use of Medicines, Professional Roles"
   ],
   "BP405T": [
     "Pharmacology of drugs acting on the peripheral nervous system",
@@ -169,143 +176,73 @@
   ],
   "BP501T": [
     "Drugs Acting on the Central Nervous System",
-    "Cycloserine, Streptomycin, Capreomycin, Pretomanid",
-    "Clindamycin, Clavulanic acid",
-    "Mercaptopurine*, Thioguanine, Fluorouracil, Floxur",
-    "Endocrine Drugs, Antidiabetic Agents and Narcotic "
+    "Anti-Infective Chemotherapeutic Agents",
+    "Antibiotics and Sulfa Drugs",
+    "Antineoplastic Agents",
+    "Endocrine Drugs, Antidiabetic Agents and Narcotic Analgesics"
   ],
   "BP502T": [
-    "General Introduction to Herbal Industries, institu",
-    "Commercial production of standardized herbal extra",
-    "Spectroscopic methods: UV-Visible spectroscopy, IR",
-    "Isolation, characterization with commercial produc",
+    "General Introduction to Herbal Industries",
+    "Commercial Production and Standardization of botanicals",
+    "Modern methods of analysis of Plants and Plant-based products",
+    "Isolation, Characterization, Commercial Production and analysis of bioactive phy",
     "International Regulatory Perspectives"
   ],
   "BP503T": [
     "Unit I: Introduction to Innovation and",
-    "Identifying Problems and Market Gaps",
-    "Designing and Developing an MVP",
-    "Legal and Financial Aspects for Startups",
-    "Future Trends in Innovation and Entrepreneurship"
+    "Unit II: Ideation and Opportunity Identification",
+    "Unit III: Building a Minimum Viable Product",
+    "Unit IV: Business Models and Startup Operations",
+    "Unit V: Scaling, Ecosystem Engagement"
+  ],
+  "BP504T": [
+    "Monophasic Liquids & Pressurised Dosage Forms",
+    "Biphasic Liquids - Suspensions",
+    "Biphasic Liquids - Emulsions",
+    "Pressurized dosage forms (Aerosols/MDIs)",
+    "Semisolid Dosage Form"
   ],
   "BP505T": [
-    "Quality Assurance and Quality Management Systems",
-    "2. Premises: Design, construction, plant layout, m",
-    "In-process and finished product quality control te",
-    "File, SOPs, quality audits, preparation, handling,",
-    "Calibration of weights and measures, pH meter"
+    "Quality Assurance and Quality Management Concepts",
+    "Organization, Personnel, Premises, and Materials Management",
+    "Quality Control and Good Laboratory Practices",
+    "Documentation, Complaints, and Product Recall",
+    "Calibration and Validation"
   ],
   "BP506T": [
-    "Pharmacology of Drugs Acting on Central Nervous Sy",
-    "Pharmacology of Drugs Used in Psychiatry a. Antips",
-    "Classification, mechanism of action, adverse drug ",
-    "Pharmacology of Drugs Acting on Endocrine System a",
-    "Drugs Acting on Gastrointestinal Tract a. Drugs us"
+    "Pharmacology of Drugs Acting on Central Nervous System",
+    "Pharmacology of Drugs Used in Psychiatry",
+    "Chemotherapy",
+    "Pharmacology of Drugs Acting on Endocrine System",
+    "Drugs Acting on Gastrointestinal Tract"
   ],
   "BP601T": [
     "Reverse Pharmacology and Integrative Approaches",
-    "HRMS in metabolomics, Metabolomics profiling and d",
-    "Role of artificial intelligence (AI), Machine lear",
-    "Preclinical, Clinical Evaluation and New Drug appr",
-    "Traditional Knowledge: Legal frameworks and challe"
+    "Metabolomics and Systems Biology",
+    "Modern Techniques in Natural Product Discovery",
+    "Validation and Development of Herbal Leads",
+    "Patenting of Natural Products"
   ],
   "BP602T": [
-    "Introduction to Biopharmaceutics and pharmacokinet",
-    "Bioavailability and Bioequivalence: Definition and",
-    "Pharmacokinetic Models: Compartment Models: Defini",
-    "(Bolus/rapid) and (b) Extra vascular administratio",
-    "Michaelis-menton method of estimating parameters, "
+    "Introduction to Biopharmaceutics and pharmacokinetics",
+    "Bioavailability and Bioequivalence",
+    "Pharmacokinetic Models: Compartment Models",
+    "Multicompartment models: Multiple dosage regimen",
+    "Nonlinear Pharmacokinetics"
   ],
   "BP603T": [
     "Introduction to Intellectual Property",
-    "Novelty/innovations, Non-obviousness, Utility, Typ",
-    "Overview of Indian Patent Act, 1970 (latest amendm",
-    "Trademarks, Copyrights, Industrial designs: Defini",
-    "processes of technology transfer, licensing agreem"
+    "Patents – Fundamentals and Process",
+    "Patent Laws and Acts",
+    "Other Forms of Intellectual Property",
+    "IPR Management and Commercialization"
   ],
   "BP604T": [
-    "AI in Natural Products & Pharmacognostic Data Mode",
-    "Overview of the role of AI applications in pharmac",
-    "\u2022   Overview of dosage form development and formul",
-    "Overview of introduces multivariate analysis in ph",
-    "Overview of multivariate analysis in pharmaceutica"
-  ],
-  "BP606T": [
-    "Drugs and Cosmetics Act, 1940 and its rules 1945:",
-    "Offences and penalties",
-    "Export of alcoholic preparations, Offences and Pen",
-    ", opium poppy cultivation and production of poppy ",
-    "\u2022   Code of Pharmaceutical ethics: Definition, Pha"
-  ],
-  "BP702T": [
-    "Cosmetics and cosmeceuticals, Classification of Co",
-    "Cosmetics and cosmeceuticals. Herbal cosmetics for",
-    "Types of shampoos, general composition, method for",
-    "Various problems of oral cavity, Oral Cosmetics, a",
-    "Role of certifying bodies like ECCERT and COSMOS i"
-  ],
-  "BP704T": [
-    "1. Nuclear Magnetic Resonance Spectroscopy:",
-    "Origin of X-Rays, basic aspects of crystals, X-Ray",
-    "Introduction, instrumentation, factors affecting m",
-    "Introduction to bioanalytical method development, ",
-    "Principle, instrumentation, and applications of op"
-  ],
-  "BP705T": [
-    "Fundamentals of Pharmacovigilance a) Concept, hist",
-    "Pharmacovigilance Systems and Regulatory Framework",
-    "Adverse Drug Reactions (ADRs) a) Classification an",
-    "Immunovigilance and Other Disciplines of Pharmacov",
-    "Risk Communication, Evaluation, Management, and IC"
-  ],
-  "BP706T": [
-    "Introduction to Pharmacy Practice",
-    "Definition of hospital formulary, contents of hosp",
-    "Clinical Pharmacy Services",
-    "Definition of patient counselling",
-    "Core principles and key features"
-  ],
-  "BP707T": [
-    "Fundamentals of Regulatory Affairs",
-    "\u2022 Non-clinical drug development: Pharmacology, Dru",
-    "State    Licensing     Authorities:    Organizatio",
-    "Drug Application (ANDA)",
-    "Committee (IEC): Formation and functions"
-  ],
-  "BP802T": [
-    "Ischemic Heart Disease",
-    "Respiratory System",
-    "Endocrine System",
-    "Gastrointestinal System",
-    "Infectious Diseases"
-  ],
-  "BP803T": [
-    "Regulatory guidelines for formulation Development:",
-    "(API, excipients, finished products, packaging mat",
-    "Clean Steam, Compressed air, Vacuum, CIP. Industry",
-    "- Overview of sterile pharmaceutical manufacturing",
-    "Advances in facility design"
-  ],
-  "BP804T": [
-    "Introduction to Pharmaceutical Management",
-    "Marketing: Product, Price, Place, Promotion, Strat",
-    "Introduction to Pharmaceutical Product Management,",
-    "Budgeting, financial forecasting, cost control, Pr",
-    "Lean manufacturing and Six Sigma in the pharmaceut"
-  ],
-  "BP206T": [
-    "Solubility distribution phenomenon",
-    "Interfacial phenomenon",
-    "Colloidal and Coarse Dispersion",
-    "Rheological studies",
-    "Micromeritics"
-  ],
-  "BP504T": [
-    "Monophasic Liquids",
-    "Biphasic Liquids - Suspensions",
-    "Biphasic Liquids - Emulsions",
-    "Pressurized dosage forms",
-    "Semisolid Dosage Form"
+    "Natural Products & Pharmacognostic Data Modeling",
+    "AI in Medicinal & Pharmaceutical Chemistry",
+    "AI in Drug Product Design & Performance Prediction",
+    "AI in Process Monitoring & Production Systems",
+    "AI in Pharmaceutical Analysis & Chemometrics"
   ],
   "BP605T": [
     "Electrochemical Methods of analysis",
@@ -314,6 +251,13 @@
     "Introduction to Chromatographic Techniques",
     "Gas chromatography"
   ],
+  "BP606T": [
+    "Drugs and Cosmetics Act, 1940 and its rules 1945:",
+    "Drugs and Cosmetics Act, 1940 and its rules 1945.",
+    "Pharmacy Act –1948",
+    "Study of Salient Features of Drugs and Magic Remedies Act",
+    "Pharmaceutical Legislations – A brief review"
+  ],
   "BP701T": [
     "Basic concepts of biostatistics",
     "Probability and probability distributions",
@@ -321,25 +265,81 @@
     "Inferential statistics",
     "Research methodology"
   ],
+  "BP702T": [
+    "Cosmetics and cosmeceuticals, Classification of Cosmetics",
+    "Common skin problems",
+    "Common Hair problems, Hair Cosmetics and cosmeceuticals",
+    "Various problems of oral cavity, Oral Cosmetics",
+    "Role of Regulatory authorities for Cosmetics and cosmeceuticals"
+  ],
   "BP703T": [
-    "AI in Pharmacokinetics",
-    "AI in Drug Safety",
-    "AI in Personalized Medicine",
-    "AI in Clinical Decision",
-    "Guided Supervised Learning"
+    "AI in Pharmacokinetics & Dose Optimization",
+    "AI in Drug Safety & Pharmacovigilance",
+    "AI in Personalized Medicine & Risk Stratification",
+    "AI in Clinical Decision Support & Real-World Data",
+    "Guided Supervised Learning Project"
+  ],
+  "BP704T": [
+    "Nuclear Magnetic Resonance Spectroscopy",
+    "X-Ray Diffraction Methods",
+    "UPLC and Nano LC",
+    "Green Analytical Chemistry",
+    "Microscopy-Based Analytical Techniques"
+  ],
+  "BP705T": [
+    "Fundamentals of Pharmacovigilance",
+    "Pharmacovigilance Systems and Regulatory Framework",
+    "Adverse Drug Reactions (ADRs)",
+    "Immunovigilance and Other Disciplines of Pharmacovigilance",
+    "Risk Communication, Evaluation, Management, and ICH"
+  ],
+  "BP706T": [
+    "Introduction to Pharmacy Practice",
+    "Hospital and Community Pharmacy",
+    "Clinical Pharmacy Services",
+    "Patient-Oriented Services",
+    "Prescribing Guidelines, Essential Drug Concept and Rational Drug"
+  ],
+  "BP707T": [
+    "Fundamentals of Regulatory Affairs",
+    "Regulatory Requirements in Drug Development",
+    "Indian Regulatory Framework and Approval Process",
+    "International Regulatory Systems & Global Drug Registration",
+    "Clinical Trials, Ethics, and Post-Marketing Surveillance"
   ],
   "BP801T": [
-    "AI Lifecycle",
-    "Regulatory Framework",
-    "AI in in Pharmacy Automation",
-    "AI in in Public Health",
-    "Guided Project"
+    "AI Lifecycle, Validation & Model Auditing",
+    "Regulatory Framework & Explainable AI",
+    "AI in in Pharmacy Automation & Supply Chain",
+    "AI in in Public Health & Real-World Data Analytics",
+    "Guided Project - Translational AI in Pharmacy"
+  ],
+  "BP802T": [
+    "Definition, etiopathogenesis, clinical manifestations",
+    "Respiratory System: Asthma, COPD",
+    "Endocrine System: diabetes, thyroid disorders",
+    "Gastrointestinal System: peptic ulcer disease",
+    "Infectious Diseases: tuberculosis"
+  ],
+  "BP803T": [
+    "Regulatory guidelines for formulation Development",
+    "Technology development and transfer",
+    "Facility Considerations: Non sterile",
+    "Facility considerations: Sterile",
+    "Advances in facility design"
+  ],
+  "BP804T": [
+    "Introduction to Pharmaceutical Management",
+    "Marketing Management in Pharmaceuticals",
+    "Pharmaceutical Product Management",
+    "Financial planning and Human Resource Management",
+    "Operations & Supply Chain Management in Pharmaceuticals"
   ],
   "BP805T": [
-    "Fundamentals, Polymers",
-    "Oral and Mucosal",
+    "Fundamentals, Polymers & Materials for NDDS",
+    "Oral and Mucosal Delivery Systems",
     "Transdermal NDDS",
-    "Evaluation, Quality",
-    "Introduction & classification"
+    "Evaluation, Quality, and Translation",
+    "Sterile Dosage Forms (Parenteral & Ophthalmic)"
   ]
 }

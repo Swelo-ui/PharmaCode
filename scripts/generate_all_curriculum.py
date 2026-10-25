@@ -69,13 +69,14 @@ def refine_topics(raw_topics):
 
 def to_title_case(s):
     s = re.sub(r"^\d+\.\s*", "", s)
-    s = re.sub(r"^[a-z]\)\s*", "", s)
-    s = re.sub(r"[:–\-]\s*$", "", s).strip()
+    s = re.sub(r"^[a-z][\.\)]\s*", "", s)
+    s = re.sub(r"^Unit\s+[IVX0-9]+:\s*", "", s, flags=re.IGNORECASE)
+    s = re.sub(r"[:–\-,\.]\s*$", "", s).strip()
     words = s.split()
     small_words = {"and", "or", "of", "in", "to", "for", "with", "on", "at", "by", "from", "as", "the", "a", "an"}
     capitalized = []
     for i, w in enumerate(words):
-        if w.upper() in ["AI", "ML", "IDE", "IDES", "DNA", "RNA", "WHO", "ICH", "GMP", "CGMP", "DPCO", "CDSCO", "FDA", "USFDA", "EMA", "HPLC", "GC", "HPTLC", "UV", "IR", "NMR", "FTIR", "MS", "TLC", "IP", "BP", "USP", "NF", "NDDS", "ADR", "ADRS", "PK", "PD", "PK/PD", "QBD", "IVIVC", "PAT", "WFI", "SVP", "LVP", "BFS", "DPIS", "ETC", "TCA", "HMP", "ATP", "GTP", "HDL", "LDL", "VLDL", "ICD", "INN", "RDU", "ELISA", "TGA", "DSC", "DTA", "UPLC", "ICP-MS", "GI", "GIT", "CNS", "PNS", "ANS", "PCOD", "AIDS", "HIV", "UTI", "COPD", "GERD", "APCTD", "NRDC", "TIFAC", "BCIL", "TBSE", "SIDBI", "ACTD", "CTD", "ECTD", "IND", "NDA", "ANDA", "IRB", "IEC", "GCP", "GLP", "PMDA"]:
+        if w.upper() in ["AI", "ML", "IDE", "IDES", "DNA", "RNA", "WHO", "ICH", "GMP", "CGMP", "DPCO", "CDSCO", "FDA", "USFDA", "EMA", "HPLC", "GC", "HPTLC", "UV", "IR", "NMR", "FTIR", "MS", "TLC", "IP", "BP", "USP", "NF", "NDDS", "ADR", "ADRS", "PK", "PD", "PK/PD", "QBD", "IVIVC", "PAT", "WFI", "SVP", "LVP", "BFS", "DPIS", "ETC", "TCA", "HMP", "ATP", "GTP", "HDL", "LDL", "VLDL", "ICD", "INN", "RDU", "ELISA", "TGA", "DSC", "DTA", "UPLC", "ICP-MS", "GI", "GIT", "CNS", "PNS", "ANS", "PCOD", "AIDS", "HIV", "UTI", "COPD", "GERD", "APCTD", "NRDC", "TIFAC", "BCIL", "TBSE", "SIDBI", "ACTD", "CTD", "ECTD", "IND", "NDA", "ANDA", "IRB", "IEC", "GCP", "GLP", "PMDA", "AYUSH"]:
             capitalized.append(w.upper())
         elif i > 0 and w.lower() in small_words:
             capitalized.append(w.lower())
@@ -87,27 +88,34 @@ def format_unit_topics(lines, unit_title):
     topics = []
     cur_topic = ""
 
+    dangling_ends = (" and", " or", " with", " of", " in", " to", " including", " for", " –", " -")
+
     for line in lines:
         l = line.strip()
         if not l:
             continue
         clean_check = re.sub(r"[^\w\s]", "", l).strip().lower()
         title_check = re.sub(r"[^\w\s]", "", unit_title).strip().lower()
-        if clean_check == title_check or (len(title_check) > 10 and clean_check.startswith(title_check[:20])):
+        if clean_check == title_check:
             continue
 
-        is_bullet = bool(re.match(r"^(?:•|o\s+|-|\*|\d+\.|\d+\)|\([a-z0-9]+\)|[a-z]\))\s*", l))
+        is_bullet = bool(re.match(r"^(?:•|o\s+|-|\*|\d+\.|\d+\)|\([a-z0-9]+\)|[a-z][\.\)])\s*", l))
         has_header_format = bool(re.search(r"\s+[–:]\s+|\s+-\s+", l[:40])) and len(l) < 100
 
-        l_clean = re.sub(r"^(?:•|o\s+|-|\*|\d+\.|\d+\)|\([a-z0-9]+\)|[a-z]\))\s*", "", l).strip()
+        l_clean = re.sub(r"^(?:•|o\s+|-|\*|\d+\.|\d+\)|\([a-z0-9]+\)|[a-z][\.\)])\s*", "", l).strip()
 
-        if is_bullet or has_header_format:
+        # If previous topic ended with a conjunction, ALWAYS continue into l_clean
+        if cur_topic and cur_topic.rstrip().endswith(dangling_ends):
+            cur_topic += " " + l_clean
+        elif is_bullet or has_header_format:
             if cur_topic:
+                cur_topic = re.sub(r"[,;:\s]+$", "", cur_topic).strip()
                 topics.append(cur_topic)
             cur_topic = l_clean
         else:
             if cur_topic:
                 if cur_topic.endswith((".", ";", ":", "-")) or len(l_clean) < 40:
+                    cur_topic = re.sub(r"[,;:\s]+$", "", cur_topic).strip()
                     topics.append(cur_topic)
                     cur_topic = l_clean
                 else:
@@ -116,6 +124,7 @@ def format_unit_topics(lines, unit_title):
                 cur_topic = l_clean
 
     if cur_topic:
+        cur_topic = re.sub(r"[,;:\s]+$", "", cur_topic).strip()
         topics.append(cur_topic)
 
     formatted = []
@@ -123,6 +132,16 @@ def format_unit_topics(lines, unit_title):
         t = " ".join(t.split())
         if len(t) < 4:
             continue
+        t = re.sub(r"[,;:\s]+$", "", t).strip()
+        # Clean any trailing dangling conjunction
+        for dend in dangling_ends:
+            if t.lower().endswith(dend):
+                t = t[:-len(dend)].rstrip()
+                break
+        t = re.sub(r"[,;:\s]+$", "", t).strip()
+        if not t.endswith((".", "?", "!")):
+            t += "."
+
         # Format major topic headings before colon/dash in UPPERCASE
         m = re.match(r"^([A-Za-z0-9\s,\/\-]+?)(?:\s*[:–]\s*|\s+-\s+)(.*)$", t)
         if m and len(m.group(1).split()) <= 4 and not m.group(1).isupper():
@@ -164,17 +183,19 @@ def extract_theory(c):
         l = re.sub(r"\s+\d+\s*(?:hours|hrs)$", "", l, flags=re.IGNORECASE)
         cleaned.append(l)
 
-    # Stitch lines: only continuous lowercase words, NOT bullet characters
+    markers = markers_all[c["code"]]
+    markers_set = [m.lower() for m in markers]
     stitched = []
     for l in cleaned:
-        is_bullet_lead = bool(re.match(r"^(?:•|o\s+|-|\*|\d+\.|\d+\)|\([a-z0-9]+\)|[a-z]\))\s*", l))
-        if stitched and not is_bullet_lead and re.match(r"^[a-z]", l):
+        is_bullet_lead = bool(re.match(r"^(?:•|o\s+|-|\*|\d+\.|\d+\)|\([a-z0-9]+\)|[a-z][\.\)])\s*", l))
+        is_marker_start = any(m in l.lower() for m in markers_set)
+        is_continuation = not is_marker_start and ((not is_bullet_lead and re.match(r"^[a-z]", l)) or bool(re.match(r"^[,;]", l)))
+        if stitched and is_continuation:
             stitched[-1] = re.sub(r"\.\s*$", ",", stitched[-1])
             stitched[-1] = stitched[-1].rstrip() + " " + l
         else:
             stitched.append(l)
 
-    markers = markers_all[c["code"]]
     indices = []
     cur = 0
     for m in markers:
@@ -200,14 +221,16 @@ def extract_theory(c):
         u_lines = list(stitched[s_idx:e_idx])
         
         u_title = ""
-        if u_lines:
-            first_l = u_lines[0]
-            m_split = re.match(r"^(.*?)\s+([a-z0-9]\)\s+.*)$", first_l)
+        u_content = list(u_lines)
+        if u_content:
+            first_l = u_content[0]
+            m_split = re.match(r"^(.*?)\s+([a-z0-9][\.\)]\s+.*)$", first_l)
             if m_split and len(m_split.group(1).split()) <= 8:
                 u_title = to_title_case(m_split.group(1))
-                u_lines[0] = m_split.group(2)
+                u_content[0] = m_split.group(2)
             elif not re.match(r"^(?:•|o\s+|-|\*|\d+\.|\d+\))\s*", first_l) and len(first_l) < 80:
                 u_title = to_title_case(first_l)
+                u_content.pop(0)
         
         if not u_title:
             if u_idx < len(c["unit_titles"]):
@@ -216,10 +239,10 @@ def extract_theory(c):
                 u_title = f"Unit {romans[u_idx]}"
 
         u_hours = f"{raw_hours[u_idx]} Hours"
-        clean_topics = format_unit_topics(u_lines, u_title)
+        clean_topics = format_unit_topics(u_content, u_title)
 
-        if not clean_topics and u_lines:
-            clean_topics = [l for l in u_lines if len(l) > 3]
+        if not clean_topics and u_content:
+            clean_topics = [l for l in u_content if len(l) > 3]
 
         units.append({
             "num": romans[u_idx],
