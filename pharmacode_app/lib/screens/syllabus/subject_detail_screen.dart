@@ -130,7 +130,10 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 6,
+                    crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -147,7 +150,6 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(
@@ -163,7 +165,6 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                           ),
                         ),
                       ),
-                      const Spacer(),
                       if (s.highlight)
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -200,6 +201,7 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                       letterSpacing: -0.3,
                     ),
                   ),
+                  const SizedBox(height: 16),
                   Row(
                     children: [
                       Expanded(
@@ -368,19 +370,25 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                         initiallyExpanded: index == 0,
                         tilePadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
                         leading: Container(
-                          width: 36,
-                          height: 36,
+                          width: 38,
+                          height: 38,
                           decoration: BoxDecoration(
                             color: const Color(0xFFEEF2FF),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           alignment: Alignment.center,
-                          child: Text(
-                            unit.num,
-                            style: GoogleFonts.dmSans(
-                              color: const Color(0xFF4C6EF5),
-                              fontWeight: FontWeight.w900,
-                              fontSize: 12,
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 4),
+                              child: Text(
+                                unit.num,
+                                style: GoogleFonts.dmSans(
+                                  color: const Color(0xFF4C6EF5),
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 12,
+                                ),
+                              ),
                             ),
                           ),
                         ),

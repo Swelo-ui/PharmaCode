@@ -20,6 +20,7 @@ import {
     Link2,
     ClipboardList,
     BookOpen,
+    Target,
 } from "lucide-react";
 import type { Metadata } from "next";
 
@@ -328,6 +329,28 @@ export default function SubjectPage({
                     </code>
                 </div>
 
+                {/* ── Course Objectives ─────────────────────────── */}
+                {subject.objectives && subject.objectives.length > 0 && (
+                    <div className="mb-6 rounded-[16px] p-5 bg-white border border-[#E8EDFF] shadow-sm">
+                        <div className="flex items-center gap-2 mb-3">
+                            <Target size={18} className="shrink-0" style={{ color: sem.color }} />
+                            <h2 className="font-[Nunito] font-extrabold text-[16px] sm:text-[18px] text-[#1A2B6B]">
+                                Course Objectives
+                            </h2>
+                        </div>
+                        <ul className="flex flex-col gap-2">
+                            {subject.objectives.map((obj, i) => (
+                                <li key={i} className="flex gap-2.5 items-start">
+                                    <span className="shrink-0 mt-[7px] w-[6px] h-[6px] rounded-full" style={{ background: sem.color }} />
+                                    <span className="font-[DM_Sans] text-[13px] sm:text-[14px] text-[#374151] leading-[1.6]">
+                                        {obj}
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+
                 {/* ── Unit-wise Detailed Syllabus ───────────────── */}
                 {subject.units.length > 0 ? (
                     <section id="units">
@@ -385,6 +408,25 @@ export default function SubjectPage({
                     </p>
                 </div>
 
+                {/* ── Recommended Textbooks & References ──────── */}
+                {subject.references && subject.references.length > 0 && (
+                    <div className="mt-8 rounded-[16px] p-5 sm:p-6 bg-white border border-[#E8EDFF] shadow-sm">
+                        <div className="flex items-center gap-2 mb-4">
+                            <BookOpen size={18} className="shrink-0" style={{ color: sem.color }} />
+                            <h2 className="font-[Nunito] font-extrabold text-[16px] sm:text-[18px] text-[#1A2B6B]">
+                                Recommended Textbooks &amp; References
+                            </h2>
+                        </div>
+                        <ol className="flex flex-col gap-3 list-decimal list-inside">
+                            {subject.references.map((ref, i) => (
+                                <li key={i} className="font-[DM_Sans] text-[13px] sm:text-[14px] text-[#4B5563] leading-[1.6]">
+                                    <span className="text-[#1F2937] font-medium">{ref}</span>
+                                </li>
+                            ))}
+                        </ol>
+                    </div>
+                )}
+
                 {/* ── What's coming next ───────────────────────── */}
                 <div className="mt-6 rounded-[16px] px-4 py-4 sm:px-5 sm:py-5 bg-white border border-[#E8EDFF] shadow-sm">
                     <div className="flex items-center gap-2 mb-3">
@@ -395,9 +437,9 @@ export default function SubjectPage({
                     </div>
                     <ul className="flex flex-col gap-2.5">
                         {[
-                            "Reference textbooks and recommended reading list",
                             "Previous year question papers (PYQ)",
                             "Topic-wise short notes and revision summaries",
+                            "MCQs and self-assessment quizzes",
                             "Suggested external resources and video tutorials",
                         ].map((item) => (
                             <li key={item} className="flex gap-2.5 items-start">
