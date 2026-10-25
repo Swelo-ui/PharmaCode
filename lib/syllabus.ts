@@ -61,46 +61,48 @@ const SEM1: Subject[] = [
             num: "I", hours: "6 Hours", title: "Introduction to Python Programming", topics: [
                 "Installing Python and an Integrated Development Environment (IDE) [Jupyter Notebook, PyCharm, VS Code etc.], Advantages of IDEs over text editors.",
                 "Python variables and data types (integers, floats, strings, booleans), Type casting and basic operators (arithmetic, comparison, logical), Input and output operations.",
-                "Basic string operations and manipulation techniques. Introduction to standard libraries and third-party libraries, installing and uninstalling libraries. Control Structures & Functions",
-                "Conditional statements (if, if-else, if-elif-else), nested conditions",
-                "Loops (for loop, while loop).",
+                "Basic string operations and manipulation techniques.",
+                "Introduction to standard libraries and third-party libraries, installing and uninstalling libraries.",
+                "Control Structures & Functions",
             ]
         },
         {
             num: "II", hours: "6 Hours", title: "Control Structures & Functions", topics: [
+                "Conditional statements (if, if-else, if-elif-else), nested conditions",
+                "Loops (for loop, while loop).",
                 "Break and continue statements.",
                 "Defining and calling functions, passing arguments and returning values.",
-                "Writing modular programs for simple pharmaceutical applications- dosage calculation and BMI calculation. Data Structures & File Handling",
+                "Writing modular programs for simple pharmaceutical applications- dosage calculation and BMI calculation.",
+                "Data Structures & File Handling",
                 "Lists, tuples, and dictionaries.",
-                "Indexing and slicing lists, basic operations on lists and dictionaries, string manipulation techniques.",
-                "Introduction to NumPy arrays, basic operations using",
             ]
         },
         {
             num: "III", hours: "6 Hours", title: "Data Structures & File Handling", topics: [
-                "NumPy (array creation, arithmetic operations).",
+                "Indexing and slicing lists, basic operations on lists and dictionaries, string manipulation techniques.",
+                "Introduction to NumPy arrays, basic operations using NumPy (array creation, arithmetic operations).",
                 "Reading and writing CSV files.",
                 "Understanding structured healthcare datasets.",
-                "Importing small pharmaceutical datasets and performing basic data access and manipulation tasks. Data Handling with Pandas",
+                "Importing small pharmaceutical datasets and performing basic data access and manipulation tasks.",
+                "Data Handling with Pandas",
                 "Introduction to Pandas library.",
                 "Pandas Series and DataFrame structures.",
-                "Reading CSV and Excel files-PK study datasets and ADR",
             ]
         },
         {
             num: "IV", hours: "6 Hours", title: "Data Handling with Pandas", topics: [
-                "reports",
+                "Reading CSV and Excel files-PK study datasets and ADR reports",
                 "Inspecting datasets using functions such as head(), tail(), info(), and describe().",
                 "Data cleaning techniques and handling missing values.",
                 "Filtering and selecting data based on conditions.",
-                "Grouping data and performing aggregation functions. Data Visualization with Matplotlib",
+                "Grouping data and performing aggregation functions.",
+                "Data Visualization with Matplotlib",
                 "Introduction to Matplotlib.",
-                "Creating line plots, histograms, scatter plots, and box",
             ]
         },
         {
             num: "V", hours: "6 Hours", title: "Data Visualization with Matplotlib", topics: [
-                "plots.",
+                "Creating line plots, histograms, scatter plots, and box plots.",
                 "Labeling axes, titles, and legends.",
                 "Create plots and visualize pharmaceutical datasets - concentration-time curves for oral and IV administration, ADR reporting rates across drugs, dissolution profiles.",
                 "Scientific interpretation of plots.",
@@ -126,53 +128,42 @@ const SEM1: Subject[] = [
             num: "I", hours: "9 Hours", title: "Introduction to the Profession of Pharmacy", topics: [
                 "History of the Profession of Pharmacy in India: In relation to pharmacy education, pharmaceutical industries and organizations – evolution, development and milestones.",
                 "Scope of the Pharmacy Profession: Role and responsibilities of pharmacists in retail/community pharmacy, hospital and clinical pharmacy, and industrial pharmacy including research and development.",
-                "Pharmacopoeias: Introduction to IP, BP, USP, BPC, International Pharmacopoeia, other pharmacopoeias and the National Formulary of India",
-                "structure and content of the Indian Pharmacopoeia",
-                "study of one model IP monograph.",
-                "Introduction to Prescription: Structure and format/parts of prescription, handling of prescriptions, Latin terminology related to prescriptions. Introduction to Pharmaceutical Calculations and Dosage Forms",
-                "Metric system of weights and measures",
-                "calculations based on alligation, proof spirit, isotonic solutions, dilute solutions (percentage and ratio) and geometric dilution",
-                "scientific notation of units and measures.",
-                "Posology: Definition and dose calculation based on age, body weight and",
+                "PHARMACOPOEIAS: Introduction to IP, BP, USP, BPC, International Pharmacopoeia, other pharmacopoeias and the National Formulary of India; structure and content of the Indian Pharmacopoeia; study of one model IP monograph.",
+                "INTRODUCTION TO PRESCRIPTION: Structure and format/parts of prescription, handling of prescriptions, Latin terminology related to prescriptions.",
+                "Introduction to Pharmaceutical Calculations and Dosage Forms",
             ]
         },
         {
             num: "II", hours: "9 Hours", title: "Pharmaceutical Calculations and Posology", topics: [
-                "body surface area.",
-                "Introduction to Dosage Forms: Routes of administration and classification",
-                "f dosage forms.",
-                "Introduction to Active Pharmaceutical Ingredients and Excipients: Definition, ideal characteristics and importance. Solid Dosage Forms",
-                "Powders: Classification, advantages and disadvantages",
-                "dusting powders,",
+                "Metric system of weights and measures; calculations based on alligation, proof spirit, isotonic solutions, dilute solutions (percentage and ratio) and geometric dilution; scientific notation of units and measures.",
+                "POSOLOGY: Definition and dose calculation based on age, body weight and body surface area.",
+                "INTRODUCTION TO DOSAGE FORMS: Routes of administration and classification of dosage forms.",
+                "Introduction to Active Pharmaceutical Ingredients and Excipients:",
+                "Definition, ideal characteristics and importance.",
+                "Solid Dosage Forms",
             ]
         },
         {
             num: "III", hours: "9 Hours", title: "Solid Dosage Forms — Powders, Tablets and Capsules", topics: [
-                "effervescent powders, efflorescent powders, hygroscopic powders and eutectic mixtures",
-                "introduction to excipients and methods of preparation.",
-                "Tablets: Definition, types of tablets including moulded tablets and pills with examples",
-                "advantages and disadvantages",
-                "introduction to excipients and methods of preparation.",
-                "Capsules: Definition, types of capsules, advantages and disadvantages,",
+                "POWDERS: Classification, advantages and disadvantages; dusting powders, effervescent powders, efflorescent powders, hygroscopic powders and eutectic mixtures; introduction to excipients and methods of preparation.",
+                "TABLETS: Definition, types of tablets including moulded tablets and pills with examples; advantages and disadvantages; introduction to excipients and methods of preparation.",
+                "CAPSULES: Definition, types of capsules, advantages and disadvantages, capsule sizes; introduction to excipients and methods of preparation.",
             ]
         },
         {
-            num: "IV", hours: "9 Hours", title: "Monophasic and Biphasic Liquid Dosage Forms", topics: [
-                "capsule sizes",
-                "introduction to excipients and methods of preparation. Monophasic and Biphasic Liquids",
-                "For internal use – aromatic waters, syrups, elixirs and linctus (definition and preparation).",
+            num: "IV", hours: "9 Hours", title: "Monophasic and Biphasic Liquids", topics: [
+                "FOR INTERNAL USE: aromatic waters, syrups, elixirs and linctus (definition and preparation).",
                 "For external use and body cavities – liniments, lotions, throat paints, applications, gargles, mouthwashes, enemas, eye drops, ear drops, nasal drops and tinctures with examples.",
                 "Study of official preparations- Introduction to excipients and methods of preparation.",
                 "Suspensions- Definition and types (flocculated and deflocculated), advantages and disadvantages, formulation excipients and general methods of preparation.",
-                "Emulsions- Definition and types, emulsifying agents, tests for identification of types of emulsions, formulation excipients and general methods of preparation. Semisolid Dosage Forms",
-                "Definitions, classification, advantages and disadvantages, ointment bases",
+                "Emulsions- Definition and types, emulsifying agents, tests for identification of types of emulsions, formulation excipients and general methods of preparation.",
+                "Semisolid Dosage Forms",
             ]
         },
         {
             num: "V", hours: "9 Hours", title: "Semisolid Dosage Forms and Suppositories", topics: [
-                "and other excipients used in semisolid dosage forms",
-                "general methods of preparation of ointments, pastes, creams and gels.",
-                "Suppositories / Pessaries: Definition, types of suppositories, advantages and disadvantages, formulation excipients used in suppositories, properties of ideal suppository bases, types of suppository bases, displacement value and general method of preparation.",
+                "Definitions, classification, advantages and disadvantages, ointment bases and other excipients used in semisolid dosage forms; general methods of preparation of ointments, pastes, creams and gels.",
+                "SUPPOSITORIES / PESSARIES: Definition, types of suppositories, advantages and disadvantages, formulation excipients used in suppositories, properties of ideal suppository bases, types of suppository bases, displacement value and general method of preparation.",
             ]
         },
     ], false,
@@ -198,23 +189,28 @@ const SEM1: Subject[] = [
     s("BP103T", "Healthcare Psychology and Communication Skills", 1, "T", [
         {
             num: "I", hours: "3 Hours", title: "Introduction to Psychology in Healthcare", topics: [
-                "Definition, scope, and relevance of psychology in health sciences. Branches of psychology with healthcare relevance: clinical, health, behavioural, and developmental psychology. Sensation, perception, and",
+                "Definition, scope, and relevance of psychology in health sciences.",
+                "Branches of psychology with healthcare relevance: clinical, health, behavioural, and developmental psychology. Sensation, perception, and attention in clinical assessment. Learning and memory: reinforcement in health behaviour change. Emotion and motivation: theories and implications in health contexts.",
+                "Developmental and Behavioural Psychology",
             ]
         },
         {
             num: "II", hours: "3 Hours", title: "Developmental and Behavioural Psychology", topics: [
-                "attention in clinical assessment. Learning and memory: reinforcement in health behaviour change. Emotion and motivation: theories and implications in health contexts. Developmental and Behavioural Psychology Human developmental stages and healthcare needs. Personality theories and patient interaction styles. Psychological factors affecting illness",
+                "Human developmental stages and healthcare needs. Personality theories and patient interaction styles. Psychological factors affecting illness perception and recovery. Common psychological disorders in healthcare: anxiety, depression, and somatization. Coping strategies, resilience, and stress management techniques.",
+                "Foundations of Health Communication",
             ]
         },
         {
             num: "III", hours: "3 Hours", title: "Foundations of Health Communication", topics: [
-                "perception and recovery. Common psychological disorders in healthcare: anxiety, depression, and somatization. Coping strategies, resilience, and stress management techniques. Foundations of Health Communication Elements and models of communication in healthcare. Types of communication: interpersonal, group, mass, and telehealth",
+                "Elements and models of communication in healthcare. Types of communication: interpersonal, group, mass, and telehealth communication. Barriers to effective communication in clinical settings.",
+                "Active listening, questioning techniques, and empathy. Culturally appropriate and inclusive communication.",
+                "Professional Communication in Healthcare Settings Communication with patients, caregivers, and interdisciplinary teams.",
             ]
         },
         {
-            num: "IV", hours: "3 Hours", title: "Professional Communication in Healthcare Settings", topics: [
-                "communication. Barriers to effective communication in clinical settings. Active listening, questioning techniques, and empathy. Culturally appropriate and inclusive communication. Professional Communication in Healthcare Settings Communication with patients, caregivers, and interdisciplinary teams. Delivering difficult news and handling emotionally charged situations. Legal and ethical issues in health communication (confidentiality, consent). Writing patient records, reports, and discharge summaries. Use",
-                "f technology and digital communication tools in healthcare services.",
+            num: "IV", hours: "3 Hours", title: "Delivering Difficult News and Handling Emotionally Charged Situations.", topics: [
+                "Legal and ethical issues in health communication (confidentiality, consent). Writing patient records, reports, and discharge summaries. Use of technology and digital communication tools in healthcare services.",
+                "Health Psychology and Behavioural Interventions",
             ]
         },
         {
@@ -241,34 +237,46 @@ const SEM1: Subject[] = [
     ]),
     s("BP104T", "Human Anatomy, Physiology and Pathophysiology I", 4, "T", [
         {
-            num: "I", hours: "12 Hours", title: "Introduction to Human Body, Cell and Tissues", topics: [
-                "Cellular and tissue level of organization. Definition and scope of anatomy, physiology and pathophysiology. Levels of structural organization and body systems, basic life processes, homeostasis, basic anatomical terminologies. Structure and functions of cell, transport across cell membrane, cell division, cell junctions. General principles of cell communication, forms of intracellular signalling-",
-                "a) Contact-dependent, b) Paracrine, c) Synaptic, d) Endocrine",
+            num: "I", hours: "12 Hours", title: "Introduction to Human Body", topics: [
+                "Cellular and tissue level of organization.",
+                "Definition and scope of anatomy, physiology and pathophysiology.",
+                "Levels of structural organization and body systems, basic life processes, homeostasis, basic anatomical terminologies.",
+                "Structure and functions of cell, transport across cell membrane, cell division, cell junctions. General principles of cell communication, forms of intracellular signalling-",
+                "Contact-dependent, b) Paracrine, c) Synaptic, d) Endocrine Classification of tissues, structure, location and functions of epithelial, muscular and nervous and connective tissues.",
+                "Basic principles of cell injury and adaptation Components and types of feedback systems, causes of cellular injury, pathogenesis (cell membrane damage, mitochondrial damage, ribosome damage and nuclear damage), morphology of cell injury – adaptive changes (atrophy, hypertrophy, hyperplasia, metaplasia, dysplasia), cell swelling, intra cellular accumulation and cell death.",
+                "Definitions of commonly used relevant medical terminologies.",
+                "Integumentary system and wound healing Structure and functions of skin. Skin disorders: Psoriasis and dermatitis and pathophysiology of Leprosy. Basic principles of wound healing.",
+                "Skeletal system and joints",
             ]
         },
         {
             num: "II", hours: "12 Hours", title: "Integumentary and Skeletal Systems", topics: [
-                "Classification of tissues, structure, location and functions of epithelial, muscular and nervous and connective tissues. Basic principles of cell injury and adaptation Components and types of feedback systems, causes of cellular injury, pathogenesis (cell membrane damage, mitochondrial damage, ribosome damage and nuclear damage), morphology of cell injury – adaptive changes (atrophy, hypertrophy, hyperplasia, metaplasia, dysplasia), cell swelling, intra cellular accumulation and cell death. Definitions of commonly used relevant medical terminologies. Integumentary system and wound healing Structure and functions of skin. Skin disorders: Psoriasis and dermatitis and pathophysiology of Leprosy. Basic principles of wound healing. Skeletal system and joints Divisions of skeletal system, types of bones, salient features and functions of bones of axial and appendicular skeletal system.",
+                "Divisions of skeletal system, types of bones, salient features and functions of bones of axial and appendicular skeletal system.",
+                "Organization of skeletal muscle, physiology of muscle contraction, neuromuscular junction. Structural and functional classification of joints.",
+                "Diseases of bones and joints Pathophysiology of rheumatoid arthritis, osteoporosis and gout.",
+                "Body fluids, blood and lymphatic system Body fluids, composition and functions of blood, hemopoiesis, formation of haemoglobin, mechanisms of coagulation, blood grouping,",
+                "Rh factors and transfusion.",
             ]
         },
         {
             num: "III", hours: "12 Hours", title: "Body Fluids, Blood and Lymphatic System", topics: [
-                "Organization of skeletal muscle, physiology of muscle contraction, neuromuscular junction. Structural and functional classification of joints. Diseases of bones and joints Pathophysiology of rheumatoid arthritis, osteoporosis and gout. Body fluids, blood and lymphatic system Body fluids, composition and functions of blood, hemopoiesis, formation of haemoglobin, mechanisms of coagulation, blood grouping, Rh factors and transfusion. Lymphatic organs and tissues, lymphatic vessels, lymph formation, circulation and functions of lymphatic system. Basic mechanism of inflammation and repair",
+                "Lymphatic organs and tissues, lymphatic vessels, lymph formation, circulation and functions of lymphatic system.",
+                "Basic mechanism of inflammation and repair Introduction, classification and pathophysiology of inflammation, mediators of inflammation.",
+                "Haematological diseases Pathophysiology of iron deficiency, megaloblastic anaemia (Vit B12 and folic acid), sickle cell anaemia, Thalassemia, hereditary acquired anaemia and haemophilia.",
+                "Peripheral nervous system",
             ]
         },
         {
             num: "IV", hours: "12 Hours", title: "Peripheral Nervous System and Special Senses", topics: [
-                "Introduction, classification and pathophysiology of inflammation, mediators of inflammation. Haematological diseases Pathophysiology of iron deficiency, megaloblastic anaemia (Vit B12 and folic acid), sickle cell anaemia, Thalassemia, hereditary acquired anaemia and haemophilia. Peripheral nervous system Classification of peripheral nervous system: structure and functions of sympathetic and parasympathetic nervous system. Origin and functions",
-                "f spinal and cranial nerves. Special senses Structure and functions of eye, ear, nose and tongue. Pathophysiology",
-                "f special sense disorders- glaucoma, cataract, myopia, otitis externa,",
-                "titis media, vertigo and anosmia Cardiovascular system Anatomy of heart, blood circulation, blood vessels, structure and functions of artery, vein and capillaries, elements of conduction system",
-                "f heart and heartbeat, its regulation by autonomic nervous system,",
+                "Classification of peripheral nervous system: structure and functions of sympathetic and parasympathetic nervous system. Origin and functions of spinal and cranial nerves.",
+                "Special senses Structure and functions of eye, ear, nose and tongue. Pathophysiology of special sense disorders- glaucoma, cataract, myopia, otitis externa, otitis media, vertigo and anosmia",
+                "Cardiovascular system",
             ]
         },
         {
             num: "V", hours: "12 Hours", title: "Cardiovascular System and Pathophysiology", topics: [
-                "cardiac output, cardiac cycle.",
-                "f blood pressure, pulse, electrocardiogram. Pathophysiology of hypertension, cardiac arrhythmias, congestive heart failure, ischemic heart disease (angina, myocardial infarction, atherosclerosis and coronary artery disease).",
+                "Anatomy of heart, blood circulation, blood vessels, structure and functions of artery, vein and capillaries, elements of conduction system of heart and heartbeat, its regulation by autonomic nervous system, cardiac output, cardiac cycle, of blood pressure, pulse, electrocardiogram.",
+                "Pathophysiology of hypertension, cardiac arrhythmias, congestive heart failure, ischemic heart disease (angina, myocardial infarction, atherosclerosis and coronary artery disease).",
             ]
         },
     ], false,
@@ -287,33 +295,39 @@ const SEM1: Subject[] = [
     ]),
     s("BP105T", "Introduction to Pharmacognosy", 3, "T", [
         {
-            num: "I", hours: "10 Hours", title: "Introduction to Pharmacognosy and Sources of Crude Drugs", topics: [
-                "Fundamentals of Pharmacognosy (a) Definition, history, present status, scope and development of pharmacognosy. (b) Sources of drugs: Plants, animals, microbial, marine, mineral and plant tissue culture. (c) Historical milestones in drug discovery: Morphine, quinine, aspirin, warfarin,",
+            num: "I", hours: "10 Hours", title: "Fundamentals of Pharmacognosy", topics: [
+                "Definition, history, present status, scope and development of pharmacognosy.",
+                "SOURCES OF DRUGS: Plants, animals, microbial, marine, mineral and plant tissue culture.",
+                "Historical milestones in drug discovery: Morphine, quinine, aspirin, warfarin, penicillin, cephalosporin, taxol and artemisinin.",
+                "Introduction to different herbal / traditional pharmacopoeias: Indian Pharmacopoeia, British Herbal Pharmacopoeia, United States Pharmacopeia – Herbal Medicines and Dietary Supplements, Ayurvedic Pharmacopoeia of India, Unani Pharmacopoeia of India and American Herbal Pharmacopoeia.",
+                "Official and non-official; codified and non-codified drugs. Classification of crude drugs: alphabetical, morphological, taxonomical, chemical, pharmacological and chemotaxonomic classification along with their merits and limitations.",
+                "Cultivation, Collection, Processing and Storage of Drugs of Natural Origin Methods of plant cultivation and Good Agricultural and Collection Practices (WHO /",
             ]
         },
         {
             num: "II", hours: "8 Hours", title: "Classification of Crude Drugs", topics: [
-                "penicillin, cephalosporin, taxol and artemisinin. (d) Introduction to different herbal / traditional pharmacopoeias: Indian Pharmacopoeia, British Herbal Pharmacopoeia, United States Pharmacopeia – Herbal Medicines and Dietary Supplements, Ayurvedic Pharmacopoeia of India, Unani Pharmacopoeia of India and American Herbal Pharmacopoeia. (e) Official and non-official",
-                "codified and non-codified drugs. Classification of crude drugs: alphabetical, morphological, taxonomical, chemical, pharmacological and chemotaxonomic classification along with their merits and limitations. Cultivation, Collection, Processing and Storage of Drugs of Natural Origin Methods of plant cultivation and Good Agricultural and Collection Practices (WHO / GAP / GCP guidelines) for medicinal plants. Factors influencing cultivation, collection and storage of medicinal plants. Plant hormones and their applications in cultivation of medicinal plants. Application",
-                "f polyploidy, mutation and hybridization concepts with reference to secondary",
+                "GAP / GCP guidelines) for medicinal plants. Factors influencing cultivation, collection and storage of medicinal plants.",
+                "Plant hormones and their applications in cultivation of medicinal plants. Application of polyploidy, mutation and hybridization concepts with reference to secondary metabolites. Ex-situ and in-situ conservation and strategies for value addition of medicinal plants. Role of eco-pharmacognosy in sustainable conservation of endangered medicinal plants such as kutki and chirata.",
+                "Quality Control of Drugs of Natural Origin (WHO Guidelines)",
             ]
         },
         {
             num: "III", hours: "8 Hours", title: "Quality Control of Drugs of Natural Origin (WHO Guidelines)", topics: [
-                "metabolites. Ex-situ and in-situ conservation and strategies for value addition of medicinal plants. Role of eco-pharmacognosy in sustainable conservation of endangered medicinal plants such as kutki and chirata. Quality Control of Drugs of Natural Origin (WHO Guidelines) Adulteration of drugs of natural origin. Evaluation of drugs using organoleptic, microscopic (qualitative and quantitative), physical, chemical and biological methods. Physicochemical parameters: extractive values, moisture content, foreign",
-                "rganic matter, ash values, bitterness value, foaming index, haemolytic potential,",
+                "Adulteration of drugs of natural origin. Evaluation of drugs using organoleptic, microscopic (qualitative and quantitative), physical, chemical and biological methods. Physicochemical parameters: extractive values, moisture content, foreign organic matter, ash values, bitterness value, foaming index, haemolytic potential, swelling index, viscosity, optical rotation, refractive index, acid value and saponification value. DNA barcoding.",
+                "Introduction to Metabolites of Plant Origin",
             ]
         },
         {
             num: "IV", hours: "12 Hours", title: "Conservation of Medicinal Plants and Good Agricultural Practices", topics: [
-                "swelling index, viscosity, optical rotation, refractive index, acid value and saponification value. DNA barcoding. Introduction to Metabolites of Plant Origin Definition and general properties of plant metabolites. Primary and secondary metabolites such as carbohydrates, proteins, lipids, alkaloids, glycosides, flavonoids, tannins, terpenoids, volatile oils and resins. Traditional Systems of Medicine Basic principles of treatment of diseases in different systems of medicine including AYUSH and TCM. Types of dosage forms in AYUSH medicines. Role of pharmacognosy in allopathy and traditional systems",
-                "f medicine such as AYUSH and TCM. Phyto-therapeutic Agents Biological source, major constituents and uses of the following classes of drugs:",
-                "Adaptogens and Immunomodulators: Ashwagandha, Tulsi, Amla •",
+                "Definition and general properties of plant metabolites. Primary and secondary metabolites such as carbohydrates, proteins, lipids, alkaloids, glycosides, flavonoids, tannins, terpenoids, volatile oils and resins.",
+                "Traditional Systems of Medicine Basic principles of treatment of diseases in different systems of medicine including AYUSH and TCM. Types of dosage forms in AYUSH medicines. Role of pharmacognosy in allopathy and traditional systems of medicine such as AYUSH and TCM.",
+                "Phyto-therapeutic Agents Biological source, major constituents and uses of the following classes of drugs:",
+                "ADAPTOGENS AND IMMUNOMODULATORS: Ashwagandha, Tulsi, Amla •",
             ]
         },
         {
-            num: "V", hours: "7 Hours", title: "Plant Secondary Metabolites and Primary Metabolites", topics: [
-                "Hepatoprotectives: Milk thistle, Kutki • Cardiovascular drugs: Garlic, Arjuna • Antidiabetics: Gymnema, Fenugreek • Anti-inflammatory and analgesics: Turmeric, Boswellia • CNS drugs: Brahmi • Antimicrobial and antivirals: Giloy, Neem, Andrographis • Gastrointestinal drugs: Psyllium • Dermatological agents: Aloe • Drugs used in women’s health: Chasteberry, Shatavari • Respiratory drugs: Vasaka",
+            num: "V", hours: "7 Hours", title: "Hepatoprotectives: Milk Thistle, Kutki • Cardiovascular Drugs: Garlic, Arjuna •", topics: [
+                "ANTIDIABETICS: Gymnema, Fenugreek • Anti-inflammatory and analgesics: Turmeric, Boswellia • CNS drugs: Brahmi • Antimicrobial and antivirals: Giloy, Neem, Andrographis • Gastrointestinal drugs: Psyllium • Dermatological agents: Aloe • Drugs used in women’s health: Chasteberry, Shatavari • Respiratory drugs: Vasaka",
             ]
         },
     ], false,
@@ -332,30 +346,47 @@ const SEM1: Subject[] = [
     ]),
     s("BP106T", "Pharmaceutical Inorganic and Analytical Chemistry", 3, "T", [
         {
-            num: "I", hours: "7 Hours", title: "Introduction to Pharmaceutical Analysis and Impurities", topics: [
-                "Different techniques of analysis, Methods of expressing strength of solutions, Primary and secondary standards with examples. Errors Sources of errors, types of errors, methods of minimizing errors, accuracy, precision and significant figures.",
+            num: "I", hours: "7 Hours", title: "Introduction to Pharmaceutical Analysis", topics: [
+                "Different techniques of analysis, Methods of expressing strength of solutions, Primary and secondary standards with examples.",
+                "Errors Sources of errors, types of errors, methods of minimizing errors, accuracy, precision and significant figures.",
+                "Impurities Definition, types, contents and regulatory importance. Sources and types of impurities in Pharmaceuticals, limit tests for chloride, sulphate, iron, arsenic, lead, heavy metals, and modified limit test for chloride and sulphate.",
+                "Acid-Base Chemistry and Buffer Systems in Pharmacy",
             ]
         },
         {
             num: "II", hours: "8 Hours", title: "Acid-Base Chemistry, Buffers and Major Intra/Extracellular Electrolytes", topics: [
-                "Definition, types, contents and regulatory importance. Sources and types of impurities in Pharmaceuticals, limit tests for chloride, sulphate, iron, arsenic, lead, heavy metals, and modified limit test for chloride and sulphate. Acid-Base Chemistry and Buffer Systems in Pharmacy Definition of acids, bases, buffers, pH Scale and its significance, Buffer equation, calculation of pH for Buffer solution. Isotonicity and its application in IV Fluids and Ophthalmic Solutions. Major extra and intracellular electrolytes",
+                "Definition of acids, bases, buffers, pH Scale and its significance, Buffer equation, calculation of pH for Buffer solution. Isotonicity and its application in IV Fluids and Ophthalmic Solutions.",
+                "Major extra and intracellular electrolytes Functions of major physiological ions, Electrolytes used in the replacement therapy: Sodium chloride*, Potassium chloride, Calcium chloride and Oral Rehydration Salt (ORS), Physiological acid base balance.",
+                "Acid base titrations Theories of acid base indicators, classification of acid base titrations.",
+                "Preparation and standardization of titrants viz. hydrochloric acid and sodium hydroxide. Theory involved in titrations of strong, weak, and very weak acids and bases, neutralization curves. Assay of Ammonium hydroxide.",
+                "Non-aqueous titrations",
             ]
         },
         {
             num: "III", hours: "14 Hours", title: "Titrimetric Methods of Analysis", topics: [
-                "Functions of major physiological ions, Electrolytes used in the replacement therapy: Sodium chloride*, Potassium chloride, Calcium chloride and Oral Rehydration Salt (ORS), Physiological acid base balance. Acid base titrations Theories of acid base indicators, classification of acid base titrations. Preparation and standardization of titrants viz. hydrochloric acid and sodium hydroxide. Theory involved in titrations of strong, weak, and very weak acids and bases, neutralization curves. Assay of Ammonium hydroxide. Non-aqueous titrations Types of solvents used, acidimetric and alkalimetric titration using non- aqueous solvents. Preparation and standardization of acidic and basic titrants. Estimation of weakly acidic and basic substances using non- aqueous titrants, estimation of Sodium benzoate. Precipitation titrations and gravimetry Principle and steps involved in gravimetric analysis, Mohr’s method, Volhard’s, Modified Volhard’s, Fajans method. Estimation of barium sulphate by gravimetry. Complexometric titrations Classification, metal ion indicators, masking and demasking reagents, preparation and standardization of disodium EDTA. Estimation of Magnesium sulphate and Calcium gluconate*. Redox titrations Concepts of oxidation and reduction, Types of redox titrations viz. Permanganometry, Cerimetry, Iodimetry, Iodometry and titrations with potassium iodate. Gastrointestinal agents Acidifiers: Sodium acid phosphate and Dilute Hydrochloric acid. Antacids: Ideal properties of antacids, combinations of antacids, Sodium bicarbonate*, Aluminium hydroxide gel*. Agents promote bowel movements: Magnesium hydroxide, Sodium",
-                "rthophosphate, Sodium Potassium tartrate and magnesium trisilicate.",
+                "Types of solvents used, acidimetric and alkalimetric titration using non- aqueous solvents. Preparation and standardization of acidic and basic titrants. Estimation of weakly acidic and basic substances using non- aqueous titrants, estimation of Sodium benzoate.",
+                "Precipitation titrations and gravimetry Principle and steps involved in gravimetric analysis, Mohr’s method, Volhard’s, Modified Volhard’s, Fajans method. Estimation of barium sulphate by gravimetry.",
+                "Complexometric titrations Classification, metal ion indicators, masking and demasking reagents, preparation and standardization of disodium EDTA. Estimation of Magnesium sulphate and Calcium gluconate*.",
+                "Redox titrations Concepts of oxidation and reduction, Types of redox titrations viz.",
+                "Permanganometry, Cerimetry, Iodimetry, Iodometry and titrations with potassium iodate.",
+                "GASTROINTESTINAL AGENTS ACIDIFIERS: Sodium acid phosphate and Dilute Hydrochloric acid.",
+                "ANTACIDS: Ideal properties of antacids, combinations of antacids, Sodium bicarbonate*, Aluminium hydroxide gel*.",
+                "AGENTS PROMOTE BOWEL MOVEMENTS: Magnesium hydroxide, Sodium orthophosphate, Sodium Potassium tartrate and magnesium trisilicate.",
             ]
         },
         {
-            num: "IV", hours: "10 Hours", title: "Gastrointestinal Agents and Topical Agents", topics: [
-                "Antimicrobials: Mechanism, classification, Potassium permanganate, Boric acid, Hydrogen peroxide*, Chlorinated lime*, Iodine and its",
+            num: "IV", hours: "10 Hours", title: "Antimicrobials: Mechanism, Classification, Potassium Permanganate,", topics: [
+                "Boric acid, Hydrogen peroxide*, Chlorinated lime*, Iodine and its preparations.",
+                "Radiopharmaceuticals",
             ]
         },
         {
-            num: "V", hours: "06 Hours", title: "Dental Products, Radiopharmaceuticals and Miscellaneous Inorganic Compounds", topics: [
-                "preparations. Radiopharmaceuticals Basics of radioactivity, applications of radioisotopes of Sodium Iodide",
-                "131, Technetium-99m, Cobalt-60, Phosphorus-32 including safe handling, storage, and disposal of radiopharmaceuticals, adhering to regulatory guidelines for safety. Miscellaneous Compounds Expectorants: Potassium iodide, Ammonium chloride*. Emetics: Copper sulphate*, Sodium potassium tartrate. Haematinics: Ferrous sulphate*, Ferrous gluconate. Poison and Antidote: Definition, classification of antidotes, Sodium thiosulphate",
+            num: "V", hours: "06 Hours", title: "Basics of Radioactivity, Applications of Radioisotopes of Sodium Iodide", topics: [
+                "I-131, Technetium-99m, Cobalt-60, Phosphorus-32 including safe handling, storage, and disposal of radiopharmaceuticals, adhering to regulatory guidelines for safety.",
+                "MISCELLANEOUS COMPOUNDS EXPECTORANTS: Potassium iodide, Ammonium chloride*.",
+                "EMETICS: Copper sulphate*, Sodium potassium tartrate.",
+                "HAEMATINICS: Ferrous sulphate*, Ferrous gluconate.",
+                "POISON AND ANTIDOTE: Definition, classification of antidotes, Sodium thiosulphate",
             ]
         },
     ], false,
@@ -525,51 +556,51 @@ const SEM1: Subject[] = [
 const SEM2: Subject[] = [
     s("BP201T", "Applied Biostatistics and Data Analytics for Pharmaceutical Sciences", 2, "T", [
         {
-            num: "I", hours: "6 Hours", title: "Introduction to Data Analytics & Descriptive Statistics", topics: [
+            num: "I", hours: "6 Hours", title: "Descriptive Statistics", topics: [
                 "Types of data in pharmaceutical sciences (nominal, ordinal, interval, ratio)",
                 "Sources of data in pharmacy: clinical trials, pharmacovigilance, quality control, PK studies",
-                "Measures of central tendency: mean, median, mode, their calculation and interpretation",
+                "MEASURES OF CENTRAL TENDENCY: mean, median, mode, their calculation and interpretation",
                 "Measures of dispersion (range, variance, standard deviation) and their interpretation using pharmaceutical data",
                 "Skewness and understanding distribution shape in biological measurements",
                 "Perform descriptive statistical analysis using Python libraries such as NumPy and Pandas, with focus on Interpretation of results Probability & Statistical Distributions in Healthcare",
-                "Basic probability concepts and laws (addition and multiplication rules), conditional probability and its interpretation",
-                "Bayes' theorem and its application in clinical decision-making",
-                "Concept of random variables (discrete and continuous)",
-                "Normal distribution and its importance in biological and pharmaceutical",
             ]
         },
         {
             num: "II", hours: "6 Hours", title: "Probability & Probability Distributions", topics: [
-                "measurements,",
-                "Binomial distribution demonstrating applications in clinical trial",
-                "utcomes",
+                "Basic probability concepts and laws (addition and multiplication rules), conditional probability and its interpretation",
+                "Bayes' theorem and its application in clinical decision-making",
+                "Concept of random variables (discrete and continuous)",
+                "Normal distribution and its importance in biological and pharmaceutical measurements,",
+                "Binomial distribution demonstrating applications in clinical trial outcomes",
                 "Poisson distribution for modeling rare events such as adverse drug reactions",
-                "Graphical visualization of these probability distributions using Python Sampling & Statistical Inference",
+                "Graphical visualization of these probability distributions using Python",
+                "Sampling & Statistical Inference",
+            ]
+        },
+        {
+            num: "III", hours: "6 Hours", title: "Inferential Statistics & Hypothesis Testing", topics: [
                 "Population versus sample, sampling techniques used in clinical research, Sampling error and bias",
                 "Conceptual understanding of the Central Limit Theorem",
             ]
         },
         {
-            num: "III", hours: "6 Hours", title: "Inferential Statistics & Hypothesis Testing", topics: [
+            num: "IV", hours: "6 Hours", title: "Correlation & Regression Analysis", topics: [
                 "Confidence intervals and their interpretation",
                 "Hypothesis testing framework (null and alternative hypotheses)",
                 "Type I and Type II errors, p-value and statistical significance",
-                "Demonstration, calculation and interpretation of these parameters using python with pharmaceutical data Basics of Correlation & Regression Conceptual understanding of the following concepts with emphasis on their interpretation-",
+                "Demonstration, calculation and interpretation of these parameters using python with pharmaceutical data",
+                "Basics of Correlation & Regression Conceptual understanding of the following concepts with emphasis on their interpretation-",
                 "correlation and Pearson correlation coefficients",
                 "Interpretation of positive and negative correlations",
-            ]
-        },
-        {
-            num: "IV", hours: "6 Hours", title: "Correlation & Regression Analysis", topics: [
                 "Scatter plots and trend visualization using pharmaceutical data such as dose-response relationships",
                 "Simple linear regression concept, interpretation of regression coefficients",
-                "Introduction to odds ratio and its application in clinical risk analysis Statistical Analysis Using Python – Case based learning",
-                "Demonstration of descriptive statistics, correlation analysis and linear",
+                "Introduction to odds ratio and its application in clinical risk analysis",
+                "STATISTICAL ANALYSIS USING PYTHON: Case based learning",
             ]
         },
         {
             num: "V", hours: "6 Hours", title: "Experimental Design & Statistical Quality Control", topics: [
-                "regression using Python libraries- SciPy / Statsmodels / Scikit-learn on pharmaceutical datasets",
+                "Demonstration of descriptive statistics, correlation analysis and linear regression using Python libraries- SciPy / Statsmodels / Scikit-learn on pharmaceutical datasets",
                 "Interpretation of the output summaries and p-values",
                 "Preparation of statistical reports",
             ]
@@ -592,36 +623,33 @@ const SEM2: Subject[] = [
     s("BP202T", "Biochemistry", 3, "T", [
         {
             num: "I", hours: "10 Hours", title: "Biomolecules and Bioenergetics", topics: [
-                "No. of Unit No. Topics Lectures Enzymology a. Introduction, properties, nomenclature, and IUB classification of enzymes and coenzymes. Enzyme kinetics (Michaelis plot, Lineweaver– Burk plot). Enzyme inhibitors with examples.",
-                "f enzymes:",
+                "Enzymology a. Introduction, properties, nomenclature, and IUB classification of enzymes and coenzymes. Enzyme kinetics (Michaelis plot, Lineweaver– Burk plot). Enzyme inhibitors with examples, of enzymes: enzyme induction and repression, allosteric enzyme regulation.",
+                "Therapeutic and diagnostic application of enzymes and isoenzymes.",
+                "Factors affecting enzyme activity. Digestion, absorption function of dietary Macro and Micronutrients, including Vitamins and Minerals, Biochemical functions of vitamins and associated diseases, b. Clinical Chemistry: Liver function tests (routinely performed tests based on liver function). Renal function tests (routinely performed tests based on kidney function, ELISA test) a. Introduction about biomolecules – Introduction of carbohydrate, lipids, nucleic acids, amino acids and proteins, b. Bioenergetics: Concept of free energy; relationship between free energy, enthalpy, and entropy; redox potential; energy-rich compounds",
             ]
         },
         {
             num: "II", hours: "10 Hours", title: "Carbohydrate Metabolism", topics: [
-                "enzyme induction and repression, allosteric enzyme regulation. Therapeutic and diagnostic application of enzymes and isoenzymes. Factors affecting enzyme activity. Digestion, absorption function of dietary Macro and Micronutrients, including Vitamins and Minerals, Biochemical functions of vitamins and associated diseases. b. Clinical Chemistry: Liver function tests (routinely performed tests based on liver function). Renal function tests (routinely performed tests based on kidney function, ELISA test) a. Introduction about biomolecules – Introduction of carbohydrate, lipids, nucleic acids, amino acids and proteins. b. Bioenergetics: Concept of free energy",
-                "relationship between free energy, enthalpy, and entropy",
-                "redox potential",
-                "energy-rich compounds (ATP, GTP, etc.) and their biological significance. c. Carbohydrate Metabolism and their role in diabetis mellitus: Overview and significance of major pathways: Glycolysis, Citric Acid Cycle (TCA), Gluconeogenesis, Hexose Monophosphate (HMP) shunt, and",
+                "(ATP, GTP, etc.) and their biological significance, c. Carbohydrate Metabolism and their role in diabetis mellitus: Overview and significance of major pathways: Glycolysis, Citric Acid Cycle (TCA), Gluconeogenesis, Hexose Monophosphate (HMP) shunt, and Glycogen metabolism; regulation of blood glucose levels; metabolic adaptations during fed state, fasting, and prolonged starvation; metabolic derangements in diabetes mellitus and related disorders, d. Biological Oxidation: Electron Transport Chain (ETC), oxidative phosphorylation, and mechanisms of ATP synthesis; regulation and clinical implications of mitochondrial dysfunction and oxidative stress.",
+                "Lipid metabolism a. Classification, functions, and properties of lipids and lipoproteins",
             ]
         },
         {
             num: "III", hours: "7 Hours", title: "Lipid Metabolism", topics: [
-                "Glycogen metabolism",
-                "regulation of blood glucose levels",
-                "metabolic adaptations during fed state, fasting, and prolonged starvation",
-                "metabolic derangements in diabetes mellitus and related disorders. d. Biological Oxidation: Electron Transport Chain (ETC), oxidative phosphorylation, and mechanisms of ATP synthesis",
-                "regulation and clinical implications of mitochondrial dysfunction and oxidative stress. Lipid metabolism a. Classification, functions, and properties of lipids and lipoproteins (HDL, LDL, VLDL, chylomicrons) b. β-oxidation and de-novo synthesis of fatty acids: Ketone bodies: synthesis, utilization, and clinical significance c. Biological significance of cholesterol, lipid profile, and its clinical",
+                "(HDL, LDL, VLDL, chylomicrons) b. β-oxidation and de-novo synthesis of fatty acids: Ketone bodies: synthesis, utilization, and clinical significance c. Biological significance of cholesterol, lipid profile, and its clinical significance d. Disorders associated with lipid metabolism: Hyperlipidaemias and hypercholesterolemia, lipid storage diseases, atherosclerosis, fatty liver disease, and obesity",
             ]
         },
         {
             num: "IV", hours: "10 Hours", title: "Amino Acid and Protein Metabolism", topics: [
-                "significance d. Disorders associated with lipid metabolism: Hyperlipidaemias and hypercholesterolemia, lipid storage diseases, atherosclerosis, fatty liver disease, and obesity Amino acids and protein metabolism a. Classification and Biological Functions: Classification and physiological roles of amino acids. Structure and functions of proteins and plasma proteins b. General Metabolism of Amino Acids: Transamination, oxidative and",
+                "Amino acids and protein metabolism a. Classification and Biological Functions: Classification and physiological roles of amino acids. Structure and functions of proteins and plasma proteins b. General Metabolism of Amino Acids: Transamination, oxidative and non-oxidative deamination, decarboxylation. Urea cycle – nitrogen disposal and detoxification. Fate of carbon skeletons of amino acids (glucogenic vs ketogenic), c. Catabolism of Specific Amino Acids and Related Disorders:",
+                "Catabolism of phenylalanine and tyrosine and their metabolic disorders (Phenylketonuria, Albinism, Alkaptonuria, Tyrosinemia) and Inborn errors of branched chain and aromatic amino acids d. Biochemical significance of neurotransmitters and hormones derived from amino acids:",
+                "5-HT (serotonin), melatonin, dopamine, noradrenaline, adrenaline e. Catabolism of heme and related disorders (jaundice).",
+                "Nucleic acid metabolism and genetic information transfer a. Nucleotide Metabolism and their related disorders: Biosynthesis of purine and pyrimidine nucleotides. Catabolism of purine nucleotides",
             ]
         },
         {
             num: "V", hours: "8 Hours", title: "Nucleic Acid Metabolism and Genetic Information Transfer", topics: [
-                "non-oxidative deamination, decarboxylation. Urea cycle – nitrogen disposal and detoxification. Fate of carbon skeletons of amino acids (glucogenic vs ketogenic). c. Catabolism of Specific Amino Acids and Related Disorders: Catabolism of phenylalanine and tyrosine and their metabolic disorders (Phenylketonuria, Albinism, Alkaptonuria, Tyrosinemia) and Inborn errors of branched chain and aromatic amino acids d. Biochemical significance of neurotransmitters and hormones derived from amino acids: 5-HT (serotonin), melatonin, dopamine, noradrenaline, adrenaline e. Catabolism of heme and related disorders (jaundice). Nucleic acid metabolism and genetic information transfer a. Nucleotide Metabolism and their related disorders: Biosynthesis of purine and pyrimidine nucleotides. Catabolism of purine nucleotides (uric acid formation). Clinical significance of Hyperuricemia and Gout. b. Genome Structure and Central Dogma: Organization of the mammalian genome. Introduction to DNA replication, Transcription, and Translation. c. Genetic Code and",
-                "f Protein Synthesis: Properties of the genetic code: Inhibitors of transcription and translation (antibiotics, toxins) d. DNA Repair and Related Disorders: DNA damage types, Repair mechanisms. Overview of clinical disorders associated with faulty DNA repair.",
+                "(uric acid formation). Clinical significance of Hyperuricemia and Gout, b. Genome Structure and Central Dogma: Organization of the mammalian genome. Introduction to DNA replication, Transcription, and Translation, c. Genetic Code and of Protein Synthesis: Properties of the genetic code: Inhibitors of transcription and translation (antibiotics, toxins) d. DNA Repair and Related Disorders: DNA damage types, Repair mechanisms. Overview of clinical disorders associated with faulty DNA repair.",
             ]
         },
     ], false,
@@ -643,42 +671,40 @@ const SEM2: Subject[] = [
     ]),
     s("BP203T", "Human Anatomy, Physiology and Pathophysiology II", 4, "T", [
         {
-            num: "I", hours: "14 Hours", title: "Digestive System and Nutrition", topics: [
-                "Nervous System",
-                "a) Organization of nervous system, neuron, neuroglia, classification and properties of nerve fibre, electrophysiology, action potential, nerve impulse, receptors, synapse and neurotransmitters. Central nervous system: Meninges, ventricles of brain and cerebrospinal fluid. Structure and functions of brain (cerebrum, brain stem and cerebellum), spinal cord (gross structure, functions of afferent and efferent nerve tracts, reflex activity).",
-                "b) Pathophysiology of epilepsy, Parkinson’s disease, stroke, migraine, depression, schizophrenia, Alzheimer’s disease and meningitis. Gastrointestinal System",
-                "a) Anatomy of GI tract with special reference to anatomy and functions of",
+            num: "I", hours: "14 Hours", title: "Nervous System", topics: [
+                "Organization of nervous system, neuron, neuroglia, classification and properties of nerve fibre, electrophysiology, action potential, nerve impulse, receptors, synapse and neurotransmitters.",
+                "CENTRAL NERVOUS SYSTEM: Meninges, ventricles of brain and cerebrospinal fluid. Structure and functions of brain (cerebrum, brain stem and cerebellum), spinal cord (gross structure, functions of afferent and efferent nerve tracts, reflex activity).",
+                "Pathophysiology of epilepsy, Parkinson’s disease, stroke, migraine, depression, schizophrenia, Alzheimer’s disease and meningitis.",
             ]
         },
         {
-            num: "II", hours: "12 Hours", title: "Respiratory System and Pathophysiology", topics: [
-                "stomach (acid production in the stomach and its regulation through parasympathetic nervous system",
-                "role of pepsin in protein digestion). Anatomy and functions of small intestine and large intestine. Anatomy and functions of salivary glands, pancreas and liver. Movements of GIT, digestion and absorption of nutrients.",
-                "b) Pathophysiology of inflammatory bowel diseases, peptic ulcer, jaundice, hepatitis, typhoid and alcoholic and non alcoholic fatty liver disease",
-                "a) Respiratory System Anatomy of respiratory system with special reference to anatomy of lungs. Mechanism of respiration and regulation of respiration. Lung volumes and capacities, transport of respiratory gases, artificial respiration and resuscitation methods.",
-                "b) Pathophysiology of asthma, chronic obstructive pulmonary diseases and",
+            num: "II", hours: "12 Hours", title: "Gastrointestinal System", topics: [
+                "Anatomy of GI tract with special reference to anatomy and functions of stomach (acid production in the stomach and its regulation through parasympathetic nervous system; role of pepsin in protein digestion).",
+                "Anatomy and functions of small intestine and large intestine. Anatomy and functions of salivary glands, pancreas and liver. Movements of GIT, digestion and absorption of nutrients.",
+                "Pathophysiology of inflammatory bowel diseases, peptic ulcer, jaundice, hepatitis, typhoid and alcoholic and non alcoholic fatty liver disease",
+                "Respiratory System Anatomy of respiratory system with special reference to anatomy of lungs.",
+                "Mechanism of respiration and regulation of respiration. Lung volumes and capacities, transport of respiratory gases, artificial respiration and resuscitation methods.",
+                "Pathophysiology of asthma, chronic obstructive pulmonary diseases and tuberculosis.",
             ]
         },
         {
-            num: "III", hours: "12 Hours", title: "Endocrine System and Hormonal Regulation", topics: [
-                "tuberculosis.",
-                "c) Urinary System Anatomy of urinary tract with special reference to anatomy of kidney and nephrons. Functions of kidney and urinary tract. Physiology of urine formation, micturition reflex and role of kidneys in acid–base balance. Role of Renin Angitensin Aldosterone System in kidney.",
-                "d) Pathophysiology of acute and chronic renal failure and urinary tract infections. Endocrine System",
-                "a) Classification of hormones and mechanism of hormone action. Structure",
+            num: "III", hours: "12 Hours", title: "Urinary System", topics: [
+                "Urinary System Anatomy of urinary tract with special reference to anatomy of kidney and nephrons. Functions of kidney and urinary tract. Physiology of urine formation, micturition reflex and role of kidneys in acid–base balance.",
+                "Role of Renin Angitensin Aldosterone System in kidney.",
+                "Pathophysiology of acute and chronic renal failure and urinary tract infections.",
             ]
         },
         {
-            num: "IV", hours: "10 Hours", title: "Renal System, Fluid Balance and Pathophysiology", topics: [
-                "and functions of pituitary gland, thyroid gland, parathyroid gland, adrenal gland, pancreas, pineal gland and thymus.",
-                "b) Pathophysiology of diabetes, hypothyroidism, hyperthyroidism, goitre and polycystic ovary syndrome. Reproductive System and Cancer",
-                "a) Anatomy of male and female reproductive system. Functions of male",
+            num: "IV", hours: "10 Hours", title: "Endocrine System", topics: [
+                "Classification of hormones and mechanism of hormone action. Structure and functions of pituitary gland, thyroid gland, parathyroid gland, adrenal gland, pancreas, pineal gland and thymus.",
+                "Pathophysiology of diabetes, hypothyroidism, hyperthyroidism, goitre and polycystic ovary syndrome.",
             ]
         },
         {
-            num: "V", hours: "12 Hours", title: "Reproductive System and Energetics", topics: [
-                "and female reproductive system, sex hormones, physiology of menstruation, fertilization, spermatogenesis, oogenesis, pregnancy and parturition.",
-                "b) Pathophysiology of sexually transmitted diseases: AIDS, syphilis and gonorrhea.",
-                "c) Etiology and pathogenesis of cancer.",
+            num: "V", hours: "12 Hours", title: "Reproductive System and Cancer", topics: [
+                "Anatomy of male and female reproductive system. Functions of male and female reproductive system, sex hormones, physiology of menstruation, fertilization, spermatogenesis, oogenesis, pregnancy and parturition.",
+                "Pathophysiology of sexually transmitted diseases: AIDS, syphilis and gonorrhea.",
+                "Etiology and pathogenesis of cancer.",
             ]
         },
     ], false,
@@ -700,67 +726,73 @@ const SEM2: Subject[] = [
     ]),
     s("BP204T", "Pharmaceutical Organic Chemistry", 4, "T", [
         {
-            num: "I", hours: "12 Hours", title: "Aliphatic Saturated Hydrocarbons (Alkanes & Cycloalkanes)", topics: [
-                "Aliphatic Saturated Hydrocarbons – Alkanes",
-                "Methods of preparation: Wurtz reaction, Kolbe’s reaction, Clemmensen reduction, Wolff–Kishner reduction",
+            num: "I", hours: "12 Hours", title: "Aliphatic Saturated Hydrocarbons", topics: [
+                "Alkanes",
+                "METHODS OF PREPARATION: Wurtz reaction, Kolbe’s reaction, Clemmensen reduction, Wolff–Kishner reduction",
                 "Chemical reactions of alkanes",
                 "Mechanism of free radical substitution (halogenation)",
-                "Pharmaceutical applications of alkanes: Liquid paraffin, soft paraffin, hard paraffin Cycloalkanes",
+                "PHARMACEUTICAL APPLICATIONS OF ALKANES: Liquid paraffin, soft paraffin, hard paraffin",
+                "Cycloalkanes",
                 "Baeyer’s strain theory and its limitations",
-                "Coulson–Moffitt modification",
-                "Sachse–Mohr theory Aliphatic Unsaturated Hydrocarbons – - Alkenes",
-                "Methods of preparation:",
+                "COULSON: Moffitt modification",
+                "SACHSE: Mohr theory",
+                "ALIPHATIC UNSATURATED HYDROCARBONS: -",
+            ]
+        },
+        {
+            num: "II", hours: "12 Hours", title: "Alkenes", topics: [
+                "METHODS OF PREPARATION",
                 "Dehydration of alcohols",
                 "Dehydrohalogenation of alkyl halides",
                 "Dehalogenation of vicinal dihalides",
                 "Wittig reaction",
                 "Chemical reactions of alkenes",
-            ]
-        },
-        {
-            num: "II", hours: "12 Hours", title: "Aliphatic Unsaturated Hydrocarbons (Alkenes & Conjugated Dienes)", topics: [
                 "Mechanism of electrophilic addition reactions",
                 "Markovnikov’s and anti-Markovnikov’s rule",
-                "Ozonolysis Conjugated Dienes",
+                "Ozonolysis",
+                "Conjugated Dienes",
                 "Stability of conjugated dienes",
-                "Mechanism of Diels–Alder reaction Electrophilic and free radical addition reactions",
-                "1,2- and 1,4-addition reactions Alkyl Halides",
-                "Nucleophilic substitution reactions: SN1 and SN2",
-                "Mechanism, kinetics, substrate structure, solvent effect, stereochemistry",
-                "Elimination reactions: E1 and E2",
+                "MECHANISM OF DIELS: Alder reaction Electrophilic and free radical addition reactions",
+                "1,2- and 1,4-addition reactions",
+                "Alkyl Halides",
             ]
         },
         {
             num: "III", hours: "12 Hours", title: "Alkyl Halides (SN1, SN2, E1, E2 & Elimination Reactions)", topics: [
+                "NUCLEOPHILIC SUBSTITUTION REACTIONS: SN1 and SN2",
+                "Mechanism, kinetics, substrate structure, solvent effect, stereochemistry",
+                "ELIMINATION REACTIONS: E1 and E2",
                 "Mechanism, kinetics, substrate structure, solvent effect, stereochemistry",
                 "Zaitsev’s (Saytzeff’s) rule with examples",
-                "Comparison of substitution vs elimination reactions : Benzene and Its Derivatives – -",
+                "Comparison of substitution vs elimination reactions",
+            ]
+        },
+        {
+            num: "IV", hours: "12 Hours", title: ": Benzene and Its Derivatives –", topics: [
                 "IUPAC nomenclature of mono- and di-substituted benzene derivatives",
                 "Structure of benzene",
                 "Molecular orbital picture and resonance",
                 "Aromaticity and Hückel’s rule",
-                "Electrophilic aromatic substitution reactions:",
+                "ELECTROPHILIC AROMATIC SUBSTITUTION REACTIONS",
+                "Nitration",
+                "Halogenation",
+                "FRIEDEL: Crafts alkylation and its limitations",
+                "FRIEDEL: Crafts acylation",
+                "Sulphonation and desulphonation",
+                "Effect of substituents on reactivity and orientation",
+                "Carbonyl Compounds -",
             ]
         },
         {
-            num: "IV", hours: "12 Hours", title: "Benzene and Its Derivatives (Electrophilic Aromatic Substitution)", topics: [
-                "Nitration",
-                "Halogenation",
-                "Friedel–Crafts alkylation and its limitations",
-                "Friedel–Crafts acylation",
-                "Sulphonation and desulphonation",
-                "Effect of substituents on reactivity and orientation Carbonyl Compounds - Aldehydes and Ketones",
+            num: "V", hours: "12 Hours", title: "Aldehydes and Ketones", topics: [
                 "Preparation and properties of carbonyl compounds",
                 "Nucleophilic addition reactions",
                 "Aldol condensation and crossed aldol condensation",
-            ]
-        },
-        {
-            num: "V", hours: "12 Hours", title: "Carbonyl Compounds (Aldehydes and Ketones)", topics: [
                 "Cannizzaro and crossed Cannizzaro reactions",
                 "Benzoin and Perkin condensation",
                 "Oxidation and reduction reactions",
-                "Pharmaceutical applications of carbonyl compounds: Chloral, Paraldehyde, Ketoprofen",
+                "Pharmaceutical applications of carbonyl compounds: Chloral,",
+                "Paraldehyde, Ketoprofen",
             ]
         },
     ], false,
@@ -779,11 +811,15 @@ const SEM2: Subject[] = [
     ]),
     s("BP205T", "Pharmacognosy and Phytochemistry", 4, "T", [
         {
-            num: "I", hours: "10 Hours", title: "Metabolic Pathways in Higher Plants & Biogenesis", topics: [
-                "Metabolic Pathways and Biogenetic Studies – Brief study of basic metabolic pathways and biosynthesis of secondary metabolites including:",
+            num: "I", hours: "10 Hours", title: "Metabolic Pathways and Biogenetic Studies", topics: [
+                "Brief study of basic metabolic pathways and biosynthesis of secondary metabolites including:",
                 "Shikimic acid pathway",
                 "Acetate pathway",
-                "Amino acid pathways Utilization of radioactive isotopes in biogenetic studies. Introduction to pathway prediction tools and modern genetic tools such as CRISPR/Cas9. Primary Metabolites – General classification and identification tests Pharmacognostic study (biological source, distribution, identifying characters, chemical constituents, specific tests, therapeutic uses, and commercial applications) of: Carbohydrates:",
+                "Amino acid pathways Utilization of radioactive isotopes in biogenetic studies.",
+                "Introduction to pathway prediction tools and modern genetic tools such as",
+                "CRISPR/Cas9.",
+                "PRIMARY METABOLITES: General classification and identification tests Pharmacognostic study (biological source, distribution, identifying characters, chemical constituents, specific tests, therapeutic uses, and commercial applications) of:",
+                "CARBOHYDRATES",
                 "Acacia,",
                 "Agar",
                 "Tragacanth",
@@ -791,54 +827,63 @@ const SEM2: Subject[] = [
             ]
         },
         {
-            num: "II", hours: "12 Hours", title: "Alkaloids and Glycosides", topics: [
-                "Proteins and Enzymes:",
+            num: "II", hours: "12 Hours", title: "Proteins and Enzymes", topics: [
                 "Gelatin",
                 "Casein",
-                "Proteolytic enzymes: Papain, Bromelain, Serratiopeptidase, Urokinase, Streptokinase, Pepsin Lipids (Waxes, Fats, Fixed Oils):",
+                "PROTEOLYTIC ENZYMES: Papain, Bromelain, Serratiopeptidase,",
+                "Urokinase, Streptokinase, Pepsin",
+                "Lipids (Waxes, Fats, Fixed Oils):",
                 "Castor oil",
                 "Olive oil",
                 "Cocoa butter",
                 "Wool fat",
                 "Beeswax",
+                "SECONDARY METABOLITES: General classification and identification tests",
             ]
         },
         {
             num: "III", hours: "12 Hours", title: "Terpenoids, Volatile Oils and Resins", topics: [
-                "Secondary Metabolites – General classification and identification tests Pharmacognostic study (biological source, distribution, cultivation of underlined drugs, identifying characters, chemical constituents, specific tests, therapeutic uses, and commercial applications) of: Alkaloids:",
+                "Pharmacognostic study (biological source, distribution, cultivation of underlined drugs, identifying characters, chemical constituents, specific tests, therapeutic uses, and commercial applications) of:",
+                "ALKALOIDS",
                 "Vinca",
                 "Rauwolfia",
-                "Opium Volatile Oils:",
+                "Opium",
+                "VOLATILE OILS",
                 "Lemongrass",
                 "Clove",
                 "Cinnamon",
-                "Fennel Tannins:",
+                "Fennel",
+                "TANNINS",
                 "Myrobalans",
                 "Catechu",
-                "Pomegranate Resins:",
+                "Pomegranate",
+                "RESINS",
                 "Guggul",
-                "Asafoetida Glycosides:",
+                "Asafoetida",
+                "GLYCOSIDES",
                 "Senna",
                 "Liquorice",
-                "Digitalis Phenylpropanoids and Flavonoids:",
+                "Digitalis",
+                "PHENYLPROPANOIDS AND FLAVONOIDS",
                 "Green Tea",
                 "Ginkgo",
                 "Flax seed Iridoids, Other Terpenoids and Naphthoquinones:",
                 "Gentian",
-                "Artemisia Extraction Methods for Medicinal Plants – Conventional Methods of Extraction:",
+                "Artemisia Extraction Methods for Medicinal Plants –",
+            ]
+        },
+        {
+            num: "IV", hours: "12 Hours", title: "Conventional Methods of Extraction", topics: [
                 "Infusion",
                 "Decoction",
                 "Digestion",
                 "Maceration",
                 "Percolation",
                 "Reflux",
-            ]
-        },
-        {
-            num: "IV", hours: "12 Hours", title: "Tannins, Flavonoids and Phenylpropanoids", topics: [
                 "Distillation",
                 "Soxhlet extraction",
-                "Successive solvent extraction Modern Methods of Extraction:",
+                "Successive solvent extraction",
+                "MODERN METHODS OF EXTRACTION",
                 "Supercritical fluid extraction",
                 "Microwave-assisted extraction",
                 "Ultrasonic-assisted extraction",
@@ -847,15 +892,19 @@ const SEM2: Subject[] = [
             ]
         },
         {
-            num: "V", hours: "14 Hours", title: "Extraction, Isolation and Standardization of Phytoconstituents", topics: [
-                "Overview of Isolation, Identification and Characterization Techniques– Separation and Isolation Techniques:",
+            num: "V", hours: "14 Hours", title: "Overview of Isolation, Identification and Characterization", topics: [
+                "TECHNIQUES",
+                "SEPARATION AND ISOLATION TECHNIQUES",
                 "Planar chromatography",
                 "Column chromatography",
                 "Preparative TLC",
-                "Flash chromatography Identification Techniques:",
+                "Flash chromatography",
+                "IDENTIFICATION TECHNIQUES",
                 "Phytochemical tests",
                 "Chromatographic techniques",
-                "Spectroscopic techniques Fingerprinting of medicinal plants using TLC/HPTLC. Types and significance of markers (phytochemical reference standards). Screening and analysis of major metabolites:",
+                "Spectroscopic techniques Fingerprinting of medicinal plants using TLC/HPTLC.",
+                "Types and significance of markers (phytochemical reference standards).",
+                "Screening and analysis of major metabolites:",
                 "Alkaloids",
                 "Glycosides",
                 "Saponins",
@@ -882,28 +931,35 @@ const SEM2: Subject[] = [
     ]),
     s("BP206T", "Physical Pharmaceutics", 3, "T", [
         {
-            num: "I", hours: "9 Hours", title: "Solubility Distribution Phenomenon and Buffers", topics: [
-                "Solubility distribution phenomenon & buffers Solubility expression, Solute solvent interactions, Solubility of liquid and liquids, Solubility of solids and liquids, Solubility of Gas in Liquids, Raoult’s Law. Factors affecting solubility, Measurement of saturation Solubility, Effect of pH on solubility, Partition Coefficient – Measurement and significance, Critical Solution Temperature and Applications.",
+            num: "I", hours: "9 Hours", title: "Solubility Distribution Phenomenon & Buffers", topics: [
+                "Solubility expression, Solute solvent interactions, Solubility of liquid and liquids, Solubility of solids and liquids, Solubility of Gas in Liquids, Raoult’s Law. Factors affecting solubility, Measurement of saturation Solubility, Effect of pH on solubility, Partition Coefficient – Measurement and significance, Critical Solution Temperature and",
+                "Applications.",
+                "Introduction to buffers, Buffers in pharmaceutical and biological system, pH determination methos (Electrometry and colorimetry). Buffer equation / Factor influencing the pH of buffer solutions, Factor influencing Buffer capacity, General procedure for preparing buffers,",
+                "Indicators.",
             ]
         },
         {
             num: "II", hours: "8 Hours", title: "Interfacial Phenomenon", topics: [
-                "Introduction to buffers, Buffers in pharmaceutical and biological system, pH determination methos (Electrometry and colorimetry). Buffer equation / Factor influencing the pH of buffer solutions, Factor influencing Buffer capacity, General procedure for preparing buffers, Indicators. Interfacial phenomenon Liquid interface: Surface and interfacial tension, surface free energy, Measurement of surface and interfacial tension, Spreading coefficient, surface active agent, HLB, detergency, types of monolayers at liquid",
+                "LIQUID INTERFACE: Surface and interfacial tension, surface free energy, Measurement of surface and interfacial tension, Spreading coefficient, surface active agent, HLB, detergency, types of monolayers at liquid surface. Adsorption at solid interface, Liquid Interface (contact angle, activated charcoal and Wetting). Adsorption of surface-active agents.",
+                "Electric properties of interface / Electric double layer, Nernst and zeta potential effect of electrolytes",
             ]
         },
         {
-            num: "III", hours: "12 Hours", title: "Colloidal and Coarse Dispersions", topics: [
-                "surface. Adsorption at solid interface, Liquid Interface (contact angle, activated charcoal and Wetting). Adsorption of surface-active agents. Electric properties of interface / Electric double layer, Nernst and zeta potential effect of electrolytes Colloidal and Coarse Dispersion Colloidal dispersions: Types of colloidal dispersions (Lyophobic, Lyophilic, Association colloids), Optical properties of colloids, Kinetic properties of colloids, Electrical properties of colloids, Size and shape of colloidal systems, Stability of colloidal system (peptization and protective action), Application of Colloidal System. Coarse Dispersions: Suspensions, stokes law (Theory of sedimentation),",
+            num: "III", hours: "12 Hours", title: "Colloidal and Coarse Dispersion", topics: [
+                "COLLOIDAL DISPERSIONS: Types of colloidal dispersions (Lyophobic, Lyophilic, Association colloids), Optical properties of colloids, Kinetic properties of colloids, Electrical properties of colloids, Size and shape of colloidal systems, Stability of colloidal system (peptization and protective action), Application of Colloidal System.",
+                "COARSE DISPERSIONS: Suspensions, stokes law (Theory of sedimentation), Effect of Brownian movement / Sedimentation of flocculated particles, sedimentation parameters. Flocculation and controlled structure flocculation. Theories of emulsification and stabilizaition (DLVO Theory, Monomolecular adsorption, Multimolecular adsorption, Film formation, Solid particle adsorption). Physical instabilities of emulsions (creaming, coalescence and breaking, and phase inversion).",
             ]
         },
         {
             num: "IV", hours: "8 Hours", title: "Rheological Studies", topics: [
-                "Effect of Brownian movement / Sedimentation of flocculated particles, sedimentation parameters. Flocculation and controlled structure flocculation. Theories of emulsification and stabilizaition (DLVO Theory, Monomolecular adsorption, Multimolecular adsorption, Film formation, Solid particle adsorption). Physical instabilities of emulsions (creaming, coalescence and breaking, and phase inversion). Rheological studies Newtonian systems and non-Newtonian systems. Thixotropy –",
+                "Newtonian systems and non-Newtonian systems. Thixotropy – measurement / Bulges and spurs. Negative thixotropy, Determination of rheological properties (Viscometers / single and multi-point).",
+                "Viscoelasticity, psycho-rheology. Applications of rheology in pharm",
             ]
         },
         {
-            num: "V", hours: "8 Hours", title: "Micromeritics and Powder Flow Properties", topics: [
-                "measurement / Bulges and spurs. Negative thixotropy, Determination of rheological properties (Viscometers / single and multi-point). Viscoelasticity, psycho-rheology. Applications of rheology in pharm Micromeritics Particle size and size distribution, Particle Shape and Surface area: Methods for determination and significance. Flow properties of powders: determination, significance and methods of enhancement. Advanced flow properties of powers (Powder flow tester).",
+            num: "V", hours: "8 Hours", title: "Micromeritics", topics: [
+                "Particle size and size distribution, Particle Shape and Surface area:",
+                "Methods for determination and significance. Flow properties of powders: determination, significance and methods of enhancement. Advanced flow properties of powers (Powder flow tester).",
             ]
         },
     ], false,
@@ -1172,51 +1228,56 @@ const SEM2: Subject[] = [
 const SEM3: Subject[] = [
     s("BP301T", "Introduction to Machine Learning in Pharmaceutical Sciences", 2, "T", [
         {
-            num: "I", hours: "6 Hours", title: "Introduction to Machine Learning in Pharmaceutical Sciences", topics: [
-                "Unit No. Topics No. of Lectures Foundations of Machine Learning Definition and scope of Artificial Intelligence, Machine Learning, and Data Science",
-                "Types of machine learning: supervised, unsupervised, and reinforcement learning",
+            num: "I", hours: "6 Hours", title: "Foundations of Machine Learning", topics: [
+                "Definition and scope of Artificial Intelligence, Machine",
+                "Learning, and Data Science",
+                "TYPES OF MACHINE LEARNING: supervised, unsupervised, and reinforcement learning",
                 "Features and labels, training data and testing data",
                 "Concept of model building and prediction",
                 "Train-test split, overfitting and underfitting",
                 "Conceptual explanation of bias-variance trade-off",
-                "Overview of the basic ML workflow Regression Models in Healthcare Overview of the concepts in predictive modeling for continuous",
-                "utcomes, with emphasis on interpretation of outputs, and applications in pharmaceutical sciences.",
-                "Linear regression and multiple linear regression",
-                "Model coefficients and their interpretation",
+                "Overview of the basic ML workflow",
+                "Regression Models in Healthcare",
             ]
         },
         {
             num: "II", hours: "6 Hours", title: "Supervised Learning — Regression and Classification", topics: [
+                "Overview of the concepts in predictive modeling for continuous outcomes, with emphasis on interpretation of outputs, and applications in pharmaceutical sciences.",
+                "Linear regression and multiple linear regression",
+                "Model coefficients and their interpretation",
                 "Residuals and goodness-of-fit",
                 "Performance metrics such as Mean Squared Error (MSE), Root Mean Squared Error (RMSE), R² score",
-                "Implementation of regression models on pharmaceutical data ( e.g. dose–response relationships, predicting drug dissolution rates, estimating PK parameters), and demonstration of predictive modeling using python libraries such as sklearn Classification Models in Clinical Applications Overview of the following ML models used for categorical prediction, with emphasis on conceptual understanding, interpretation of outputs and applications in pharmaceutical sciences.",
-                "Logistic regression",
+                "Implementation of regression models on pharmaceutical data ( e.g. dose–response relationships, predicting drug dissolution rates, estimating PK parameters), and demonstration of predictive modeling using python libraries such as sklearn Classification Models in Clinical Applications",
             ]
         },
         {
             num: "III", hours: "6 Hours", title: "Unsupervised Learning and Dimensionality Reduction", topics: [
+                "Overview of the following ML models used for categorical prediction, with emphasis on conceptual understanding, interpretation of outputs and applications in pharmaceutical sciences.",
+                "Logistic regression",
                 "Probability output and threshold selection",
                 "Confusion matrix",
                 "Accuracy, sensitivity, specificity, precision, recall",
-                "Intuitive understanding of ROC curve and AUC, and k- Nearest Neighbors",
-                "Demonstration of predictive modeling using pharmaceutical and clinical examples such as predicting adverse drug reactions, disease risk prediction, binary therapeutic outcome modeling. Tree-Based Models & Ensemble Learning Overview of the following ML models with emphasis on intuitive and conceptual understanding.",
-                "Decision Trees (structure and splitting criteria), interpretation",
+                "Intuitive understanding of ROC curve and AUC, and k-",
+                "Nearest Neighbors",
+                "Demonstration of predictive modeling using pharmaceutical and clinical examples such as predicting adverse drug reactions, disease risk prediction, binary therapeutic outcome modeling.",
+                "Tree-Based Models & Ensemble Learning",
             ]
         },
         {
             num: "IV", hours: "6 Hours", title: "Model Evaluation and Validation Techniques", topics: [
-                "f decision paths and feature importance",
+                "Overview of the following ML models with emphasis on intuitive and conceptual understanding.",
+                "Decision Trees (structure and splitting criteria), interpretation of decision paths and feature importance",
                 "Random Forest, overview of ensemble concept",
                 "Advantages and limitations of tree-based models",
-                "Demonstration of these models for pharmaceutical and",
+                "Demonstration of these models for pharmaceutical and clinical applications such as ADR risk stratification, Patient classification, Predicting treatment outcomes etc.",
+                "Unsupervised Learning & Practical Case Studies",
             ]
         },
         {
             num: "V", hours: "6 Hours", title: "Pharmaceutical Applications of Machine Learning", topics: [
-                "clinical applications such as ADR risk stratification, Patient classification, Predicting treatment outcomes etc. Unsupervised Learning & Practical Case Studies Overview of the unsupervised learning with emphasis on intuitive and conceptual understanding of pattern recognition and clustering, and their applications in pharmaceutical sciences.",
+                "Overview of the unsupervised learning with emphasis on intuitive and conceptual understanding of pattern recognition and clustering, and their applications in pharmaceutical sciences.",
                 "Concept of unsupervised learning",
-                "Clustering overview, K-means clustering, choosing number",
-                "f clusters, Interpreting cluster outputs",
+                "Clustering overview, K-means clustering, choosing number of clusters, Interpreting cluster outputs",
                 "Mini-case study integrating regression, classification, or clustering on healthcare datasets to demonstrate Patient segmentation, and drug grouping based on properties.",
             ]
         },
@@ -1237,44 +1298,44 @@ const SEM3: Subject[] = [
     ]),
     s("BP302T", "Environmental Sciences", 1, "T", [
         {
-            num: "I", hours: "3 Hours", title: "Ecosystems and Natural Resources", topics: [
-                "No. of Unit No. Topics Lectures Environmental Pollution",
+            num: "I", hours: "3 Hours", title: "Environmental Pollution", topics: [
                 "Definition, scope, and importance of environmental studies",
                 "Types, causes, effects, and control measures of Air, water, soil, noise, and nuclear pollution",
                 "Solid waste and hazardous waste management in pharmaceuticals",
                 "Role of pharmacists in conservation and sustainable use of resources Pharmaceutical Waste and Effluent Management",
-                "Types of pharmaceutical waste: chemical, expired drugs, packaging, biomedical waste",
-                "Biomedical Waste Management Rules (2016) and CPCB guidelines",
             ]
         },
         {
             num: "II", hours: "3 Hours", title: "Biodiversity and Its Conservation", topics: [
+                "TYPES OF PHARMACEUTICAL WASTE: chemical, expired drugs, packaging, biomedical waste",
+                "Biomedical Waste Management Rules (2016) and CPCB guidelines",
                 "Effluent Treatment Plant (ETP) design and functioning",
-                "Water purification methods in pharmaceutical settings (RO, UV, distillation, filtration) Environmental Impact of the Pharmaceutical Industry",
+                "Water purification methods in pharmaceutical settings (RO, UV, distillation, filtration)",
+            ]
+        },
+        {
+            num: "III", hours: "3 Hours", title: "Environmental Impact of the Pharmaceutical Industry", topics: [
                 "Sources of pollution in pharmaceutical manufacturing",
-                "Types of pharmaceutical waste: solid, liquid, and gaseous",
+                "TYPES OF PHARMACEUTICAL WASTE: solid, liquid, and gaseous",
+                "Environmental risks of active pharmaceutical ingredients (APIs) and its dosage forms.",
+                "Impact of pharmaceutical residues on ecosystems and human health",
             ]
         },
         {
-            num: "III", hours: "3 Hours", title: "Environmental Pollution and Control", topics: [
-                "Environmental risks of active pharmaceutical ingredients (APIs) and its dosage forms. Impact of pharmaceutical residues on ecosystems and human health Sustainability in the Pharmaceutical Sector",
+            num: "IV", hours: "3 Hours", title: "Sustainability in the Pharmaceutical Sector", topics: [
                 "Principles of sustainable development in pharma",
-            ]
-        },
-        {
-            num: "IV", hours: "3 Hours", title: "Pharmaceutical Effluents, Biomedical Waste Management and Green Chemistry", topics: [
                 "Principles and Practices of Green pharmacy",
-                "Energy conservation and resource optimization. Government Policies, Compliance, and Practical Exposure",
-                "Environmental laws:",
+                "Energy conservation and resource optimization.",
+                "Government Policies, Compliance, and Practical Exposure",
+                "ENVIRONMENTAL LAWS",
                 "Environment (Protection) Act, 1986",
                 "Water (Prevention and Control of Pollution) Act",
                 "National Green Tribunal (NGT) and regulatory bodies (CPCB,",
             ]
         },
         {
-            num: "V", hours: "3 Hours", title: "Environmental Legislation, Disaster Management and Sustainability", topics: [
-                "SPCB)",
-                "Government initiatives:",
+            num: "V", hours: "3 Hours", title: "Spcb)", topics: [
+                "GOVERNMENT INITIATIVES",
                 "Swachh Bharat Abhiyan",
                 "River rejuvenation program- Namami Gange Programme",
                 "Jal Jeevan Mission",
@@ -1296,39 +1357,39 @@ const SEM3: Subject[] = [
     ]),
     s("BP303T", "Ethics and Universal Human Values", 1, "T", [
         {
-            num: "I", hours: "3 Hours", title: "Introduction to Value Education and Self-Exploration", topics: [
-                "1. Concept, definition, and need for value education.",
+            num: "I", hours: "3 Hours", title: "Introduction to Value Education", topics: [
+                "Concept, definition, and need for value education.",
+                "Content and process of value education.",
+                "Application of human values in everyday life.",
             ]
         },
         {
-            num: "II", hours: "3 Hours", title: "Harmony in the Human Being", topics: [
-                "2. Content and process of value education.",
-                "3. Application of human values in everyday life. Self-Exploration and Human Aspirations",
-                "1. Self-exploration as a means of value education.",
+            num: "II", hours: "3 Hours", title: "Self-exploration and Human Aspirations", topics: [
+                "Self-exploration as a means of value education.",
+                "Development of positive attitude and self-confidence.",
+                "Right understanding of happiness and prosperity.",
             ]
         },
         {
-            num: "III", hours: "3 Hours", title: "Harmony in Family and Society", topics: [
-                "2. Development of positive attitude and self-confidence.",
-                "3. Right understanding of happiness and prosperity. Harmony in the Human Being",
-                "1. Human being as more than just the physical body.",
+            num: "III", hours: "3 Hours", title: "Harmony in the Human Being", topics: [
+                "Human being as more than just the physical body.",
+                "Harmony between the Self (‘I’) and the Body.",
+                "Understanding the coexistence of the Self and the Body.",
             ]
         },
         {
-            num: "IV", hours: "3 Hours", title: "Harmony in Nature and Existence", topics: [
-                "2. Harmony between the Self (‘I’) and the Body.",
-                "3. Understanding the coexistence of the Self and the Body. Harmony in the Individual and Society",
-                "1. Understanding the needs of the Self and the needs of the Body.",
-                "2. Activities of the Self and activities of the Body.",
+            num: "IV", hours: "3 Hours", title: "Harmony in the Individual and Society", topics: [
+                "Understanding the needs of the Self and the needs of the Body.",
+                "Activities of the Self and activities of the Body.",
+                "Family as the basic unit of human interaction and the role of values in relationships.",
+                "Foundations of respect in relationships: affection, kindness, guidance, reverence, glory, gratitude, and love.",
             ]
         },
         {
-            num: "V", hours: "3 Hours", title: "Professional Ethics and Holistic Living", topics: [
-                "3. Family as the basic unit of human interaction and the role of values in relationships.",
-                "4. Foundations of respect in relationships: affection, kindness, guidance, reverence, glory, gratitude, and love. Harmony in Society and Nature",
-                "1. Comprehensive human goal: the five dimensions of human endeavour.",
-                "2. Harmony in nature and the four orders in nature.",
-                "3. Holistic perception of harmony in existence.",
+            num: "V", hours: "3 Hours", title: "Harmony in Society and Nature", topics: [
+                "COMPREHENSIVE HUMAN GOAL: the five dimensions of human endeavour.",
+                "Harmony in nature and the four orders in nature.",
+                "Holistic perception of harmony in existence.",
             ]
         },
     ], false,
@@ -1350,50 +1411,54 @@ const SEM3: Subject[] = [
     ]),
     s("BP304T", "General Pharmacology", 3, "T", [
         {
-            num: "I", hours: "08 Hours", title: "Introduction to Pharmacology & Pharmacokinetics", topics: [
-                "a) Definition, historical perspectives, branches of pharmacology and their scope, drug, nature and sources of drugs, International Classification of Diseases (ICD) and International Non- proprietary Names (INN) for drugs",
-                "b) Concept of generic medicines, essential drugs and rational drug use (RDU). Indian Government’s initiatives to promote these concepts.",
-                "c) Routes of drug administration along with their advantages and disadvantages. Pharmacokinetics",
-                "a) Drug absorption, mechanisms of drug absorption, membrane transporters, bioavailability, bioequivalence, factors affecting drug absorption.",
-                "b) Drug distribution in different compartments, volume of",
+            num: "I", hours: "08 Hours", title: "Introduction to Pharmacology", topics: [
+                "Definition, historical perspectives, branches of pharmacology and their scope, drug, nature and sources of drugs, International Classification of Diseases (ICD) and International Non- proprietary Names (INN) for drugs",
+                "Concept of generic medicines, essential drugs and rational drug use (RDU). Indian Government’s initiatives to promote these concepts.",
+                "Routes of drug administration along with their advantages and disadvantages.",
+                "Pharmacokinetics",
+                "Drug absorption, mechanisms of drug absorption, membrane transporters, bioavailability, bioequivalence, factors affecting drug absorption.",
             ]
         },
         {
             num: "II", hours: "07 Hours", title: "Pharmacodynamics & Mechanisms of Drug Action", topics: [
-                "distribution, storage sites, plasma protein binding and its therapeutic importance.",
-                "c) Drug biotransformation, microsomal, non- microsomal metabolism and cytochrome P450 enzyme system, phase I and II reactions, first-pass metabolism, entero-hepatic cycling, concept",
-                "f prodrugs.",
-                "d) Drug excretion and its kinetics. Pharmacodynamics",
-                "a) Types drug action and mechanisms of drug action, dose response relationship.",
-                "b) Receptor theories, structure of receptors, classification and regulation of receptors, spare receptors. Concept of agonist, inverse agonist, partial agonist and antagonist.",
-                "c) Signal transduction mechanisms of receptors.",
+                "Drug distribution in different compartments, volume of distribution, storage sites, plasma protein binding and its therapeutic importance.",
+                "Drug biotransformation, microsomal, non- microsomal metabolism and cytochrome P450 enzyme system, phase I and II reactions, first-pass metabolism, entero-hepatic cycling, concept of prodrugs.",
+                "Drug excretion and its kinetics.",
+                "Pharmacodynamics",
+                "Types drug action and mechanisms of drug action, dose response relationship.",
             ]
         },
         {
             num: "III", hours: "10 Hours", title: "Adverse Drug Effects & Drug Interactions", topics: [
-                "d) Factors modifying drug action including the concepts of tachyphylaxis, idiosyncrasy, drug tolerance, dependence, addiction, and the combined effect of drugs (Additive effect & Synergism).",
-                "e) Adverse drug reactions (ADR) and types of ADRs.",
-                "f) Drug interaction, types, pharmacokinetic and pharmacodynamic drug-drug interactions. Overview of drug discovery and evaluation of new drug",
-                "a) Brief discussion on drug discovery and preclinical evaluation of",
+                "Receptor theories, structure of receptors, classification and regulation of receptors, spare receptors. Concept of agonist, inverse agonist, partial agonist and antagonist.",
+                "Signal transduction mechanisms of receptors.",
+                "Factors modifying drug action including the concepts of tachyphylaxis, idiosyncrasy, drug tolerance, dependence, addiction, and the combined effect of drugs (Additive effect &",
+                "Synergism).",
+                "Adverse drug reactions (ADR) and types of ADRs.",
+                "Drug interaction, types, pharmacokinetic and pharmacodynamic drug-drug interactions.",
             ]
         },
         {
-            num: "IV", hours: "12 Hours", title: "Discovery and Development of New Drugs", topics: [
-                "new drugs.",
-                "b) Human relevant screening techniques: Reconstructed human epidermis, organ-on- Chip model, skin irritancy test by reconstructed corneal epithelium, skin corrosivity testing by Direct Peptide Reactivity Assay.",
-                "c) Advantages and disadvantages of in vitro and in silico Pharmacological screening and evaluation Recent trends in pharmacology",
-                "a) Chronopharmacology: Introduction, biological clock, types of rhythms, hormones, diseases and drugs affected by circadian rhythm. Introduction to chrono kinetics and importance of chronotherapeutic and future scope.",
-                "b) Introduction, general principles, applications and scope of Pharmacogenomics, Gene therapy, Biosimilars and Precision medicine. Toxicology",
-                "a) Introduction to toxicology and its branches. Classification of poisons based on actions and lethal doses, types of antidotes.",
-                "b) General principles of treatment of acute poisoning include",
+            num: "IV", hours: "12 Hours", title: "Overview of Drug Discovery and Evaluation of New Drug", topics: [
+                "Brief discussion on drug discovery and preclinical evaluation of new drugs.",
+                "HUMAN RELEVANT SCREENING TECHNIQUES: Reconstructed human epidermis, organ-on- Chip model, skin irritancy test by reconstructed corneal epithelium, skin corrosivity testing by Direct",
+                "Peptide Reactivity Assay.",
+                "Advantages and disadvantages of in vitro and in silico Pharmacological screening and evaluation",
+                "Recent trends in pharmacology",
+                "CHRONOPHARMACOLOGY: Introduction, biological clock, types of rhythms, hormones, diseases and drugs affected by circadian rhythm. Introduction to chrono kinetics and importance of chronotherapeutic and future scope.",
+                "Introduction, general principles, applications and scope of Pharmacogenomics, Gene therapy, Biosimilars and Precision medicine.",
+                "Toxicology",
+                "Introduction to toxicology and its branches.",
+                "Classification of poisons based on actions and lethal doses, types of antidotes.",
             ]
         },
         {
             num: "V", hours: "8 Hours", title: "Preclinical Safety & General Toxicology", topics: [
-                "heavy metal poisoning. Management of poisoning.",
-                "c) Definition and basic knowledge of preclinical toxicity testing-acute toxicity, sub-acute toxicity, combined chronic and carcinogenicity testing as per OECD norms.",
-                "d) Basic understanding of principles of genotoxicity and teratogenicity as per OECD guidelines.",
-                "e) Definition and concepts of safety pharmacology as per ICH and OECD guidelines.",
+                "General principles of treatment of acute poisoning include heavy metal poisoning. Management of poisoning.",
+                "Definition and basic knowledge of preclinical toxicity testing-acute toxicity, sub-acute toxicity, combined chronic and carcinogenicity testing as per OECD norms.",
+                "Basic understanding of principles of genotoxicity and teratogenicity as per OECD guidelines.",
+                "Definition and concepts of safety pharmacology as per",
+                "ICH and OECD guidelines.",
             ]
         },
     ], false,
@@ -1413,57 +1478,67 @@ const SEM3: Subject[] = [
     ]),
     s("BP305T", "Heterocyclic Compounds and Stereochemistry", 3, "T", [
         {
-            num: "I", hours: "15 Hours", title: "Conformational Analysis and Stereochemistry", topics: [
-                "Chemistry of Carboxylic acids, Phenols, Amines and Polynuclear Aromatic hydrocarbons",
-                "1. Aliphatic and aromatic carboxylic acids",
+            num: "I", hours: "15 Hours", title: "Chemistry of Carboxylic Acids, Phenols, Amines and Polynuclear", topics: [
+                "Aromatic hydrocarbons",
+                "Aliphatic and aromatic carboxylic acids",
                 "Methods to prepare carboxylic acids (Oxidation of alcohols, carbonation of Grignard reagent, Kolbe-Schmidt reaction)",
                 "Study of acidity of carboxylic acids and effect of substituents on acidity",
-                "Study of chemical reactions of carboxylic acids [Mechanism of nucleophilic acyl substitution, Decarboxylation and Hell-Volhard- Zelinsky reaction]. Pharmaceutical applications of aromatic carboxylic acids (Benzoic acid, Salicylic acid, Acetyl Salicylic acid)",
-                "2. Aliphatic and aromatic amines",
+                "Study of chemical reactions of carboxylic acids [Mechanism of nucleophilic acyl substitution, Decarboxylation and Hell-Volhard-",
+                "Zelinsky reaction]. Pharmaceutical applications of aromatic carboxylic acids (Benzoic acid, Salicylic acid, Acetyl Salicylic acid)",
+                "Aliphatic and aromatic amines",
                 "Methods to prepare amines (Reduction of nitro compound, reduction of nitriles and Hofmann degradation of amides)",
                 "Study of basicity of amines and effect of substituents on basicity",
                 "Study of mechanism a n d synthetic applications of diazonium salts including Sandmeyer’s and azo-dye coupling reaction",
-                "3. Alcohols and Phenols",
-                "Classification of alcohols, methods to prepare alcohols (oxymercuration - demercuration, reduction of carbonyl compounds)",
+                "Alcohols and Phenols",
+                "Classification of alcohols, methods to prepare alcohols",
+                "(oxymercuration - demercuration, reduction of carbonyl compounds)",
                 "Acidity of alcohols and Phenols including effect of substituent on acidity",
-                "Definition of phenols, method to prepare phenols by cumene process. Comparison of the acidity of phenol vs alcohol",
-                "Study of mechanism of chemical reactions of phenols (Reimer- Tiemann reaction, halogenation and nitration of phenols). Pharmaceutical applications of alcohols and phenols (Glycerine, Thymol, Paracetamol)",
-                "4. Chemistry of polynuclear hydrocarbons Definition, and classification of polynuclear aromatic hydrocarbons, Study of synthesis (Haworth synthesis) and mechanism of electrophilic aromatic substitution reactions of naphthalene, phenanthrene and anthracene and medicinal uses of drugs containing Naphthalene (Propranolol, Naphazoline) and Phenanthrene (Morphine, Codeine). Optical isomerism",
-                "Definition of stereoisomerism and types of stereoisomerism with examples",
-                "Definition with examples for optical activity, origin of chirality,",
+                "Definition of phenols, method to prepare phenols by cumene process.",
+                "Comparison of the acidity of phenol vs alcohol",
+                "Study of mechanism of chemical reactions of phenols (Reimer-",
+                "Tiemann reaction, halogenation and nitration of phenols).",
+                "Pharmaceutical applications of alcohols and phenols (Glycerine,",
+                "Thymol, Paracetamol)",
+                "Chemistry of polynuclear hydrocarbons Definition, and classification of polynuclear aromatic hydrocarbons, Study of synthesis (Haworth synthesis) and mechanism of electrophilic aromatic substitution reactions of naphthalene, phenanthrene and anthracene and medicinal uses of drugs containing Naphthalene (Propranolol, Naphazoline) and Phenanthrene",
+                "(Morphine, Codeine).",
+                "Optical isomerism",
             ]
         },
         {
             num: "II", hours: "7 Hours", title: "Five-Membered Heterocycles", topics: [
-                "elements of symmetry, chiral and achiral molecules, enantiomerism, diastereoisomerism and meso compounds",
+                "Definition of stereoisomerism and types of stereoisomerism with examples",
+                "Definition with examples for optical activity, origin of chirality, elements of symmetry, chiral and achiral molecules, enantiomerism, diastereoisomerism and meso compounds",
                 "Study of configuration including D & L system, sequence rules, R & S system. Medicinal importance of optical isomers with examples",
-                "Racemic mixture and resolution of racemic mixtures Geometrical isomerism",
-                "Nomenclature of geometrical isomers (Cis & Trans, E & Z, Syn & Anti system)",
-                "Conformational isomerism and its analysis in ethane, butane and",
+                "Racemic mixture and resolution of racemic mixtures",
+                "Geometrical isomerism",
+                "Nomenclature of geometrical isomers (Cis & Trans, E & Z, Syn &",
             ]
         },
         {
-            num: "III", hours: "6 Hours", title: "Six-Membered Heterocycles", topics: [
-                "cyclohexane",
-                "Stereo isomerism in biphenyl compounds (Atropisomerism) and conditions for optical activity in biphenyl compounds Chemistry of five membered heterocycles",
-                "IUPAC nomenclature and classification of heterocyclic compounds as per the Hansch- Widman system",
-                "Relative aromaticity and reactivity of pyrrole, furan and thiophene",
-                "Study of synthesis of pyrrole (Paal – Knorr synthesis), furan (Feist-",
+            num: "III", hours: "6 Hours", title: "Anti System)", topics: [
+                "Conformational isomerism and its analysis in ethane, butane and cyclohexane",
+                "Stereo isomerism in biphenyl compounds (Atropisomerism) and conditions for optical activity in biphenyl compounds",
+                "Chemistry of five membered heterocycles",
             ]
         },
         {
             num: "IV", hours: "10 Hours", title: "Fused Heterocyclic Systems", topics: [
+                "IUPAC nomenclature and classification of heterocyclic compounds as per the Hansch- Widman system",
+                "Relative aromaticity and reactivity of pyrrole, furan and thiophene",
+                "Study of synthesis of pyrrole (Paal – Knorr synthesis), furan (Feist-",
                 "Bénary reaction), thiophene (Hinsberg synthesis) and Mechanism of Electrophilic substitution reactions of pyrrole, furan and thiophene",
-                "Medicinal uses of drugs containing pyrrole (Ethosuximide, procyclidine), furan (Furosemide, Nitrofurazone) and thiophene (Cephaloridine, Clopidogrel) Chemistry of other heterocycles",
+                "Medicinal uses of drugs containing pyrrole (Ethosuximide, procyclidine), furan (Furosemide, Nitrofurazone) and thiophene",
+                "(Cephaloridine, Clopidogrel)",
+                "Chemistry of other heterocycles",
                 "Study of nomenclature of fused heterocyclic compounds, synthesis for pyrazole (Knorr synthesis), imidazole (Debus-Radziszewski reaction), pyridine (The Hantzsch synthesis), quinoline (The Skraup synthesis) and Electrophilic aromatic substitution reactions of pyrazole and imidazole",
-                "Chemical structures of Indole, pyrimidine, benzimidazole, purine,",
             ]
         },
         {
             num: "V", hours: "07 Hours", title: "Biological Significance and Synthesis of Heterocyclic Drugs", topics: [
-                "azepine, pyrazole, oxazole, Phenothiazine, benzotriazole, quinoxaline",
+                "Chemical structures of Indole, pyrimidine, benzimidazole, purine, azepine, pyrazole, oxazole, Phenothiazine, benzotriazole, quinoxaline",
                 "Basicity of imidazole, pyridine and quinolone",
-                "Medicinal uses of any two drugs containing pyrazole (Sildenafil, Celecoxib), imidazole (Metronidazole, Pilocarpine), pyridine (Isoniazid, Chlorpheniramine), quinoline (Chloroquine, Ciprofloxacin), indole (Indomethacin, Reserpine), benzimidazole (Albendazole, Mebendazole) pyrimidine (Fluorouracil, Sulphadiazine), purine (Mercaptopurine, Thioguanine), azepine (Diazepam, Loxapine) heterocycles",
+                "Medicinal uses of any two drugs containing pyrazole (Sildenafil, Celecoxib), imidazole (Metronidazole, Pilocarpine), pyridine (Isoniazid, Chlorpheniramine), quinoline (Chloroquine, Ciprofloxacin), indole (Indomethacin, Reserpine), benzimidazole (Albendazole, Mebendazole) pyrimidine (Fluorouracil, Sulphadiazine), purine (Mercaptopurine, Thioguanine), azepine",
+                "(Diazepam, Loxapine) heterocycles",
             ]
         },
     ], false,
@@ -1485,45 +1560,47 @@ const SEM3: Subject[] = [
     ]),
     s("BP306T", "Pharmaceutical Dosage Forms I", 3, "T", [
         {
-            num: "I", hours: "07 Hours", title: "Fundamentals of Preformulation & Formulation Development", topics: [
-                "No. of Unit Topics Lectures No. Fundamentals of Dosage Form Development: Pre-formulation studies: concept, need, and parameters including solubility, pKa, physical nature (amorphous and crystalline), polymorphism, particle size and shape, and powder flow parameters. Drug–excipient compatibility studies.",
+            num: "I", hours: "07 Hours", title: "No.", topics: [
+                "Fundamentals of Dosage Form Development:",
+                "PRE-FORMULATION STUDIES: concept, need, and parameters including solubility, pKa, physical nature (amorphous and crystalline), polymorphism, particle size and shape, and powder flow parameters.",
+                "DRUG: excipient compatibility studies.",
+                "Packaging selection for various dosage forms.",
+                "Drug product and container-closure interaction.",
+                "Introduction to stability guidelines of new drug substances and products",
+                "(ICH Q1).",
+                "COMPRESSED SOLIDS",
+                "Tablets",
             ]
         },
         {
             num: "II", hours: "12 Hours", title: "Solid Dosage Forms — Compressed Tablets", topics: [
-                "Packaging selection for various dosage forms. Drug product and container-closure interaction. Introduction to stability guidelines of new drug substances and products (ICH Q1). Compressed Solids: Tablets Excipients (roles and examples)",
-                "tooling (types and specifications)",
-                "manufacturing methods and equipment",
-                "tablet defects and remedies",
-                "in- process quality control (IPQC)",
-                "finished-product tests",
-                "packaging.",
+                "Excipients (roles and examples); tooling (types and specifications); manufacturing methods and equipment; tablet defects and remedies; in- process quality control (IPQC); finished-product tests; packaging.",
+                "Tablet Coating Types of coating (sugar, film, compression, enteric); need, advantages, and limitations; polymers, process specifications, and equipment; coating defects; quality control of coated tablets.",
+                "Finely Divided and Filled Solids:",
+                "MEDICATED POWDERS AND GRANULES: formulation considerations, manufacturing processes (mixing, granulation), quality control, and packaging.",
             ]
         },
         {
             num: "III", hours: "12 Hours", title: "Hard and Soft Gelatin Capsules", topics: [
-                "Tablet Coating Types of coating (sugar, film, compression, enteric)",
-                "need, advantages, and limitations",
-                "polymers, process specifications, and equipment",
-                "coating defects",
-                "quality control of coated tablets. Finely Divided and Filled Solids: Medicated powders and granules: formulation considerations, manufacturing processes (mixing, granulation), quality control, and packaging. Gelatin and non-gelatin shells: composition, empty shell manufacturing, quality control, and capsule sizes.",
+                "GELATIN AND NON-GELATIN SHELLS: composition, empty shell manufacturing, quality control, and capsule sizes.",
+                "HARD GELATIN CAPSULES: formulation design; filling methods (manual, semi- automatic, automatic); IPQC and finished-product tests; packaging.",
+                "SOFT GELATIN CAPSULES: shell composition and plasticizers; fill materials; manufacturing methods (rotary die and others); defects; quality control and stability.",
+                "MODIFIED-RELEASE SOLIDS",
+                "TYPES OF TABLETS: sustained-release and controlled-release tablets.",
             ]
         },
         {
-            num: "IV", hours: "07 Hours", title: "Liquid Orals and Dispersions", topics: [
-                "Hard gelatin capsules: formulation design",
-                "filling methods (manual, semi- automatic, automatic)",
-                "IPQC and finished-product tests",
-                "packaging. Soft gelatin capsules: shell composition and plasticizers",
-                "fill materials",
-                "manufacturing methods (rotary die and others)",
-                "defects",
-                "quality control and stability. Modified-Release Solids: Types of tablets: sustained-release and controlled-release tablets. Concept, need, advantages, and disadvantages. Formulation design and drug-release mechanisms.",
+            num: "IV", hours: "07 Hours", title: "Concept, Need, Advantages, and Disadvantages.", topics: [
+                "Formulation design and drug-release mechanisms.",
+                "Polymers used for sustained and controlled release.",
+                "Evaluation of modified-release dosage forms.",
+                "MICROENCAPSULATION",
             ]
         },
         {
             num: "V", hours: "07 Hours", title: "Suppositories and Novel Oral Delivery Concepts", topics: [
-                "Polymers used for sustained and controlled release. Evaluation of modified-release dosage forms. Microencapsulation: Concept, need, advantages, and disadvantages. Methods of microencapsulation: spray drying, spray congealing, extrusion and spheronisation, fluidized bed coating, and phase-separation coacervation. Evaluation of microcapsules.",
+                "METHODS OF MICROENCAPSULATION: spray drying, spray congealing, extrusion and spheronisation, fluidized bed coating, and phase-separation coacervation.",
+                "Evaluation of microcapsules.",
             ]
         },
     ], false,
@@ -1547,28 +1624,30 @@ const SEM3: Subject[] = [
     ]),
     s("BP307T", "Pharmaceutical Engineering", 3, "T", [
         {
-            num: "I", hours: "12 Hours", title: "Flow of Fluids and Size Reduction", topics: [
-                "Unit operations associated with solids Principle, construction, working, advantages and disadvantages and Pharmaceutical applications of size reduction, size separation and mixing",
+            num: "I", hours: "12 Hours", title: "Unit Operations Associated with Solids", topics: [
+                "Principle, construction, working, advantages and disadvantages and Pharmaceutical applications of size reduction, size separation and mixing equipment",
             ]
         },
         {
-            num: "II", hours: "12 Hours", title: "Size Separation and Mixing", topics: [
-                "equipment Unit operations associated with liquids Principle, construction, working, advantages and disadvantages and",
+            num: "II", hours: "12 Hours", title: "Unit Operations Associated with Liquids", topics: [
+                "Principle, construction, working, advantages and disadvantages and Pharmaceutical applications of filtration, crystallization and centrifugation equipment",
             ]
         },
         {
-            num: "III", hours: "12 Hours", title: "Heat Transfer and Evaporation", topics: [
-                "Pharmaceutical applications of filtration, crystallization and centrifugation equipment Unit operations associated with heat transfer Principle, construction, working, advantages and disadvantages and",
+            num: "III", hours: "12 Hours", title: "Unit Operations Associated with Heat Transfer", topics: [
+                "Principle, construction, working, advantages and disadvantages and Pharmaceutical applications of evaporation, drying, distillation and",
+                "Heat transfer equipment",
             ]
         },
         {
-            num: "IV", hours: "05 Hours", title: "Distillation and Drying", topics: [
-                "Pharmaceutical applications of evaporation, drying, distillation and Heat transfer equipment Materials and material handling Introduction to material handling equipment and techniques, Conveyors, hoists, and automated guided vehicles (AGVs), Storage",
+            num: "IV", hours: "05 Hours", title: "Materials and Material Handling", topics: [
+                "Introduction to material handling equipment and techniques, Conveyors, hoists, and automated guided vehicles (AGVs), Storage systems: bins, silos in warehouses, Safety considerations in material handling and waste management. Types of corrosion and their impact on pharmaceutical processes and environment",
             ]
         },
         {
-            num: "V", hours: "04 Hours", title: "Filtration, Centrifugation, Materials and Corrosion", topics: [
-                "systems: bins, silos in warehouses, Safety considerations in material handling and waste management. Types of corrosion and their impact on pharmaceutical processes and environment Flow of fluids Types and measurement of flow, manometers, Reynolds number and its significance, Bernoulli’s theorem and its applications, Orifice meter, Venturimeter, Pitot tube and Rotometer.",
+            num: "V", hours: "04 Hours", title: "Flow of Fluids", topics: [
+                "Types and measurement of flow, manometers, Reynolds number and its significance, Bernoulli’s theorem and its applications, Orifice meter,",
+                "Venturimeter, Pitot tube and Rotometer.",
             ]
         },
     ], false,
@@ -1592,44 +1671,43 @@ const SEM3: Subject[] = [
     ]),
     s("BP308T", "Pharmaceutical Microbiology", 3, "T", [
         {
-            num: "I", hours: "09 Hours", title: "Introduction to Microbiology, Bacteria and Viruses", topics: [
-                "Introduction and role of microorganisms in pharmaceutical industry",
-                "Fundamentals of microbiology: Microorganisms and medicines, Introduction to various microorganisms, Microbial cultivation, isolation and enumeration. Pharmaceutical importance of microorganisms.",
-                "Introduction to Microscope (Compound and Electron Microscope)",
+            num: "I", hours: "09 Hours", title: "Introduction and Role of Microorganisms in Pharmaceutical Industry", topics: [
+                "FUNDAMENTALS OF MICROBIOLOGY: Microorganisms and medicines, Introduction to various microorganisms, Microbial cultivation, isolation and enumeration.",
+                "Pharmaceutical importance of microorganisms.",
+                "Introduction to Microscope (Compound and Electron",
+                "Microscope)",
                 "Identification of bacteria using staining techniques (simple, Gram‘s &Acid-fast staining) and biochemical tests (IMViC).",
                 "Antibiotics p r o d u c e d by microbiology (Production and uses streptomycin, cephalosporin) Evaluation of microbiological contamination",
                 "Sources and types of microbial contaminant",
-                "Control of microbial contamination during manufacture",
-                "f Nonsterile dosage forms and sterile dosage forms",
+                "Control of microbial contamination during manufacture of Nonsterile dosage forms and sterile dosage forms",
             ]
         },
         {
-            num: "II", hours: "09 Hours", title: "Identification and Cultivation of Microorganisms", topics: [
-                "(including Aseptic area), control of Atmosphere, Water, Raw material, Facility, Packaging, Equipment",
+            num: "II", hours: "09 Hours", title: "(including Aseptic Area), Control of Atmosphere,", topics: [
+                "Water, Raw material, Facility, Packaging, Equipment",
                 "Microbiological spoilage of pharmaceuticals, Factors affecting microbial spoilage of pharmaceuticals.",
                 "Introduction to Fermentation, types and fermenters.",
+                "Microbial control and evaluation",
             ]
         },
         {
             num: "III", hours: "09 Hours", title: "Sterilization Methods and Validation", topics: [
-                "Microbial control and evaluation Designing of aseptic area. Laminar flow equipment’s, clean area classification, Biological Safety Level categories. Methods of prevention. Disinfectants, antiseptics, and preservatives, and their evaluation, Factors affecting the antimicrobial activity of disinfectants Sterilization procedures, assurance and evaluation",
-                "Physical, chemical, gaseous, radiation and mechanical",
+                "Designing of aseptic area. Laminar flow equipment’s, clean area classification, Biological Safety Level categories. Methods of prevention.",
+                "Disinfectants, antiseptics, and preservatives, and their evaluation, Factors affecting the antimicrobial activity of disinfectants Sterilization procedures, assurance and evaluation",
+                "Physical, chemical, gaseous, radiation and mechanical methods of sterilization, Advances sterilization technologies, Evaluation of efficiency of sterilization;",
             ]
         },
         {
-            num: "IV", hours: "09 Hours", title: "Disinfectants, Antiseptics and Microbial Assays", topics: [
-                "methods of sterilization, Advances sterilization technologies, Evaluation of efficiency of sterilization",
-                "Validation of sterilization procedures and Sterility indicators.",
-                "Sterility assurance, Bioburden determination, Modelling in predicting microbial growth and death, Test for bacteriostatic, bactericidal activity Microbiological quality control",
-                "Microbial limit tests and Microbial assay (antibiotics, vitamins and",
+            num: "IV", hours: "09 Hours", title: "Validation of Sterilization Procedures and Sterility Indicators.", topics: [
+                "Sterility assurance, Bioburden determination, Modelling in predicting microbial growth and death, Test for bacteriostatic, bactericidal activity",
+                "Microbiological quality control",
             ]
         },
         {
             num: "V", hours: "09 Hours", title: "Microbial Contamination, Cleanroom Engineering and Preservation", topics: [
-                "amino acids)",
+                "Microbial limit tests and Microbial assay (antibiotics, vitamins and amino acids)",
                 "Sterility testing of products according to IP, BP and USP",
-                "Methods for monitoring Water and Air Quality In vitro cell cultures, general procedure for cell culture, Application",
-                "f cell cultures in pharmaceutical industry and research",
+                "Methods for monitoring Water and Air Quality In vitro cell cultures, general procedure for cell culture, Application of cell cultures in pharmaceutical industry and research",
             ]
         },
     ], false,
@@ -1831,77 +1909,83 @@ const SEM4: Subject[] = [
     s("BP401T", "Herbal Drug Technology", 3, "T", [
         {
             num: "I", hours: "10 Hours", title: "Plant Tissue Culture and Standardized Extracts", topics: [
-                "No. of Unit No. Topics Lectures Plant Tissue Culture and Standardized Extracts: Plant tissue culture as an alternative source of medicine:",
                 "Historical development",
                 "Types of cultures",
                 "Nutritional requirements",
                 "Growth and maintenance of callus and suspension culture",
-                "Role of elicitation, genetic transformation, biotransformation, precursor feeding, and somaclonal variation in biomass and secondary metabolite production Introduction to biomanufacturing:",
-                "Medicinal plant–based biomanufacturing",
+                "Role of elicitation, genetic transformation, biotransformation, precursor feeding, and somaclonal variation in biomass and secondary metabolite production",
+                "INTRODUCTION TO BIOMANUFACTURING",
+                "MEDICINAL PLANT: based biomanufacturing",
                 "Utilising plant factories in obtaining valuable ingredients for food, pharmaceutical, and cosmetic industries",
-                "Examples: Shikonin and Paclitaxel",
-                "Oral vaccines in healthcare Optimization and production of standardized extracts of medicinal plants: Strategies for preparation of desired quality extracts by optimizing and adjusting bioactives ensuring quality using analysis of metabolites and TLC fingerprints of the following:",
-                "Aqueous and hydro-alcoholic extracts of Ashwagandha, Shatavari, Licorice, Neem, and Haritaki",
+                "EXAMPLES: Shikonin and Paclitaxel",
+                "Oral vaccines in healthcare Optimization and production of standardized extracts of medicinal plants:",
+                "Strategies for preparation of desired quality extracts by optimizing and adjusting bioactives ensuring quality using analysis of metabolites and",
+                "TLC fingerprints of the following:",
+                "Aqueous and hydro-alcoholic extracts of Ashwagandha,",
+                "Shatavari, Licorice, Neem, and Haritaki",
                 "Flavonoid-rich fraction of Sweet lime peel",
                 "Terpenoid-rich fraction of Bacopa",
                 "Phenol-rich fraction of Green Tea",
                 "Steroid-rich fraction of Tribulus",
-                "Alkaloid-rich fraction of Vasaka Herbal Formulations, Excipients and Cosmetics: Herbal formulations:",
-                "Conventional herbal formulations: syrups, mixtures, powders, capsules, tablets, creams, ointments",
-                "Novel dosage forms: phytosomes (phytocomplexes), liposomes, nanoformulations",
-                "Composition, preparation, and characterization using",
+                "Alkaloid-rich fraction of Vasaka Herbal Formulations, Excipients and Cosmetics:",
+                "HERBAL FORMULATIONS",
+                "CONVENTIONAL HERBAL FORMULATIONS: syrups, mixtures, powders, capsules, tablets, creams, ointments",
+                "NOVEL DOSAGE FORMS: phytosomes (phytocomplexes), liposomes, nanoformulations",
+                "Composition, preparation, and characterization using standardized extracts and bioactives",
             ]
         },
         {
-            num: "II", hours: "10 Hours", title: "Herbal Formulations, Excipients and Cosmetics", topics: [
-                "standardized extracts and bioactives Herbal cosmetics:",
+            num: "II", hours: "10 Hours", title: "Herbal Cosmetics", topics: [
                 "Sources and description of raw materials of herbal origin as active agents in skincare, hair care, and oral hygiene products",
                 "Applications in skincare, hair care, and oral hygiene products such as:",
                 "Sunscreen-lotion/gel",
                 "Hair oil, shampoo, herbal dye",
                 "Herbal mouthwash, chewing gums, candies, gargles",
-                "Face serums and herbal face packs Excipients of Natural origin",
+                "Face serums and herbal face packs",
+                "Excipients of Natural origin",
                 "Colorants, sweeteners, binders, diluents",
                 "Viscosity builders, disintegrants",
                 "Flavors and perfumes",
                 "Protective agents, waxes, bleaching agents and antioxidants Quality Control and Standardisation of Herbal Medicines:",
                 "WHO, AYUSH, and EU guidelines on quality control, stability, and shelf life studies of herbal medicines",
-                "Approaches for standardisation and quality control of botanicals",
             ]
         },
         {
             num: "III", hours: "7 Hours", title: "Quality Control and Standardisation of Herbal Medicines", topics: [
-                "and formulations",
+                "Approaches for standardisation and quality control of botanicals and formulations",
                 "Testing methods and regulatory considerations",
                 "Role of DNA fingerprint and molecular markers such as rbcL, matK, and SCAR in quality control",
-                "Forensic pharmacognosy: Role in identification of illicit herbal drugs (e.g., Cannabis, Opium) Herb–Drug / Food / Herb Interactions:",
-                "General introduction to interactions and role of ADME, Cytochrome P450, and P-gp",
-                "Herb–drug interactions:",
-                "St. John’s Wort with warfarin",
-                "Ginkgo biloba with aspirin",
-                "Herb–food interactions:",
-                "Licorice with salty foods",
+                "FORENSIC PHARMACOGNOSY: Role in identification of illicit herbal drugs (e.g., Cannabis, Opium)",
+                "HERB: Drug / Food / Herb Interactions:",
+                "General introduction to interactions and role of ADME,",
             ]
         },
         {
-            num: "IV", hours: "10 Hours", title: "Herb–Drug / Food / Herb Interactions", topics: [
-                "Turmeric with fats",
-                "Green tea with iron-rich foods",
-                "Herb–herb interactions:",
-                "Ephedra with Ginseng",
-                "Chamomile with Valerian",
-                "Adverse reactions related to plants and foods such as allergy, intolerance, and toxicity Regulatory Requirements of Herbal Drugs and Botanicals: Regulatory framework in India for Herbal and ASU medicines:",
-                "a) Role of regulatory bodies",
-                "b) ASU DTAB (Ayurveda, Siddha, and Unani Drugs Technical Advisory Board)",
-                "c) ASU DCC (Drugs Consultative Committee for ASU drugs)",
+            num: "IV", hours: "10 Hours", title: "Cytochrome P450, and P-gp", topics: [
+                "Cytochrome P450, and P-gp",
             ]
         },
         {
             num: "V", hours: "8 Hours", title: "Regulatory Requirements of Herbal Drugs and Botanicals", topics: [
-                "d) Schedule T – GMP requirements for ASU drugs",
-                "e) Schedule E1 – Poisonous drugs listed under AYUSH",
-                "f) Drugs and Cosmetics Act – Regulatory provisions relevant to herbal/ASU medicines, procedures for registration, trade, and export",
-                "g) Concept of Phytopharmaceuticals and Ayush Aahara in bridging Indian traditional knowledge with modern science.",
+                "HERB: drug interactions:",
+                "St. John’s Wort with warfarin",
+                "Ginkgo biloba with aspirin",
+                "HERB: food interactions:",
+                "Licorice with salty foods",
+                "Turmeric with fats",
+                "Green tea with iron-rich foods",
+                "HERB: herb interactions:",
+                "Ephedra with Ginseng",
+                "Chamomile with Valerian",
+                "Adverse reactions related to plants and foods such as allergy, intolerance, and toxicity Regulatory framework in India for Herbal and ASU medicines:",
+                "Role of regulatory bodies",
+                "ASU DTAB (Ayurveda, Siddha, and Unani Drugs Technical Advisory",
+                "Board)",
+                "ASU DCC (Drugs Consultative Committee for ASU drugs)",
+                "SCHEDULE T: GMP requirements for ASU drugs",
+                "SCHEDULE E1: Poisonous drugs listed under AYUSH",
+                "DRUGS AND COSMETICS ACT: Regulatory provisions relevant to herbal/ASU medicines, procedures for registration, trade, and export",
+                "Concept of Phytopharmaceuticals and Ayush Aahara in bridging Indian traditional knowledge with modern science.",
             ]
         },
     ], false,
@@ -1921,43 +2005,53 @@ const SEM4: Subject[] = [
     s("BP402T", "Medicinal Chemistry", 3, "T", [
         {
             num: "I", hours: "7 Hours", title: "Fundamentals of Medicinal Chemistry and Drug Metabolism", topics: [
-                "Classification, Structure, uses of drugs mentioned in the course, Structure activity relationship of selective class of drugs as specified in the course and Synthesis of selected drugs as superscripted (*) Fundamentals of Medicinal Chemistry",
-                "Introduction: History and scope of medicinal chemistry",
-                "Physicochemical properties in relation to biological action: Ionization, solubility, partition coefficient, hydrogen bonding, Chelation, Bioisosterism and protein binding",
-                "Drug metabolism: Phase I & II reactions",
+                "Classification, Structure, uses of drugs mentioned in the course, Structure activity relationship of selective class of drugs as specified in the course and Synthesis of selected drugs as superscripted (*)",
+                "INTRODUCTION: History and scope of medicinal chemistry",
+                "Physicochemical properties in relation to biological action:",
+                "Ionization, solubility, partition coefficient, hydrogen bonding, Chelation, Bioisosterism and protein binding",
+                "DRUG METABOLISM: Phase I & II reactions Drugs Acting on the Autonomic Nervous System",
+                "ADRENERGIC OR SYMPATHOMIMETIC AGENTS: Nor-epinephrine, Epinephrine, Phenylephrine*, Dopamine, Methyldopa, Clonidine, Dobutamine, Isoproterenol, Terbutaline, Salbutamol*, Bitolterol, Naphazoline, Oxymetazoline and Xylometazoline, Hydroxyamphetamine, Pseudoephedrine, Propylhexedrine,",
+                "Metaraminol.",
+                "ANTI-ADRENERGIC OR SYMPATHOLYTIC AGENTS: Tolazoline*, Phentolamine, Phenoxybenzamine, Prazosin, Dihydroergotamine, Propranolol*, Metibranolol, Atenolol, Betazolol, Bisoprolol, Esmolol, Metoprolol, Labetalol, Carvedilol. SAR of beta adrenergic blockers.",
+                "CHOLINERGIC OR PARASYMPATHOMIMETIC AGENTS: Acetylcholine, Carbachol*, Bethanechol, Methacholine, Pilocarpine,",
             ]
         },
         {
             num: "II", hours: "15 Hours", title: "Drugs Acting on the Autonomic Nervous System", topics: [
-                "1. Adrenergic or Sympathomimetic agents: Nor-epinephrine, Epinephrine, Phenylephrine*, Dopamine, Methyldopa, Clonidine, Dobutamine, Isoproterenol, Terbutaline, Salbutamol*, Bitolterol, Naphazoline, Oxymetazoline and Xylometazoline, Hydroxyamphetamine, Pseudoephedrine, Propylhexedrine, Metaraminol.",
-                "2. Anti-adrenergic or Sympatholytic agents: Tolazoline*, Phentolamine, Phenoxybenzamine, Prazosin, Dihydroergotamine, Propranolol*, Metibranolol, Atenolol, Betazolol, Bisoprolol, Esmolol, Metoprolol, Labetalol, Carvedilol. SAR of beta adrenergic blockers.",
-                "3. Cholinergic or Parasympathomimetic agents: Acetylcholine, Carbachol*, Bethanechol, Methacholine, Pilocarpine, Physostigmine, Neostigmine, Pyridostigmine, Edrophonium",
+                "Physostigmine, Neostigmine, Pyridostigmine, Edrophonium chloride, Tacrine hydrochloride, Ambenonium chloride, Isofluorphate, Echothiophate iodide, Parathione, Malathion.",
+                "Pralidoxime chloride.",
+                "ANTI-CHOLINERGIC OR PARASYMPATHOLYTIC AGENTS: Atropine, Hyoscyamine, Scopolamine, Homatropine, Ipratropium*, Tropicamide, Cyclopentolate, Clidinium Glycopyrrolate, Dicyclomine*, Methantheline, Propantheline, Benztropine mesylate, Orphenadrine, Biperidine, Procyclidine, Tridihexethyl, Isopropamide, Ethopropazine, SAR of cholinergic blockers.",
+                "LOCAL ANESTHETIC AGENTS: Cocaine, Hexylcaine, Meprylcaine, Cyclomethycaine, Piperocaine. Benzocaine, Butamben, Procaine*, Butacaine, Propoxycaine, Tetracaine, Benoxinate, Lignocaine, Mepivacaine, Prilocaine, Etidocaine, Phenacaine, Diperodon, Dibucaine.* SAR of Local anesthetics.",
             ]
         },
         {
             num: "III", hours: "09 Hours", title: "Drugs Acting on the Cardiovascular System", topics: [
-                "chloride, Tacrine hydrochloride, Ambenonium chloride, Isofluorphate, Echothiophate iodide, Parathione, Malathion. Pralidoxime chloride.",
-                "4. Anti-Cholinergic or Parasympatholytic agents: Atropine, Hyoscyamine, Scopolamine, Homatropine, Ipratropium*, Tropicamide, Cyclopentolate, Clidinium Glycopyrrolate, Dicyclomine*, Methantheline, Propantheline, Benztropine mesylate, Orphenadrine, Biperidine, Procyclidine, Tridihexethyl, Isopropamide, Ethopropazine, SAR of cholinergic blockers.",
-                "5. Local anesthetic agents: Cocaine, Hexylcaine, Meprylcaine, Cyclomethycaine, Piperocaine. Benzocaine, Butamben, Procaine*, Butacaine, Propoxycaine, Tetracaine, Benoxinate, Lignocaine, Mepivacaine, Prilocaine, Etidocaine, Phenacaine, Diperodon, Dibucaine.* SAR of Local anesthetics. Drugs Acting on the Cardiovascular System",
-                "1. Anti-anginals: Amyl nitrite, Nitroglycerin, Pentaerythritol, Isosorbide dinitrite*, Dipyridamole, Verapamil, Bepridil",
+                "ANTI-ANGINALS: Amyl nitrite, Nitroglycerin, Pentaerythritol, Isosorbide dinitrite*, Dipyridamole, Verapamil, Bepridil hydrochloride, Diltiazem, Nifedipine, Amlodipine, Felodipine,",
+                "Nicardipine, Nimodipine.",
+                "ANTI-HYPERTENSIVES: Timolol, Captopril, Lisinopril, Enalapril, Benazepril, Quinapril, Methyldopate,* Clonidine, Guanethidine, Guanabenz, Sodium nitroprusside, Diazoxide, Minoxidil,",
+                "Reserpine, Hydralazine.",
+                "Drugs to treat Congestive Heart Failure (CHF): Digoxin, Digitoxin, Nesiritide, Bosentan,Tezosentan.",
+                "Anti-arrhythmics (Class I–IV): Quinidine sulphate, Procainamide, Disopyramide*, Phenytoin, Lidocaine, Tocainide, Mexiletine, Lorcainide, Amiodarone, Sotalol.",
+                "Drugs acting on blood and Renal System",
+                "ANTIHYPERLIPIDEMIC AGENTS: Fenofibrate*, Lovastatin,",
+                "Cholesteramine and Cholestipol",
+                "COAGULANTS AND ANTI-COAGULANTS: Menadione, Acetomenadione,",
             ]
         },
         {
-            num: "IV", hours: "06 Hours", title: "Drugs Acting on Blood and Renal System", topics: [
-                "hydrochloride, Diltiazem, Nifedipine, Amlodipine, Felodipine, Nicardipine, Nimodipine.",
-                "2. Anti-hypertensives: Timolol, Captopril, Lisinopril, Enalapril, Benazepril, Quinapril, Methyldopate,* Clonidine, Guanethidine, Guanabenz, Sodium nitroprusside, Diazoxide, Minoxidil, Reserpine, Hydralazine.",
-                "3. Drugs to treat Congestive Heart Failure (CHF): Digoxin, Digitoxin, Nesiritide, Bosentan,Tezosentan.",
-                "4. Anti-arrhythmics (Class I–IV): Quinidine sulphate, Procainamide, Disopyramide*, Phenytoin, Lidocaine, Tocainide, Mexiletine, Lorcainide, Amiodarone, Sotalol. Drugs acting on blood and Renal System",
-                "1. Antihyperlipidemic Agents: Fenofibrate*, Lovastatin, Cholesteramine and Cholestipol",
-                "2. Coagulants and Anti-Coagulants: Menadione, Acetomenadione, Warfarin, Anisindione, clopidogrel.",
+            num: "IV", hours: "06 Hours", title: "Warfarin, Anisindione, Clopidogrel.", topics: [
+                "DIURETICS: Acetazolamide*, Methazolamide, Dichlorphenamide, Chlorthiazide, Hydrochlorothiazide, Hydroflumethiazide, Cyclothiazide, Furosemide*, Bumetanide, Ethacrynic acid, Spironolactone, Triamterene, Amiloride. Mannitol. SAR of",
+                "Thiazides.",
+                "Autacoids and related drugs",
+                "Antihistamines a. H1–antagonists: Diphenhydramine hydrochloride*, Dimenhydrinate, Doxylamines, Clemastine, Diphenylphyraline, Tripelenamine, Chlorcyclizine, Meclizine, Buclizine, Chlorpheniramine, Triprolidine, Phenindamine, Promethazine*, Trimeprazine, Cyproheptadine, Azatidine,",
             ]
         },
         {
             num: "V", hours: "08 Hours", title: "Autacoids, Antihistamines, PPIs and NSAIDs", topics: [
-                "3. Diuretics: Acetazolamide*, Methazolamide, Dichlorphenamide, Chlorthiazide, Hydrochlorothiazide, Hydroflumethiazide, Cyclothiazide, Furosemide*, Bumetanide, Ethacrynic acid, Spironolactone, Triamterene, Amiloride. Mannitol. SAR of Thiazides. Autacoids and related drugs",
-                "1. Antihistamines a. H1–antagonists: Diphenhydramine hydrochloride*, Dimenhydrinate, Doxylamines, Clemastine, Diphenylphyraline, Tripelenamine, Chlorcyclizine, Meclizine, Buclizine, Chlorpheniramine, Triprolidine, Phenindamine, Promethazine*, Trimeprazine, Cyproheptadine, Azatidine, Astemizole, Loratadine, Cetirizine, Levocetrizine Cromolyn. b. H2-antagonists: Cimetidine*, Famotidine, Ranitidine.",
-                "2. Gastric Proton pump inhibitors: Omeprazole, Lansoprazole, Rabeprazole, Pantoprazole Non-Steroidal Anti-Inflammatory Drugs (NSAIDs), Antipyretics: Sodium salicylate, Aspirin, Diflunisal, Mefenamic acid*, Niflumic acid, Meclofenamate, Indomethacin, Sulindac, Tolmetin, Zomepirac, Diclofenac, Ketorolac, Ibuprofen*, Naproxen, Piroxicam, Phenacetin, Acetaminophen, Antipyrine, Phenylbutazone, Celecoxib, Etoricoxib, SAR",
-                "f representative agents by class.",
+                "Astemizole, Loratadine, Cetirizine, Levocetrizine Cromolyn, b. H2-antagonists: Cimetidine*, Famotidine, Ranitidine.",
+                "GASTRIC PROTON PUMP INHIBITORS: Omeprazole, Lansoprazole,",
+                "Rabeprazole, Pantoprazole Non-Steroidal Anti-Inflammatory Drugs (NSAIDs), Antipyretics:",
+                "Sodium salicylate, Aspirin, Diflunisal, Mefenamic acid*, Niflumic acid, Meclofenamate, Indomethacin, Sulindac, Tolmetin, Zomepirac, Diclofenac, Ketorolac, Ibuprofen*, Naproxen, Piroxicam, Phenacetin, Acetaminophen, Antipyrine, Phenylbutazone, Celecoxib, Etoricoxib, SAR of representative agents by class.",
             ]
         },
     ], false,
@@ -1980,52 +2074,32 @@ const SEM4: Subject[] = [
     ]),
     s("BP403T", "Pharmaceutical Biotechnology", 3, "T", [
         {
-            num: "I", hours: "9 Hours", title: "Recombinant DNA Technology and Genetic Engineering", topics: [
-                "Introduction to Pharmaceutical Biotechnology",
+            num: "I", hours: "9 Hours", title: "Introduction to Pharmaceutical Biotechnology", topics: [
+                "Introduction to biotechnology in pharmaceutical sciences; protein therapeutics; analytical characterization of proteins; monoclonal antibodies; antigens; enzyme immobilization; cell culture and immobilization techniques; pharmaceutical applications.",
+                "Genetic Engineering and Recombinant DNA Technology",
             ]
         },
         {
             num: "II", hours: "9 Hours", title: "Bioprocess Technology and Industrial Fermentation", topics: [
-                "Introduction to biotechnology in pharmaceutical sciences",
-                "protein therapeutics",
-                "analytical characterization of proteins",
-                "monoclonal antibodies",
-                "antigens",
-                "enzyme immobilization",
-                "cell culture and immobilization techniques",
-                "pharmaceutical applications. Genetic Engineering and Recombinant DNA Technology Principles of genetic engineering",
-                "recombinant DNA technology",
-                "production of interferons, hepatitis-B vaccine, and insulin",
-                "polymerase",
+                "Principles of genetic engineering; recombinant DNA technology; production of interferons, hepatitis-B vaccine, and insulin; polymerase chain reaction (PCR) and its applications; mutations and types of mutants.",
+                "Microbial Biotransformation and Fermentation Technology",
             ]
         },
         {
             num: "III", hours: "9 Hours", title: "Immunology, Vaccines and Diagnostic Kits", topics: [
-                "chain reaction (PCR) and its applications",
-                "mutations and types of mutants. Microbial Biotransformation and Fermentation Technology Microbial biotransformation",
-                "fermentation principles and process control",
-                "industrial production of alcohol, penicillins, citric acid, and vitamin B₁₂",
+                "Microbial biotransformation; fermentation principles and process control; industrial production of alcohol, penicillins, citric acid, and vitamin B₁₂; blood products—collection, processing, and storage.",
+                "Gene Therapy, Genomics and Personalized Medicine",
             ]
         },
         {
             num: "IV", hours: "9 Hours", title: "Enzyme Immobilization and Biosensors in Healthcare", topics: [
-                "blood products—collection, processing, and storage. Gene Therapy, Genomics and Personalized Medicine Gene therapy—types and methodologies",
-                "delivery systems",
-                "ethical concerns and challenges",
-                "Human Genome Project",
-                "role of bioinformatics",
+                "Gene therapy—types and methodologies; delivery systems; ethical concerns and challenges; Human Genome Project; role of bioinformatics and artificial intelligence in personalized medicine.",
+                "Immunology, Vaccines and Sera",
             ]
         },
         {
             num: "V", hours: "9 Hours", title: "Regulatory Aspects, Biosafety and Biopharmaceuticals", topics: [
-                "and artificial intelligence in personalized medicine. Immunology, Vaccines and Sera Basics of immunology",
-                "types and generations of vaccines",
-                "immunization strategies",
-                "vaccine preparation, evaluation, and standardization",
-                "regulatory aspects",
-                "sera therapy",
-                "marketed products",
-                "challenges and newer approaches.",
+                "Basics of immunology; types and generations of vaccines; immunization strategies; vaccine preparation, evaluation, and standardization; regulatory aspects; sera therapy; marketed products; challenges and newer approaches.",
             ]
         },
     ], false,
@@ -2052,69 +2126,55 @@ const SEM4: Subject[] = [
     s("BP404T", "Social Pharmacy and Public Health", 2, "T", [
         {
             num: "I", hours: "6 Hours", title: "Introduction to Social Pharmacy and Public Health", topics: [
-                "a) Social Pharmacy: Definition, scope, historical development, and importance. Social pharmacy as a multidisciplinary field.",
-                "b) Public Health: Definition, concepts, history, core functions, and ethical considerations.",
-                "c) Interplay between Social Pharmacy and Public Health: The evolving role of the pharmacist in the public health arena.",
-                "d) Concept of Health and Disease: WHO definition of health",
-                "dimensions",
-                "f health – physical, mental, social, spiritual, and environmental.",
-                "e) Determinants of Health: Social, economic, environmental, lifestyle, and healthcare service determinants and their impact on population health.",
-                "f) Health Indicators: Indicators used to measure health status and health",
-                "utcomes in a population. Health Systems, Policy, and Pharmacoepidemiology",
-                "a) Healthcare Delivery Systems: Overview of global healthcare systems.",
-                "b) Indian Healthcare System: Structure, public and private sectors, primary, secondary, and tertiary levels of care.",
-                "c) Health Policy: Introduction to health policy formulation and analysis",
-                "bjectives of India’s National Health Policy.",
-                "d) National Health Mission (NHM): NRHM and NUHM – goals,",
+                "SOCIAL PHARMACY: Definition, scope, historical development, and importance. Social pharmacy as a multidisciplinary field.",
+                "PUBLIC HEALTH: Definition, concepts, history, core functions, and ethical considerations.",
+                "Interplay between Social Pharmacy and Public Health: The evolving role of the pharmacist in the public health arena.",
+                "Concept of Health and Disease: WHO definition of health; dimensions of health – physical, mental, social, spiritual, and environmental.",
+                "DETERMINANTS OF HEALTH: Social, economic, environmental, lifestyle, and healthcare service determinants and their impact on population health.",
+                "HEALTH INDICATORS: Indicators used to measure health status and health outcomes in a population.",
             ]
         },
         {
-            num: "II", hours: "6 Hours", title: "Epidemiology and Disease Prevention", topics: [
-                "strategies, and impact on public health indicators.",
-                "e) Pharmacoepidemiology: Definition, aims, scope, and applications.",
-                "f) Measures of Disease Frequency and Distribution: Incidence, prevalence, endemic, epidemic, pandemic",
-                "morbidity and mortality rates, Odds ratio and relative risk.",
-                "g) Introduction to Biostatistics: Role in public health",
-                "types of data",
-                "basic data presentation methods. Preventive Healthcare, Health Promotion, and Communicable Diseases",
-                "a) Levels of Prevention: Primordial, primary, secondary, and tertiary prevention with examples.",
-                "b) Role of Pharmacists in Disease Prevention and Health Promotion:",
+            num: "II", hours: "6 Hours", title: "Health Systems, Policy, and Pharmacoepidemiology", topics: [
+                "HEALTHCARE DELIVERY SYSTEMS: Overview of global healthcare systems.",
+                "INDIAN HEALTHCARE SYSTEM: Structure, public and private sectors, primary, secondary, and tertiary levels of care.",
+                "HEALTH POLICY: Introduction to health policy formulation and analysis; objectives of India’s National Health Policy.",
+                "National Health Mission (NHM): NRHM and NUHM – goals, strategies, and impact on public health indicators.",
+                "PHARMACOEPIDEMIOLOGY: Definition, aims, scope, and applications.",
+                "Measures of Disease Frequency and Distribution: Incidence, prevalence, endemic, epidemic, pandemic; morbidity and mortality rates, Odds ratio and relative risk.",
+                "INTRODUCTION TO BIOSTATISTICS: Role in public health; types of data; basic data presentation methods.",
             ]
         },
         {
-            num: "III", hours: "6 Hours", title: "National Health Programs and Policies in India", topics: [
+            num: "III", hours: "6 Hours", title: "Preventive Healthcare, Health Promotion, and Communicable", topics: [
+                "Diseases",
+                "LEVELS OF PREVENTION: Primordial, primary, secondary, and tertiary prevention with examples.",
+                "Role of Pharmacists in Disease Prevention and Health Promotion:",
                 "Immunization services, screening programs, lifestyle counselling.",
-                "c) Health Education: Definition, principles, methods, and importance",
-                "development of effective health education materials.",
-                "d) Mother and Child Health (MCH): Antenatal care, postnatal care, breastfeeding, immunization schedules.",
-                "e) Communicable Diseases: Modes of transmission, prevention, and control of tuberculosis, HIV/AIDS, malaria, dengue, typhoid, influenza",
-                "pharmacist’s role. Non-Communicable Diseases, Nutrition, Mental Health, and National Programs",
-                "a) Non-Communicable Diseases (NCDs): Diabetes, hypertension, cardiovascular diseases, chronic respiratory diseases, cancer",
-                "prevention and management.",
-                "b) Nutrition and Health: Balanced diet, macro- and micronutrients,",
+                "HEALTH EDUCATION: Definition, principles, methods, and importance; development of effective health education materials.",
+                "Mother and Child Health (MCH): Antenatal care, postnatal care, breastfeeding, immunization schedules.",
+                "COMMUNICABLE DISEASES: Modes of transmission, prevention, and control of tuberculosis, HIV/AIDS, malaria, dengue, typhoid, influenza; pharmacist’s role.",
             ]
         },
         {
-            num: "IV", hours: "6 Hours", title: "Health Education, Nutrition and Health Promotion", topics: [
-                "malnutrition, nutritional deficiency disorders, food safety, and adulteration.",
-                "c) Mental Health: Common mental disorders, stigma, promotion of mental well-being",
-                "pharmacist’s role.",
-                "d) National Health Programs in India: Programs related to MCH, NCDs, communicable diseases, tobacco control, and deafness prevention. Pharmacoeconomics, Rational Use of Medicines, Professional Roles, and Future Trends",
-                "a) Pharmacoeconomics: Introduction, significance",
-                "Cost-Benefit Analysis (CBA), Cost-Effectiveness Analysis (CEA), Cost-Utility Analysis (CUA).",
-                "b) Rational Use of Medicines (RUM): Definition, importance, problems of irrational drug use",
-                "pharmacist’s role.",
-                "c) Medication Adherence: Factors affecting adherence, consequences of",
+            num: "IV", hours: "6 Hours", title: "Non-communicable Diseases, Nutrition, Mental Health, and National", topics: [
+                "Programs",
+                "Non-Communicable Diseases (NCDs): Diabetes, hypertension, cardiovascular diseases, chronic respiratory diseases, cancer; prevention and management.",
+                "NUTRITION AND HEALTH: Balanced diet, macro- and micronutrients, malnutrition, nutritional deficiency disorders, food safety, and adulteration.",
+                "MENTAL HEALTH: Common mental disorders, stigma, promotion of mental well-being; pharmacist’s role.",
+                "National Health Programs in India: Programs related to MCH, NCDs, communicable diseases, tobacco control, and deafness prevention.",
             ]
         },
         {
             num: "V", hours: "6 Hours", title: "Environmental Health, Disaster Response and Global Health", topics: [
-                "non-adherence, improvement strategies.",
-                "d) Drug Misuse and Abuse: Alcohol, tobacco, opioids, prescription drug abuse",
-                "pharmacist’s role.",
-                "e) Professionalism and Ethics in Social Pharmacy: Ethical dilemmas in public health pharmacy.",
-                "f) Disaster Management: Role of pharmacists.",
-                "g) Emerging Trends: Telepharmacy, digital health, personalized medicine, expanding public health responsibilities of pharmacists.",
+                "Pharmacoeconomics, Rational Use of Medicines, Professional Roles, and Future Trends",
+                "PHARMACOECONOMICS: Introduction, significance; Cost-Benefit Analysis (CBA), Cost-Effectiveness Analysis (CEA), Cost-Utility Analysis (CUA).",
+                "Rational Use of Medicines (RUM): Definition, importance, problems of irrational drug use; pharmacist’s role.",
+                "MEDICATION ADHERENCE: Factors affecting adherence, consequences of non-adherence, improvement strategies.",
+                "DRUG MISUSE AND ABUSE: Alcohol, tobacco, opioids, prescription drug abuse; pharmacist’s role.",
+                "Professionalism and Ethics in Social Pharmacy: Ethical dilemmas in public health pharmacy.",
+                "DISASTER MANAGEMENT: Role of pharmacists.",
+                "EMERGING TRENDS: Telepharmacy, digital health, personalized medicine, expanding public health responsibilities of pharmacists.",
             ]
         },
     ], false,
@@ -2138,55 +2198,55 @@ const SEM4: Subject[] = [
     ]),
     s("BP405T", "Systemic Pharmacology I", 3, "T", [
         {
-            num: "I", hours: "10 Hours", title: "Pharmacology of the Autonomic Nervous System", topics: [
-                "Pharmacology of drugs acting on the peripheral nervous system",
-                "a) Organization and functions of PNS.",
-                "b) Neurohumoral transmission, co-transmission. Neurotransmitters and their receptors, including non-adrenergic and non-cholinergic (NANC) neurotransmitters.",
-                "c) Parasympathomimetic and Parasympatholytic drugs.",
-                "d) Sympathomimetic and sympatholytic drugs.",
-                "e) Skeletal muscle relaxants (peripheral and central).",
-                "f) Drugs used in the treatment of myasthenia gravis and glaucoma Pharmacology of drugs acting on the cardiovascular system",
-                "a) Introduction to cardiovascular hemodynamic and cardiac electrophysiology.",
-                "b) Drugs used in congestive cardiac failure.",
+            num: "I", hours: "10 Hours", title: "Pharmacology of Drugs Acting on the Peripheral Nervous System", topics: [
+                "Organization and functions of PNS.",
+                "Neurohumoral transmission, co-transmission. Neurotransmitters and their receptors, including non-adrenergic and non-cholinergic (NANC) neurotransmitters.",
+                "Parasympathomimetic and Parasympatholytic drugs.",
+                "Sympathomimetic and sympatholytic drugs.",
+                "Skeletal muscle relaxants (peripheral and central).",
+                "Drugs used in the treatment of myasthenia gravis and glaucoma",
             ]
         },
         {
-            num: "II", hours: "10 Hours", title: "Pharmacology of the Cardiovascular System", topics: [
-                "c) Anti-arrhythmic drugs.",
-                "d) Anti-anginal and newer anti-ischemic drugs.",
-                "e) Anti-hypertensive drugs.",
-                "f) Shock, types of shocks and drugs used in their management.",
-                "g) Stroke, types of strokes and drugs used in their management Pharmacology of drugs acting on blood and kidney 1.Pharmacology of drugs acting on blood",
-                "a) Anti-platelet agents",
-                "b) Coagulants and anticoagulants.",
-                "c) Fibrinolytics and Plasma expanders.",
+            num: "II", hours: "10 Hours", title: "Pharmacology of Drugs Acting on the Cardiovascular System", topics: [
+                "Introduction to cardiovascular hemodynamic and cardiac electrophysiology.",
+                "Drugs used in congestive cardiac failure.",
+                "Anti-arrhythmic drugs.",
+                "Anti-anginal and newer anti-ischemic drugs.",
+                "Anti-hypertensive drugs.",
+                "Shock, types of shocks and drugs used in their management.",
+                "Stroke, types of strokes and drugs used in their management",
             ]
         },
         {
-            num: "III", hours: "10 Hours", title: "Pharmacology of Drugs Acting on Blood and Renal System", topics: [
-                "d) Haematinics.",
-                "e) Anti-hyperlipidaemic drugs.",
-                "2. Pharmacology of drugs acting on kidney",
-                "a) Diuretics.",
-                "b) Anti-diuretics. Pharmacology of autacoids and related drugs",
-                "a) Introduction to autacoids and their classification. Therapeutic significance of important agonists and antagonists of prostaglandins, thromboxane, leukotrienes, angiotensin, bradykinin and substance P.",
-                "b) Histamine and antihistamines.",
+            num: "III", hours: "10 Hours", title: "Pharmacology of Drugs Acting on Blood and Kidney", topics: [
+                "Pharmacology of drugs acting on blood",
+                "Anti-platelet agents",
+                "Coagulants and anticoagulants.",
+                "Fibrinolytics and Plasma expanders.",
+                "Haematinics.",
+                "Anti-hyperlipidaemic drugs.",
+                "Pharmacology of drugs acting on kidney",
+                "Diuretics.",
+                "Anti-diuretics.",
             ]
         },
         {
-            num: "IV", hours: "9 Hours", title: "Autacoids, Histamine, Serotonin and Prostaglandins", topics: [
-                "c) 5-HT, its agonists and antagonists, drugs used in migraine.",
-                "d) Non-steroidal anti-inflammatory drugs, antipyretics and analgesics.",
-                "e) Anti-gout and Antirheumatic drugs including Disease Modifying Antirheumatic Drugs (DMARDs).",
-                "i) Pharmacology of Drugs acting on respiratory system",
-                "a) Drugs used in the treatment of bronchial asthma and COPD.",
-                "b) Definitions, classification and therapeutic uses of nasal decongestants,",
+            num: "IV", hours: "9 Hours", title: "Pharmacology of Autacoids and Related Drugs", topics: [
+                "Introduction to autacoids and their classification. Therapeutic significance of important agonists and antagonists of prostaglandins, thromboxane, leukotrienes, angiotensin, bradykinin and substance P.",
+                "Histamine and antihistamines.",
+                "5-HT, its agonists and antagonists, drugs used in migraine.",
+                "Non-steroidal anti-inflammatory drugs, antipyretics and analgesics.",
+                "Anti-gout and Antirheumatic drugs including Disease Modifying",
+                "Antirheumatic Drugs (DMARDs).",
             ]
         },
         {
-            num: "V", hours: "6 Hours", title: "Pharmacology of the Respiratory System", topics: [
-                "mucolytics, expectorants and antitussives.",
-                "c) Respiratory stimulants. ii) Pharmacology of Drugs acting on immune system Mechanism of action, adverse effects and therapeutic uses of important classes of immune stimulants and immunosuppressants.",
+            num: "V", hours: "6 Hours", title: "Pharmacology of Drugs Acting on Respiratory System", topics: [
+                "Pharmacology of Drugs acting on respiratory system",
+                "Drugs used in the treatment of bronchial asthma and COPD.",
+                "Definitions, classification and therapeutic uses of nasal decongestants, mucolytics, expectorants and antitussives.",
+                "Respiratory stimulants, ii) Pharmacology of Drugs acting on immune system Mechanism of action, adverse effects and therapeutic uses of important classes of immune stimulants and immunosuppressants.",
             ]
         },
     ], false,
@@ -2437,27 +2497,67 @@ const SEM5: Subject[] = [
     s("BP501T", "Biomedicinal Chemistry", 3, "T", [
         {
             num: "I", hours: "10 Hours", title: "Drugs Acting on the Central Nervous System", topics: [
-                "No. of Unit No. Topics Lectures Study of the development of the following classes of drugs includes chemical classification, structure, uses, SAR of selective drug classes, and synthesis of selected drugs as superscripted* Drugs Acting on the Central Nervous System General Anesthetics Halothane, Methoxyflurane, Enflurane, Sevoflurane, Isoflurane, Desflurane, Methohexital, Thiamylal, Thiopental, Ketamine*, Ramelteon, Remimazolam, Fospropofol, Dexmedetomidine Sedatives and Hypnotics Barbital, Phenobarbital*, Mephobarbital, Amobarbital, Butabarbital, Pentobarbital, Secobarbital, Chlordiazepoxide, Diazepam*, Oxazepam, Chlorazepate, Lorazepam, Alprazolam, Zolpidem, Glutethimide, Meprobamate, Ethchlorvynol, Triclofos, Paraldehyde SAR of Barbiturates and Benzodiazepines Antipsychotics",
+                "General Anesthetics Halothane, Methoxyflurane, Enflurane, Sevoflurane, Isoflurane, Desflurane, Methohexital, Thiamylal, Thiopental, Ketamine*, Ramelteon, Remimazolam, Fospropofol, Dexmedetomidine",
+                "Sedatives and Hypnotics Barbital, Phenobarbital*, Mephobarbital, Amobarbital, Butabarbital,",
+                "Pentobarbital, Secobarbital, Chlordiazepoxide, Diazepam*, Oxazepam, Chlorazepate, Lorazepam,",
+                "Alprazolam, Zolpidem, Glutethimide, Meprobamate, Ethchlorvynol, Triclofos, Paraldehyde",
+                "SAR of Barbiturates and Benzodiazepines",
+                "Antipsychotics Promazine, Chlorpromazine*, Triflupromazine, Thioridazine, Piperacetazine, Prochlorperazine, Trifluoperazine, Chlorprothixene, Thiothixene, Loxapine, Clozapine, Haloperidol, Droperidol, Risperidone, Molindone, Sulpiride, Brexpiprazole, Lumateperone, Pimavanserin, Samidorphan",
+                "SAR of Phenothiazines",
+                "Anticonvulsants Phenobarbitone, Methabarbital, Phenytoin*, Mephenytoin, Ethotoin, Oxazolidinediones: Trimethadione, Paramethadione Succinimides: Phensuximide, Methsuximide, Ethosuximide Phenacemide, Carbamazepine*, Clonazepam, Primidone, Valproic acid, Gabapentin, Felbamate, Perampanel, Lacosamide, Retigabine",
+                "SAR of Anticonvulsants",
+                "Anti-Infective Chemotherapeutic Agents",
+                "Antitubercular Agents Isoniazid*, Ethionamide, Ethambutol, Pyrazinamide, Para-amino salicylic acid*, Rifampicin, Rifabutin,",
             ]
         },
         {
-            num: "II", hours: "12 Hours", title: "Anti-Infective Chemotherapeutic Agents", topics: [
-                "Promazine, Chlorpromazine*, Triflupromazine, Thioridazine, Piperacetazine, Prochlorperazine, Trifluoperazine, Chlorprothixene, Thiothixene, Loxapine, Clozapine, Haloperidol, Droperidol, Risperidone, Molindone, Sulpiride, Brexpiprazole, Lumateperone, Pimavanserin, Samidorphan SAR of Phenothiazines Anticonvulsants Phenobarbitone, Methabarbital, Phenytoin*, Mephenytoin, Ethotoin, Oxazolidinediones: Trimethadione, Paramethadione Succinimides: Phensuximide, Methsuximide, Ethosuximide Phenacemide, Carbamazepine*, Clonazepam, Primidone, Valproic acid, Gabapentin, Felbamate, Perampanel, Lacosamide, Retigabine SAR of Anticonvulsants Anti-Infective Chemotherapeutic Agents Antitubercular Agents Isoniazid*, Ethionamide, Ethambutol, Pyrazinamide, Para-amino salicylic acid*, Rifampicin, Rifabutin, Cycloserine, Streptomycin, Capreomycin, Pretomanid, Clofazimine,",
+            num: "II", hours: "12 Hours", title: "Cycloserine, Streptomycin, Capreomycin, Pretomanid, Clofazimine,", topics: [
+                "Levofloxacin, Bedaquiline, Linezolid, Delamanid",
+                "Antimalarials Quinine, Chloroquine*, Amodiaquine, Primaquine, Pamaquine, Quinacrine, Mefloquine, Cycloguanil pamoate, Proguanil, Pyrimethamine, Artesunate, Artemether, Atovaquone",
+                "SAR of Quinoline derivatives",
+                "Antiprotozoals Metronidazole*, Tinidazole, Ornidazole, Diloxanide, Iodoquinol, Pentamidine isethionate, Atovaquone,Eflornithine, Paromomycin,",
+                "Nitazoxanide",
+                "Antivirals Amantadine, Rimantadine, Idoxuridine, Acyclovir*, Ganciclovir, Zidovudine, Didanosine, Zalcitabine, Lamivudine,Loviride, Delavirdine, Ribavirin, Saquinavir, Indinavir, Ritonavir, Valganciclovir, Peramivir,",
+                "Lenacapavir",
+                "Antifungals Amphotericin-B, Nystatin, Natamycin, Griseofulvin, Clotrimazole,",
+                "Econazole, Butoconazole, Oxiconazole, Tioconazole, Miconazole, Ketoconazole*, Terconazole, Itraconazole,",
+                "Fluconazole, Naftifine, Tolnaftate,",
+                "Posaconazole, Isavuconazole",
+                "Anthelmintics Diethylcarbamazine, Thiabendazole, Mebendazole, Albendazole*, Niclosamide, Oxamniquine, Praziquantel, Ivermectin",
+                "Urinary Tract Anti-infective Agents Nalidixic acid, Norfloxacin, Enoxacin, Ciprofloxacin*, Ofloxacin, Lomefloxacin, Sparfloxacin, Gatifloxacin, Furazolidone, Nitrofurantoin, Methenamine, Moxifloxacin",
+                "SAR of Quinolones",
+                "Antibiotics and Sulfa Drugs",
+                "Antibiotics Penicillins, Cephalosporins, β-Lactamase inhibitors, Monobactams Aminoglycosides: Streptomycin, Neomycin, Kanamycin, Tetracyclines:",
+                "Tetracycline, Oxytetracycline, Minocycline, Doxycycline, Macrolides:",
+                "Erythromycin, Clarithromycin, Azithromycin Chloramphenicol*,",
             ]
         },
         {
-            num: "III", hours: "8 Hours", title: "Antiprotozoals, Antivirals, Antifungals, Anthelmintics and Quinolones", topics: [
-                "Levofloxacin, Bedaquiline, Linezolid, Delamanid Antimalarials Quinine, Chloroquine*, Amodiaquine, Primaquine, Pamaquine, Quinacrine, Mefloquine, Cycloguanil pamoate, Proguanil, Pyrimethamine, Artesunate, Artemether, Atovaquone SAR of Quinoline derivatives Antiprotozoals Metronidazole*, Tinidazole, Ornidazole, Diloxanide, Iodoquinol, Pentamidine isethionate, Atovaquone,Eflornithine, Paromomycin, Nitazoxanide Antivirals Amantadine, Rimantadine, Idoxuridine, Acyclovir*, Ganciclovir, Zidovudine, Didanosine, Zalcitabine, Lamivudine,Loviride, Delavirdine, Ribavirin, Saquinavir, Indinavir, Ritonavir, Valganciclovir, Peramivir, Lenacapavir Antifungals Amphotericin-B, Nystatin, Natamycin, Griseofulvin, Clotrimazole, Econazole, Butoconazole, Oxiconazole, Tioconazole, Miconazole, Ketoconazole*, Terconazole, Itraconazole, Fluconazole, Naftifine, Tolnaftate, Posaconazole, Isavuconazole Anthelmintics Diethylcarbamazine, Thiabendazole, Mebendazole, Albendazole*, Niclosamide, Oxamniquine, Praziquantel, Ivermectin Urinary Tract Anti-infective Agents Nalidixic acid, Norfloxacin, Enoxacin, Ciprofloxacin*, Ofloxacin, Lomefloxacin, Sparfloxacin, Gatifloxacin, Furazolidone, Nitrofurantoin, Methenamine, Moxifloxacin SAR of Quinolones Antibiotics and Sulfa Drugs Antibiotics Penicillins, Cephalosporins, β-Lactamase inhibitors, Monobactams Aminoglycosides: Streptomycin, Neomycin, Kanamycin, Tetracyclines: Tetracycline, Oxytetracycline, Minocycline, Doxycycline, Macrolides: Erythromycin, Clarithromycin, Azithromycin Chloramphenicol*, Clindamycin, Clavulanic acid",
+            num: "III", hours: "8 Hours", title: "Clindamycin, Clavulanic Acid", topics: [
+                "SAR of Penicillins, Tetracyclines, and Cephalosporins",
+                "Sulfa Drugs Sulphamethizole, Sulfisoxazole, Sulphapyridine, Sulphathiazole, Sulfacetamide, Sulphamethoxazole,Sulphadiazine, Mefenide, Sulfasalazine, Trimethoprim, Cotrimoxazole, Dapsone*",
+                "SAR of Sulfonamides",
+                "Antineoplastic Agents Mechlorethamine, Cyclophosphamide, Melphalan, Chlorambucil,",
+                "Busulfan, Thiotepa,",
             ]
         },
         {
-            num: "IV", hours: "6 Hours", title: "Antibiotics, Sulfa Drugs and Antineoplastic Agents", topics: [
-                "SAR of Penicillins, Tetracyclines, and Cephalosporins Sulfa Drugs Sulphamethizole, Sulfisoxazole, Sulphapyridine, Sulphathiazole, Sulfacetamide, Sulphamethoxazole,Sulphadiazine, Mefenide, Sulfasalazine, Trimethoprim, Cotrimoxazole, Dapsone* SAR of Sulfonamides Antineoplastic Agents Mechlorethamine, Cyclophosphamide, Melphalan, Chlorambucil, Busulfan, Thiotepa, Mercaptopurine*, Thioguanine, Fluorouracil, Floxuridine, Cytarabine,",
+            num: "IV", hours: "6 Hours", title: "Mercaptopurine*, Thioguanine, Fluorouracil, Floxuridine, Cytarabine,", topics: [
+                "Methotrexate*, Azathioprine, Dactinomycin, Daunorubicin, Doxorubicin, Bleomycin, Etoposide, Vinblastine, Vincristine, Paclitaxel, Camptothecin, Cisplatin, Mitotane, Carboplatin",
             ]
         },
         {
             num: "V", hours: "9 Hours", title: "Endocrine Drugs, Antidiabetic Agents and Narcotic Analgesics", topics: [
-                "Methotrexate*, Azathioprine, Dactinomycin, Daunorubicin, Doxorubicin, Bleomycin, Etoposide, Vinblastine, Vincristine, Paclitaxel, Camptothecin, Cisplatin, Mitotane, Carboplatin Endocrine Drugs, Antidiabetic Agents and Narcotic Analgesics Endocrine Drugs Sex hormones: Testosterone, Nandrolone, Progesterone, Oestriol, Oestradiol, Oestrone, Diethylstilbestrol Drugs for erectile dysfunction: Sildenafil, Tadalafil Oral contraceptives: Mifepristone, Norgestrel, Levonorgestrel Corticosteroids: Cortisone, Hydrocortisone, Prednisolone, Betamethasone, Dexamethasone Thyroid and antithyroid drugs: L-Thyroxine, L-Thyronine, Propylthiouracil, Methimazole Antidiabetic Agents Insulin and preparations, Tolbutamide*, Chlorpropamide, Glipizide, Glimepiride Biguanides: Metformin Thiazolidinediones: Pioglitazone, Rosiglitazone Repaglinide, Nateglinide, Acarbose, Voglibose Narcotic Analgesics Morphine, Codeine, Meperidine, Anilerdine, Diphenoxylate, Loperamide, Fentanyl*, Methadone, Propoxyphene, Pentazocine, Levorphanol Nalorphine, Levallorphan, Naloxone SAR of Morphine analogues",
+                "ENDOCRINE DRUGS SEX HORMONES: Testosterone, Nandrolone, Progesterone, Oestriol, Oestradiol, Oestrone, Diethylstilbestrol Drugs for erectile dysfunction: Sildenafil, Tadalafil Oral contraceptives: Mifepristone, Norgestrel, Levonorgestrel Corticosteroids: Cortisone, Hydrocortisone, Prednisolone,",
+                "Betamethasone, Dexamethasone Thyroid and antithyroid drugs: L-Thyroxine, L-Thyronine,",
+                "Propylthiouracil, Methimazole",
+                "Antidiabetic Agents Insulin and preparations, Tolbutamide*, Chlorpropamide, Glipizide,",
+                "Glimepiride",
+                "BIGUANIDES: Metformin Thiazolidinediones: Pioglitazone, Rosiglitazone Repaglinide, Nateglinide, Acarbose, Voglibose",
+                "Narcotic Analgesics Morphine, Codeine, Meperidine, Anilerdine, Diphenoxylate,",
+                "Loperamide, Fentanyl*, Methadone, Propoxyphene, Pentazocine, Levorphanol",
+                "Nalorphine, Levallorphan, Naloxone",
+                "SAR of Morphine analogues",
             ]
         },
     ], false,
@@ -2482,27 +2582,45 @@ const SEM5: Subject[] = [
     s("BP502T", "Industrial Pharmacognosy", 3, "T", [
         {
             num: "I", hours: "8 Hours", title: "Industrial Extraction and Scale-Up Processing", topics: [
-                "General Introduction to Herbal Industries, institutions and trade status of herbals (a) Role of medicinal and aromatic plants trade in national economy of a country and introduction of Current trade status and potential of some commercially important medicinal plants/natural products like Ashwagandha, Turmeric, Ginseng, Amla and essential oils. (b) A brief account of bioeconomy, biodiversity hot spots and plant- based industries and institutions involved in research work on",
+                "General Introduction to Herbal Industries, institutions and trade status of herbals",
+                "Role of medicinal and aromatic plants trade in national economy of a country and introduction of Current trade status and potential of some commercially important medicinal plants/natural products like Ashwagandha, Turmeric, Ginseng, Amla and essential oils.",
+                "A brief account of bioeconomy, biodiversity hot spots and plant- based industries and institutions involved in research work on medicinal and aromatic plants in India.",
+                "Emerging therapeutic categories of Herbal Medicinal Products available in market, their composition with rationale for Aphrodisiac, Antistress, anti-diabetics, antihyperlipidemic, immunomodulator, hepatoprotective and kidney disorders",
+                "EMERGING HERBAL COSMECEUTICALS: Anti-Aging, Depigmenting, anti- acne, sunscreen, detoxifying, anti-irritant, nutricosmetics.",
+                "Commercial Production and Standardization of botanicals Significance of AYUSH/ WHO-GMP, GLP and USFDA compliant facility in production of quality herbal products.",
             ]
         },
         {
             num: "II", hours: "10 Hours", title: "Standardization of Extracts by Advanced Chromatography", topics: [
-                "medicinal and aromatic plants in India. (c) Emerging therapeutic categories of Herbal Medicinal Products available in market, their composition with rationale for Aphrodisiac, Antistress, anti-diabetics, antihyperlipidemic, immunomodulator, hepatoprotective and kidney disorders (d) Emerging Herbal cosmeceuticals: Anti-Aging, Depigmenting, anti- acne, sunscreen, detoxifying, anti-irritant, nutricosmetics. Commercial Production and Standardization of botanicals Significance of AYUSH/ WHO-GMP, GLP and USFDA compliant facility in production of quality herbal products. Commercial production of standardized herbal extracts with clinical relevance: Coleus, Amla, Turmeric, Ashwagandha and Senna.",
+                "Commercial production of standardized herbal extracts with clinical relevance: Coleus, Amla, Turmeric, Ashwagandha and",
+                "Senna.",
+                "Commercial production and standardization of volatile oils:",
+                "Eucalyptus oils, Lavender oil and Peppermint oil, Rosemary oil Preparation and standardization of Ayush formulations viz Aristas and Asawas, Ghutika/Habb, Churna/ Shafoof Arq,",
+                "Sharbat, Tincture and Bhasma.",
+                "Modern methods of analysis of Plants and Plant-based products Basic principles and applications in analysis of botanicals:",
             ]
         },
         {
-            num: "III", hours: "12 Hours", title: "Quality Assurance and Stability of Herbal Products", topics: [
-                "Commercial production and standardization of volatile oils: Eucalyptus oils, Lavender oil and Peppermint oil, Rosemary oil Preparation and standardization of Ayush formulations viz Aristas and Asawas, Ghutika/Habb, Churna/ Shafoof Arq, Sharbat, Tincture and Bhasma. Modern methods of analysis of Plants and Plant-based products Basic principles and applications in analysis of botanicals: Spectroscopic methods: UV-Visible spectroscopy, IR",
+            num: "III", hours: "12 Hours", title: "Spectroscopic Methods: Uv-visible Spectroscopy, IR", topics: [
+                "Spectroscopy, NMR spectroscopy and Mass spectroscopy, Atomic Absorption Scpectroscopy Chromatographic methods: HPTLC,",
+                "HPLC, UPLC, GC, Isolation, Characterization, Commercial Production and analysis of bioactive phytoconstituents",
             ]
         },
         {
             num: "IV", hours: "08 Hours", title: "Industrial Production and Commercialization of Bioactives", topics: [
-                "Spectroscopy, NMR spectroscopy and Mass spectroscopy, Atomic Absorption Scpectroscopy Chromatographic methods: HPTLC, HPLC, UPLC, GC, Isolation, Characterization, Commercial Production and analysis of bioactive phytoconstituents Isolation, characterization with commercial production,",
+                "Isolation, characterization with commercial production, identification and analysis of bioactive phytoconstituents:",
+                "Artemisinin, Sennosides, Withanolids, Boswellic acid, Atropine, and Lycopene.",
             ]
         },
         {
-            num: "V", hours: "07 Hours", title: "Global Regulatory Framework for Botanicals", topics: [
-                "identification and analysis of bioactive phytoconstituents: Artemisinin, Sennosides, Withanolids, Boswellic acid, Atropine, and Lycopene. International Regulatory Perspectives (a) Overview of global regulations for herbal products (e.g., World Health Organization, United States Food and Drug Administration – Dietary Supplement Health and Education Act, European Medicines Agency, TGA-ARG Therapeutic Goods Administration – Australian Regulatory Guidelines for Complementary Medicines, Natural Health Products (Canada) (b) Harmonization challenges and mutual recognition of traditional medicine (c) Importance of safety, efficacy and pharmacovigilance in herbal product regulation (d) Study of Monographs on herbal drugs and botanicals related to Indian Pharmacopoeia, United States Pharmacopoeia Herbal Medicine and Dietary Supplement, Ayurvedic Pharmacopoeia of India and Unani Pharmacopoeia of India.",
+            num: "V", hours: "07 Hours", title: "International Regulatory Perspectives", topics: [
+                "Overview of global regulations for herbal products (e.g., World Health Organization, United States Food and Drug Administration – Dietary Supplement Health and Education Act, European",
+                "Medicines Agency, TGA-ARG Therapeutic Goods Administration – Australian Regulatory Guidelines for Complementary Medicines,",
+                "Natural Health Products (Canada)",
+                "Harmonization challenges and mutual recognition of traditional medicine",
+                "Importance of safety, efficacy and pharmacovigilance in herbal product regulation",
+                "Study of Monographs on herbal drugs and botanicals related to Indian Pharmacopoeia, United States Pharmacopoeia Herbal Medicine and Dietary Supplement, Ayurvedic Pharmacopoeia of",
+                "India and Unani Pharmacopoeia of India.",
             ]
         },
     ], false,
@@ -2527,19 +2645,23 @@ const SEM5: Subject[] = [
     ]),
     s("BP503T", "Innovation and Startup Ecosystem", 2, "T", [
         {
-            num: "I", hours: "06 Hours", title: "Fundamentals of Innovation and Entrepreneurship", topics: [
-                "No. of Unit No. Topics Lectures Unit I: Introduction to Innovation and Entrepreneurship Defining Innovation and Entrepreneurship",
+            num: "I", hours: "06 Hours", title: "Unit I: Introduction to Innovation and", topics: [
+                "Entrepreneurship Defining Innovation and Entrepreneurship",
                 "What is Innovation?",
-                "Types of Innovation: Product, Process, Business Model, Social",
+                "TYPES OF INNOVATION: Product, Process, Business",
+                "Model, Social",
                 "What is Entrepreneurship?",
-                "Characteristics of an Entrepreneur Invention vs Innovation",
+                "Characteristics of an Entrepreneur",
+                "Invention vs Innovation",
                 "Distinction between Invention and Innovation",
                 "Importance of Innovation in the 21st Century",
                 "Economic growth and job creation",
                 "Solving societal problems",
-                "Disruptive technologies and their impact Case Studies",
-                "Innovative companies (e.g., Apple, Google, Tesla) Introduction to the Startup Ecosystem",
-                "Key components:",
+                "Disruptive technologies and their impact",
+                "Case Studies",
+                "Innovative companies (e.g., Apple, Google, Tesla)",
+                "Introduction to the Startup Ecosystem",
+                "KEY COMPONENTS",
                 "Entrepreneurs",
                 "Incubators/Accelerators",
                 "Mentors",
@@ -2547,84 +2669,105 @@ const SEM5: Subject[] = [
                 "Government",
                 "Academia",
                 "Support Services",
-                "Role of each component in fostering innovation Practical Aspect: Participation in National Innovation Day and National Startup Day Unit II: Ideation and Opportunity Identification Identifying Problems and Market Gaps",
-                "Problem-solving approach to entrepreneurship",
-                "Techniques for problem identification:",
-                "Observation",
-                "Empathy mapping",
-                "User interviews",
+                "Role of each component in fostering innovation",
+                "PRACTICAL ASPECT",
+                "Participation in National Innovation Day and",
+                "National Startup Day Unit II: Ideation and Opportunity Identification",
             ]
         },
         {
-            num: "II", hours: "06 Hours", title: "Design Thinking and Problem Validation in Healthcare", topics: [
-                "Market research basics:",
-                "Understanding customer needs and pain points Generating Innovative Ideas",
-                "Brainstorming techniques:",
+            num: "II", hours: "06 Hours", title: "Identifying Problems and Market Gaps", topics: [
+                "Problem-solving approach to entrepreneurship",
+                "TECHNIQUES FOR PROBLEM IDENTIFICATION",
+                "Observation",
+                "Empathy mapping",
+                "User interviews",
+                "MARKET RESEARCH BASICS",
+                "Understanding customer needs and pain points",
+                "Generating Innovative Ideas",
+                "BRAINSTORMING TECHNIQUES",
                 "SCAMPER",
                 "Mind Mapping",
                 "Design Thinking principles for ideation",
                 "Lateral thinking and divergent thinking",
-                "From problem to solution: developing initial concepts Opportunity Analysis and Feasibility",
+                "FROM PROBLEM TO SOLUTION: developing initial concepts",
+                "Opportunity Analysis and Feasibility",
                 "Market sizing and potential",
                 "Competitive analysis",
-                "SWOT analysis for new ventures Practical Aspect: Participation in Ideation Challenges or Hackathons (e.g., Smart India Hackathon or IIC internal ideation competitions) Unit III: Building a Minimum Viable Product (MVP) and Validation Lean Startup Methodology",
+                "SWOT analysis for new ventures",
+                "PRACTICAL ASPECT",
+                "Participation in Ideation Challenges or Hackathons (e.g., Smart India Hackathon or IIC internal ideation competitions) Unit III: Building a Minimum Viable Product",
+                "(MVP) and Validation",
+                "Lean Startup Methodology",
                 "Introduction to Lean Startup principles",
-                "Build–Measure–Learn feedback loop",
-                "Concept of MVP:",
+                "BUILD: Measure–Learn feedback loop",
+                "CONCEPT OF MVP",
                 "Importance",
-                "Scope and objectives Designing and Developing an MVP",
-                "Different types of MVPs",
+                "Scope and objectives",
             ]
         },
         {
-            num: "III", hours: "06 Hours", title: "Business Model Development and Feasibility Analysis", topics: [
+            num: "III", hours: "06 Hours", title: "Designing and Developing an Mvp", topics: [
+                "Different types of MVPs",
                 "Tools and resources for rapid prototyping",
-                "User experience basics for MVPs Validation",
+                "User experience basics for MVPs",
+                "Validation",
                 "Customer interviews and feedback collection",
                 "A/B testing and split testing",
-                "Pivoting vs Persevering Practical Aspect: Participation in sessions/workshops on Prototype, MVP, and Product Development Unit IV: Business Models and Startup Operations Business Model Canvas (BMC)",
+                "Pivoting vs Persevering",
+                "PRACTICAL ASPECT",
+                "Participation in sessions/workshops on Prototype,",
+                "MVP, and Product Development Unit IV: Business Models and Startup Operations",
+                "Business Model Canvas (BMC)",
                 "Introduction to the 9 building blocks of BMC",
                 "Developing a BMC for a new venture",
-                "Value Proposition Design Legal and Financial Aspects for Startups",
-                "Legal structures:",
-                "Sole Proprietorship",
-                "Partnership",
+                "Value Proposition Design",
             ]
         },
         {
-            num: "IV", hours: "06 Hours", title: "Startup Financing, Incubation and Commercialization", topics: [
+            num: "IV", hours: "06 Hours", title: "Legal and Financial Aspects for Startups", topics: [
+                "LEGAL STRUCTURES",
+                "Sole Proprietorship",
+                "Partnership",
                 "Private Limited Company",
                 "Intellectual Property Rights (IPR):",
                 "Patents",
                 "Trademarks",
                 "Copyrights",
-                "Startup funding:",
+                "STARTUP FUNDING",
                 "Bootstrapping",
                 "Angel investors",
-                "Venture capital Team Building and Mentorship",
+                "Venture capital",
+                "Team Building and Mentorship",
                 "Importance of a strong founding team",
                 "Roles and responsibilities in a startup",
-                "Value of mentors and advisors Practical Aspect: Participation in IPR awareness programs or startup funding sessions Unit V: Scaling, Ecosystem Engagement, and Future Trends Growth Strategies and Scaling Up",
+                "Value of mentors and advisors",
+                "PRACTICAL ASPECT",
+                "Participation in IPR awareness programs or startup funding sessions Unit V: Scaling, Ecosystem Engagement, and",
+                "Future Trends",
+                "Growth Strategies and Scaling Up",
                 "Marketing and sales for startups",
                 "User acquisition and retention",
                 "Challenges of scaling and solutions",
-                "Exit strategies:",
+                "EXIT STRATEGIES",
                 "Acquisition",
-                "IPO Engaging with the Startup Ecosystem",
+                "Engaging with the Startup Ecosystem",
                 "Networking with investors, mentors, and entrepreneurs",
                 "Participation in startup competitions and pitch events",
-                "Leveraging incubators and accelerators Future Trends in Innovation and Entrepreneurship",
-                "Emerging technologies:",
+                "Leveraging incubators and accelerators",
+            ]
+        },
+        {
+            num: "V", hours: "06 Hours", title: "Future Trends in Innovation and Entrepreneurship", topics: [
+                "EMERGING TECHNOLOGIES",
                 "Artificial Intelligence",
                 "Blockchain",
                 "Internet of Things (IoT)",
                 "Sustainable Technologies",
                 "Social entrepreneurship and impact investing",
-            ]
-        },
-        {
-            num: "V", hours: "06 Hours", title: "IP Management and Regulatory Pathways for Health Startups", topics: [
-                "Global startup trends Practical Aspect: Participation in National Innovation Day and student engagement activities to prepare and deliver a concise pitch for their developed idea, simulating a startup pitch event.",
+                "Global startup trends",
+                "PRACTICAL ASPECT",
+                "Participation in National Innovation Day and student engagement activities to prepare and deliver a concise pitch for their developed idea, simulating a startup pitch event.",
             ]
         },
     ], false,
@@ -2646,54 +2789,43 @@ const SEM5: Subject[] = [
     ]),
     s("BP504T", "Pharmaceutical Dosage Form II", 2, "T", [
         {
-            num: "I", hours: "06 Hours", title: "Modified Release Drug Delivery Systems", topics: [
-                "Monophasic Liquids & Pressurised Dosage Forms Foundations: Need, advantages/limitations",
-                "monophasic vs biphasic",
-                "solubility-enhancement techniques. Vehicles & solvents: Pharmaceutical waters (types",
-                "manufacturing & Quality Control of Purified/Distilled)",
-                "classes of solvents as per toxicity. Formulation & manufacturing: Raw-material",
+            num: "I", hours: "06 Hours", title: "Monophasic Liquids & Pressurised Dosage Forms", topics: [
+                "FOUNDATIONS: Need, advantages/limitations; monophasic vs biphasic; solubility-enhancement techniques.",
+                "Vehicles & solvents: Pharmaceutical waters (types; manufacturing & Quality Control of Purified/Distilled); classes of solvents as per toxicity.",
+                "Formulation & manufacturing: Raw-material considerations and additives; processing; Quality Control of solutions/syrups/elixirs; powders for reconstitution as solutions.",
+                "Measuring, filling & packaging: Techniques; container– closure integrity; automation in liquid manufacturing.",
             ]
         },
         {
-            num: "II", hours: "06 Hours", title: "Transdermal and Mucosal Drug Delivery Systems", topics: [
-                "considerations and additives",
-                "processing",
-                "Quality Control of solutions/syrups/elixirs",
-                "powders for reconstitution as solutions. Measuring, filling & packaging: Techniques",
-                "container– closure integrity",
-                "automation in liquid manufacturing. Biphasic Liquids - Suspensions Formulation & manufacturing: Additives",
-                "classification of suspending agents",
-                "IPQC & Quality Control",
-                "instabilities and packaging.",
+            num: "II", hours: "06 Hours", title: "Biphasic Liquids - Suspensions", topics: [
+                "Formulation & manufacturing: Additives; classification of suspending agents; IPQC & Quality Control; instabilities and packaging.",
+                "ADVANCES: Nanosuspensions; dry powder for reconstitution as suspensions; raft- forming systems.",
             ]
         },
         {
-            num: "III", hours: "06 Hours", title: "Ocular, Nasal and Pulmonary Drug Delivery Systems", topics: [
-                "Advances: Nanosuspensions",
-                "dry powder for reconstitution as suspensions",
-                "raft- forming systems. Biphasic Liquids - Emulsions Formulation & manufacturing: Additives",
-                "classification of emulsifying agents",
-                "IPQC & Quality Control",
-                "instabilities and packaging.",
+            num: "III", hours: "06 Hours", title: "Biphasic Liquids - Emulsions", topics: [
+                "Formulation & manufacturing: Additives; classification of emulsifying agents; IPQC & Quality Control; instabilities and packaging.",
+                "ADVANCES: Nano-emulsions, micro-emulsions, SMEDDS/SNEDDS",
+                "(overview, applications).",
             ]
         },
         {
-            num: "IV", hours: "06 Hours", title: "Microencapsulation and Colloidal Drug Delivery Systems", topics: [
-                "Advances: Nano-emulsions, micro-emulsions, SMEDDS/SNEDDS (overview, applications). Pressurized dosage forms (Aerosols/MDIs) Concepts",
-                "propellant classification/selection",
-                "valves & containers",
-                "formulation, manufacturing, and Quality Control (leak, spray pattern, delivered dose, particle- size/aerodynamic performance).",
+            num: "IV", hours: "06 Hours", title: "Pressurized Dosage Forms (aerosols/mdis)", topics: [
+                "Concepts; propellant classification/selection; valves & containers; formulation, manufacturing, and Quality Control (leak, spray pattern, delivered dose, particle- size/aerodynamic performance).",
+                "DRY POWDER INHALERS: valves & containers; formulation, manufacturing, and Quality Control",
             ]
         },
         {
-            num: "V", hours: "06 Hours", title: "Targeted Drug Delivery Systems and Nanocarriers", topics: [
-                "Dry Powder Inhalers: valves & containers",
-                "formulation, manufacturing, and Quality Control Semisolid Dosage Form Theory of Semisolid Dosage Forms: Definition & Purpose, Drug Permeation Pathways through skin ,Factors affecting Permeation, Permeation enhancers: Physical and Chemical. Types of semisolid dosage form:",
-                "Ointments: Base Selection, Formulation , Manufacturing and Evaluation",
-                "Creams: Formulation, Manufacturing and Evaluation",
-                "Gels/Jellies: Formulation, Manufacturing and Evaluation.",
-                "Pastes: Formulation, Manufacturing and Evaluation",
-                "Suppositories and Pessaries: Formulation, Manufacturing and Evaluation Advances: Xerogels, emulgels (overview, applications).",
+            num: "V", hours: "06 Hours", title: "Semisolid Dosage Form", topics: [
+                "Theory of Semisolid Dosage Forms: Definition & Purpose, Drug Permeation Pathways through skin ,Factors affecting Permeation, Permeation enhancers: Physical and Chemical.",
+                "Types of semisolid dosage form:",
+                "OINTMENTS: Base Selection, Formulation , Manufacturing and",
+                "Evaluation",
+                "CREAMS: Formulation, Manufacturing and Evaluation",
+                "GELS/JELLIES: Formulation, Manufacturing and Evaluation.",
+                "PASTES: Formulation, Manufacturing and Evaluation",
+                "SUPPOSITORIES AND PESSARIES: Formulation, Manufacturing and",
+                "EVALUATION ADVANCES: Xerogels, emulgels (overview, applications).",
             ]
         },
     ], false,
@@ -2714,43 +2846,50 @@ const SEM5: Subject[] = [
     ]),
     s("BP505T", "Pharmaceutical Quality Assurance", 3, "T", [
         {
-            num: "I", hours: "10 Hours", title: "Quality Assurance and Good Manufacturing Practice (GMP)", topics: [
-                "Quality Assurance and Quality Management Systems",
-                "1. Quality Assurance and Quality Management concepts: Definition and concepts of Quality Control, Quality Assurance, and GMP",
-                "2. Total Quality Management (TQM): Definition, elements, and philosophies",
+            num: "I", hours: "10 Hours", title: "Quality Assurance and Quality Management Systems", topics: [
+                "Quality Assurance and Quality Management concepts: Definition and concepts of Quality Control, Quality Assurance, and GMP",
+                "Total Quality Management (TQM): Definition, elements, and philosophies",
+                "ICH GUIDELINES: Purpose, process of harmonization, overview of QSEM with special emphasis on Q-series guidelines",
+                "Quality by Design (QbD): Definition, overview, elements of QbD program, and tools",
+                "ISO 9000 and ISO 14000: Overview, benefits, elements, and steps for registration",
+                "NABL ACCREDITATION: Principles and procedures Organization, Personnel, Premises, and Materials Management",
+                "ORGANIZATION AND PERSONNEL: Responsibilities, training, hygiene, and personal records",
             ]
         },
         {
             num: "II", hours: "10 Hours", title: "Quality Management Systems and ICH Guidelines", topics: [
-                "3. ICH Guidelines: Purpose, process of harmonization, overview of QSEM with special emphasis on Q-series guidelines",
-                "4. Quality by Design (QbD): Definition, overview, elements of QbD program, and tools",
-                "5. ISO 9000 and ISO 14000: Overview, benefits, elements, and steps for registration",
-                "6. NABL Accreditation: Principles and procedures Organization, Personnel, Premises, and Materials Management",
-                "1. Organization and Personnel: Responsibilities, training, hygiene, and personal records",
-                "2. Premises: Design, construction, plant layout, maintenance, sanitation, environmental control, utilities, and control of contamination",
+                "PREMISES: Design, construction, plant layout, maintenance, sanitation, environmental control, utilities, and control of contamination",
+                "EQUIPMENT AND RAW MATERIALS: Equipment selection, User Requirement Specifications (URS), handling and maintenance of raw materials",
+                "WAREHOUSING: Good warehousing practices and materials management Quality Control and Good Laboratory Practices",
+                "Quality Control Tests for Formulations:",
             ]
         },
         {
             num: "III", hours: "10 Hours", title: "Equipment Qualification, Calibration and Validation", topics: [
-                "3. Equipment and Raw Materials: Equipment selection, User Requirement Specifications (URS), handling and maintenance of raw materials",
-                "4. Warehousing: Good warehousing practices and materials management Quality Control and Good Laboratory Practices",
-                "1. Quality Control Tests for Formulations: In-process and finished product quality control tests for tablets, capsules, ointments, creams, ophthalmic and parenteral preparations",
-                "2. Quality Control of Raw Materials and Packaging Materials: Tests for raw materials, containers, rubber closures, and",
+                "In-process and finished product quality control tests for tablets, capsules, ointments, creams, ophthalmic and parenteral preparations",
+                "Quality Control of Raw Materials and Packaging Materials:",
+                "Tests for raw materials, containers, rubber closures, and secondary packing materials",
+                "Good Laboratory Practices (GLP):",
+                "General provisions, organization and personnel, facilities and equipment, ALCOA principles, reference standards, testing facility operations, records and reports, and disqualification of testing facilities Documentation, Complaints, and Product Recall",
+                "Documentation in the Pharmaceutical Industry:",
+                "Batch Formula Record, Master Formula Record, Drug Master",
             ]
         },
         {
             num: "IV", hours: "08 Hours", title: "In-Process Quality Control (IPQC) and Documentation", topics: [
-                "secondary packing materials",
-                "3. Good Laboratory Practices (GLP): General provisions, organization and personnel, facilities and equipment, ALCOA principles, reference standards, testing facility operations, records and reports, and disqualification of testing facilities Documentation, Complaints, and Product Recall",
-                "1. Documentation in the Pharmaceutical Industry: Batch Formula Record, Master Formula Record, Drug Master File, SOPs, quality audits, preparation, handling, archival, and",
+                "File, SOPs, quality audits, preparation, handling, archival, and distribution of records",
+                "COMPLAINTS AND PRODUCT RECALL",
+                "Handling of complaints, evaluation of complaints, returned goods, recalls, and waste disposal",
+                "Calibration and Validation",
+                "CALIBRATION AND VALIDATION",
+                "Introduction, definitions, importance, and general principles",
             ]
         },
         {
-            num: "V", hours: "07 Hours", title: "Complaints, Recalls, Audits and Quality Risk Management", topics: [
-                "distribution of records",
-                "2. Complaints and Product Recall: Handling of complaints, evaluation of complaints, returned goods, recalls, and waste disposal Calibration and Validation",
-                "1. Calibration and Validation: Introduction, definitions, importance, and general principles Calibration of weights and measures, pH meter Qualification of UV-Visible spectrophotometer, electronic balance, IR spectrophotometer, and HPLC",
-                "2. Analytical Method Validation: General principles of analytical method validation as per ICH Q2 guidelines",
+            num: "V", hours: "07 Hours", title: "Calibration of Weights and Measures, Ph Meter", topics: [
+                "Qualification of UV-Visible spectrophotometer, electronic balance, IR spectrophotometer, and HPLC",
+                "ANALYTICAL METHOD VALIDATION",
+                "General principles of analytical method validation as per ICH Q2 guidelines",
             ]
         },
     ], false,
@@ -2769,27 +2908,28 @@ const SEM5: Subject[] = [
     ]),
     s("BP506T", "Systemic Pharmacology II", 3, "T", [
         {
-            num: "I", hours: "10 Hours", title: "Pharmacology of the Central Nervous System", topics: [
-                "Pharmacology of Drugs Acting on Central Nervous System Neurohumoral transmission in the CNS",
-                "physiological roles of GABA, glutamate, glycine, serotonin, and dopamine. a. General anesthetics, pre-anaesthetic medications, and local anaesthetic agents b. Sedative–hypnotics",
+            num: "I", hours: "10 Hours", title: "Pharmacology of Drugs Acting on Central Nervous System", topics: [
+                "Neurohumoral transmission in the CNS; physiological roles of GABA, glutamate, glycine, serotonin, and dopamine, a. General anesthetics, pre-anaesthetic medications, and local anaesthetic agents b. Sedative–hypnotics c. Alcohol and disulfiram d. Opioids, opiate analgesics, and antagonists e. Drugs used in epilepsy f. Drugs used in Parkinson’s and Alzheimer’s diseases",
             ]
         },
         {
             num: "II", hours: "07 Hours", title: "Chemotherapy of Infectious Diseases and Cancer", topics: [
-                "c. Alcohol and disulfiram d. Opioids, opiate analgesics, and antagonists e. Drugs used in epilepsy f. Drugs used in Parkinson’s and Alzheimer’s diseases Pharmacology of Drugs Used in Psychiatry a. Antipsychotics, antidepressants, anti-anxiety drugs, mood stabilizers, CNS stimulants, and hallucinogens b. Substance abuse, drug addiction, and general principles of de- addiction Chemotherapy",
-                "i) Introduction",
+                "Pharmacology of Drugs Used in Psychiatry a. Antipsychotics, antidepressants, anti-anxiety drugs, mood stabilizers, CNS stimulants, and hallucinogens b. Substance abuse, drug addiction, and general principles of de- addiction",
+                "Chemotherapy",
+                "Introduction a. Definitions of chemotherapy, chemotherapeutic index, antibiotics, and antimicrobial agents b. Concept of selective targeting in chemotherapy c. Classification of antimicrobial agents based on mechanism of action d. Concept of superinfection, chemoprophylaxis, and combined use of antibiotics e. Antimicrobial resistance: causes, mechanisms, and preventive measures ii) Antimicrobial Agents",
             ]
         },
         {
             num: "III", hours: "14 Hours", title: "Immunopharmacology and Autacoids", topics: [
-                "a. Definitions of chemotherapy, chemotherapeutic index, antibiotics, and antimicrobial agents b. Concept of selective targeting in chemotherapy c. Classification of antimicrobial agents based on mechanism of action d. Concept of superinfection, chemoprophylaxis, and combined use of antibiotics e. Antimicrobial resistance: causes, mechanisms, and preventive measures ii) Antimicrobial Agents Classification, mechanism of action, adverse drug reactions, and therapeutic uses of:",
+                "Classification, mechanism of action, adverse drug reactions, and therapeutic uses of:",
                 "Sulphonamides and cotrimoxazole",
                 "Fluoroquinolones",
                 "Penicillins and cephalosporins",
                 "Macrolides and tetracyclines",
                 "Linezolid",
                 "Carbapenems and monobactams",
-                "Chloramphenicol and aminoglycosides iii) Chemotherapy of Diseases Drugs used in the treatment of:",
+                "Chloramphenicol and aminoglycosides iii) Chemotherapy of Diseases",
+                "Drugs used in the treatment of:",
                 "Fungal infections",
                 "Viral infections",
                 "Helminthiasis",
@@ -2803,12 +2943,12 @@ const SEM5: Subject[] = [
         },
         {
             num: "IV", hours: "10 Hours", title: "Endocrine Pharmacology", topics: [
-                "Pharmacology of Drugs Acting on Endocrine System a. Introduction to basic concepts of endocrinology b. Thyroid and antithyroid agents c. Parathormone, calcitonin, and vitamin D d. Insulin and oral hypoglycaemic agents",
+                "Pharmacology of Drugs Acting on Endocrine System a. Introduction to basic concepts of endocrinology b. Thyroid and antithyroid agents c. Parathormone, calcitonin, and vitamin D d. Insulin and oral hypoglycaemic agents e. ACTH and corticosteroids f. Oral contraceptives g. Drugs acting on the uterus h. PCOD",
             ]
         },
         {
             num: "V", hours: "04 Hours", title: "Toxicology and Principles of Pharmacovigilance", topics: [
-                "e. ACTH and corticosteroids f. Oral contraceptives g. Drugs acting on the uterus h. PCOD Drugs Acting on Gastrointestinal Tract a. Drugs used in peptic ulcer b. Drugs used for constipation and diarrhoea c. Emetics and anti-emetics d. Digestants, carminatives, appetizers, and anorectics – definitions and examples",
+                "Drugs Acting on Gastrointestinal Tract a. Drugs used in peptic ulcer b. Drugs used for constipation and diarrhoea c. Emetics and anti-emetics d. Digestants, carminatives, appetizers, and anorectics – definitions and examples",
             ]
         },
     ], false,
@@ -2968,29 +3108,31 @@ const SEM5: Subject[] = [
 const SEM6: Subject[] = [
     s("BP601T", "Advanced Pharmacognosy", 3, "T", [
         {
-            num: "I", hours: "6 Hours", title: "Biotechnological Production of Secondary Metabolites", topics: [
-                "Reverse Pharmacology and Integrative Approaches Reverse pharmacology and integrative approaches from the AYUSH perspective. Ethnopharmacological approach to bioprospecting. Traditional medicine",
+            num: "I", hours: "6 Hours", title: "Reverse Pharmacology and Integrative Approaches", topics: [
+                "Ethnopharmacological approach to bioprospecting. Traditional medicine databases: AYUSH Research Portal, ICMR Standards on Indian Medicinal Plants, TKDL, NAPRALERT, Super Natural, etc. Molecular docking and ADMET screening of bioactives. Concept of adjuvant therapy with herbals in metabolic and non-communicable diseases.",
+                "Metabolomics and Systems Biology Introduction to metabolomics and its tools: applications of NMR and",
             ]
         },
         {
             num: "II", hours: "11 Hours", title: "Marine Pharmacognosy and Novel Bioactives", topics: [
-                "databases: AYUSH Research Portal, ICMR Standards on Indian Medicinal Plants, TKDL, NAPRALERT, Super Natural, etc. Molecular docking and ADMET screening of bioactives. Concept of adjuvant therapy with herbals in metabolic and non-communicable diseases. Metabolomics and Systems Biology Introduction to metabolomics and its tools: applications of NMR and HRMS in metabolomics, Metabolomics profiling and dereplication studies, Role of metabolomics in quality control, scientific, validation of traditional claims and pharmacological evaluation, Network",
+                "HRMS in metabolomics, Metabolomics profiling and dereplication studies, Role of metabolomics in quality control, scientific, validation of traditional claims and pharmacological evaluation, Network pharmacology and systems biology approaches to herbal medicine, Significance of spectral libraries and chemoinformatics databases in drug discovery Modern Techniques in Natural Product Discovery",
             ]
         },
         {
             num: "III", hours: "10 Hours", title: "Herbal Drug Standardization by Hyphenated Techniques", topics: [
-                "pharmacology and systems biology approaches to herbal medicine, Significance of spectral libraries and chemoinformatics databases in drug discovery Modern Techniques in Natural Product Discovery Role of artificial intelligence (AI), Machine learning and big data in Drug discovery from natural Products. Molecular docking, Virtual Screening and Pharmacophore modelling, Use of Genomic and transcriptomic tools",
+                "Role of artificial intelligence (AI), Machine learning and big data in Drug discovery from natural Products. Molecular docking, Virtual Screening and Pharmacophore modelling, Use of Genomic and transcriptomic tools in medicinal plant research, High-throughput screening (HTS) and bioautography.",
+                "Validation and Development of Herbal Leads Bioactivity Guided Fractionation, characterization /Structure Elucidation, Optimization of lead compounds for better efficacy, safety, and stability through SAR and QSAR modelling for semi-synthetic compounds of Salicin, Artemisinin, Piperine, Papaverine and Andrographolides.",
             ]
         },
         {
             num: "IV", hours: "12 Hours", title: "Nutraceuticals, Cosmeceuticals and Functional Foods", topics: [
-                "in medicinal plant research, High-throughput screening (HTS) and bioautography. . Validation and Development of Herbal Leads Bioactivity Guided Fractionation, characterization /Structure Elucidation, Optimization of lead compounds for better efficacy, safety, and stability through SAR and QSAR modelling for semi-synthetic compounds of Salicin, Artemisinin, Piperine, Papaverine and Andrographolides. Preclinical, Clinical Evaluation and New Drug approvals: Testing for toxicity as per OECD guidelines, pharmacokinetics, and bioavailability of herbal products, extracts and lead compounds, assessment of safety and efficacy, clinical trials with or without placebo for clinical endpoints based",
-                "n assessment of quality of life reporting adverse events if any, filing IND application, NDA submission, Regulatory review and post marketing surveillance. Patenting of Natural Products",
+                "Preclinical, Clinical Evaluation and New Drug approvals: Testing for toxicity as per OECD guidelines, pharmacokinetics, and bioavailability of herbal products, extracts and lead compounds, assessment of safety and efficacy, clinical trials with or without placebo for clinical endpoints based on assessment of quality of life reporting adverse events if any, filing IND application, NDA submission, Regulatory review and post marketing surveillance.",
+                "Patenting of Natural Products Key Terminologies and Concepts: Definitions and distinctions: Patent, Intellectual Property Rights (IPR) Farmers' Rights and Breeders' Rights, Bioprospecting and Biopiracy Patenting Aspects of Natural Products and",
             ]
         },
         {
-            num: "V", hours: "9 Hours", title: "Intellectual Property Rights and Commercialization of Botanicals", topics: [
-                "Key Terminologies and Concepts: Definitions and distinctions: Patent, Intellectual Property Rights (IPR) Farmers' Rights and Breeders' Rights, Bioprospecting and Biopiracy Patenting Aspects of Natural Products and Traditional Knowledge: Legal frameworks and challenges in patenting natural substances, Traditional Knowledge Digital Library (TKDL) and its role in protecting indigenous knowledge. Role of National Biodiversity Authority in patenting natural products and NAGOYA protocol. Case Studies: Turmeric– U.S. patent on wound healing and its revocation, Neem– Biopiracy issue and patent cancellation.",
+            num: "V", hours: "6 Hours", title: "Intellectual Property Rights and Commercialization of Botanicals", topics: [
+                "TRADITIONAL KNOWLEDGE: Legal frameworks and challenges in patenting natural substances, Traditional Knowledge Digital Library (TKDL) and its role in protecting indigenous knowledge. Role of National Biodiversity Authority in patenting natural products and NAGOYA protocol. Case Studies: Turmeric– U.S. patent on wound healing and its revocation, Neem– Biopiracy issue and patent cancellation.",
             ]
         },
     ], false,
@@ -3012,29 +3154,36 @@ const SEM6: Subject[] = [
     ]),
     s("BP602T", "Biopharmaceutics and Pharmacokinetics", 3, "T", [
         {
-            num: "I", hours: "10 Hours", title: "Introduction to Biopharmaceutics and Drug Absorption", topics: [
-                "Introduction to Biopharmaceutics and pharmacokinetics: Introduction to various Pharmacokinetic parameters (using Plasma drug Concentration vs Time curve) and Pharmacodynamic parameters and drug delivery index. Absorption",
-                "Mechanisms of drug absorption through GIT, Physicochemical, Biological and Dosage form related factors influencing drug absorption",
+            num: "I", hours: "10 Hours", title: "Introduction to Biopharmaceutics and Pharmacokinetics", topics: [
+                "Introduction to various Pharmacokinetic parameters (using Plasma drug Concentration vs Time curve) and Pharmacodynamic parameters and drug delivery index.",
+                "Absorption; Mechanisms of drug absorption through GIT, Physicochemical, Biological and Dosage form related factors influencing drug absorption though GIT, methods of Assessment of GIT absorption, Distribution Tissue permeability of drugs, binding of drugs, apparent volume of drug distribution, plasma and tissue protein binding of drugs, factors affecting protein-drug binding. Kinetics of protein binding, Clinical significance of protein binding of drugs.",
+                "Elimination (Metabolism and Elimination): Drug metabolism and basic understanding of metabolic pathways renal excretion of drugs, factors affecting renal excretion of drugs, renal clearance, non renal routes of drug excretion of drugs",
             ]
         },
         {
             num: "II", hours: "10 Hours", title: "Drug Distribution, Binding and Elimination", topics: [
-                "though GIT, methods of Assessment of GIT absorption, Distribution Tissue permeability of drugs, binding of drugs, apparent volume of drug distribution, plasma and tissue protein binding of drugs, factors affecting protein-drug binding. Kinetics of protein binding, Clinical significance of protein binding of drugs. Elimination (Metabolism and Elimination): Drug metabolism and basic understanding of metabolic pathways renal excretion of drugs, factors affecting renal excretion of drugs, renal clearance, non renal routes of drug excretion of drugs Bioavailability and Bioequivalence: Definition and Objectives of bioavailability, absolute and relative bioavailability, Introduction to BCS and",
+                "BIOAVAILABILITY AND BIOEQUIVALENCE: Definition and Objectives of bioavailability, absolute and relative bioavailability, Introduction to BCS and biopharmaceutical drug disposition classification system, methods of measurement of bioavailability (Plasma data, Urinary excretion data), Protocol for assessment of bioavailability and bioequivalence studies. in- vitro drug dissolution methods (test apparatus I-VII), biorelevant dissolution mediums, in-vitro in-vivo correlations: Concept and Applications, Biowaivers, Methods of enhancement of bioavailability.",
             ]
         },
         {
             num: "III", hours: "10 Hours", title: "Pharmacokinetics — One-Compartment and Multicompartment Models", topics: [
-                "biopharmaceutical drug disposition classification system, methods of measurement of bioavailability (Plasma data, Urinary excretion data), Protocol for assessment of bioavailability and bioequivalence studies. in- vitro drug dissolution methods (test apparatus I-VII), biorelevant dissolution mediums, in-vitro in-vivo correlations: Concept and Applications, Biowaivers, Methods of enhancement of bioavailability. Pharmacokinetic Models: Compartment Models: Definition, Basis of classification, Properties of compartment, Advantages and disadvantages of compartment modelling. Kinetic considerations of One compartment open model. (a). Intravenous Injection (Bolus/rapid) (b). Intravenous infusion and",
+                "PHARMACOKINETIC MODELS: Compartment Models: Definition, Basis of classification, Properties of compartment, Advantages and disadvantages of compartment modelling. Kinetic considerations of One compartment open model. (a). Intravenous Injection (Bolus/rapid) (b). Intravenous infusion and",
+                "Extra-vascular administration. (with emphasis on Curve Fitting, Wagner",
+                "–Nelson, Loo Riegelman) Introduction to non - compartment model: Principles, estimation of PK parameters (AUC, AUMC, MRT, MAT statistical moment theory).",
+                "MULTICOMPARTMENT MODELS: Multiple dosage regimen: dosing interval, drug accumulation, loading dose, maintenance dose, PK Parameters Kinetic consideration of two compartment open model (a) Intravenous Injection",
             ]
         },
         {
-            num: "IV", hours: "9 Hours", title: "Non-Linear Pharmacokinetics", topics: [
-                "(c) Extra-vascular administration. (with emphasis on Curve Fitting, Wagner –Nelson, Loo Riegelman) Introduction to non - compartment model: Principles, estimation of PK parameters (AUC, AUMC, MRT, MAT statistical moment theory). Multicompartment models: Multiple dosage regimen: dosing interval, drug accumulation, loading dose, maintenance dose, PK Parameters Kinetic consideration of two compartment open model (a) Intravenous Injection (Bolus/rapid) and (b) Extra vascular administrations (oral administration). Kinetics of multiple dosing, steady state drug levels, calculation of loading",
+            num: "IV", hours: "9 Hours", title: "(bolus/rapid) and (b) Extra Vascular Administrations (oral Administration).", topics: [
+                "Kinetics of multiple dosing, steady state drug levels, calculation of loading and maintenance doses and their clinical significance. Multiple dosage regimen.",
+                "Introduction to pharmacokinetic consideration of Modified release drug products.",
+                "NONLINEAR PHARMACOKINETICS: Introduction, Reasons for Non-linearity,",
             ]
         },
         {
             num: "V", hours: "6 Hours", title: "Bioavailability, Bioequivalence and Clinical Pharmacokinetics", topics: [
-                "and maintenance doses and their clinical significance. Multiple dosage regimen. Introduction to pharmacokinetic consideration of Modified release drug products. Nonlinear Pharmacokinetics: Introduction, Reasons for Non-linearity, Michaelis-menton method of estimating parameters, Explanation with example of drugs. Application of PK software: Introduction of various in -silico methods for calculating various PK parameters.",
+                "Michaelis-menton method of estimating parameters, Explanation with example of drugs.",
+                "APPLICATION OF PK SOFTWARE: Introduction of various in -silico methods for calculating various PK parameters.",
             ]
         },
     ], false,
@@ -3055,33 +3204,32 @@ const SEM6: Subject[] = [
     ]),
     s("BP603T", "Intellectual Property Rights", 2, "T", [
         {
-            num: "I", hours: "6 Hours", title: "Introduction to Intellectual Property and Patents", topics: [
-                "Definition and scope of Intellectual Property (IP), Importance and types",
-                "f IP: Patents, Trademarks, Copyrights and Trade Secrets, Overview of",
+            num: "I", hours: "6 Hours", title: "Introduction to Intellectual Property", topics: [
+                "Definition and scope of Intellectual Property (IP), Importance and types of IP: Patents, Trademarks, Copyrights and Trade Secrets, Overview of the origin and progression of intellectual property rights in India and internationally, Role of IP in the pharmaceutical industry",
+                "PATENTS: Fundamentals and Process Definition and objectives of patents, Criteria for patentability such as",
             ]
         },
         {
             num: "II", hours: "6 Hours", title: "Patent Search, Drafting and Filing in India & Globally", topics: [
-                "the origin and progression of intellectual property rights in India and internationally, Role of IP in the pharmaceutical industry Patents – Fundamentals and Process Definition and objectives of patents, Criteria for patentability such as Novelty/innovations, Non-obviousness, Utility, Types of patents and non- patentable inventions in India, Procedure for filing a patent in India, Rights",
-                "f a patent holder and term of patent protection",
+                "Novelty/innovations, Non-obviousness, Utility, Types of patents and non- patentable inventions in India, Procedure for filing a patent in India, Rights of a patent holder and term of patent protection",
+                "Patent Laws and Acts",
             ]
         },
         {
             num: "III", hours: "6 Hours", title: "Trademarks, Copyrights and Trade Secrets in Pharma", topics: [
-                "Patent Laws and Acts Overview of Indian Patent Act, 1970 (latest amendments and key provisions under the act), TRIPS Agreement and its implications on the",
+                "Overview of Indian Patent Act, 1970 (latest amendments and key provisions under the act), TRIPS Agreement and its implications on the Indian pharmaceutical sector, Compulsory licensing, patent opposition, and revocation, Indian pharmaceutical patents: Case studies.",
+                "Other Forms of Intellectual Property",
             ]
         },
         {
             num: "IV", hours: "6 Hours", title: "Patent Infringement, Licensing and Patent Opposition", topics: [
-                "Indian pharmaceutical sector, Compulsory licensing, patent opposition, and revocation, Indian pharmaceutical patents: Case studies. Other Forms of Intellectual Property Trademarks, Copyrights, Industrial designs: Definition, importance, registration process, Basics and protection in scientific work, Importance",
+                "TRADEMARKS, COPYRIGHTS, INDUSTRIAL DESIGNS: Definition, importance, registration process, Basics and protection in scientific work, Importance and legal framework, Trade secrets and geographical indications in pharma industry",
+                "IPR Management and Commercialization",
             ]
         },
         {
             num: "V", hours: "6 Hours", title: "TRIPS, Traditional Knowledge and Patent Strategies in Pharma", topics: [
-                "and legal framework, Trade secrets and geographical indications in pharma industry IPR Management and Commercialization Valuation and strategies for commercialization of intellectual property",
-                "processes of technology transfer, licensing agreements, and collaborative ventures",
-                "issues related to IP infringement and available legal remedies",
-                "management practices of IPR in the pharmaceutical industry supported by relevant case studies.",
+                "Valuation and strategies for commercialization of intellectual property; processes of technology transfer, licensing agreements, and collaborative ventures; issues related to IP infringement and available legal remedies; management practices of IPR in the pharmaceutical industry supported by relevant case studies.",
             ]
         },
     ], false,
@@ -3110,48 +3258,53 @@ const SEM6: Subject[] = [
                 "Overview of ML applications in natural products:",
                 "Representation of crude drug data (morphological, microscopic, phytochemical, chromatographic features)",
                 "Structuring herbal datasets for predictive modeling",
-                "Classification models for authentication of crude drugs (authentic vs adulterated)",
+                "Classification models for authentication of crude drugs",
+                "(authentic vs adulterated)",
                 "Regression models for prediction of secondary metabolite yield",
                 "Application of AI in phytochemical screening and prioritization",
                 "Herb-drug interaction prediction using database-driven approaches",
-                "Limitations of predictive modeling in natural products. AI in Medicinal & Pharmaceutical Chemistry Overview of the role of AI applications in pharmaceutical chemistry with focus on drug discovery concepts:",
-                "Conversion of molecular structures into numerical descriptors",
+                "Limitations of predictive modeling in natural products.",
+                "AI in Medicinal & Pharmaceutical Chemistry",
             ]
         },
         {
             num: "II", hours: "6 Hours", title: "AI in Drug Discovery and Structure-Activity Modeling", topics: [
+                "Overview of the role of AI applications in pharmaceutical chemistry with focus on drug discovery concepts:",
+                "Conversion of molecular structures into numerical descriptors",
                 "(MW, logP, HBD/HBA, TPSA)",
                 "Structured chemical datasets and QSAR modeling",
                 "Regression and classification models for predicting biological activity (IC₅₀, solubility, ADMET properties), toxicities.",
                 "Virtual screening and lead optimization concepts",
                 "Limitations of ML models and importance of chemical reasoning AI in Drug Product Design & Performance Prediction Overview of AI models across formulation development stages, with emphasis on the applications and limitations:",
-                "Overview of dosage form development and formulation",
             ]
         },
         {
             num: "III", hours: "6 Hours", title: "AI in Formulation Design and Drug Delivery Optimization", topics: [
-                "variables",
+                "Overview of dosage form development and formulation variables",
                 "Machine learning in formulation optimization and excipient selection",
                 "Regression modeling for solubility and bioavailability enhancement",
                 "Time-concentration modeling for drug release interpretation",
                 "Stability study design and modeling degradation trends",
                 "Shelf-life estimation using regression-based approaches",
-                "Practical limitations of extrapolation in formulation science",
+                "Practical limitations of extrapolation in formulation science AI in Process Monitoring & Production Systems",
             ]
         },
         {
             num: "IV", hours: "6 Hours", title: "AI in Pharmaceutical Manufacturing and Process Analytical Technology (PAT)", topics: [
-                "AI in Process Monitoring & Production Systems Overview of introduces multivariate analysis in pharmaceutical analytical techniques with focus on the different models and their applications:",
+                "Overview of introduces multivariate analysis in pharmaceutical analytical techniques with focus on the different models and their applications:",
                 "Digital data acquisition in pharmaceutical production",
-                "Critical Quality Attributes (CQAs) and Critical Process Parameters (CPPs)",
+                "Critical Quality Attributes (CQAs) and Critical Process",
+                "Parameters (CPPs)",
                 "Correlation analysis for identifying process variability",
                 "Logistic regression models for batch pass/fail prediction",
-                "Feature importance in process monitoring, predictive maintenance concepts. Ethical and regulatory considerations in automated decision- making, and limitations of predictive models in manufacturing environments. AI in Pharmaceutical Analysis & Chemometrics Overview of multivariate analysis in pharmaceutical analytical techniques with focus on the different models and their applications:",
-                "Introduction to chemometrics and multivariate analytical data",
+                "Feature importance in process monitoring, predictive maintenance concepts.",
+                "Ethical and regulatory considerations in automated decision- making, and limitations of predictive models in manufacturing environments.",
             ]
         },
         {
             num: "V", hours: "6 Hours", title: "Emerging Trends, Generative AI and Case Studies in Pharma", topics: [
+                "Overview of multivariate analysis in pharmaceutical analytical techniques with focus on the different models and their applications:",
+                "Introduction to chemometrics and multivariate analytical data",
                 "Spectroscopic data modeling (UV/IR interpretation)",
                 "Regression analysis in quantitative pharmaceutical analysis",
                 "Chromatographic peak modeling and interpretation",
@@ -3180,45 +3333,41 @@ const SEM6: Subject[] = [
     ]),
     s("BP605T", "Pharmaceutical Analysis", 3, "T", [
         {
-            num: "I", hours: "10 Hours", title: "UV-Visible and Fluorescence Spectroscopy", topics: [
-                "Electrochemical Methods of analysis",
-                "1. Potentiometry: Electrode potential, electrochemical cell,",
+            num: "I", hours: "10 Hours", title: "Electrochemical Methods of Analysis", topics: [
+                "POTENTIOMETRY: Electrode potential, electrochemical cell, construction and working of reference and indicator electrodes including membrane electrodes, measurement of potential and pH, potentiometric titrations, methods of detecting end point and Karl Fischer titration.",
+                "CONDUCTOMETRY: Introduction, conductivity cell, conductometric titrations and applications.",
+                "POLAROGRAPHY: Introduction, residual current, migration current, diffusion current and limiting current, DME, polarographic wave, Ilkovic’s equation (Statement Only), and applications.",
             ]
         },
         {
-            num: "II", hours: "10 Hours", title: "Infrared (IR) and Raman Spectroscopy", topics: [
-                "construction and working of reference and indicator electrodes including membrane electrodes, measurement of potential and pH, potentiometric titrations, methods of detecting end point and Karl Fischer titration.",
-                "2. Conductometry: Introduction, conductivity cell, conductometric titrations and applications.",
-                "3. Polarography: Introduction, residual current, migration current, diffusion current and limiting current, DME, polarographic wave, Ilkovic’s equation (Statement Only), and applications. Spectroscopy",
-                "1. Fundamentals of Spectroscopy: Properties of electromagnetic radiation, electromagnetic spectrum.",
-                "2. UV Visible spectroscopy: Beer and Lambert’s law, Derivation and deviations. Electronic transitions, chromophores, auxochromes, spectral shifts, solvent effect on absorption spectra, Instrumentation - Sources of radiation, wavelength selectors, sample cells, detectors (Photo tube, Photomultiplier",
+            num: "II", hours: "10 Hours", title: "Spectroscopy", topics: [
+                "FUNDAMENTALS OF SPECTROSCOPY: Properties of electromagnetic radiation, electromagnetic spectrum.",
+                "UV VISIBLE SPECTROSCOPY: Beer and Lambert’s law, Derivation and deviations. Electronic transitions, chromophores, auxochromes, spectral shifts, solvent effect on absorption spectra, Instrumentation - Sources of radiation, wavelength selectors, sample cells, detectors (Photo tube, Photomultiplier tube, Photo voltaic cell, Silicon Photodiode). Applications - single and multi component analysis of pharmaceuticals.",
+                "IR SPECTROSCOPY: Introduction, fundamental modes of vibrations in poly atomic molecules, factors affecting vibrations, Instrumentation of dispersive Infrared spectrophotometer (including sample handling Techniques) and FTIR.",
+                "Pharmaceutical applications.",
             ]
         },
         {
-            num: "III", hours: "7 Hours", title: "Nuclear Magnetic Resonance (NMR) Spectroscopy", topics: [
-                "tube, Photo voltaic cell, Silicon Photodiode). Applications - single and multi component analysis of pharmaceuticals.",
-                "3. IR spectroscopy: Introduction, fundamental modes of vibrations in poly atomic molecules, factors affecting vibrations, Instrumentation of dispersive Infrared spectrophotometer (including sample handling Techniques) and FTIR. Pharmaceutical applications. Fluorometric Analysis",
-                "1. Theory, luminescence, factors affecting fluorescence, quenching. Instrumentation and pharmaceutical applications.",
-                "2. Flame Photometry and Atomic Absorption Spectrometry: Theory, nebulisation, flame and flame temperature, interferences, instrumentation and pharmaceutical applications.",
-                "3. Nepheloturbidometry: Principle, instrumentation and applications. Introduction to Chromatographic Techniques",
-                "1. Principle, various stationary and mobile phases, diverse development and detection techniques and applications of column, paper and thin layer chromatography.",
-                "2. Ion-exchange chromatography: Introduction, principles, types",
-                "f ions exchange resins, factors affecting ion exchange,",
+            num: "III", hours: "7 Hours", title: "Fluorometric Analysis", topics: [
+                "Theory, luminescence, factors affecting fluorescence, quenching. Instrumentation and pharmaceutical applications.",
+                "Flame Photometry and Atomic Absorption Spectrometry:",
+                "Theory, nebulisation, flame and flame temperature, interferences, instrumentation and pharmaceutical applications.",
+                "NEPHELOTURBIDOMETRY: Principle, instrumentation and applications.",
             ]
         },
         {
-            num: "IV", hours: "8 Hours", title: "Mass Spectrometry (MS) and Hyphenated Techniques", topics: [
-                "methodology and applications.",
-                "3. Gel filtration and affinity chromatography: Principles and applications.",
-                "4. Electrophoresis: Introduction, factors affecting electrophoretic mobility, Techniques of paper, gel, capillary electrophoresis, applications.",
-                "1. Gas chromatography: Introduction, theory, instrumentation, derivatization, temperature programming, advantages,",
+            num: "IV", hours: "8 Hours", title: "Introduction to Chromatographic Techniques", topics: [
+                "Principle, various stationary and mobile phases, diverse development and detection techniques and applications of column, paper and thin layer chromatography.",
+                "ION-EXCHANGE CHROMATOGRAPHY: Introduction, principles, types of ions exchange resins, factors affecting ion exchange, methodology and applications.",
+                "Gel filtration and affinity chromatography: Principles and applications.",
+                "ELECTROPHORESIS: Introduction, factors affecting electrophoretic mobility, Techniques of paper, gel, capillary electrophoresis, applications.",
             ]
         },
         {
-            num: "V", hours: "9 Hours", title: "Chromatographic Techniques and Method Validation (ICH Q2)", topics: [
-                "disadvantages and applications",
-                "2. High performance liquid chromatography: Introduction, theory, instrumentation, advantages and applications.",
-                "3. HPTLC: Principle, instrumentation and applications.",
+            num: "V", hours: "10 Hours", title: "Chromatographic Techniques and Method Validation (ICH Q2)", topics: [
+                "GAS CHROMATOGRAPHY: Introduction, theory, instrumentation, derivatization, temperature programming, advantages, disadvantages and applications",
+                "HIGH PERFORMANCE LIQUID CHROMATOGRAPHY: Introduction, theory, instrumentation, advantages and applications.",
+                "HPTLC: Principle, instrumentation and applications.",
             ]
         },
     ], false,
@@ -3239,46 +3388,45 @@ const SEM6: Subject[] = [
     ]),
     s("BP606T", "Pharmaceutical Jurisprudence", 3, "T", [
         {
-            num: "I", hours: "10 Hours", title: "Pharmacy Act 1948 and Ethics in Pharmacy Practice", topics: [
-                "Drugs and Cosmetics Act, 1940 and its rules 1945: Objectives, Definitions, Legal definitions of schedules to the Act and Rules, CDSCO guidelines for Import & export of Pharmaceuticals Manufacture of drugs – Prohibition of manufacture and sale of certain drugs, Conditions for grant of license and conditions of license for manufacture of drugs, Manufacture of drugs for test, examination and analysis, manufacture of new drug, loan license and repacking license. Drugs and Cosmetics Act, 1940 and its rules 1945.",
-                "Detailed study of Schedule G, H, H1, M, N, P, T, U, V, X, Y, Sch F, Part XII B.",
-                "Sale of Drugs – Wholesale, Retail sale and Restricted license. Offences and penalties",
-                "Labeling & packing of drugs- General labeling requirements and",
+            num: "I", hours: "10 Hours", title: "Drugs and Cosmetics Act, 1940 and Its Rules 1945", topics: [
+                "Objectives, Definitions, Legal definitions of schedules to the Act and Rules, CDSCO guidelines for Import & export of Pharmaceuticals Manufacture of drugs – Prohibition of manufacture and sale of certain drugs, Conditions for grant of license and conditions of license for manufacture of drugs, Manufacture of drugs for test, examination and analysis, manufacture of new drug, loan license and repacking license.",
+                "Detailed study of Schedule G, H, H1, M, N, P, T, U, V, X, Y,",
+                "Sch F, Part XII B.",
+                "SALE OF DRUGS: Wholesale, Retail sale and Restricted license.",
             ]
         },
         {
-            num: "II", hours: "10 Hours", title: "Drugs and Cosmetics Act 1940 and Rules 1945 (Import, Manufacture, Sale)", topics: [
-                "specimen labels for drugs and cosmetics, List of permitted colors. Offences and penalties.",
+            num: "II", hours: "10 Hours", title: "Offences and Penalties", topics: [
+                "Labeling & packing of drugs- General labeling requirements and specimen labels for drugs and cosmetics, List of permitted colors. Offences and penalties.",
                 "Administration of the Act and Rules – Drugs Technical Advisory Board, Central drugs Laboratory, Drugs Consultative Committee, Government drug analysts, Licensing authorities, controlling authorities, Drugs Inspectors",
-                "Pharmacy Act –1948: Objectives, Definitions, Pharmacy Council of India",
-                "its constitution and functions, Education s including ER20, State and Joint state pharmacy councils",
-                "constitution and functions, Registration of Pharmacists, Offences and Penalties",
-                "Medicinal and Toilet Preparation Act –1955: Objectives,",
+                "PHARMACY ACT: 1948: Objectives, Definitions, Pharmacy Council of India; its constitution and functions, Education s including ER20, State and Joint state pharmacy councils; constitution and functions, Registration of",
+                "Pharmacists, Offences and Penalties",
+                "Medicinal and Toilet Preparation Act –1955: Objectives, Definitions, Licensing, Manufacture In bond and Outside bond,",
             ]
         },
         {
-            num: "III", hours: "8 Hours", title: "Schedules to D&C Act, Good Manufacturing Practices (Schedule M)", topics: [
-                "Definitions, Licensing, Manufacture In bond and Outside bond, Export of alcoholic preparations, Offences and Penalties.",
-                "Narcotic Drugs and Psychotropic substances Act-1985 and Rules: Objectives, Definitions, Authorities and Officers, Constitution and Functions of narcotic &Psychotropic Consultative Committee, National Fund for Controlling the Drug Abuse, Prohibition, Control and , opium poppy cultivation and production of poppy straw, manufacture, sale and export of opium, Offences and Penalties",
-                "Study of Salient Features of Drugs and Magic Remedies Act",
+            num: "III", hours: "8 Hours", title: "Export of Alcoholic Preparations, Offences and Penalties.", topics: [
+                "Narcotic Drugs and Psychotropic substances Act-1985 and Rules: Objectives, Definitions, Authorities and Officers, Constitution and Functions of narcotic &Psychotropic Consultative Committee, National Fund for Controlling the Drug",
+                "Abuse, Prohibition, Control and",
             ]
         },
         {
             num: "IV", hours: "8 Hours", title: "Narcotic Drugs and Psychotropic Substances (NDPS) Act 1985 & Medical Termination of Pregnancy Act", topics: [
-                "and its rules: Objectives, Definitions, Prohibition of certain advertisements, Classes of Exempted advertisements, Offences and Penalties",
-                "Prevention of Cruelty to animals Act-1960: Objectives, Definitions, Institutional Animal Ethics Committee, CCSEA guidelines for Breeding and Stocking of Animals, Performance",
-                "f Experiments, Transfer and acquisition of animals for experiment, Records, Power to suspend or revoke registration, Offences and Penalties",
-                "National Pharmaceutical Pricing Authority: Drugs Price Control Order (DPCO)- 2013. Objectives, Definitions, Sale prices of bulk drugs, Retail price of formulations, Retail price and ceiling price of scheduled formulations, National List of Essential Medicines (NLEM).",
-                "Pharmaceutical Legislations – A brief review, Introduction, Study of drugs enquiry committee, Health survey and development committee, Hathi committee and Mudaliar committee",
-                "Code of Pharmaceutical ethics: Definition, Pharmacist in relation to his job, trade, medical profession and his profession,",
-                "Medical Termination of Pregnancy Act",
-                "Brief Introduction to Right to Information Act",
-                "Introduction New Drugs and Clinical Trials Rules, 2019 and",
+                ", opium poppy cultivation and production of poppy straw, manufacture, sale and export of opium, Offences and Penalties",
+                "Study of Salient Features of Drugs and Magic Remedies Act and its rules: Objectives, Definitions, Prohibition of certain advertisements, Classes of Exempted advertisements, Offences and Penalties",
+                "Prevention of Cruelty to animals Act-1960: Objectives, Definitions, Institutional Animal Ethics Committee, CCSEA guidelines for Breeding and Stocking of Animals, Performance of Experiments, Transfer and acquisition of animals for experiment, Records, Power to suspend or revoke registration,",
+                "Offences and Penalties",
+                "NATIONAL PHARMACEUTICAL PRICING AUTHORITY: Drugs Price Control Order (DPCO)- 2013. Objectives, Definitions, Sale prices of bulk drugs, Retail price of formulations, Retail price and ceiling price of scheduled formulations, National List of",
+                "Essential Medicines (NLEM).",
+                "PHARMACEUTICAL LEGISLATIONS: A brief review, Introduction, Study of drugs enquiry committee, Health survey and development committee, Hathi committee and Mudaliar committee",
             ]
         },
         {
             num: "V", hours: "9 Hours", title: "DPCO, Patent Act, Prevention of Cruelty to Animals Act & CDSCO Regulatory System", topics: [
-                "amendments.",
+                "CODE OF PHARMACEUTICAL ETHICS: Definition, Pharmacist in relation to his job, trade, medical profession and his profession,",
+                "Medical Termination of Pregnancy Act",
+                "Brief Introduction to Right to Information Act",
+                "Introduction New Drugs and Clinical Trials Rules, 2019 and amendments.",
                 "Cosmetic rules 2020",
                 "Regulatory guidelines on similar biologics.",
                 "Overview of Medical Device s, Guidelines on Probiotics, Food Safety and Standards (Health Supplements, Nutraceuticals, Food for Special Dietary Use, Food for Special Medical Purpose, Functional Food and Novel Food) s, 2016",
@@ -3725,49 +3873,59 @@ const SEM6: Subject[] = [
 const SEM7: Subject[] = [
     s("BP701T", "Biostatistics Research Methodology", 3, "T", [
         {
-            num: "I", hours: "9 Hours", title: "Research Design, Sampling Techniques and Data Collection", topics: [
-                "Basic concepts of biostatistics",
-                "1. Definition, meaning and type of variables Data – Meaning and methods of data collection, data preprocessing and cleaning Population and sample, Importance of sampling, Sampling methods Probability and non-probability sampling",
-                "Probability sampling - Random, systematic, stratified, cluster sampling",
-                "Non-probability sampling - Convenience sampling, purposive sampling, snowball sampling Types of statistics - Descriptive statistics and inferential statistics Descriptive statistics – Meaning and types of descriptive statistics",
+            num: "I", hours: "9 Hours", title: "Basic Concepts of Biostatistics", topics: [
+                "Definition, meaning and type of variables",
+                "DATA: Meaning and methods of data collection, data preprocessing and cleaning Population and sample, Importance of sampling, Sampling methods Probability and non-probability sampling",
+                "PROBABILITY SAMPLING: Random, systematic, stratified, cluster sampling",
+                "NON-PROBABILITY SAMPLING: Convenience sampling, purposive sampling, snowball sampling",
+                "Types of statistics -",
+                "Descriptive statistics and inferential statistics",
+                "DESCRIPTIVE STATISTICS: Meaning and types of descriptive statistics",
                 "Frequency distribution, measures of central tendency",
-                "Measures of dispersion – Range, variance and standard deviation. Concept of degrees of freedom, quartiles, skewness and kurtosis Diagrammatic representation of frequency distribution Probability and probability distributions",
-                "1. Probability and probability distributions- Classical probability and statistical probability Probability of union, intersection and complement of events, conditional probability, marginal probability",
-                "2. Probability distributions- Meaning of a probability distribution Discrete probability distribution- Meaning and examples of discrete probability distribution, meaning of PMF Continuous probability distribution – Meaning and examples of normally distributed data, meaning of PDF",
-                "Normal distribution – Meaning and characteristics of a normal",
+                "MEASURES OF DISPERSION: Range, variance and standard deviation.",
+                "Concept of degrees of freedom, quartiles, skewness and kurtosis Diagrammatic representation of frequency distribution",
             ]
         },
         {
-            num: "II", hours: "9 Hours", title: "Hypothesis Testing and Parametric Tests", topics: [
-                "distribution, parameters of a normal distribution, equation for PDF of a normal distribution. Pharmaceutical examples of data which can be modelled with Poisson Normal distribution.",
-                "Standard normal distribution, Z transformation, reading the table",
-                "f Z values Problems based on standard normal distribution, binomial and Poisson distributions",
-                "3. Sampling distributions – Meaning of sampling distributions",
-                "t distribution – the t statistic, equation for calculating t statistic, meaning of t distribution, meaning of degrees of freedom and their relevance to t distribution, reading and interpreting table of t values, applications of t distribution",
-                "F distribution – the F statistic, equation for calculating F statistic, meaning of F distribution, reading and interpreting table of F values",
-                "Chi square distribution – the Chi square statistic, meaning of chi square distribution, reading and interpreting the table of chi square values, applications of chi square distribution. Correlation and regression analysis",
-                "1. Correlation analysis – Introduction to the concept of correlation between two variables, positive and negative correlation, no correlation, examples of positive, negative and no correlation Measurement of correlation -",
+            num: "II", hours: "9 Hours", title: "Probability and Probability Distributions", topics: [
+                "Probability and probability distributions- Classical probability and statistical probability Probability of union, intersection and complement of events, conditional probability, marginal probability",
+                "Probability distributions- Meaning of a probability distribution Discrete probability distribution- Meaning and examples of discrete probability distribution, meaning of PMF Continuous probability distribution – Meaning and examples of normally distributed data, meaning of PDF",
+                "NORMAL DISTRIBUTION: Meaning and characteristics of a normal distribution, parameters of a normal distribution, equation for PDF of a normal distribution. Pharmaceutical examples of data which can be modelled with Poisson Normal distribution.",
+                "Standard normal distribution, Z transformation, reading the table of Z values Problems based on standard normal distribution, binomial and Poisson distributions",
+                "SAMPLING DISTRIBUTIONS: Meaning of sampling distributions",
+                "T DISTRIBUTION: the t statistic, equation for calculating t statistic, meaning of t distribution, meaning of degrees of freedom and their relevance to t distribution, reading and interpreting table of t values, applications of t distribution",
+                "F DISTRIBUTION: the F statistic, equation for calculating F statistic, meaning of F distribution, reading and interpreting table of F values",
+                "CHI SQUARE DISTRIBUTION: the Chi square statistic, meaning of chi square distribution, reading and interpreting the table of chi square values, applications of chi square distribution.",
+            ]
+        },
+        {
+            num: "III", hours: "9 Hours", title: "Correlation and Regression Analysis", topics: [
+                "CORRELATION ANALYSIS: Introduction to the concept of correlation between two variables, positive and negative correlation, no correlation, examples of positive, negative and no correlation",
+                "Measurement of correlation -",
                 "Pearson’s Correlation Co-efficient – Definition and formula, assumptions, range of Pearson’s correlation co-efficient, interpretation of sign and magnitude",
-                "Spearman’s Rank Correlation Co- efficient – Concept and when to",
+                "Spearman’s Rank Correlation Co- efficient – Concept and when to use, procedure for calculation Spearman’s Rank Correlation Co- efficient.",
+                "Real life applications in pharmaceutical and health sciences Problems on calculation of these two types of correlation co-efficient, use of scatter plot",
+                "MULTIPLE CORRELATION: Concept and applications.",
+                "REGRESSION ANALYSIS: Concept of regression, dependent and independent variables in regression analysis, simple linear regression, simple linear regression equation (method of least squares), calculation of slope and intercept, co-efficient of determination, interpretation of output of regression analysis, applications of regression analysis. Relationship between regression co-efficient and correlation co-efficient Problems on simple linear regression analysis for predicting values of dependent variables (pharmaceutical examples) Multiple linear regression-Concept and applications, meaning of overfitting and underfitting.",
             ]
         },
         {
-            num: "III", hours: "9 Hours", title: "Non-Parametric Tests and Categorical Data Analysis", topics: [
-                "use, procedure for calculation Spearman’s Rank Correlation Co- efficient. Real life applications in pharmaceutical and health sciences Problems on calculation of these two types of correlation co-efficient, use",
-                "f scatter plot",
+            num: "IV", hours: "12 Hours", title: "Inferential Statistics", topics: [
+                "STATISTICAL ESTIMATION: Point estimates and interval estimates of population parameters from sample statistics Concept of confidence intervals. Confidence intervals for means using t values. Problems on generating confidence intervals",
+                "HYPOTHESIS TESTING: Concept, steps involved, type I and type II error, sample size and power of the test, p values, applications of hypothesis testing Parametric tests - t- tests (single sample t test, two independent samples t test, paired t test) ANOVA (one way and two way).",
+                "Assumptions, procedure and applications (case studies using t tests and",
+                "ANOVA) Hypothesis testing in regression analysis and correlation",
+                "Non-parametric tests -",
+                "Mann Whitney U test, Wilcoxon Sign Rank test, Kruskal Wallis test,",
+                "Friedman test, Chi square tests.",
+                "Assumptions, procedure and applications (problems on non-parametric tests)",
             ]
         },
         {
-            num: "IV", hours: "12 Hours", title: "Design of Experiments (DoE) and Factorial Designs", topics: [
-                "Multiple correlation – Concept and applications.",
-                "2. Regression analysis – Concept of regression, dependent and independent variables in regression analysis, simple linear regression, simple linear regression equation (method of least squares), calculation of slope and intercept, co-efficient of determination, interpretation of output of regression analysis, applications of regression analysis. Relationship between regression co-efficient and correlation co-efficient Problems on simple linear regression analysis for predicting values of dependent variables (pharmaceutical examples) Multiple linear regression-Concept and applications, meaning of overfitting and underfitting. Inferential statistics",
-                "1. Statistical estimation – Point estimates and interval estimates of population parameters from sample statistics Concept of confidence intervals. Confidence intervals for means using t values. Problems on generating confidence intervals",
-                "2. Hypothesis testing – Concept, steps involved, type I and type II error, sample size and power of the test, p values, applications of hypothesis testing Parametric tests - t- tests (single sample t test, two independent samples t test, paired t test) ANOVA (one way and two way).",
-            ]
-        },
-        {
-            num: "V", hours: "6 Hours", title: "Statistical Software (SPSS, R) and Scientific Research Writing", topics: [
-                "Assumptions, procedure and applications (case studies using t tests and ANOVA) Hypothesis testing in regression analysis and correlation Non-parametric tests - Mann Whitney U test, Wilcoxon Sign Rank test, Kruskal Wallis test, Friedman test, Chi square tests. Assumptions, procedure and applications (problems on non-parametric tests) Research methodology Research – Meaning, importance and types. Types of research designs Research methodology – Based on the research question, selection of research design, defining the population and sample, selecting the sample size and sampling method, method of data collection and data analysis. Decision tree approach for selection of statistical tests on the basis of research question and type of data Descriptive research design – Examples of application Observational research design – Examples of application Experimental research design – Examples of application Scientific report writing, plagiarism, referencing styles, selection of research journals, abstracting services and databases Screening and Optimization – Concept and experimental designs used for screening and optimization including Plackett Burman design, factorial designs, D optimal design, sequential simplex design, central composite design and response surface methodology, blocking and confounding in experimental designs.",
+            num: "V", hours: "6 Hours", title: "Research Methodology", topics: [
+                "RESEARCH: Meaning, importance and types.",
+                "Types of research designs Decision tree approach for selection of statistical tests on the basis of research question and type of data Descriptive research design – Examples of application Observational research design – Examples of application Experimental research design –",
+                "Examples of application Scientific report writing, plagiarism, referencing styles, selection of research journals, abstracting services and databases Screening and Optimization – Concept and experimental designs used for screening and optimization including Plackett Burman design, factorial designs, D optimal design, sequential simplex design, central composite design and response surface methodology, blocking and confounding in experimental designs.",
             ]
         },
     ], false,
@@ -3786,27 +3944,36 @@ const SEM7: Subject[] = [
     s("BP702T", "Cosmetics and Cosmeceuticals", 2, "T", [
         {
             num: "I", hours: "6 Hours", title: "Biological Foundations and Cosmetic Formulation Science", topics: [
-                "Cosmetics and cosmeceuticals, Classification of Cosmetics (Cosmetics and Cosmeceuticals for Skin Care, Hair Care, Oral Care, foot care, body cavities, Decorative Cosmetics, Cleansing cosmetics, Perfumes and Fragrances.) Types of various dosage forms for Cosmetics, Common excipients for cosmetic. Common skin problems (Dry Skin, Oily skin, Pimples and acne,",
+                "Cosmetics and cosmeceuticals, Classification of Cosmetics (Cosmetics and Cosmeceuticals for Skin Care, Hair Care, Oral Care, foot care, body cavities, Decorative Cosmetics, Cleansing cosmetics, Perfumes and",
+                "Fragrances.) Types of various dosage forms for Cosmetics, Common excipients for cosmetic.",
+                "Common skin problems (Dry Skin, Oily skin, Pimples and acne, Pigmentation, Prickly heat and Sun burn) and general composition, method for preparation, packing and evaluation of the skin",
             ]
         },
         {
-            num: "II", hours: "6 Hours", title: "Skin Care, Hair Care and Oral Care Cosmetics", topics: [
-                "Pigmentation, Prickly heat and Sun burn) and general composition, method for preparation, packing and evaluation of the skin Cosmetics and cosmeceuticals. Herbal cosmetics for skin. Types of soaps, syndet bars, general composition, method for preparation, packing and evaluation of soaps. Introduction to Perfumes and toiletries. Common Hair problems, Hair Cosmetics and cosmeceuticals:",
+            num: "II", hours: "6 Hours", title: "Cosmetics and Cosmeceuticals. Herbal Cosmetics for Skin.", topics: [
+                "Types of soaps, syndet bars, general composition, method for preparation, packing and evaluation of soaps.",
+                "Introduction to Perfumes and toiletries.",
+                "Common Hair problems, Hair Cosmetics and cosmeceuticals:",
             ]
         },
         {
             num: "III", hours: "6 Hours", title: "Active Ingredients and Cosmeceuticals", topics: [
-                "Types of shampoos, general composition, method for preparation, packing and evaluation of shampoos. Introduction to hair oils, hair serums, conditioners, hair colors, Depilatory and shaving products. Herbal hair care products. Various problems of oral cavity, Oral Cosmetics, and",
+                "Types of shampoos, general composition, method for preparation, packing and evaluation of shampoos.",
+                "Introduction to hair oils, hair serums, conditioners, hair colors, Depilatory and shaving products. Herbal hair care products.",
             ]
         },
         {
             num: "IV", hours: "6 Hours", title: "Safety Evaluation and Toxicity Testing of Cosmetics", topics: [
-                "cosmeceuticals: general composition, method for preparation, packing and evaluation of mouth wash and toothpaste. Herbal oral care cosmetics. Types of Cosmetics for nails, eyes, body odor, lip care and cleansing. Intimate hygiene products for males and females. Role of Regulatory authorities for Cosmetics and cosmeceuticals",
+                "Various problems of oral cavity, Oral Cosmetics, and cosmeceuticals: general composition, method for preparation, packing and evaluation of mouth wash and toothpaste. Herbal oral care cosmetics.",
+                "Types of Cosmetics for nails, eyes, body odor, lip care and cleansing.",
+                "Intimate hygiene products for males and females.",
+                "Role of Regulatory authorities for Cosmetics and cosmeceuticals (CDSCO and FDA). Cosmetics regulations 2020 and role of BIS.",
             ]
         },
         {
-            num: "V", hours: "9 Hours", title: "Cosmetic Regulations, Quality Control and BIS Guidelines", topics: [
-                "(CDSCO and FDA). Cosmetics regulations 2020 and role of BIS. Role of certifying bodies like ECCERT and COSMOS in herbal cosmetics. Labeling requirement of cosmetics and Packaging of cosmetics. Testing as per BIS specification and analytical methods (including sensory test, sensitivity test).",
+            num: "V", hours: "6 Hours", title: "Cosmetic Regulations, Quality Control and BIS Guidelines", topics: [
+                "Role of certifying bodies like ECCERT and COSMOS in herbal cosmetics. Labeling requirement of cosmetics and Packaging of cosmetics.",
+                "Testing as per BIS specification and analytical methods (including sensory test, sensitivity test).",
             ]
         },
     ], false,
@@ -3830,57 +3997,59 @@ const SEM7: Subject[] = [
         {
             num: "I", hours: "6 Hours", title: "AI in Pharmacokinetics & Dose Optimization", topics: [
                 "Review of pharmacokinetic parameters (Cmax, Tmax, AUC, clearance)",
-                "Modeling concentration-time relationships: Linear regression in PK data modeling, multiple regression for dose adjustment based on patient variables (age, weight, renal function)",
+                "MODELING CONCENTRATION-TIME RELATIONSHIPS: Linear regression in PK data modeling, multiple regression for dose adjustment based on patient variables (age, weight, renal function)",
                 "Interpretation of regression coefficients in clinical context",
                 "Error metrics (RMSE, R²) in PK modeling",
-                "Limitations of linear modeling in nonlinear pharmacokinetics AI in Drug Safety & Pharmacovigilance",
-                "Overview of pharmacovigilance systems",
-                "Structure and data formats from real systems (e.g. FAERS,",
+                "Limitations of linear modeling in nonlinear pharmacokinetics",
             ]
         },
         {
             num: "II", hours: "6 Hours", title: "AI in Drug Safety & Pharmacovigilance", topics: [
+                "Overview of pharmacovigilance systems",
+                "Structure and data formats from real systems (e.g. FAERS,",
                 "EudraVigilance)",
                 "Conceptual overview of frequency analysis and signal detection",
                 "Logistic regression for ADR risk prediction",
                 "Confusion matrix and clinical performance metrics",
                 "Sensitivity, specificity, precision, recall",
-                "Bias and confounding in observational datasets AI in Personalized Medicine & Risk Stratification",
-                "Concept of precision medicine",
-                "Patient covariates and therapeutic response",
+                "Bias and confounding in observational datasets",
             ]
         },
         {
             num: "III", hours: "6 Hours", title: "AI in Personalized Medicine & Risk Stratification", topics: [
+                "Concept of precision medicine",
+                "Patient covariates and therapeutic response",
                 "Logistic regression for disease risk prediction",
                 "Classification of responders vs non-responders",
                 "Evaluation metrics in healthcare prediction",
-                "Ethical implications of predictive modeling AI in Clinical Decision Support & Real-World Data",
-                "Structure of Electronic Health Records (EHR)",
+                "Ethical implications of predictive modeling",
             ]
         },
         {
-            num: "IV", hours: "6 Hours", title: "AI in Clinical Decision Support & Real-World Data", topics: [
-                "AI in Clinical Decision Support Systems (CDSS)",
+            num: "IV", hours: "6 Hours", title: "AI in Clinical Decision Support & Real-world Data", topics: [
+                "Structure of Electronic Health Records (EHR)",
                 "Regression models for outcome prediction",
                 "Classification models for risk scoring",
                 "Real-world data analytics",
                 "Limitations of AI in clinical environments",
-                "Accountability and interpretabilit Guided Supervised Learning Project – Pharmaceutical and Clinical Applications Students will undertake a guided supervised learning project (individually or in groups) applying regression or classification models to pharmaceutical or clinical datasets. The project should include the following steps:",
+                "Accountability and interpretabilit",
+            ]
+        },
+        {
+            num: "V", hours: "6 Hours", title: "Guided Supervised Learning Project – Pharmaceutical and", topics: [
+                "Clinical Applications Students will undertake a guided supervised learning project (individually or in groups) applying regression or classification models to pharmaceutical or clinical datasets.",
+                "The project should include the following steps:",
                 "Identification and definition of a relevant pharmaceutical or clinical problem",
                 "Selection of an appropriate publicly available dataset",
                 "Identification of predictor variables and outcome variables",
                 "Data preprocessing and preparation for analysis",
                 "Application of suitable supervised learning methods (e.g., linear regression or logistic regression)",
                 "Evaluation of model performance using appropriate metrics",
-                "Interpretation of results in the context of pharmaceutical or",
-            ]
-        },
-        {
-            num: "V", hours: "6 Hours", title: "Guided Supervised Learning Project — Pharmaceutical and Clinical Applications", topics: [
-                "clinical relevance",
+                "Interpretation of results in the context of pharmaceutical or clinical relevance",
                 "Discussion of limitations, potential biases, and ethical considerations",
-                "Presentation of findings to faculty mentors or peers. Suggested project topics (not limited to): Dissolution rate prediction, tablet hardness prediction, stability degradation modelling, quality control batch failure prediction, assay variability modelling, impurity prediction, moisture impact on formulation stability, coating thickness prediction, solubility enhancement modelling, tablet defect classification, adverse drug reaction (ADR) prediction, therapeutic response prediction using patient datasets, hospital readmission risk prediction, dose requirement prediction using pharmacokinetic data, diabetes risk prediction from health markers, antibiotic treatment success prediction, ICU stay duration prediction, medication adherence analysis, and disease severity classification.",
+                "Presentation of findings to faculty mentors or peers.",
+                "Suggested project topics (not limited to):",
+                "Dissolution rate prediction, tablet hardness prediction, stability degradation modelling, quality control batch failure prediction, assay variability modelling, impurity prediction, moisture impact on formulation stability, coating thickness prediction, solubility enhancement modelling, tablet defect classification, adverse drug reaction (ADR) prediction, therapeutic response prediction using patient datasets, hospital readmission risk prediction, dose requirement prediction using pharmacokinetic data, diabetes risk prediction from health markers, antibiotic treatment success prediction, ICU stay duration prediction, medication adherence analysis, and disease severity classification.",
             ]
         },
     ], true,
@@ -3902,35 +4071,43 @@ const SEM7: Subject[] = [
     s("BP704T", "Modern Analytical Techniques", 3, "T", [
         {
             num: "I", hours: "10 Hours", title: "Thermal Analysis Techniques (DSC, TGA, DTA)", topics: [
-                "1. Nuclear Magnetic Resonance Spectroscopy: Principles of ¹H-NMR and ¹³C-NMR, various solvents used, chemical shift, factors affecting chemical shift, coupling constant, spin–spin coupling, relaxation, instrumentation of FT-NMR and its",
+                "NUCLEAR MAGNETIC RESONANCE SPECTROSCOPY",
+                "Principles of ¹H-NMR and ¹³C-NMR, various solvents used, chemical shift, factors affecting chemical shift, coupling constant, spin–spin coupling, relaxation, instrumentation of FT-NMR and its applications.",
+                "MASS SPECTROMETRY",
+                "Principles, fragmentation and its rules, ionization techniques – Electron impact, chemical ionization, MALDI, FAB, API, analyzers – Time of flight and quadrupole, ion trap, detectors and applications.",
+                "X-RAY DIFFRACTION METHODS",
             ]
         },
         {
             num: "II", hours: "08 Hours", title: "X-Ray Diffraction (XRD) and Electron Microscopy (SEM, TEM)", topics: [
-                "applications.",
-                "2. Mass Spectrometry: Principles, fragmentation and its rules, ionization techniques – Electron impact, chemical ionization, MALDI, FAB, API, analyzers – Time of flight and quadrupole, ion trap, detectors and applications.",
-                "1. X-Ray Diffraction Methods: Origin of X-Rays, basic aspects of crystals, X-Ray crystallography, rotating crystal technique, single crystal diffraction, powder diffraction, structural elucidation and applications.",
+                "Origin of X-Rays, basic aspects of crystals, X-Ray crystallography, rotating crystal technique, single crystal diffraction, powder diffraction, structural elucidation and applications.",
+                "THERMAL ANALYSIS",
             ]
         },
         {
             num: "III", hours: "10 Hours", title: "Hyphenated Mass Spectrometry (LC-MS/MS, GC-MS/MS)", topics: [
-                "2. Thermal Analysis: Introduction, instrumentation, factors affecting measurements, applications of TGA, DSC (types) and DTA.",
-                "1. UPLC and Nano LC: Principle, advantages over LC and applications.",
-                "2. Principle and applications of hyphenated techniques: GC-MS, LC- MS/MS, ICP-MS.",
+                "Introduction, instrumentation, factors affecting measurements, applications of TGA, DSC (types) and DTA.",
+                "UPLC AND NANO LC: Principle, advantages over LC and applications.",
+                "Principle and applications of hyphenated techniques: GC-MS, LC-",
+                "MS/MS, ICP-MS.",
+                "Supercritical chromatography and flash chromatography: principles and applications.",
+                "GREEN ANALYTICAL CHEMISTRY",
+                "Types of green solvents, various computational tools used to assess the greenness and its applications in sample preparation and analytical method development.",
+                "BIO-ANALYTICAL METHODS",
             ]
         },
         {
             num: "IV", hours: "12 Hours", title: "Supercritical Fluid Chromatography and Advanced Electrophoresis", topics: [
-                "3. Supercritical chromatography and flash chromatography: principles and applications.",
-                "1. Green Analytical Chemistry: Types of green solvents, various computational tools used to assess the greenness and its applications in sample preparation and analytical method development.",
-                "2. Bio-analytical Methods: Introduction to bioanalytical method development, extraction of drugs and metabolites from biological fluids – SPE, LLE, PPE, BCS",
+                "Introduction to bioanalytical method development, extraction of drugs and metabolites from biological fluids – SPE, LLE, PPE, BCS classification, PK-PD interaction, microsomal assays, MTT assay,",
+                "BA & BE study protocol, biosimilars.",
+                "Radio Immune Assays and ELISA:",
+                "Importance, various components, principle, different methods, limitations and applications of radio immunoassay and ELISA.",
+                "MICROSCOPY-BASED ANALYTICAL TECHNIQUES",
             ]
         },
         {
             num: "V", hours: "5 Hours", title: "Bioanalytical Method Development and Validation", topics: [
-                "classification, PK-PD interaction, microsomal assays, MTT assay, BA & BE study protocol, biosimilars.",
-                "3. Radio Immune Assays and ELISA: Importance, various components, principle, different methods, limitations and applications of radio immunoassay and ELISA.",
-                "1. Microscopy-Based Analytical Techniques: Principle, instrumentation, and applications of optical microscopy, scanning electron microscopy and transmission electron microscopy.",
+                "Principle, instrumentation, and applications of optical microscopy, scanning electron microscopy and transmission electron microscopy.",
             ]
         },
     ], false,
@@ -3953,69 +4130,69 @@ const SEM7: Subject[] = [
     ]),
     s("BP705T", "Pharmacovigilance", 3, "T", [
         {
-            num: "I", hours: "10 Hours", title: "Introduction to Pharmacovigilance and Drug Safety", topics: [
-                "Fundamentals of Pharmacovigilance",
-                "a) Concept, history, and importance of pharmacovigilance",
-                "b) Basic drug classification systems (introductory overview only):",
-                "c) ATC classification, ICD",
+            num: "I", hours: "10 Hours", title: "Fundamentals of Pharmacovigilance", topics: [
+                "Concept, history, and importance of pharmacovigilance",
+                "Basic drug classification systems (introductory overview only):",
+                "ATC classification, ICD",
                 "ATC system",
-                "d) Drug-related problems and medication safety",
-                "e) Drug safety considerations in special populations:",
+                "Drug-related problems and medication safety",
+                "Drug safety considerations in special populations:",
                 "Paediatrics",
                 "Geriatrics",
-                "Pregnancy and lactation Pharmacovigilance Systems and Regulatory Framework",
-                "a) Objectives and functions of pharmacovigilance",
-                "b) Methods of pharmacovigilance data collection:",
+                "Pregnancy and lactation",
+            ]
+        },
+        {
+            num: "II", hours: "10 Hours", title: "Pharmacovigilance Systems and Regulatory Framework", topics: [
+                "Pharmacovigilance Systems and Regulatory Framework",
+            ]
+        },
+        {
+            num: "III", hours: "8 Hours", title: "Objectives and Functions of Pharmacovigilance", topics: [
+                "Objectives and functions of pharmacovigilance",
+                "Methods of pharmacovigilance data collection:",
                 "Spontaneous reporting",
                 "Cohort and case-control studies",
-                "c) Global pharmacovigilance systems:",
-            ]
-        },
-        {
-            num: "II", hours: "10 Hours", title: "Adverse Drug Reactions (ADR) Monitoring and Reporting", topics: [
+                "GLOBAL PHARMACOVIGILANCE SYSTEMS",
                 "WHO International Drug Monitoring Programme",
-                "Role of CIOMS and major regulatory agencies (e.g., USFDA, EMA)",
-                "d) Pharmacovigilance Programme of India (PvPI)",
-                "e) Establishment and role of ADR Monitoring Centres Adverse Drug Reactions (ADRs)",
-                "a) Classification and types of ADRs",
-                "b) Mechanisms and risk factors for ADRs",
-                "c) Methods of ADR monitoring, detection, and reporting",
-                "d) Assessment of causality, severity, predictability, and",
+                "Role of CIOMS and major regulatory agencies (e.g., USFDA,",
+                "EMA)",
+                "Pharmacovigilance Programme of India (PvPI)",
+                "Establishment and role of ADR Monitoring Centres",
+                "Adverse Drug Reactions (ADRs)",
+                "Classification and types of ADRs",
+                "Mechanisms and risk factors for ADRs",
+                "Methods of ADR monitoring, detection, and reporting",
+                "Assessment of causality, severity, predictability, and preventability of ADRs",
+                "Management of ADRs",
+                "Online reporting mechanisms and databases (WHO-ART, VigiBase, Vigiflow, Oracle Argus, OpenVigil software).",
+                "MEDRA",
             ]
         },
         {
-            num: "III", hours: "8 Hours", title: "Signal Detection, Causality Assessment and Risk Management", topics: [
-                "preventability of ADRs",
-                "e) Management of ADRs",
-                "f) Online reporting mechanisms and databases (WHO-ART, VigiBase, Vigiflow, Oracle Argus, OpenVigil software).",
-                "g) MEDRA Immunovigilance and Other Disciplines of Pharmacovigilance",
-                "a) Definition, scope, and significance of immunovigilance,",
+            num: "IV", hours: "7 Hours", title: "Immunovigilance and Other Disciplines of Pharmacovigilance", topics: [
+                "Definition, scope, and significance of immunovigilance, cosmetovigilance, nutraceutical-vigilance, materiovigilance, herbovigilance, ecopharmacovigilance, and hemovigilance",
+                "Vaccination failure and vaccine pharmacovigilance",
+                "Overview of adverse events following immunization (AEFIs)",
+                "Immunization safety monitoring systems in India",
             ]
         },
         {
-            num: "IV", hours: "7 Hours", title: "Good Pharmacovigilance Practices (GVP) and Safety Databases", topics: [
-                "cosmetovigilance, nutraceutical-vigilance, materiovigilance, herbovigilance, ecopharmacovigilance, and hemovigilance",
-                "b) Vaccination failure and vaccine pharmacovigilance (vaccinovigilance)",
-                "c) Overview of adverse events following immunization (AEFIs)",
-                "d) Immunization safety monitoring systems in India",
-            ]
-        },
-        {
-            num: "V", hours: "10 Hours", title: "Pharmacovigilance Programme of India (PvPI) and Global Regulatory Standards", topics: [
-                "Risk Communication, Evaluation, Management, and ICH Guidelines",
-                "a) Risk evaluation and management strategies in pharmacovigilance and immunovigilance",
-                "b) Communication in drug safety crisis management",
-                "c) Communication with regulatory agencies, business partners, and healthcare facilities",
-                "d) Analysis of real-world case studies and lessons learnt",
-                "e) Emerging trends and challenges in pharmacovigilance and immunovigilance",
-                "f) Overview of safety data generation",
-                "g) Objectives of ICH guidelines",
-                "h) Expedited and aggregate reporting",
-                "i) Individual Case Safety Reports (ICSRs)",
-                "j) Periodic Safety Update Reports (PSURs)",
-                "k) Post-approval expedited reporting",
-                "l) Good Clinical Practices (GCPs) regulation 2019",
-                "m) Application of pharmacogenomics and pharmacometrics in pharmacovigilance.",
+            num: "V", hours: "10 Hours", title: "Risk Communication, Evaluation, Management, and ICH", topics: [
+                "Guidelines",
+                "Risk evaluation and management strategies in pharmacovigilance and immunovigilance",
+                "Communication in drug safety crisis management",
+                "Communication with regulatory agencies, business partners, and healthcare facilities",
+                "Analysis of real-world case studies and lessons learnt",
+                "Emerging trends and challenges in pharmacovigilance and immunovigilance",
+                "Overview of safety data generation",
+                "Objectives of ICH guidelines",
+                "Expedited and aggregate reporting",
+                "Individual Case Safety Reports (ICSRs)",
+                "Periodic Safety Update Reports (PSURs)",
+                "Post-approval expedited reporting",
+                "Good Clinical Practices (GCPs) regulation 2019",
+                "Application of pharmacogenomics and pharmacometrics in pharmacovigilance.",
             ]
         },
     ], false,
@@ -4036,8 +4213,8 @@ const SEM7: Subject[] = [
     ]),
     s("BP706T", "Pharmacy Practice", 3, "T", [
         {
-            num: "I", hours: "8 Hours", title: "Hospital Pharmacy Organization and Management", topics: [
-                "Introduction to Pharmacy Practice Definition, scope and evolution of:",
+            num: "I", hours: "8 Hours", title: "Introduction to Pharmacy Practice", topics: [
+                "Definition, scope and evolution of:",
                 "Hospital and clinical pharmacy",
                 "Pharmacist's role from dispenser to healthcare provider",
                 "WHO and FIP guidelines on pharmacy practice",
@@ -4045,23 +4222,30 @@ const SEM7: Subject[] = [
                 "Role of pharmacy in public health and policymaking",
                 "Promoting rational use of medicines",
                 "Concepts of Good Pharmacy Practice",
-                "Pharmacy practice settings: inpatient, outpatient",
+                "PHARMACY PRACTICE SETTINGS: inpatient, outpatient",
                 "Concept of healthcare delivery system and interprofessional collaboration",
                 "Primary (PHC), Secondary (CHC), Tertiary (District Hospitals,",
+                "Medical Colleges) – role of pharmacists at various levels of care.",
+                "Hospital and Community Pharmacy",
+                "Hospital and its Organization Classification of hospitals, organizational structure of a hospital, healthcare staff involved in hospital services and their functions",
+                "Hospital Pharmacy and its Organization Definition, organization structure, location, layout, and staff requirements, responsibilities and functions of hospital pharmacists",
+                "Pharmacy and Therapeutic Committee Organization, functions, and policies, drug inclusion into formulary, inpatient and outpatient prescriptions, automatic stop order, emergency drug list preparation",
+                "Hospital Formulary",
             ]
         },
         {
             num: "II", hours: "10 Hours", title: "Drug Distribution Systems in Hospitals", topics: [
-                "Medical Colleges) – role of pharmacists at various levels of care. Hospital and Community Pharmacy Hospital and its Organization Classification of hospitals, organizational structure of a hospital, healthcare staff involved in hospital services and their functions Hospital Pharmacy and its Organization Definition, organization structure, location, layout, and staff requirements, responsibilities and functions of hospital pharmacists Pharmacy and Therapeutic Committee Organization, functions, and policies, drug inclusion into formulary, inpatient and outpatient prescriptions, automatic stop order, emergency drug list preparation Hospital Formulary Definition of hospital formulary, contents of hospital formulary, differentiation between hospital formulary and drug list, preparation and revision of hospital formulary Drug Distribution System in a Hospital Drug procurement and inventory control, dispensing of drugs to inpatients, types of drug distribution systems, charging policy and labeling, dispensing of drugs to ambulatory patients, dispensing of controlled drugs, outpatient medication dispensing, NABH standards for medication management in hospital settings Community Pharmacy Organization and structure of retail and wholesale drug stores, types and design of a drug store, legal requirements for establishment and maintenance of a drug store, dispensing of proprietary products, maintenance of records of retail and wholesale drug stores, prescription handling, labelling, and patient counselling, introduction, definition, sale, and OTC medication list, vaccination services Clinical Pharmacy Services",
+                "Definition of hospital formulary, contents of hospital formulary, differentiation between hospital formulary and drug list, preparation and revision of hospital formulary Drug procurement and inventory control, dispensing of drugs to inpatients, types of drug distribution systems, charging policy and labeling, dispensing of drugs to ambulatory patients, dispensing of controlled drugs, outpatient medication dispensing, NABH standards for medication management in hospital settings",
+                "Community Pharmacy Organization and structure of retail and wholesale drug stores, types and design of a drug store, legal requirements for establishment and maintenance of a drug store, dispensing of proprietary products, maintenance of records of retail and wholesale drug stores, prescription handling, labelling, and patient counselling, introduction, definition, sale, and OTC medication list, vaccination services",
+            ]
+        },
+        {
+            num: "III", hours: "9 Hours", title: "Clinical Pharmacy Services", topics: [
                 "Introduction to clinical pharmacy and its concept",
                 "Drug therapy monitoring",
                 "Medication chart review",
                 "Clinical review",
                 "Pharmacist intervention",
-            ]
-        },
-        {
-            num: "III", hours: "9 Hours", title: "Community Pharmacy and Patient Counseling", topics: [
                 "Ward round participation",
                 "Medication history",
                 "Pharmaceutical care",
@@ -4069,18 +4253,39 @@ const SEM7: Subject[] = [
                 "Drug/Medication related problems",
                 "Drug and poison information services",
                 "Therapeutic drug monitoring (TDM)",
+                "Patient-Oriented Services",
+                "Medication Adherence and Non-Adherence",
+                "Definition",
+                "Factors influencing non-adherence Pharmacist’s role in medication adherence Monitoring of patient medication adherence Tools used to assess medication adherence",
+                "Strategies to overcome non-adherence Patient Counselling Techniques and Communication Skills",
             ]
         },
         {
-            num: "IV", hours: "9 Hours", title: "Clinical Pharmacy, Ward Round Participation and Drug Therapy Monitoring", topics: [
-                "Patient-Oriented Services Medication Adherence and Non-Adherence Definition Factors influencing non-adherence Pharmacist’s role in medication adherence Monitoring of patient medication adherence Tools used to assess medication adherence Strategies to overcome non-adherence Patient Counselling Techniques and Communication Skills Definition of patient counselling Steps involved in patient counselling",
+            num: "IV", hours: "9 Hours", title: "Definition of Patient Counselling", topics: [
+                "Steps involved in patient counselling",
+                "COMMUNICATION SKILLS: communication with prescribers and patients Types of educational materials used in patient counselling",
+                "BARRIERS TO EFFECTIVE COUNSELLING: types and strategies to overcome barriers",
+                "Health Screening Services",
+                "Definition and importance",
+                "METHODS FOR SCREENING",
+                "Blood pressure, Blood sugar, Body Mass Index, Lung function test Role of pharmacist in health screening services",
+                "Telemedicine Prescribing Guidelines, Essential Drug Concept and Rational Drug",
+                "Therapy",
+                "Prescribing Guidelines Pediatrics, geriatrics, pregnant and lactating women",
+                "ISMP guidelines for high risk medicines",
+                "Essential Drug Concept",
+                "WHO definition",
             ]
         },
         {
-            num: "V", hours: "9 Hours", title: "Medication Errors, Drug Information Services and Pharmacoeconomics", topics: [
-                "Communication skills – communication with prescribers and patients Types of educational materials used in patient counselling Barriers to effective counselling – types and strategies to overcome barriers Health Screening Services Definition and importance Methods for screening: Blood pressure, Blood sugar, Body Mass Index, Lung function test Role of pharmacist in health screening services Telemedicine Prescribing Guidelines, Essential Drug Concept and Rational Drug Therapy Prescribing Guidelines Pediatrics, geriatrics, pregnant and lactating women ISMP guidelines for high risk medicines Essential Drug Concept WHO definition Core principles and key features Procedure involved in adding a drug into the essential drug list Rational Use of Medications",
+            num: "V", hours: "9 Hours", title: "Core Principles and Key Features", topics: [
+                "Procedure involved in adding a drug into the essential drug list",
+                "Rational Use of Medications",
                 "Antibiotics",
-                "Antibiotic stewardship program Injections OTC drugs Consequences of irrational drug use.",
+                "Antibiotic stewardship program",
+                "Injections",
+                "OTC drugs",
+                "Consequences of irrational drug use.",
                 "Dose calculations in chemotherapy, renal and hepatic failure patients.",
             ]
         },
@@ -4102,41 +4307,41 @@ const SEM7: Subject[] = [
     ]),
     s("BP707T", "Regulatory Affairs", 2, "T", [
         {
-            num: "I", hours: "6 Hours", title: "Drug Regulatory Agencies and Global Harmonization (ICH, WHO)", topics: [
-                "Fundamentals of Regulatory Affairs Introduction to Drug Regulatory Affairs, Overview of regulatory authorities in India and major international markets (US FDA, EMA, PMDA), Role and responsibilities of Regulatory Affairs Professionals, Organizational structure of regulatory bodies.",
-                "Basic regulatory terminologies: Guidance, Guidelines, s, Laws, Acts.",
-                "Regulatory reference resources: Orange Book, Purple Book, Federal Register, Code of Federal s (CFR). Regulatory Requirements in Drug Development",
+            num: "I", hours: "6 Hours", title: "Fundamentals of Regulatory Affairs", topics: [
+                "Introduction to Drug Regulatory Affairs, Overview of regulatory authorities in India and major international markets (US FDA, EMA, PMDA), Role and responsibilities of Regulatory Affairs Professionals, Organizational structure of regulatory bodies.",
+                "BASIC REGULATORY TERMINOLOGIES: Guidance, Guidelines, s, Laws, Acts.",
+                "REGULATORY REFERENCE RESOURCES: Orange Book, Purple Book, Federal Register, Code of Federal s (CFR).",
+                "Regulatory Requirements in Drug Development",
                 "Drug discovery and development process, Drug development teams and their functions.",
-                "Non-clinical drug development: Pharmacology, Drug",
             ]
         },
         {
             num: "II", hours: "6 Hours", title: "New Drug Approval Process and Clinical Trials (IND, NDA, ANDA)", topics: [
-                "metabolism, Toxicology.",
-                "Regulatory documentation: Investigational New Drug (IND) application, Investigator’s Brochure (IB), Clinical research protocols, Biostatistics in pharmaceutical product development, Bioequivalence (BE) studies, Data presentation for regulatory submissions. Indian Regulatory Framework and Approval Process",
-                "Central Drugs Standard Control Organization (CDSCO) and State Licensing Authorities: Organization and responsibilities, Regulatory requirements for import, manufacture, and sale of pharmaceuticals in India, Certificate",
-                "f Pharmaceutical Product (COPP), Regulatory approval",
+                "NON-CLINICAL DRUG DEVELOPMENT: Pharmacology, Drug metabolism, Toxicology.",
+                "REGULATORY DOCUMENTATION: Investigational New Drug (IND) application, Investigator’s Brochure (IB), Clinical research protocols, Biostatistics in pharmaceutical product development, Bioequivalence (BE) studies, Data presentation for regulatory submissions.",
+                "Indian Regulatory Framework and Approval Process",
+                "Central Drugs Standard Control Organization (CDSCO) and",
             ]
         },
         {
             num: "III", hours: "6 Hours", title: "Common Technical Document (CTD) and Electronic CTD (eCTD)", topics: [
-                "procedure for new drugs in India, Clinical trial regulatory requirements in India, phytopharmaceutical regulations, Good Clinical Practice (GCP) guidelines and Schedule Y, Innovator and generic drugs, Generic drug product development",
-                "Phytopharmaceutical regulation by AYUSH and CDSCO. International Regulatory Systems & Global Drug Registration:",
-                "Types of regulatory applications: Investigational New Drug",
+                "STATE LICENSING AUTHORITIES: Organization and responsibilities, Regulatory requirements for import, manufacture, and sale of pharmaceuticals in India, Certificate of Pharmaceutical Product (COPP), Regulatory approval procedure for new drugs in India, Clinical trial regulatory requirements in India, phytopharmaceutical regulations, Good Clinical Practice (GCP) guidelines and Schedule Y, Innovator and generic drugs, Generic drug product development",
+                "Phytopharmaceutical regulation by AYUSH and CDSCO.",
+                "International Regulatory Systems & Global Drug Registration:",
+                "TYPES OF REGULATORY APPLICATIONS: Investigational New Drug (IND), New Drug Application (NDA), Abbreviated New",
             ]
         },
         {
-            num: "IV", hours: "6 Hours", title: "Regulatory Submission and Dossier Preparation for USFDA, EMA and MHRA", topics: [
-                "(IND), New Drug Application (NDA), Abbreviated New Drug Application (ANDA)",
+            num: "IV", hours: "6 Hours", title: "Drug Application (anda)", topics: [
                 "Drug Master Files (DMF), Common Technical Document (CTD), electronic CTD (eCTD), ASEAN CTD (ACTD),",
-                "Registration procedure for Indian drug products in overseas markets, Post-approval changes to NDA and ANDA. Clinical Trials, Ethics, and Post-Marketing Surveillance:",
-                "Clinical research phases (I-IV), Clinical trial documents, Institutional Review Board (IRB) and Independent Ethics Committee (IEC): Formation and functions",
-                "Informed consent process and documentation, Good Clinical",
+                "Registration procedure for Indian drug products in overseas markets, Post-approval changes to NDA and ANDA.",
+                "Clinical Trials, Ethics, and Post-Marketing Surveillance:",
+                "Clinical research phases (I-IV), Clinical trial documents, Institutional Review Board (IRB) and Independent Ethics",
             ]
         },
         {
-            num: "V", hours: "6 Hours", title: "Indian Regulatory Requirements (CDSCO, DCGI) and Post-Marketing Surveillance", topics: [
-                "Practice (GCP) obligations of investigators, sponsors, and monitors, Management and monitoring of clinical trials, Pharmacovigilance: Safety monitoring during clinical trials and post- marketing,",
+            num: "V", hours: "6 Hours", title: "Committee (iec): Formation and Functions", topics: [
+                "Informed consent process and documentation, Good Clinical Practice (GCP) obligations of investigators, sponsors, and monitors, Management and monitoring of clinical trials, Pharmacovigilance: Safety monitoring during clinical trials and post- marketing,",
             ]
         },
     ], false,
@@ -4386,52 +4591,52 @@ const SEM7: Subject[] = [
 const SEM8: Subject[] = [
     s("BP801T", "Ethical Considerations and Translational Applications of AI in Pharmacy", 2, "T", [
         {
-            num: "I", hours: "6 Hours", title: "Ethical Frameworks, Bias and Fairness in Healthcare AI", topics: [
-                "AI Lifecycle, Validation & Model Auditing",
+            num: "I", hours: "6 Hours", title: "AI Lifecycle, Validation & Model Auditing", topics: [
                 "Overview of AI system lifecycle: data collection, preprocessing, modeling, validation, deployment, and monitoring",
                 "Importance of data quality in healthcare datasets",
                 "Training vs testing vs validation datasets",
                 "Cross-validation (conceptual understanding)",
                 "Model drift and performance degradation, data leakage in modeling",
-                "Documentation practices: Documentation and reproducibility",
-                "Basics of model auditing Regulatory Framework & Explainable AI",
+                "DOCUMENTATION PRACTICES: Documentation and reproducibility",
+                "Basics of model auditing",
+            ]
+        },
+        {
+            num: "II", hours: "6 Hours", title: "Regulatory Framework & Explainable AI", topics: [
                 "Overview of AI in regulatory submissions",
                 "Explainable AI (XAI) concept",
+                "Transparency and interpretability",
+                "Overview of regulatory guidance on AI (EU AI Act, FDA/",
+                "CDSCO frameworks)",
+                "Accountability in automated decision systems",
+                "Risk-based classification of AI systems",
             ]
         },
         {
-            num: "II", hours: "6 Hours", title: "Transparency, Explainable AI (XAI) and Accountability", topics: [
-                "Transparency and interpretability",
-                "Overview of regulatory guidance on AI (EU AI Act, FDA/ CDSCO frameworks)",
-                "Accountability in automated decision systems",
-                "Risk-based classification of AI systems AI in in Pharmacy Automation & Supply Chain",
+            num: "III", hours: "6 Hours", title: "AI in in Pharmacy Automation & Supply Chain", topics: [
                 "Overview of AI in automated dispensing systems",
                 "Inventory prediction models",
-                "Case studies on regression-based demand forecasting, different",
-            ]
-        },
-        {
-            num: "III", hours: "6 Hours", title: "Regulatory Guidelines for AI-Powered Software as a Medical Device (SaMD)", topics: [
-                "forecasting methods",
+                "Case studies on regression-based demand forecasting, different forecasting methods",
                 "Medication adherence monitoring systems",
                 "AI in supply chain risk prediction",
                 "Predictive analytics in pharmaceutical logistics",
-                "Advantages, limitations, legal & privacy considerations of AI",
+                "Advantages, limitations, legal & privacy considerations of AI in pharmacy automation.",
             ]
         },
         {
-            num: "IV", hours: "6 Hours", title: "Data Privacy, Security and Governance in Healthcare AI", topics: [
-                "in pharmacy automation. AI in in Public Health & Real-World Data Analytics",
+            num: "IV", hours: "6 Hours", title: "AI in in Public Health & Real-world Data Analytics", topics: [
                 "Overview of real-world data sources (EHR, claims, surveillance systems)",
-                "Conceptual knowledge of AI in outbreak prediction, Population-level risk modeling",
+                "Conceptual knowledge of AI in outbreak prediction,",
+                "Population-level risk modeling",
                 "Regression models in epidemiology",
                 "AI in vaccination forecasting",
-                "Case studies: AI applications in epidemiological trend analysis",
+                "CASE STUDIES: AI applications in epidemiological trend analysis (e.g. COVID-19 vaccination hesitancy, diabetes prevalence forecasting, antibiotic resistance trends etc.)",
             ]
         },
         {
-            num: "V", hours: "6 Hours", title: "Translational AI, Commercialization and Future Competencies for Pharmacists", topics: [
-                "(e.g. COVID-19 vaccination hesitancy, diabetes prevalence forecasting, antibiotic resistance trends etc.) Guided Project - Translational AI in Pharmacy Students implement a supervised ML model (regression, logistic regression, or others) using real-world pharmacy data from domains like formulation, pharmacokinetics (PK), ADR detection, quality control (QC), automation, or public health. They validate the model, analyze regulatory implications, identify ethical risks (e.g., bias, privacy), and present a structured AI implementation plan for peer/faculty review. Suggested topics (not exhaustive): ADR prediction system, stability forecasting, demand prediction, QC failure model, disease risk prediction, medication adherence",
+            num: "V", hours: "6 Hours", title: "Guided Project - Translational AI in Pharmacy", topics: [
+                "Students implement a supervised ML model (regression, logistic regression, or others) using real-world pharmacy data from domains like formulation, pharmacokinetics (PK), ADR detection, quality control (QC), automation, or public health. They validate the model, analyze regulatory implications, identify ethical risks (e.g., bias, privacy), and present a structured AI implementation plan for peer/faculty review.",
+                "Suggested topics (not exhaustive): ADR prediction system, stability forecasting, demand prediction, QC failure model, disease risk prediction, medication adherence",
             ]
         },
     ], true,
@@ -4451,28 +4656,28 @@ const SEM8: Subject[] = [
     ]),
     s("BP802T", "Clinical Pharmacotherapeutics", 2, "T", [
         {
-            num: "I", hours: "5 Hours", title: "Principles of Pharmacotherapeutics and Evidence-Based Medicine", topics: [
-                "Definition, etiopathogenesis, clinical manifestations, overview of management of the diseases associated with Ischemic Heart Disease Hypertension, heart failure, myocardial infarction, hyperlipidaemia,",
+            num: "I", hours: "5 Hours", title: "Ischemic Heart Disease", topics: [
+                "Hypertension, heart failure, myocardial infarction, hyperlipidaemia, arrhythmia",
             ]
         },
         {
-            num: "II", hours: "2 Hours", title: "Pharmacotherapy of Cardiovascular and Renal Disorders", topics: [
-                "arrhythmia Respiratory System: Asthma, COPD",
+            num: "II", hours: "2 Hours", title: "Respiratory System: Asthma, COPD", topics: [
+                "RENAL SYSTEM: acute renal failure, chronic renal failure, renal replacement therapy",
             ]
         },
         {
-            num: "III", hours: "3 Hours", title: "Pharmacotherapy of Endocrine and Metabolic Disorders", topics: [
-                "Renal System: acute renal failure, chronic renal failure, renal",
+            num: "III", hours: "3 Hours", title: "Endocrine System: Diabetes, Thyroid Disorders", topics: [
+                "NERVOUS SYSTEM: epilepsy, stroke, parkinsonism",
             ]
         },
         {
-            num: "IV", hours: "3 Hours", title: "Pharmacotherapy of Respiratory and Gastrointestinal Disorders", topics: [
-                "replacement therapy Endocrine System: diabetes, thyroid disorders",
+            num: "IV", hours: "3 Hours", title: "Vi Gastrointestinal System: Peptic Ulcer Disease, GERD", topics: [
+                "VII Diseases of bones and joints: rheumatoid arthritis, osteoarthritis",
             ]
         },
         {
-            num: "V", hours: "5 Hours", title: "Pharmacotherapy of Infectious and Oncological Diseases", topics: [
-                "Nervous System: epilepsy, stroke, parkinsonism VI Gastrointestinal System: peptic ulcer disease, GERD VII Diseases of bones and joints: rheumatoid arthritis, osteoarthritis Infectious Diseases: tuberculosis, pneumonia, UTI, malaria, HIV VII Hematological Diseases: Anemia IX",
+            num: "V", hours: "5 Hours", title: "Infectious Diseases: Tuberculosis, Pneumonia, Uti, Malaria, HIV", topics: [
+                "HEMATOLOGICAL DISEASES: Anemia",
             ]
         },
     ], false,
@@ -4492,32 +4697,39 @@ const SEM8: Subject[] = [
     ]),
     s("BP803T", "Industrial Pharmacy and Facility Design", 3, "T", [
         {
-            num: "I", hours: "12 Hours", title: "Pharmaceutical Facility Design and Plant Layout", topics: [
-                "Regulatory guidelines for formulation Development: ICH Q8, QbD and optimization (Fundamental terminologies, process and applications) ICH guidelines of stability testing Industrial aspects of Product development",
+            num: "I", hours: "12 Hours", title: "Regulatory Guidelines for Formulation Development", topics: [
+                "ICH Q8, QbD and optimization (Fundamental terminologies, process and applications)",
+                "ICH guidelines of stability testing Industrial aspects of Product development Pilot Plant and Scale up: General considerations including significance of personnel requirements, space requirements, raw materials, Pilot plant scale up considerations for solids, liquid orals, semi solids and relevant documentation, SUPAC guidelines, Introduction to platform technology",
+                "TECHNOLOGY DEVELOPMENT AND TRANSFER",
+                "WHO guidelines for Technology Transfer(TT): Terminology, Technology transfer protocol, Quality risk management, Transfer from R & D to production (Process, packaging and cleaning), Granularity of TT Process",
             ]
         },
         {
-            num: "II", hours: "9 Hours", title: "HVAC Systems, Cleanroom Technology and Utilities", topics: [
-                "Pilot Plant and Scale up: General considerations including significance of personnel requirements, space requirements, raw materials, Pilot plant scale up considerations for solids, liquid orals, semi solids and relevant documentation, SUPAC guidelines, Introduction to platform technology Technology development and transfer: WHO guidelines for Technology Transfer(TT): Terminology, Technology transfer protocol, Quality risk management, Transfer from R & D to production (Process, packaging and cleaning), Granularity of TT Process (API, excipients, finished products, packaging materials) Documentation, Premises and equipments, qualification and validation, quality control and",
+            num: "II", hours: "9 Hours", title: "(api, Excipients, Finished Products, Packaging Materials) Documentation,", topics: [
+                "Premises and equipments, qualification and validation, quality control and analytical method transfer.",
+                "TT AGENCIES IN INDIA: APCTD, NRDC, TIFAC, BCIL, TBSE / SIDBI;",
+                "TT RELATED DOCUMENTATION: confidentiality agreement, licensing, MoUs, legal issues",
+                "FACILITY CONSIDERATIONS: Non sterile Facility design according to schedule M for various dosage forms, Water purification system: design and operation, Storage, distribution, and validation of water systems. Different types of waters. Steam systems and",
             ]
         },
         {
             num: "III", hours: "9 Hours", title: "Pilot Plant Scale-Up Techniques (SUPAC)", topics: [
-                "analytical method transfer. TT agencies in India - APCTD, NRDC, TIFAC, BCIL, TBSE / SIDBI",
-                "TT related documentation - confidentiality agreement, licensing, MoUs, legal issues Facility Considerations: Non sterile Facility design according to schedule M for various dosage forms, Water purification system: design and operation, Storage, distribution, and validation of water systems. Different types of waters. Steam systems and Clean Steam, Compressed air, Vacuum, CIP. Industry standards for water and steam systems. Effluent testing facility: Design and significance. Layout design for various non- sterile dosage forms (Process flow) Cleaning and disinfection protocols, cleaning types (Type A, B and C), Cleaning validation methods and acceptance criteria, Facility considerations: Sterile",
-                "Overview of sterile pharmaceutical manufacturing: layout as per",
+                "Clean Steam, Compressed air, Vacuum, CIP. Industry standards for water and steam systems. Effluent testing facility: Design and significance.",
+                "Layout design for various non- sterile dosage forms (Process flow) Cleaning and disinfection protocols, cleaning types (Type A, B and C), Cleaning validation methods and acceptance criteria,",
+                "FACILITY CONSIDERATIONS: Sterile",
             ]
         },
         {
             num: "IV", hours: "9 Hours", title: "Aseptic Facility Engineering and Containment", topics: [
-                "schedule M and cGMP, clean room concept -Importance of sterility and contamination control, SIP. efficient material and personnel flow to maintain sterility, zoning and segregation, Guidelines, standards and Cleanroom classifications from FDA, EMA, WHO and ISO.",
-                "Heating, ventilation and air conditioning system (HVAC): Significance, components, testing (including efficiency and integrity testing of HEPA).",
-                "Parameters for qualification and validation (routine monitoring) of",
+                "Overview of sterile pharmaceutical manufacturing: layout as per schedule M and cGMP, clean room concept -Importance of sterility and contamination control, SIP. efficient material and personnel flow to maintain sterility, zoning and segregation, Guidelines, standards and Cleanroom classifications from FDA, EMA, WHO and ISO.",
+                "Heating, ventilation and air conditioning system (HVAC):",
+                "Significance, components, testing (including efficiency and integrity testing of HEPA).",
+                "Parameters for qualification and validation (routine monitoring) of clean area.",
             ]
         },
         {
-            num: "V", hours: "6 Hours", title: "cGMP Facility Validation and Environmental Controls", topics: [
-                "clean area. Advances in facility design Modular concept of manufacturing facilities with significance and suitable examples, Advances in clean room technology: pass- through chambers, isolators, Modular cleanrooms Automation and robotics in pharmaceutical manufacturing operations.",
+            num: "V", hours: "6 Hours", title: "Advances in Facility Design", topics: [
+                "Modular concept of manufacturing facilities with significance and suitable examples, Advances in clean room technology: pass- through chambers, isolators, Modular cleanrooms Automation and robotics in pharmaceutical manufacturing operations.",
             ]
         },
     ], false,
@@ -4544,30 +4756,34 @@ const SEM8: Subject[] = [
     ]),
     s("BP804T", "Pharmaceutical Management", 2, "T", [
         {
-            num: "I", hours: "6 Hours", title: "Principles of Management in Pharmaceutical Organizations", topics: [
-                "Introduction to Pharmaceutical Management Introduction to management. Overview of Indian & Global pharmaceutical industry, Role and responsibilities of a pharmaceutical manager. Functions and importance of Key Management Principles:",
+            num: "I", hours: "6 Hours", title: "Introduction to Pharmaceutical Management", topics: [
+                "Introduction to management. Overview of Indian & Global pharmaceutical industry, Role and responsibilities of a pharmaceutical manager. Functions and importance of Key Management Principles:",
+                "Planning, organizing, leading, controlling, Decision-making and Time management.",
+                "Marketing Management in Pharmaceuticals Definition and uniqueness of pharmaceutical marketing, Pharmaceutical Marketing Overview; Global & Indian Scenario, Marketing Mix, 4 Ps of",
             ]
         },
         {
             num: "II", hours: "6 Hours", title: "Human Resource Management and Organizational Behavior", topics: [
-                "Planning, organizing, leading, controlling, Decision-making and Time management. Marketing Management in Pharmaceuticals Definition and uniqueness of pharmaceutical marketing, Pharmaceutical Marketing Overview",
-                "Global & Indian Scenario, Marketing Mix, 4 Ps of Marketing: Product, Price, Place, Promotion, Strategic marketing and",
+                "MARKETING: Product, Price, Place, Promotion, Strategic marketing and competitive analysis, Pharmaceutical Sales: Role of a medical representative, Digital marketing of pharmaceutical products, Ethical considerations in pharmaceutical marketing and promotion, E pharmacies",
+                "Pharmaceutical Product Management",
             ]
         },
         {
             num: "III", hours: "6 Hours", title: "Pharmaceutical Supply Chain and Inventory Management", topics: [
-                "competitive analysis, Pharmaceutical Sales: Role of a medical representative, Digital marketing of pharmaceutical products, Ethical considerations in pharmaceutical marketing and promotion, E pharmacies Pharmaceutical Product Management Introduction to Pharmaceutical Product Management, role of product management in the pharmaceutical industry, Key responsibilities of a pharmaceutical product manager, Product Lifecycle Management, Branding and Promotional Strategies in pharmaceutical sector, Importance",
-                "f market segmentation, targeting, and positioning in product",
+                "Introduction to Pharmaceutical Product Management, role of product management in the pharmaceutical industry, Key responsibilities of a pharmaceutical product manager, Product Lifecycle Management, Branding and Promotional Strategies in pharmaceutical sector, Importance of market segmentation, targeting, and positioning in product management, Market Research and Analysis in pharmaceutical sector:",
+                "Techniques for conducting market research.",
+                "Financial planning and Human Resource Management",
             ]
         },
         {
             num: "IV", hours: "6 Hours", title: "Pharmaceutical Marketing and Product Management", topics: [
-                "management, Market Research and Analysis in pharmaceutical sector: Techniques for conducting market research. Financial planning and Human Resource Management Budgeting, financial forecasting, cost control, Pricing of Pharmaceuticals as per DPCO, Importance of human resource management in pharmaceutical organizations, Recruitment, selection, and training of",
+                "Budgeting, financial forecasting, cost control, Pricing of Pharmaceuticals as per DPCO, Importance of human resource management in pharmaceutical organizations, Recruitment, selection, and training of pharmaceutical professionals, Performance appraisal and employee motivation, Behaviour, Leadership styles and their impact on the pharmaceutical industry, Team building and conflict resolution.",
+                "Operations & Supply Chain Management in Pharmaceuticals Operations Management, Production planning and control in pharmaceutical manufacturing, Inventory management and optimization,",
             ]
         },
         {
-            num: "V", hours: "6 Hours", title: "Pharmaceutical Entrepreneurship and Business Strategy", topics: [
-                "pharmaceutical professionals, Performance appraisal and employee motivation, Behaviour, Leadership styles and their impact on the pharmaceutical industry, Team building and conflict resolution. Operations & Supply Chain Management in Pharmaceuticals Operations Management, Production planning and control in pharmaceutical manufacturing, Inventory management and optimization, Lean manufacturing and Six Sigma in the pharmaceutical industry, Supply Chain Management, Logistics management and drug distribution channels, Cold chain management and the role of technology in SCM, E- commerce and its role in pharmaceutical distribution, Risk Management and Sustainability.",
+            num: "V", hours: "6 Hours", title: "Lean Manufacturing and Six Sigma in the Pharmaceutical Industry, Supply", topics: [
+                "Chain Management, Logistics management and drug distribution channels, Cold chain management and the role of technology in SCM, E- commerce and its role in pharmaceutical distribution, Risk Management and Sustainability.",
             ]
         },
     ], false,
@@ -4587,60 +4803,52 @@ const SEM8: Subject[] = [
     s("BP805T", "Sterile Dosage Forms and Novel Drug Delivery System", 3, "T", [
         {
             num: "I", hours: "12 Hours", title: "Fundamentals, Polymers & Materials for NDDS", topics: [
-                "1. Limitations of conventional dosage forms (e.g., solubility, permeability, toxicity, first-pass metabolism)",
-                "2. Classification of NDDS: Controlled Release, Targeted, Stimuli- Responsive (Smart), Chronotherapeutic, Transdermal and Mucosal, Implantable and Injectable Depot Systems, Vesicular, Polymeric, Ocular, Pulmonary, and Nasal Drug Delivery Systems",
+                "Limitations of conventional dosage forms (e.g., solubility, permeability, toxicity, first-pass metabolism)",
+                "CLASSIFICATION OF NDDS: Controlled Release, Targeted, Stimuli-",
+                "Responsive (Smart), Chronotherapeutic, Transdermal and Mucosal, Implantable and Injectable Depot Systems, Vesicular, Polymeric, Ocular, Pulmonary, and Nasal Drug Delivery Systems",
+                "BIODEGRADABLE AND BIOCOMPATIBLE POLYMERS: PLA, PLGA, PCL, chitosan, gelatin",
+                "LIPIDS AND SURFACTANTS: lecithin, phospholipids, Span/Tween, SLNs",
+                "INORGANIC SYSTEMS: silica, gold nanoparticles, iron oxide, MOFs",
+                "EXCIPIENTS IN NDDS: GRAS substances, IIG database, regulatory constraints",
             ]
         },
         {
-            num: "II", hours: "6 Hours", title: "Controlled, Targeted and Vesicular Delivery Systems", topics: [
-                "3. Biodegradable and biocompatible polymers: PLA, PLGA, PCL, chitosan, gelatin",
-                "4. Lipids and surfactants: lecithin, phospholipids, Span/Tween, SLNs",
-                "5. Inorganic systems: silica, gold nanoparticles, iron oxide, MOFs",
-                "6. Excipients in NDDS: GRAS substances, IIG database, regulatory constraints Oral and Mucosal Delivery Systems",
-                "1. Gastro-retentive systems: floating, bioadhesive, expandable systems",
-                "2. Colon-targeted systems: pH-triggered, microbially-triggered, time- dependent systems",
+            num: "II", hours: "6 Hours", title: "Oral and Mucosal Delivery Systems", topics: [
+                "GASTRO-RETENTIVE SYSTEMS: floating, bioadhesive, expandable systems",
+                "COLON-TARGETED SYSTEMS: pH-triggered, microbially-triggered, time- dependent systems",
+                "Buccal, nasal, and pulmonary carriers: films, sprays, DPIs, liposomes",
+                "IVIVC and biorelevant dissolution testing.",
             ]
         },
         {
-            num: "III", hours: "6 Hours", title: "Stimuli-Responsive and Chronotherapeutic Systems", topics: [
-                "3. Buccal, nasal, and pulmonary carriers: films, sprays, DPIs, liposomes",
-                "4. IVIVC and biorelevant dissolution testing. Transdermal NDDS",
-                "1. Introduction to Transdermal drug delivery: Need, advantages disadvantages, basic structure and components. Formulation aspects including permeation enhancers.",
-                "2. Long-acting systems: in-situ gels, microspheres, implants, ocular",
+            num: "III", hours: "6 Hours", title: "Transdermal NDDS", topics: [
+                "Introduction to Transdermal drug delivery: Need, advantages disadvantages, basic structure and components. Formulation aspects including permeation enhancers.",
+                "LONG-ACTING SYSTEMS: in-situ gels, microspheres, implants, ocular inserts",
+                "TRANSDERMAL AND MICRONEEDLE TECHNOLOGIES: iontophoresis, sonophoresis, micro needles Aseptic manufacturing, scale-up challenges, and process analytical tools (PAT)",
             ]
         },
         {
-            num: "IV", hours: "6 Hours", title: "Transdermal, Mucosal and Implantable Systems", topics: [
-                "inserts",
-                "3. Transdermal and microneedle technologies: iontophoresis, sonophoresis, micro needles Aseptic manufacturing, scale-up challenges, and process analytical tools (PAT) Evaluation, Quality, and Translation",
-                "1. Preformulation and QbD: QTPP, CQAs, CPPs",
-                "2. Characterization methods: particle size, zeta potential, SEM/TEM, in-vitro release, permeability assays (PAMPA, Caco-2)",
-                "3. Non-clinical evaluation: PK/PD modeling, biodistribution, toxicology",
-                "4. Regulatory pathways: 505(b)(2), complex generics, ICH Q8–Q10, EMA pathways",
-                "5. Case studies: Liposomal Amphotericin B for Fungal Infections, mRNA-Lipid Nanoparticle Vaccines (e.g., COVID-19 Vaccines), Depot Antipsychotic Injections (e.g., Risperidone Microspheres), Transdermal Patch for Hormone Replacement Therapy, Ocular Inserts for Glaucoma Management, Oral Colon-Targeted Delivery for Inflammatory Bowel Disease, Inhalable Insulin for Diabetes Mellitus, Dendrimers for Targeted Cancer Therapy, Chronotherapeutic Drug Delivery in Hypertension.",
-                "6. Nanosystems and precision medicine",
-                "a) Liposomes, niosomes, transferosomes, polymeric nanoparticles, solid-lipid nanoparticles, dendrimers.",
-                "b) Precision medicine: definition and scope, evolution from” one-",
+            num: "IV", hours: "6 Hours", title: "Evaluation, Quality, and Translation", topics: [
+                "PREFORMULATION AND QBD: QTPP, CQAs, CPPs",
+                "CHARACTERIZATION METHODS: particle size, zeta potential, SEM/TEM, in-vitro release, permeability assays (PAMPA, Caco-2)",
+                "NON-CLINICAL EVALUATION: PK/PD modeling, biodistribution, toxicology",
+                "REGULATORY PATHWAYS: 505(b)(2), complex generics, ICH Q8–Q10,",
+                "EMA pathways",
+                "CASE STUDIES: Liposomal Amphotericin B for Fungal Infections, mRNA-Lipid Nanoparticle Vaccines (e.g., COVID-19 Vaccines), Depot Antipsychotic Injections (e.g., Risperidone Microspheres), Transdermal Patch for Hormone Replacement Therapy, Ocular Inserts for Glaucoma Management, Oral Colon-Targeted Delivery for Inflammatory Bowel Disease, Inhalable Insulin for Diabetes Mellitus, Dendrimers for Targeted Cancer Therapy, Chronotherapeutic Drug Delivery in Hypertension.",
+                "Nanosystems and precision medicine",
+                "Liposomes, niosomes, transferosomes, polymeric nanoparticles, solid-lipid nanoparticles, dendrimers.",
+                "PRECISION MEDICINE: definition and scope, evolution from” one- size-fits-all” to personalized approaches a. Sterile Dosage Forms (Parenteral & Ophthalmic)",
             ]
         },
         {
-            num: "V", hours: "14 Hours", title: "Sterile Dosage Forms (Parenteral & Ophthalmic)", topics: [
-                "size-fits-all” to personalized approaches a. Sterile Dosage Forms (Parenteral & Ophthalmic) Introduction & classification: SVP vs LVP",
-                "routes",
-                "Advantages/limitations. Water for Injection (WFI): Types, preparation, storage/distribution",
-                "pharmacopoeial requirements. Formulation components: Vehicles, buffers, co-solvents, surfactants, antioxidants, preservatives, chelators",
-                "isotonicity & osmolality. Manufacturing: Aseptic vs terminal sterilisation",
-                "filtration",
-                "lyophilisation principles",
-                "environmental controls. Containers & closures: Glass/Plastic systems",
-                "elastomers",
-                "selection factors",
-                "evaluation & container– closure integrity. Form fill Seal and Blow Fill Seal Technology Ophthalmics: Solutions/suspensions/ointments/gels/inserts",
-                "physiological factors (pH, tonicity, viscosity)",
-                "residence-time enhancers",
-                "preservative-free systems (e.g., BFS). Quality control & compliance: Sterility tests, LAL/endotoxins, particulate matter, clarity, extractable volume",
-                "labelling & documentation",
-                "overview of cGMP/cleanrooms and environmental monitoring.",
+            num: "V", hours: "14 Hours", title: "Introduction & Classification: SVP Vs Lvp; Routes;", topics: [
+                "Advantages/limitations.",
+                "Water for Injection (WFI): Types, preparation, storage/distribution; pharmacopoeial requirements.",
+                "FORMULATION COMPONENTS: Vehicles, buffers, co-solvents, surfactants, antioxidants, preservatives, chelators; isotonicity & osmolality.",
+                "MANUFACTURING: Aseptic vs terminal sterilisation; filtration; lyophilisation principles; environmental controls.",
+                "Containers & closures: Glass/Plastic systems; elastomers; selection factors; evaluation & container– closure integrity. Form fill Seal and",
+                "Blow Fill Seal Technology Ophthalmics: Solutions/suspensions/ointments/gels/inserts; physiological factors (pH, tonicity, viscosity); residence-time enhancers; preservative-free systems (e.g., BFS).",
+                "Quality control & compliance: Sterility tests, LAL/endotoxins, particulate matter, clarity, extractable volume; labelling & documentation; overview of cGMP/cleanrooms and environmental monitoring.",
             ]
         },
     ], false,

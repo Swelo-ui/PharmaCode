@@ -52,6 +52,10 @@ def extract_references(text):
             cleaned.append(s)
     return cleaned
 
+MARKERS_PATH = r"scripts\verified_49_markers.json"
+with open(MARKERS_PATH, "r", encoding="utf-8") as f:
+    markers_all = json.load(f)
+
 def refine_topics(raw_topics):
     refined = []
     for t in raw_topics:
@@ -63,99 +67,164 @@ def refine_topics(raw_topics):
             refined.append(t_clean)
     return [re.sub(r"\s+", " ", t).strip() for t in refined if len(t.strip()) > 3]
 
+def to_title_case(s):
+    s = re.sub(r"^\d+\.\s*", "", s)
+    s = re.sub(r"^[a-z]\)\s*", "", s)
+    s = re.sub(r"[:–\-]\s*$", "", s).strip()
+    words = s.split()
+    small_words = {"and", "or", "of", "in", "to", "for", "with", "on", "at", "by", "from", "as", "the", "a", "an"}
+    capitalized = []
+    for i, w in enumerate(words):
+        if w.upper() in ["AI", "ML", "IDE", "IDES", "DNA", "RNA", "WHO", "ICH", "GMP", "CGMP", "DPCO", "CDSCO", "FDA", "USFDA", "EMA", "HPLC", "GC", "HPTLC", "UV", "IR", "NMR", "FTIR", "MS", "TLC", "IP", "BP", "USP", "NF", "NDDS", "ADR", "ADRS", "PK", "PD", "PK/PD", "QBD", "IVIVC", "PAT", "WFI", "SVP", "LVP", "BFS", "DPIS", "ETC", "TCA", "HMP", "ATP", "GTP", "HDL", "LDL", "VLDL", "ICD", "INN", "RDU", "ELISA", "TGA", "DSC", "DTA", "UPLC", "ICP-MS", "GI", "GIT", "CNS", "PNS", "ANS", "PCOD", "AIDS", "HIV", "UTI", "COPD", "GERD", "APCTD", "NRDC", "TIFAC", "BCIL", "TBSE", "SIDBI", "ACTD", "CTD", "ECTD", "IND", "NDA", "ANDA", "IRB", "IEC", "GCP", "GLP", "PMDA"]:
+            capitalized.append(w.upper())
+        elif i > 0 and w.lower() in small_words:
+            capitalized.append(w.lower())
+        else:
+            capitalized.append(w.capitalize())
+    return " ".join(capitalized)
+
+def format_unit_topics(lines, unit_title):
+    topics = []
+    cur_topic = ""
+
+    for line in lines:
+        l = line.strip()
+        if not l:
+            continue
+        clean_check = re.sub(r"[^\w\s]", "", l).strip().lower()
+        title_check = re.sub(r"[^\w\s]", "", unit_title).strip().lower()
+        if clean_check == title_check or (len(title_check) > 10 and clean_check.startswith(title_check[:20])):
+            continue
+
+        is_bullet = bool(re.match(r"^(?:•|o\s+|-|\*|\d+\.|\d+\)|\([a-z0-9]+\)|[a-z]\))\s*", l))
+        has_header_format = bool(re.search(r"\s+[–:]\s+|\s+-\s+", l[:40])) and len(l) < 100
+
+        l_clean = re.sub(r"^(?:•|o\s+|-|\*|\d+\.|\d+\)|\([a-z0-9]+\)|[a-z]\))\s*", "", l).strip()
+
+        if is_bullet or has_header_format:
+            if cur_topic:
+                topics.append(cur_topic)
+            cur_topic = l_clean
+        else:
+            if cur_topic:
+                if cur_topic.endswith((".", ";", ":", "-")) or len(l_clean) < 40:
+                    topics.append(cur_topic)
+                    cur_topic = l_clean
+                else:
+                    cur_topic += " " + l_clean
+            else:
+                cur_topic = l_clean
+
+    if cur_topic:
+        topics.append(cur_topic)
+
+    formatted = []
+    for t in topics:
+        t = " ".join(t.split())
+        if len(t) < 4:
+            continue
+        # Format major topic headings before colon/dash in UPPERCASE
+        m = re.match(r"^([A-Za-z0-9\s,\/\-]+?)(?:\s*[:–]\s*|\s+-\s+)(.*)$", t)
+        if m and len(m.group(1).split()) <= 4 and not m.group(1).isupper():
+            prefix = m.group(1).strip().upper()
+            rest = m.group(2).strip()
+            if rest:
+                t = f"{prefix}: {rest}"
+            else:
+                t = f"{prefix}"
+        formatted.append(t)
+    return formatted
+
 # ─────────────────────────────────────────────────────────────
-# 1. THEORY COURSES EXTRACTOR
+# 1. THEORY COURSES EXTRACTOR (49 Courses)
 # ─────────────────────────────────────────────────────────────
 def extract_theory(c):
     text = clean_text("\n".join(pages[c["start"]:c["end"]+1]))
     objectives = extract_objectives(text)
     references = extract_references(text)
 
-    syl_m = re.search(r"(?:Detailed Syllabus|Detailed syllabus):?([\s\S]*?)(?:Recommended References|Recommended Books|Reference Books|$)", text, re.IGNORECASE)
+    syl_m = re.search(r"(?:Detailed Syllabus|Unit\s*(?:No\.?)?\s*Topics)[\s\S]*?Lectures([\s\S]*?)(?:Recommended References|Recommended Books|Reference Books|$)", text, re.IGNORECASE)
     if not syl_m:
-        syl_m = re.search(r"(?:Unit No\.|Unit Topics)[\s\S]*?Lectures([\s\S]*?)(?:Recommended References|Recommended Books|Reference Books|$)", text, re.IGNORECASE)
+        syl_m = re.search(r"(?:Detailed Syllabus):?([\s\S]*?)(?:Recommended References|Recommended Books|Reference Books|$)", text, re.IGNORECASE)
     raw = syl_m.group(1) if syl_m else ""
     raw = re.sub(r"^\s*Unit[\s\S]*?Lectures\s*\n", "", raw, flags=re.IGNORECASE)
-    lines = [l.strip() for l in raw.split("\n") if l.strip()]
+    raw_lines = [l.strip() for l in raw.split("\n") if l.strip()]
 
-    while lines and ("study of the development" in lines[0].lower() or "chemical classification" in lines[0].lower() or "superscripted" in lines[0].lower()):
-        lines.pop(0)
+    while raw_lines and ("study of the development" in raw_lines[0].lower() or "chemical classification" in raw_lines[0].lower() or "superscripted" in raw_lines[0].lower()):
+        raw_lines.pop(0)
+
+    # Clean Roman numerals and hours from lines
+    cleaned = []
+    for l in raw_lines:
+        if re.match(r"^(?:I|II|III|IV|V)\s*(?:\d+\s*(?:hours|hrs))?$", l, re.IGNORECASE):
+            continue
+        if re.match(r"^\d+\s*(?:hours|hrs)$", l, re.IGNORECASE):
+            continue
+        l = re.sub(r"^(?:I|II|III|IV|V)\s+", "", l)
+        l = re.sub(r"\s+\d+\s*(?:hours|hrs)$", "", l, flags=re.IGNORECASE)
+        cleaned.append(l)
+
+    # Stitch lines: only continuous lowercase words, NOT bullet characters
+    stitched = []
+    for l in cleaned:
+        is_bullet_lead = bool(re.match(r"^(?:•|o\s+|-|\*|\d+\.|\d+\)|\([a-z0-9]+\)|[a-z]\))\s*", l))
+        if stitched and not is_bullet_lead and re.match(r"^[a-z]", l):
+            stitched[-1] = re.sub(r"\.\s*$", ",", stitched[-1])
+            stitched[-1] = stitched[-1].rstrip() + " " + l
+        else:
+            stitched.append(l)
+
+    markers = markers_all[c["code"]]
+    indices = []
+    cur = 0
+    for m in markers:
+        found = -1
+        for idx in range(cur, len(stitched)):
+            if m.lower() in stitched[idx].lower():
+                found = idx
+                break
+        indices.append(found if found != -1 else cur)
+        cur = (found + 1) if found != -1 else cur
+
+    raw_hours = re.findall(r"\b(\d+)\s*(?:hours|hrs)\b", raw, re.IGNORECASE)
+    if len(raw_hours) < 5:
+        def_h = "9" if c["credits"] == 3 else ("12" if c["credits"] == 4 else "6")
+        while len(raw_hours) < 5:
+            raw_hours.append(def_h)
 
     romans = ["I", "II", "III", "IV", "V"]
-    r_pos = []
-    for idx, l in enumerate(lines):
-        m = re.match(r"^\s{0,12}(I|II|III|IV|V)\b", l)
-        if m and len(r_pos) < 5 and m.group(1) == romans[len(r_pos)]:
-            r_pos.append((m.group(1), idx))
-    
-    if len(r_pos) < 5:
-        r_pos = []
-        for idx, l in enumerate(lines):
-            for r in romans:
-                if len(r_pos) < 5 and r == romans[len(r_pos)]:
-                    if re.search(r"\b" + r + r"\b", l[:15]):
-                        r_pos.append((r, idx))
-                        break
-
-    unit_ranges = []
-    current_start = 0
-    for i in range(len(r_pos)):
-        r_num, roman_line = r_pos[i]
-        if i + 1 < len(r_pos):
-            next_roman_line = r_pos[i+1][1]
-            split_line = next_roman_line
-            for b in range(next_roman_line - 1, roman_line, -1):
-                bl = lines[b]
-                is_bullet = bl.startswith("•") or bl.startswith("o") or bl.startswith("-") or re.match(r"^[a-z0-9]\)\s+", bl) or re.search(r"\b(hours|hrs)\b", bl, re.IGNORECASE)
-                if not is_bullet:
-                    split_line = b
-                else:
-                    break
-            unit_ranges.append((r_num, current_start, split_line))
-            current_start = split_line
-        else:
-            unit_ranges.append((r_num, current_start, len(lines)))
-
     units = []
-    for u_idx, (r_num, start_idx, end_idx) in enumerate(unit_ranges):
-        block = lines[start_idx:end_idx]
-        block_text = "\n".join(block)
-
-        h_m = re.search(r"(\d+)\s*(Hours|hours|hrs)", block_text)
-        hours = f"{h_m.group(1)} Hours" if h_m else "9 Hours"
-
-        raw_topics = []
-        cur_topic = ""
-        for l in block:
-            lc = l.strip()
-            lc = re.sub(r"^(?:I|II|III|IV|V)\b\s*", "", lc).strip()
-            lc = re.sub(r"\s+\d+\s*(?:Hours|hours|hrs)\s*$", "", lc, flags=re.IGNORECASE).strip()
-            if not lc or re.match(r"^\d+\s*(?:Hours|hours|hrs)$", lc, flags=re.IGNORECASE):
-                continue
-
-            is_bullet = lc.startswith("•") or lc.startswith("o") or lc.startswith("-") or re.match(r"^[a-z0-9]\)\s+", lc) or re.match(r"^\d+\.\s+", lc)
-            if is_bullet:
-                if cur_topic:
-                    raw_topics.append(cur_topic)
-                cur_topic = re.sub(r"^[•o\-\s]+", "", lc).strip()
+    for u_idx in range(5):
+        s_idx = indices[u_idx]
+        e_idx = indices[u_idx + 1] if u_idx + 1 < 5 else len(stitched)
+        u_lines = list(stitched[s_idx:e_idx])
+        
+        u_title = ""
+        if u_lines:
+            first_l = u_lines[0]
+            m_split = re.match(r"^(.*?)\s+([a-z0-9]\)\s+.*)$", first_l)
+            if m_split and len(m_split.group(1).split()) <= 8:
+                u_title = to_title_case(m_split.group(1))
+                u_lines[0] = m_split.group(2)
+            elif not re.match(r"^(?:•|o\s+|-|\*|\d+\.|\d+\))\s*", first_l) and len(first_l) < 80:
+                u_title = to_title_case(first_l)
+        
+        if not u_title:
+            if u_idx < len(c["unit_titles"]):
+                u_title = c["unit_titles"][u_idx]
             else:
-                if cur_topic:
-                    cur_topic += " " + lc
-                else:
-                    clean_l = lc.lower()
-                    if not any(clean_l in t.lower() for t in c["unit_titles"]):
-                        cur_topic = lc
+                u_title = f"Unit {romans[u_idx]}"
 
-        if cur_topic:
-            raw_topics.append(cur_topic)
+        u_hours = f"{raw_hours[u_idx]} Hours"
+        clean_topics = format_unit_topics(u_lines, u_title)
 
-        clean_topics = refine_topics(raw_topics)
-        u_title = c["unit_titles"][u_idx] if u_idx < len(c["unit_titles"]) else f"Unit {r_num}"
+        if not clean_topics and u_lines:
+            clean_topics = [l for l in u_lines if len(l) > 3]
 
         units.append({
-            "num": r_num,
+            "num": romans[u_idx],
             "title": u_title,
-            "hours": hours,
+            "hours": u_hours,
             "topics": clean_topics
         })
 
