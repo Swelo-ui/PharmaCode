@@ -56,16 +56,43 @@ MARKERS_PATH = r"scripts\verified_49_markers.json"
 with open(MARKERS_PATH, "r", encoding="utf-8") as f:
     markers_all = json.load(f)
 
+def split_outside_parens(s, delimiter=";"):
+    parts = []
+    cur = []
+    depth = 0
+    for ch in s:
+        if ch == "(":
+            depth += 1
+        elif ch == ")":
+            depth = max(0, depth - 1)
+        if ch == delimiter and depth == 0:
+            parts.append("".join(cur).strip())
+            cur = []
+        else:
+            cur.append(ch)
+    if cur:
+        parts.append("".join(cur).strip())
+    return parts
+
 def refine_topics(raw_topics):
     refined = []
     for t in raw_topics:
         t_clean = t.strip()
         if ";" in t_clean and len(t_clean) > 60:
-            parts = [p.strip() for p in t_clean.split(";") if len(p.strip()) > 3]
+            parts = [p.strip() for p in split_outside_parens(t_clean, ";") if len(p.strip()) > 3]
             refined.extend(parts)
         else:
             refined.append(t_clean)
-    return [re.sub(r"\s+", " ", t).strip() for t in refined if len(t.strip()) > 3]
+    result = []
+    for t in refined:
+        ts = re.sub(r"\s+", " ", t).strip()
+        if len(ts) > 3:
+            open_c = ts.count("(")
+            close_c = ts.count(")")
+            if open_c > close_c:
+                ts += ")" * (open_c - close_c)
+            result.append(ts)
+    return result
 
 def to_title_case(s):
     s = re.sub(r"^\d+\.\s*", "", s)
@@ -104,9 +131,13 @@ def format_unit_topics(lines, unit_title):
 
         l_clean = re.sub(r"^(?:•|o\s+|-|\*|\d+\.|\d+\)|\([a-z0-9]+\)|[a-z][\.\)])\s*", "", l).strip()
 
-        # If previous topic ended with a conjunction, ALWAYS continue into l_clean
-        if cur_topic and cur_topic.rstrip().endswith(dangling_ends):
+        # If previous topic ended with a conjunction or colon, continue into l_clean
+        if cur_topic and (cur_topic.rstrip().endswith(dangling_ends) or (cur_topic.endswith(":") and len(l_clean) < 40 and ":" not in l_clean)):
             cur_topic += " " + l_clean
+        elif cur_topic and is_bullet and len(l_clean) < 35 and ":" not in l_clean and any(k in cur_topic.lower() for k in ["infusion", "decoction", "maceration", "percolation", "reflux", "soxhlet", "extraction", "carbohydrate", "protein", "lipid", "alkaloid", "glycoside", "volatile oil", "resin", "uterus", "who-art", "database"]):
+            cur_topic = re.sub(r"[,;:\s]+$", "", cur_topic).strip() + ", " + l_clean
+        elif cur_topic and cur_topic.count(":") == 1 and not cur_topic.endswith(":") and is_bullet and len(l_clean) < 40 and ":" not in l_clean:
+            cur_topic = re.sub(r"[,;:\s]+$", "", cur_topic).strip() + ", " + l_clean
         elif is_bullet or has_header_format:
             if cur_topic:
                 cur_topic = re.sub(r"[,;:\s]+$", "", cur_topic).strip()
@@ -146,6 +177,10 @@ def format_unit_topics(lines, unit_title):
                 t = t[:-len(dend)].rstrip()
                 break
         t = re.sub(r"[,;:\s]+$", "", t).strip()
+        open_c = t.count("(")
+        close_c = t.count(")")
+        if open_c > close_c:
+            t += ")" * (open_c - close_c)
         if had_colon:
             t += ":"
         elif not t.endswith((".", "?", "!")):
@@ -198,13 +233,38 @@ def extract_theory(c):
     for l in cleaned:
         is_bullet_lead = bool(re.match(r"^(?:•|o\s+|-|\*|\d+\.|\d+\)|\([a-z0-9]+\)|[a-z][\.\)])\s*", l))
         is_marker_start = any(m in l.lower() for m in markers_set)
-        is_continuation = not is_marker_start and ((not is_bullet_lead and re.match(r"^[a-z]", l)) or bool(re.match(r"^[,;]", l)))
+        
+        prev_has_unclosed_paren = False
+        prev_dangling_connector = False
+        if stitched:
+            prev_l = stitched[-1]
+            prev_l_no_outline = re.sub(r"^[a-z0-9]\)\s*", "", prev_l, flags=re.I)
+            prev_has_unclosed_paren = (prev_l_no_outline.count("(") > prev_l_no_outline.count(")"))
+            prev_clean = prev_l.rstrip(".").rstrip()
+            prev_dangling_connector = any(prev_clean.lower().endswith(w) for w in [
+                "-", "–", "—", "/", "&", ",", ";", "viz", "such as", "e.g", "i.e", "including",
+                " and", " or", " of", " with", " for", " in", " to", " the"
+            ])
+
+        starts_with_closing = bool(re.match(r"^[\)\]\.,;]", l)) or (l.endswith(")") and "(" not in l)
+        is_continuation = not is_marker_start and (
+            starts_with_closing or
+            prev_has_unclosed_paren or
+            prev_dangling_connector or
+            (not is_bullet_lead and re.match(r"^[a-z]", l)) or
+            bool(re.match(r"^[,;]", l))
+        )
         if c["code"] == "BP802T" and "hypertension" in l.lower() and stitched:
             stitched[-1] = stitched[-1].rstrip() + ", " + l
             continue
         if stitched and is_continuation:
-            stitched[-1] = re.sub(r"\.\s*$", ",", stitched[-1])
-            stitched[-1] = stitched[-1].rstrip() + " " + l
+            if stitched[-1].endswith(("-", "–", "—")):
+                stitched[-1] = stitched[-1].rstrip("-–—") + l
+            elif stitched[-1].endswith("/"):
+                stitched[-1] = stitched[-1] + l
+            else:
+                stitched[-1] = re.sub(r"\.\s*$", ",", stitched[-1])
+                stitched[-1] = stitched[-1].rstrip() + " " + l
         else:
             stitched.append(l)
 
@@ -454,7 +514,9 @@ def extract_elective_group(g):
                     continue
 
                 is_bullet = lc.startswith("•") or lc.startswith("-") or lc.startswith("*") or re.match(r"^o\s+", lc) or re.match(r"^\d+\.\s+", lc)
-                if is_bullet:
+                cur_no_outline = re.sub(r"^[a-z0-9]\)\s*", "", cur, flags=re.I) if cur else ""
+                cur_has_unclosed = (cur_no_outline.count("(") > cur_no_outline.count(")")) if cur else False
+                if is_bullet and not cur_has_unclosed:
                     if cur:
                         raw_topics.append(cur)
                     cur = re.sub(r"^[•\-\*]\s*|^o\s+|^\d+\.\s+", "", lc).strip()

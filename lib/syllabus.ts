@@ -100,7 +100,7 @@ const SEM1: Subject[] = [
                 "Introduction to Matplotlib.",
                 "Creating line plots, histograms, scatter plots, and box plots.",
                 "Labeling axes, titles, and legends.",
-                "Create plots and visualize pharmaceutical datasets - concentration-time curves for oral and IV administration, ADR reporting rates across drugs, dissolution profiles.",
+                "Create plots and visualize pharmaceutical datasets concentration-time curves for oral and IV administration, ADR reporting rates across drugs, dissolution profiles.",
                 "Scientific interpretation of plots.",
             ]
         },
@@ -232,8 +232,7 @@ const SEM1: Subject[] = [
                 "Cellular and tissue level of organization.",
                 "Definition and scope of anatomy, physiology and pathophysiology.",
                 "Levels of structural organization and body systems, basic life processes, homeostasis, basic anatomical terminologies.",
-                "Structure and functions of cell, transport across cell membrane, cell division, cell junctions. General principles of cell communication, forms of intracellular signalling-.",
-                "Contact-dependent, b) Paracrine, c) Synaptic, d) Endocrine Classification of tissues, structure, location and functions of epithelial, muscular and nervous and connective tissues.",
+                "Structure and functions of cell, transport across cell membrane, cell division, cell junctions. General principles of cell communication, forms of intracellular signallinga) Contact-dependent, b) Paracrine, c) Synaptic, d) Endocrine Classification of tissues, structure, location and functions of epithelial, muscular and nervous and connective tissues.",
                 "Basic principles of cell injury and adaptation Components and types of feedback systems, causes of cellular injury, pathogenesis (cell membrane damage, mitochondrial damage, ribosome damage and nuclear damage), morphology of cell injury – adaptive changes (atrophy, hypertrophy, hyperplasia, metaplasia, dysplasia), cell swelling, intra cellular accumulation and cell death.",
                 "Definitions of commonly used relevant medical terminologies.",
             ]
@@ -248,8 +247,7 @@ const SEM1: Subject[] = [
         },
         {
             num: "III", hours: "12 Hours", title: "Body Fluids, Blood and Lymphatic System", topics: [
-                "Body fluids, composition and functions of blood, hemopoiesis, formation of haemoglobin, mechanisms of coagulation, blood grouping.",
-                "Rh factors and transfusion.",
+                "Body fluids, composition and functions of blood, hemopoiesis, formation of haemoglobin, mechanisms of coagulation, blood grouping, Rh factors and transfusion.",
                 "Lymphatic organs and tissues, lymphatic vessels, lymph formation, circulation and functions of lymphatic system.",
                 "Basic mechanism of inflammation and repair Introduction, classification and pathophysiology of inflammation, mediators of inflammation.",
                 "Haematological diseases Pathophysiology of iron deficiency, megaloblastic anaemia (Vit B12 and folic acid), sickle cell anaemia, Thalassemia, hereditary acquired anaemia and haemophilia.",
@@ -293,7 +291,7 @@ const SEM1: Subject[] = [
         },
         {
             num: "II", hours: "8 Hours", title: "Cultivation, Collection, Processing and Storage of Drugs of Natural Origin", topics: [
-                "Methods of plant cultivation and Good Agricultural and Collection Practices (WHO / GAP / GCP guidelines) for medicinal plants. Factors influencing cultivation, collection and storage of medicinal plants.",
+                "Methods of plant cultivation and Good Agricultural and Collection Practices (WHO /GAP / GCP guidelines) for medicinal plants. Factors influencing cultivation, collection and storage of medicinal plants.",
                 "Plant hormones and their applications in cultivation of medicinal plants. Application of polyploidy, mutation and hybridization concepts with reference to secondary metabolites. Ex-situ and in-situ conservation and strategies for value addition of medicinal plants. Role of eco-pharmacognosy in sustainable conservation of endangered medicinal plants such as kutki and chirata.",
             ]
         },
@@ -342,7 +340,7 @@ const SEM1: Subject[] = [
                 "Major extra and intracellular electrolytes Functions of major physiological ions, Electrolytes used in the replacement therapy: Sodium chloride*, Potassium chloride, Calcium chloride and Oral Rehydration Salt (ORS), Physiological acid base balance.",
                 "Acid base titrations Theories of acid base indicators, classification of acid base titrations.",
                 "Preparation and standardization of titrants viz. hydrochloric acid and sodium hydroxide. Theory involved in titrations of strong, weak, and very weak acids and bases, neutralization curves. Assay of Ammonium hydroxide.",
-                "Non-aqueous titrations Types of solvents used, acidimetric and alkalimetric titration using non- aqueous solvents. Preparation and standardization of acidic and basic titrants. Estimation of weakly acidic and basic substances using non- aqueous titrants, estimation of Sodium benzoate.",
+                "Non-aqueous titrations Types of solvents used, acidimetric and alkalimetric titration using nonaqueous solvents. Preparation and standardization of acidic and basic titrants. Estimation of weakly acidic and basic substances using nonaqueous titrants, estimation of Sodium benzoate.",
             ]
         },
         {
@@ -353,8 +351,7 @@ const SEM1: Subject[] = [
         },
         {
             num: "IV", hours: "10 Hours", title: "Redox Titrations", topics: [
-                "Concepts of oxidation and reduction, Types of redox titrations viz.",
-                "Permanganometry, Cerimetry, Iodimetry, Iodometry and titrations with potassium iodate.",
+                "Concepts of oxidation and reduction, Types of redox titrations viz, Permanganometry, Cerimetry, Iodimetry, Iodometry and titrations with potassium iodate.",
                 "GASTROINTESTINAL AGENTS ACIDIFIERS: Sodium acid phosphate and Dilute Hydrochloric acid.",
                 "ANTACIDS: Ideal properties of antacids, combinations of antacids, Sodium bicarbonate*, Aluminium hydroxide gel*.",
                 "AGENTS PROMOTE BOWEL MOVEMENTS: Magnesium hydroxide, Sodium orthophosphate, Sodium Potassium tartrate and magnesium trisilicate.",
@@ -551,8 +548,7 @@ const SEM2: Subject[] = [
                 "Basic probability concepts and laws (addition and multiplication rules), conditional probability and its interpretation.",
                 "Bayes' theorem and its application in clinical decision-making.",
                 "Concept of random variables (discrete and continuous).",
-                "Normal distribution and its importance in biological and pharmaceutical measurements.",
-                "Binomial distribution demonstrating applications in clinical trial outcomes.",
+                "Normal distribution and its importance in biological and pharmaceutical measurements, • Binomial distribution demonstrating applications in clinical trial outcomes.",
                 "Poisson distribution for modeling rare events such as adverse drug reactions.",
                 "Graphical visualization of these probability distributions using Python.",
             ]
@@ -569,8 +565,7 @@ const SEM2: Subject[] = [
         },
         {
             num: "IV", hours: "6 Hours", title: "Basics of Correlation & Regression", topics: [
-                "Conceptual understanding of the following concepts with emphasis on their interpretation-.",
-                "correlation and Pearson correlation coefficients.",
+                "Conceptual understanding of the following concepts with emphasis on their interpretation• correlation and Pearson correlation coefficients.",
                 "Interpretation of positive and negative correlations.",
                 "Scatter plots and trend visualization using pharmaceutical data such as dose-response relationships.",
                 "Simple linear regression concept, interpretation of regression coefficients.",
@@ -602,7 +597,7 @@ const SEM2: Subject[] = [
     s("BP202T", "Biochemistry", 3, "T", [
         {
             num: "I", hours: "10 Hours", title: "Enzymology", topics: [
-                "Introduction, properties, nomenclature, and IUB classification of enzymes and coenzymes. Enzyme kinetics (Michaelis plot, Lineweaver– Burk plot). Enzyme inhibitors with examples, of enzymes: enzyme induction and repression, allosteric enzyme regulation.",
+                "Introduction, properties, nomenclature, and IUB classification of enzymes and coenzymes. Enzyme kinetics (Michaelis plot, LineweaverBurk plot). Enzyme inhibitors with examples, of enzymes: enzyme induction and repression, allosteric enzyme regulation.",
                 "Therapeutic and diagnostic application of enzymes and isoenzymes.",
                 "Factors affecting enzyme activity. Digestion, absorption function of dietary Macro and Micronutrients, including Vitamins and Minerals, Biochemical functions of vitamins and associated diseases.",
                 "CLINICAL CHEMISTRY: Liver function tests (routinely performed tests based on liver function). Renal function tests (routinely performed tests based on kidney function, ELISA test).",
@@ -696,8 +691,7 @@ const SEM2: Subject[] = [
         {
             num: "V", hours: "12 Hours", title: "Reproductive System and Cancer", topics: [
                 "Anatomy of male and female reproductive system. Functions of male and female reproductive system, sex hormones, physiology of menstruation, fertilization, spermatogenesis, oogenesis, pregnancy and parturition.",
-                "PATHOPHYSIOLOGY OF SEXUALLY TRANSMITTED DISEASES: AIDS, syphilis and gonorrhea.",
-                "Etiology and pathogenesis of cancer.",
+                "PATHOPHYSIOLOGY OF SEXUALLY TRANSMITTED DISEASES: AIDS, syphilis and gonorrhea., Etiology and pathogenesis of cancer.",
             ]
         },
     ], false,
@@ -719,10 +713,8 @@ const SEM2: Subject[] = [
     ]),
     s("BP204T", "Pharmaceutical Organic Chemistry", 4, "T", [
         {
-            num: "I", hours: "12 Hours", title: "Aliphatic Saturated Hydrocarbons", topics: [
-                "Alkanes.",
-                "METHODS OF PREPARATION: Wurtz reaction, Kolbe’s reaction, Clemmensen reduction, Wolff–Kishner reduction.",
-                "Chemical reactions of alkanes.",
+            num: "I", hours: "12 Hours", title: "Aliphatic Saturated Hydrocarbons Alkanes", topics: [
+                "METHODS OF PREPARATION: Wurtz reaction, Kolbe’s reaction, Clemmensen reduction, Wolff–Kishner reduction, Chemical reactions of alkanes.",
                 "Mechanism of free radical substitution (halogenation).",
                 "PHARMACEUTICAL APPLICATIONS OF ALKANES: Liquid paraffin, soft paraffin, hard paraffin.",
                 "Cycloalkanes.",
@@ -732,10 +724,8 @@ const SEM2: Subject[] = [
             ]
         },
         {
-            num: "II", hours: "12 Hours", title: "Aliphatic Unsaturated Hydrocarbons –", topics: [
-                "Alkenes.",
-                "Methods of preparation.",
-                "Dehydration of alcohols.",
+            num: "II", hours: "12 Hours", title: "Aliphatic Unsaturated Hydrocarbons – Alkenes", topics: [
+                "METHODS OF PREPARATION: Dehydration of alcohols.",
             ]
         },
         {
@@ -761,14 +751,9 @@ const SEM2: Subject[] = [
             ]
         },
         {
-            num: "IV", hours: "12 Hours", title: ": Benzene and Its Derivatives –", topics: [
-                "IUPAC nomenclature of mono- and di-substituted benzene derivatives.",
-                "Structure of benzene.",
-                "Molecular orbital picture and resonance.",
-                "Aromaticity and Hückel’s rule.",
-                "Electrophilic aromatic substitution reactions.",
-                "Nitration.",
-                "Halogenation.",
+            num: "IV", hours: "12 Hours", title: "Benzene and Its Derivatives (Electrophilic Aromatic Substitution)", topics: [
+                ": Benzene and Its Derivatives – • IUPAC nomenclature of mono- and di-substituted benzene derivatives, Structure of benzene, Molecular orbital picture and resonance, Aromaticity and Hückel’s rule.",
+                "ELECTROPHILIC AROMATIC SUBSTITUTION REACTIONS: Nitration, Halogenation.",
                 "FRIEDEL: Crafts alkylation and its limitations.",
                 "FRIEDEL: Crafts acylation.",
                 "Sulphonation and desulphonation.",
@@ -776,16 +761,14 @@ const SEM2: Subject[] = [
             ]
         },
         {
-            num: "V", hours: "12 Hours", title: "Carbonyl Compounds", topics: [
-                "Aldehydes and Ketones.",
+            num: "V", hours: "12 Hours", title: "Carbonyl Compounds Aldehydes and Ketones", topics: [
                 "Preparation and properties of carbonyl compounds.",
                 "Nucleophilic addition reactions.",
                 "Aldol condensation and crossed aldol condensation.",
                 "Cannizzaro and crossed Cannizzaro reactions.",
                 "Benzoin and Perkin condensation.",
                 "Oxidation and reduction reactions.",
-                "PHARMACEUTICAL APPLICATIONS OF CARBONYL COMPOUNDS: Chloral.",
-                "Paraldehyde, Ketoprofen.",
+                "PHARMACEUTICAL APPLICATIONS OF CARBONYL COMPOUNDS: Chloral, Paraldehyde, Ketoprofen.",
             ]
         },
     ], false,
@@ -804,109 +787,44 @@ const SEM2: Subject[] = [
     ]),
     s("BP205T", "Pharmacognosy and Phytochemistry", 4, "T", [
         {
-            num: "I", hours: "10 Hours", title: "Metabolic Pathways and Biogenetic Studies", topics: [
-                "Brief study of basic metabolic pathways and biosynthesis of secondary metabolites.",
-                "Shikimic acid pathway.",
-                "Acetate pathway.",
-                "Amino acid pathways Utilization of radioactive isotopes in biogenetic studies.",
-                "Introduction to pathway prediction tools and modern genetic tools such as.",
-                "CRISPR/Cas9.",
+            num: "I", hours: "10 Hours", title: "Metabolic Pathways in Higher Plants & Biogenesis", topics: [
+                "Metabolic Pathways and Biogenetic Studies Brief study of basic metabolic pathways and biosynthesis of secondary metabolites including: Shikimic acid pathway, Acetate pathway, Amino acid pathways Utilization of radioactive isotopes in biogenetic studies.",
+                "Introduction to pathway prediction tools and modern genetic tools such as CRISPR/Cas9.",
             ]
         },
         {
-            num: "II", hours: "12 Hours", title: "Primary Metabolites", topics: [
-                "General classification and identification tests Pharmacognostic study (biological source, distribution, identifying characters, chemical constituents, specific tests, therapeutic uses, and commercial applications):",
-                "Carbohydrates.",
-                "Acacia.",
-                "Agar.",
-                "Tragacanth.",
-                "Honey.",
-                "Proteins and Enzymes.",
-                "Gelatin.",
-                "Casein.",
-                "PROTEOLYTIC ENZYMES: Papain, Bromelain, Serratiopeptidase.",
-                "Urokinase, Streptokinase, Pepsin.",
-                "Lipids (Waxes, Fats, Fixed Oils).",
-                "Castor oil.",
-                "Olive oil.",
-                "Cocoa butter.",
-                "Wool fat.",
-                "Beeswax.",
+            num: "II", hours: "12 Hours", title: "Primary Metabolites General Classification and Identification Tests", topics: [
+                "Pharmacognostic study (biological source, distribution, identifying characters, chemical constituents, specific tests, therapeutic uses, and commercial applications):",
+                "CARBOHYDRATES: Acacia, • Agar, Tragacanth, Honey.",
+                "PROTEINS AND ENZYMES: Gelatin, Casein.",
+                "PROTEOLYTIC ENZYMES: Papain, Bromelain, Serratiopeptidase, Urokinase, Streptokinase, Pepsin.",
+                "Lipids (Waxes, Fats, Fixed Oils): Castor oil, Olive oil, Cocoa butter, Wool fat, Beeswax.",
             ]
         },
         {
-            num: "III", hours: "12 Hours", title: "Secondary Metabolites", topics: [
-                "General classification and identification tests Pharmacognostic study (biological source, distribution, cultivation of underlined drugs, identifying characters, chemical constituents, specific tests, therapeutic uses, and commercial applications):",
-                "Alkaloids.",
-                "Vinca.",
-                "Rauwolfia.",
-                "Opium.",
-                "Volatile Oils.",
-                "Lemongrass.",
-                "Clove.",
-                "Cinnamon.",
-                "Fennel.",
-                "Tannins.",
-                "Myrobalans.",
-                "Catechu.",
-                "Pomegranate.",
-                "Resins.",
-                "Guggul.",
-                "Asafoetida.",
-                "Glycosides.",
-                "Senna.",
-                "Liquorice.",
-                "Digitalis.",
-                "Phenylpropanoids and Flavonoids.",
-                "Green Tea.",
-                "Ginkgo.",
-                "Flax seed Iridoids, Other Terpenoids and Naphthoquinones.",
-                "Gentian.",
+            num: "III", hours: "12 Hours", title: "Secondary Metabolites General Classification and Identification Tests", topics: [
+                "Pharmacognostic study (biological source, distribution, cultivation of underlined drugs, identifying characters, chemical constituents, specific tests, therapeutic uses, and commercial applications):",
+                "ALKALOIDS: Vinca, Rauwolfia, Opium.",
+                "VOLATILE OILS: Lemongrass, Clove, Cinnamon, Fennel.",
+                "TANNINS: Myrobalans, Catechu, Pomegranate.",
+                "RESINS: Guggul, Asafoetida.",
+                "GLYCOSIDES: Senna, Liquorice, Digitalis.",
+                "PHENYLPROPANOIDS AND FLAVONOIDS: Green Tea, Ginkgo, Flax seed Iridoids, Other Terpenoids and Naphthoquinones: Gentian.",
                 "Artemisia.",
             ]
         },
         {
-            num: "IV", hours: "12 Hours", title: "Extraction Methods for Medicinal Plants", topics: [
-                "Conventional Methods of Extraction.",
-                "Infusion.",
-                "Decoction.",
-                "Digestion.",
-                "Maceration.",
-                "Percolation.",
-                "Reflux.",
-                "Distillation.",
-                "Soxhlet extraction.",
-                "Successive solvent extraction.",
-                "Modern Methods of Extraction.",
-                "Supercritical fluid extraction.",
-                "Microwave-assisted extraction.",
-                "Ultrasonic-assisted extraction.",
-                "Enzyme-assisted extraction.",
-                "Pressurized liquid extraction.",
+            num: "IV", hours: "12 Hours", title: "Extraction Methods for Medicinal Plants Conventional Methods of Extraction", topics: [
+                "Infusion, Decoction, Digestion, Maceration, Percolation, Reflux, Distillation, Soxhlet extraction, Successive solvent extraction.",
+                "MODERN METHODS OF EXTRACTION: Supercritical fluid extraction, Microwave-assisted extraction, Ultrasonic-assisted extraction, Enzyme-assisted extraction, Pressurized liquid extraction.",
             ]
         },
         {
             num: "V", hours: "14 Hours", title: "Overview of Isolation, Identification and Characterization", topics: [
-                "TECHNIQUES: .",
-                "Separation and Isolation Techniques.",
-                "Planar chromatography.",
-                "Column chromatography.",
-                "Preparative TLC.",
-                "Flash chromatography.",
-                "Identification Techniques.",
-                "Phytochemical tests.",
-                "Chromatographic techniques.",
-                "Spectroscopic techniques Fingerprinting of medicinal plants using TLC/HPTLC.",
+                "TECHNIQUESSEPARATION AND ISOLATION TECHNIQUES: Planar chromatography, Column chromatography, Preparative TLC, Flash chromatography.",
+                "IDENTIFICATION TECHNIQUES: Phytochemical tests, Chromatographic techniques, Spectroscopic techniques Fingerprinting of medicinal plants using TLC/HPTLC.",
                 "Types and significance of markers (phytochemical reference standards).",
-                "Screening and analysis of major metabolites.",
-                "Alkaloids.",
-                "Glycosides.",
-                "Saponins.",
-                "Tannins.",
-                "Resins.",
-                "Flavonoids.",
-                "Phenolics.",
-                "Steroids.",
+                "Screening and analysis of major metabolites: Alkaloids, Glycosides, Saponins, Tannins, Resins, Flavonoids, Phenolics, Steroids.",
             ]
         },
     ], false,
@@ -926,9 +844,8 @@ const SEM2: Subject[] = [
     s("BP206T", "Physical Pharmaceutics", 3, "T", [
         {
             num: "I", hours: "9 Hours", title: "Solubility Distribution Phenomenon & Buffers", topics: [
-                "Solubility expression, Solute solvent interactions, Solubility of liquid and liquids, Solubility of solids and liquids, Solubility of Gas in Liquids, Raoult’s Law. Factors affecting solubility, Measurement of saturation Solubility, Effect of pH on solubility, Partition Coefficient – Measurement and significance, Critical Solution Temperature and Applications.",
-                "Introduction to buffers, Buffers in pharmaceutical and biological system, pH determination methos (Electrometry and colorimetry). Buffer equation / Factor influencing the pH of buffer solutions, Factor influencing Buffer capacity, General procedure for preparing buffers.",
-                "Indicators.",
+                "Solubility expression, Solute solvent interactions, Solubility of liquid and liquids, Solubility of solids and liquids, Solubility of Gas in Liquids, Raoult’s Law. Factors affecting solubility, Measurement of saturation Solubility, Effect of pH on solubility, Partition Coefficient Measurement and significance, Critical Solution Temperature and Applications.",
+                "Introduction to buffers, Buffers in pharmaceutical and biological system, pH determination methos (Electrometry and colorimetry). Buffer equation / Factor influencing the pH of buffer solutions, Factor influencing Buffer capacity, General procedure for preparing buffers, Indicators.",
             ]
         },
         {
@@ -945,7 +862,7 @@ const SEM2: Subject[] = [
         },
         {
             num: "IV", hours: "8 Hours", title: "Rheological Studies", topics: [
-                "Newtonian systems and non-Newtonian systems. Thixotropy – measurement / Bulges and spurs. Negative thixotropy, Determination of rheological properties (Viscometers / single and multi-point).",
+                "Newtonian systems and non-Newtonian systems. Thixotropy measurement / Bulges and spurs. Negative thixotropy, Determination of rheological properties (Viscometers / single and multi-point).",
                 "Viscoelasticity, psycho-rheology. Applications of rheology in pharm.",
             ]
         },
@@ -1249,8 +1166,7 @@ const SEM3: Subject[] = [
                 "Probability output and threshold selection.",
                 "Confusion matrix.",
                 "Accuracy, sensitivity, specificity, precision, recall.",
-                "Intuitive understanding of ROC curve and AUC, and k-.",
-                "Nearest Neighbors.",
+                "Intuitive understanding of ROC curve and AUC, and kNearest Neighbors.",
                 "Demonstration of predictive modeling using pharmaceutical and clinical examples such as predicting adverse drug reactions, disease risk prediction, binary therapeutic outcome modeling.",
             ]
         },
@@ -1320,13 +1236,10 @@ const SEM3: Subject[] = [
         },
         {
             num: "V", hours: "3 Hours", title: "Government Policies, Compliance, and Practical Exposure", topics: [
-                "Environmental laws.",
-                "Environment (Protection) Act, 1986.",
+                "ENVIRONMENTAL LAWS: Environment (Protection) Act, 1986.",
                 "Water (Prevention and Control of Pollution) Act.",
-                "National Green Tribunal (NGT) and regulatory bodies (CPCB.",
-                "SPCB).",
-                "Government initiatives.",
-                "Swachh Bharat Abhiyan.",
+                "National Green Tribunal (NGT) and regulatory bodies (CPCB, SPCB).",
+                "GOVERNMENT INITIATIVES: Swachh Bharat Abhiyan.",
                 "River rejuvenation program- Namami Gange Programme.",
                 "Jal Jeevan Mission.",
                 "ISO-14000.",
@@ -1402,7 +1315,7 @@ const SEM3: Subject[] = [
     s("BP304T", "General Pharmacology", 3, "T", [
         {
             num: "I", hours: "08 Hours", title: "Introduction to Pharmacology", topics: [
-                "Definition, historical perspectives, branches of pharmacology and their scope, drug, nature and sources of drugs, International Classification of Diseases (ICD) and International Non- proprietary Names (INN) for drugs.",
+                "Definition, historical perspectives, branches of pharmacology and their scope, drug, nature and sources of drugs, International Classification of Diseases (ICD) and International Nonproprietary Names (INN) for drugs.",
                 "Concept of generic medicines, essential drugs and rational drug use (RDU). Indian Government’s initiatives to promote these concepts.",
                 "Routes of drug administration along with their advantages and disadvantages.",
             ]
@@ -1420,8 +1333,7 @@ const SEM3: Subject[] = [
                 "Types drug action and mechanisms of drug action, dose response relationship.",
                 "Receptor theories, structure of receptors, classification and regulation of receptors, spare receptors. Concept of agonist, inverse agonist, partial agonist and antagonist.",
                 "Signal transduction mechanisms of receptors.",
-                "Factors modifying drug action including the concepts of tachyphylaxis, idiosyncrasy, drug tolerance, dependence, addiction, and the combined effect of drugs (Additive effect &.",
-                "Synergism).",
+                "Factors modifying drug action including the concepts of tachyphylaxis, idiosyncrasy, drug tolerance, dependence, addiction, and the combined effect of drugs (Additive effect & Synergism).",
                 "Adverse drug reactions (ADR) and types of ADRs.",
                 "Drug interaction, types, pharmacokinetic and pharmacodynamic drug-drug interactions.",
             ]
@@ -1470,8 +1382,7 @@ const SEM3: Subject[] = [
                 "Aliphatic and aromatic carboxylic acids.",
                 "Methods to prepare carboxylic acids (Oxidation of alcohols, carbonation of Grignard reagent, Kolbe-Schmidt reaction).",
                 "Study of acidity of carboxylic acids and effect of substituents on acidity.",
-                "Study of chemical reactions of carboxylic acids [Mechanism of nucleophilic acyl substitution, Decarboxylation and Hell-Volhard-.",
-                "Zelinsky reaction]. Pharmaceutical applications of aromatic carboxylic acids (Benzoic acid, Salicylic acid, Acetyl Salicylic acid).",
+                "Study of chemical reactions of carboxylic acids [Mechanism of nucleophilic acyl substitution, Decarboxylation and Hell-VolhardZelinsky reaction]. Pharmaceutical applications of aromatic carboxylic acids (Benzoic acid, Salicylic acid, Acetyl Salicylic acid).",
                 "Aliphatic and aromatic amines.",
                 "Methods to prepare amines (Reduction of nitro compound, reduction of nitriles and Hofmann degradation of amides).",
                 "Study of basicity of amines and effect of substituents on basicity.",
@@ -1482,10 +1393,8 @@ const SEM3: Subject[] = [
                 "Acidity of alcohols and Phenols including effect of substituent on acidity.",
                 "Definition of phenols, method to prepare phenols by cumene process.",
                 "Comparison of the acidity of phenol vs alcohol.",
-                "Study of mechanism of chemical reactions of phenols (Reimer-.",
-                "Tiemann reaction, halogenation and nitration of phenols).",
-                "Pharmaceutical applications of alcohols and phenols (Glycerine.",
-                "Thymol, Paracetamol).",
+                "Study of mechanism of chemical reactions of phenols (ReimerTiemann reaction, halogenation and nitration of phenols).",
+                "Pharmaceutical applications of alcohols and phenols (Glycerine, Thymol, Paracetamol).",
                 "Chemistry of polynuclear hydrocarbons Definition, and classification of polynuclear aromatic hydrocarbons, Study of synthesis (Haworth synthesis) and mechanism of electrophilic aromatic substitution reactions of naphthalene, phenanthrene and anthracene and medicinal uses of drugs containing Naphthalene (Propranolol, Naphazoline) and Phenanthrene.",
                 "(Morphine, Codeine).",
             ]
@@ -1500,8 +1409,7 @@ const SEM3: Subject[] = [
         },
         {
             num: "III", hours: "6 Hours", title: "Geometrical Isomerism", topics: [
-                "Nomenclature of geometrical isomers (Cis & Trans, E & Z, Syn &.",
-                "Anti system).",
+                "Nomenclature of geometrical isomers (Cis & Trans, E & Z, Syn & Anti system).",
                 "Conformational isomerism and its analysis in ethane, butane and cyclohexane.",
                 "Stereo isomerism in biphenyl compounds (Atropisomerism) and conditions for optical activity in biphenyl compounds.",
             ]
@@ -1510,8 +1418,7 @@ const SEM3: Subject[] = [
             num: "IV", hours: "10 Hours", title: "Chemistry of Five Membered Heterocycles", topics: [
                 "IUPAC nomenclature and classification of heterocyclic compounds as per the Hansch- Widman system.",
                 "Relative aromaticity and reactivity of pyrrole, furan and thiophene.",
-                "Study of synthesis of pyrrole (Paal – Knorr synthesis), furan (Feist-.",
-                "Bénary reaction), thiophene (Hinsberg synthesis) and Mechanism of Electrophilic substitution reactions of pyrrole, furan and thiophene.",
+                "Study of synthesis of pyrrole (Paal – Knorr synthesis), furan (FeistBénary reaction), thiophene (Hinsberg synthesis) and Mechanism of Electrophilic substitution reactions of pyrrole, furan and thiophene.",
                 "Medicinal uses of drugs containing pyrrole (Ethosuximide, procyclidine), furan (Furosemide, Nitrofurazone) and thiophene.",
                 "(Cephaloridine, Clopidogrel).",
             ]
@@ -1556,7 +1463,7 @@ const SEM3: Subject[] = [
         },
         {
             num: "II", hours: "12 Hours", title: "Compressed Solids", topics: [
-                "Tablets Excipients (roles and examples); tooling (types and specifications); manufacturing methods and equipment; tablet defects and remedies; in- process quality control (IPQC); finished-product tests; packaging.",
+                "Tablets Excipients (roles and examples); tooling (types and specifications); manufacturing methods and equipment; tablet defects and remedies; inprocess quality control (IPQC); finished-product tests; packaging.",
                 "Tablet Coating Types of coating (sugar, film, compression, enteric); need, advantages, and limitations; polymers, process specifications, and equipment; coating defects; quality control of coated tablets.",
             ]
         },
@@ -1564,7 +1471,7 @@ const SEM3: Subject[] = [
             num: "III", hours: "12 Hours", title: "Finely Divided and Filled Solids", topics: [
                 "MEDICATED POWDERS AND GRANULES: formulation considerations, manufacturing processes (mixing, granulation), quality control, and packaging.",
                 "GELATIN AND NON-GELATIN SHELLS: composition, empty shell manufacturing, quality control, and capsule sizes.",
-                "HARD GELATIN CAPSULES: formulation design; filling methods (manual, semi- automatic, automatic); IPQC and finished-product tests; packaging.",
+                "HARD GELATIN CAPSULES: formulation design; filling methods (manual, semiautomatic, automatic); IPQC and finished-product tests; packaging.",
                 "SOFT GELATIN CAPSULES: shell composition and plasticizers; fill materials; manufacturing methods (rotary die and others); defects; quality control and stability.",
             ]
         },
@@ -1626,8 +1533,7 @@ const SEM3: Subject[] = [
         },
         {
             num: "V", hours: "04 Hours", title: "Flow of Fluids", topics: [
-                "Types and measurement of flow, manometers, Reynolds number and its significance, Bernoulli’s theorem and its applications, Orifice meter.",
-                "Venturimeter, Pitot tube and Rotometer.",
+                "Types and measurement of flow, manometers, Reynolds number and its significance, Bernoulli’s theorem and its applications, Orifice meter, Venturimeter, Pitot tube and Rotometer.",
             ]
         },
     ], false,
@@ -1654,8 +1560,7 @@ const SEM3: Subject[] = [
             num: "I", hours: "09 Hours", title: "Introduction and Role of Microorganisms in Pharmaceutical Industry", topics: [
                 "FUNDAMENTALS OF MICROBIOLOGY: Microorganisms and medicines, Introduction to various microorganisms, Microbial cultivation, isolation and enumeration.",
                 "Pharmaceutical importance of microorganisms.",
-                "Introduction to Microscope (Compound and Electron.",
-                "Microscope).",
+                "Introduction to Microscope (Compound and Electron Microscope).",
                 "Identification of bacteria using staining techniques (simple, Gram‘s &Acid-fast staining) and biochemical tests (IMViC).",
                 "Antibiotics p r o d u c e d by microbiology (Production and uses streptomycin, cephalosporin).",
             ]
@@ -1676,8 +1581,7 @@ const SEM3: Subject[] = [
         },
         {
             num: "IV", hours: "09 Hours", title: "Sterilization Procedures, Assurance and Evaluation", topics: [
-                "Physical, chemical, gaseous, radiation and mechanical methods of sterilization, Advances sterilization technologies, Evaluation of efficiency of sterilization.",
-                "Validation of sterilization procedures and Sterility indicators.",
+                "Physical, chemical, gaseous, radiation and mechanical methods of sterilization, Advances sterilization technologies, Evaluation of efficiency of sterilization; Validation of sterilization procedures and Sterility indicators.",
                 "Sterility assurance, Bioburden determination, Modelling in predicting microbial growth and death, Test for bacteriostatic, bactericidal activity.",
             ]
         },
@@ -1887,20 +1791,14 @@ const SEM4: Subject[] = [
     s("BP401T", "Herbal Drug Technology", 3, "T", [
         {
             num: "I", hours: "10 Hours", title: "Plant Tissue Culture and Standardized Extracts", topics: [
-                "Plant tissue culture as an alternative source of medicine.",
-                "Historical development.",
-                "Types of cultures.",
-                "Nutritional requirements.",
+                "Plant tissue culture as an alternative source of medicine: Historical development, Types of cultures, Nutritional requirements.",
                 "Growth and maintenance of callus and suspension culture.",
                 "Role of elicitation, genetic transformation, biotransformation, precursor feeding, and somaclonal variation in biomass and secondary metabolite production.",
-                "Introduction to biomanufacturing.",
-                "MEDICINAL PLANT: based biomanufacturing.",
+                "INTRODUCTION TO BIOMANUFACTURING: Medicinal plant–based biomanufacturing.",
                 "Utilising plant factories in obtaining valuable ingredients for food, pharmaceutical, and cosmetic industries.",
-                "EXAMPLES: Shikonin and Paclitaxel.",
-                "Oral vaccines in healthcare Optimization and production of standardized extracts of medicinal plants:",
+                "EXAMPLES: Shikonin and Paclitaxel, Oral vaccines in healthcare Optimization and production of standardized extracts of medicinal plants:",
                 "Strategies for preparation of desired quality extracts by optimizing and adjusting bioactives ensuring quality using analysis of metabolites and TLC fingerprints of the following.",
-                "Aqueous and hydro-alcoholic extracts of Ashwagandha.",
-                "Shatavari, Licorice, Neem, and Haritaki.",
+                "Aqueous and hydro-alcoholic extracts of Ashwagandha, Shatavari, Licorice, Neem, and Haritaki.",
                 "Flavonoid-rich fraction of Sweet lime peel.",
                 "Terpenoid-rich fraction of Bacopa.",
                 "Phenol-rich fraction of Green Tea.",
@@ -1916,9 +1814,7 @@ const SEM4: Subject[] = [
                 "Composition, preparation, and characterization using standardized extracts and bioactives.",
                 "Herbal cosmetics.",
                 "Sources and description of raw materials of herbal origin as active agents in skincare, hair care, and oral hygiene products.",
-                "Applications in skincare, hair care, and oral hygiene products such as.",
-                "Sunscreen-lotion/gel.",
-                "Hair oil, shampoo, herbal dye.",
+                "Applications in skincare, hair care, and oral hygiene products such as: Sunscreen-lotion/gel, Hair oil, shampoo, herbal dye.",
                 "Herbal mouthwash, chewing gums, candies, gargles.",
                 "Face serums and herbal face packs.",
                 "Excipients of Natural origin.",
@@ -1939,27 +1835,17 @@ const SEM4: Subject[] = [
         },
         {
             num: "IV", hours: "10 Hours", title: "Herb–drug / Food / Herb Interactions", topics: [
-                "General introduction to interactions and role of ADME.",
-                "Cytochrome P450, and P-gp.",
-                "HERB: drug interactions.",
-                "St. John’s Wort with warfarin.",
-                "Ginkgo biloba with aspirin.",
-                "HERB: food interactions.",
-                "Licorice with salty foods.",
-                "Turmeric with fats.",
-                "Green tea with iron-rich foods.",
-                "HERB: herb interactions.",
-                "Ephedra with Ginseng.",
-                "Chamomile with Valerian.",
+                "General introduction to interactions and role of ADME, Cytochrome P450, and P-gp.",
+                "HERB: drug interactions: St. John’s Wort with warfarin, Ginkgo biloba with aspirin.",
+                "HERB: food interactions: Licorice with salty foods, Turmeric with fats, Green tea with iron-rich foods.",
+                "HERB: herb interactions: Ephedra with Ginseng, Chamomile with Valerian.",
                 "Adverse reactions related to plants and foods such as allergy, intolerance, and toxicity.",
             ]
         },
         {
             num: "V", hours: "8 Hours", title: "Regulatory Requirements of Herbal Drugs and Botanicals", topics: [
-                "Regulatory framework in India for Herbal and ASU medicines.",
-                "Role of regulatory bodies.",
-                "ASU DTAB (Ayurveda, Siddha, and Unani Drugs Technical Advisory.",
-                "Board).",
+                "Regulatory framework in India for Herbal and ASU medicines: Role of regulatory bodies.",
+                "ASU DTAB (Ayurveda, Siddha, and Unani Drugs Technical Advisory Board).",
                 "ASU DCC (Drugs Consultative Committee for ASU drugs).",
                 "SCHEDULE T: GMP requirements for ASU drugs.",
                 "SCHEDULE E1: Poisonous drugs listed under AYUSH.",
@@ -1994,8 +1880,7 @@ const SEM4: Subject[] = [
         },
         {
             num: "II", hours: "15 Hours", title: "Drugs Acting on the Autonomic Nervous System", topics: [
-                "ADRENERGIC OR SYMPATHOMIMETIC AGENTS: Nor-epinephrine, Epinephrine, Phenylephrine*, Dopamine, Methyldopa, Clonidine, Dobutamine, Isoproterenol, Terbutaline, Salbutamol*, Bitolterol, Naphazoline, Oxymetazoline and Xylometazoline, Hydroxyamphetamine, Pseudoephedrine, Propylhexedrine.",
-                "Metaraminol.",
+                "ADRENERGIC OR SYMPATHOMIMETIC AGENTS: Nor-epinephrine, Epinephrine, Phenylephrine*, Dopamine, Methyldopa, Clonidine, Dobutamine, Isoproterenol, Terbutaline, Salbutamol*, Bitolterol, Naphazoline, Oxymetazoline and Xylometazoline, Hydroxyamphetamine, Pseudoephedrine, Propylhexedrine, Metaraminol.",
                 "ANTI-ADRENERGIC OR SYMPATHOLYTIC AGENTS: Tolazoline*, Phentolamine, Phenoxybenzamine, Prazosin, Dihydroergotamine, Propranolol*, Metibranolol, Atenolol, Betazolol, Bisoprolol, Esmolol, Metoprolol, Labetalol, Carvedilol. SAR of beta adrenergic blockers.",
                 "CHOLINERGIC OR PARASYMPATHOMIMETIC AGENTS: Acetylcholine, Carbachol*, Bethanechol, Methacholine, Pilocarpine, Physostigmine, Neostigmine, Pyridostigmine, Edrophonium chloride, Tacrine hydrochloride, Ambenonium chloride, Isofluorphate, Echothiophate iodide, Parathione, Malathion.",
                 "Pralidoxime chloride.",
@@ -2005,20 +1890,16 @@ const SEM4: Subject[] = [
         },
         {
             num: "III", hours: "09 Hours", title: "Drugs Acting on the Cardiovascular System", topics: [
-                "ANTI-ANGINALS: Amyl nitrite, Nitroglycerin, Pentaerythritol, Isosorbide dinitrite*, Dipyridamole, Verapamil, Bepridil hydrochloride, Diltiazem, Nifedipine, Amlodipine, Felodipine.",
-                "Nicardipine, Nimodipine.",
-                "ANTI-HYPERTENSIVES: Timolol, Captopril, Lisinopril, Enalapril, Benazepril, Quinapril, Methyldopate,* Clonidine, Guanethidine, Guanabenz, Sodium nitroprusside, Diazoxide, Minoxidil.",
-                "Reserpine, Hydralazine.",
+                "ANTI-ANGINALS: Amyl nitrite, Nitroglycerin, Pentaerythritol, Isosorbide dinitrite*, Dipyridamole, Verapamil, Bepridil hydrochloride, Diltiazem, Nifedipine, Amlodipine, Felodipine, Nicardipine, Nimodipine.",
+                "ANTI-HYPERTENSIVES: Timolol, Captopril, Lisinopril, Enalapril, Benazepril, Quinapril, Methyldopate,* Clonidine, Guanethidine, Guanabenz, Sodium nitroprusside, Diazoxide, Minoxidil, Reserpine, Hydralazine.",
                 "Drugs to treat Congestive Heart Failure (CHF): Digoxin, Digitoxin, Nesiritide, Bosentan,Tezosentan.",
                 "Anti-arrhythmics (Class I–IV): Quinidine sulphate, Procainamide, Disopyramide*, Phenytoin, Lidocaine, Tocainide, Mexiletine, Lorcainide, Amiodarone, Sotalol.",
             ]
         },
         {
             num: "IV", hours: "06 Hours", title: "Drugs Acting on Blood and Renal System", topics: [
-                "ANTIHYPERLIPIDEMIC AGENTS: Fenofibrate*, Lovastatin.",
-                "Cholesteramine and Cholestipol.",
-                "COAGULANTS AND ANTI-COAGULANTS: Menadione, Acetomenadione.",
-                "Warfarin, Anisindione, clopidogrel.",
+                "ANTIHYPERLIPIDEMIC AGENTS: Fenofibrate*, Lovastatin, Cholesteramine and Cholestipol.",
+                "COAGULANTS AND ANTI-COAGULANTS: Menadione, Acetomenadione, Warfarin, Anisindione, clopidogrel.",
                 "DIURETICS: Acetazolamide*, Methazolamide, Dichlorphenamide, Chlorthiazide, Hydrochlorothiazide, Hydroflumethiazide, Cyclothiazide, Furosemide*, Bumetanide, Ethacrynic acid, Spironolactone, Triamterene, Amiloride. Mannitol. SAR of Thiazides.",
             ]
         },
@@ -2027,8 +1908,7 @@ const SEM4: Subject[] = [
                 "Antihistamines.",
                 "H1–antagonists: Diphenhydramine hydrochloride*, Dimenhydrinate, Doxylamines, Clemastine, Diphenylphyraline, Tripelenamine, Chlorcyclizine, Meclizine, Buclizine, Chlorpheniramine, Triprolidine, Phenindamine, Promethazine*, Trimeprazine, Cyproheptadine, Azatidine, Astemizole, Loratadine, Cetirizine, Levocetrizine Cromolyn.",
                 "H2-ANTAGONISTS: Cimetidine*, Famotidine, Ranitidine.",
-                "GASTRIC PROTON PUMP INHIBITORS: Omeprazole, Lansoprazole.",
-                "Rabeprazole, Pantoprazole Non-Steroidal Anti-Inflammatory Drugs (NSAIDs), Antipyretics:",
+                "GASTRIC PROTON PUMP INHIBITORS: Omeprazole, Lansoprazole, Rabeprazole, Pantoprazole Non-Steroidal Anti-Inflammatory Drugs (NSAIDs), Antipyretics:",
                 "Sodium salicylate, Aspirin, Diflunisal, Mefenamic acid*, Niflumic acid, Meclofenamate, Indomethacin, Sulindac, Tolmetin, Zomepirac, Diclofenac, Ketorolac, Ibuprofen*, Naproxen, Piroxicam, Phenacetin, Acetaminophen, Antipyrine, Phenylbutazone, Celecoxib, Etoricoxib, SAR of representative agents by class.",
             ]
         },
@@ -2471,9 +2351,7 @@ const SEM5: Subject[] = [
         {
             num: "I", hours: "10 Hours", title: "Drugs Acting on the Central Nervous System", topics: [
                 "General Anesthetics Halothane, Methoxyflurane, Enflurane, Sevoflurane, Isoflurane, Desflurane, Methohexital, Thiamylal, Thiopental, Ketamine*, Ramelteon, Remimazolam, Fospropofol, Dexmedetomidine.",
-                "Sedatives and Hypnotics Barbital, Phenobarbital*, Mephobarbital, Amobarbital, Butabarbital.",
-                "Pentobarbital, Secobarbital, Chlordiazepoxide, Diazepam*, Oxazepam, Chlorazepate, Lorazepam.",
-                "Alprazolam, Zolpidem, Glutethimide, Meprobamate, Ethchlorvynol, Triclofos, Paraldehyde.",
+                "Sedatives and Hypnotics Barbital, Phenobarbital*, Mephobarbital, Amobarbital, Butabarbital, Pentobarbital, Secobarbital, Chlordiazepoxide, Diazepam*, Oxazepam, Chlorazepate, Lorazepam, Alprazolam, Zolpidem, Glutethimide, Meprobamate, Ethchlorvynol, Triclofos, Paraldehyde.",
                 "SAR of Barbiturates and Benzodiazepines.",
                 "Antipsychotics Promazine, Chlorpromazine*, Triflupromazine, Thioridazine, Piperacetazine, Prochlorperazine, Trifluoperazine, Chlorprothixene, Thiothixene, Loxapine, Clozapine, Haloperidol, Droperidol, Risperidone, Molindone, Sulpiride, Brexpiprazole, Lumateperone, Pimavanserin, Samidorphan.",
                 "SAR of Phenothiazines.",
@@ -2486,14 +2364,9 @@ const SEM5: Subject[] = [
                 "Antitubercular Agents Isoniazid*, Ethionamide, Ethambutol, Pyrazinamide, Para-amino salicylic acid*, Rifampicin, Rifabutin, Cycloserine, Streptomycin, Capreomycin, Pretomanid, Clofazimine, Levofloxacin, Bedaquiline, Linezolid, Delamanid.",
                 "Antimalarials Quinine, Chloroquine*, Amodiaquine, Primaquine, Pamaquine, Quinacrine, Mefloquine, Cycloguanil pamoate, Proguanil, Pyrimethamine, Artesunate, Artemether, Atovaquone.",
                 "SAR of Quinoline derivatives.",
-                "Antiprotozoals Metronidazole*, Tinidazole, Ornidazole, Diloxanide, Iodoquinol, Pentamidine isethionate, Atovaquone,Eflornithine, Paromomycin.",
-                "Nitazoxanide.",
-                "Antivirals Amantadine, Rimantadine, Idoxuridine, Acyclovir*, Ganciclovir, Zidovudine, Didanosine, Zalcitabine, Lamivudine,Loviride, Delavirdine, Ribavirin, Saquinavir, Indinavir, Ritonavir, Valganciclovir, Peramivir.",
-                "Lenacapavir.",
-                "Antifungals Amphotericin-B, Nystatin, Natamycin, Griseofulvin, Clotrimazole.",
-                "Econazole, Butoconazole, Oxiconazole, Tioconazole, Miconazole, Ketoconazole*, Terconazole, Itraconazole.",
-                "Fluconazole, Naftifine, Tolnaftate.",
-                "Posaconazole, Isavuconazole.",
+                "Antiprotozoals Metronidazole*, Tinidazole, Ornidazole, Diloxanide, Iodoquinol, Pentamidine isethionate, Atovaquone,Eflornithine, Paromomycin, Nitazoxanide.",
+                "Antivirals Amantadine, Rimantadine, Idoxuridine, Acyclovir*, Ganciclovir, Zidovudine, Didanosine, Zalcitabine, Lamivudine,Loviride, Delavirdine, Ribavirin, Saquinavir, Indinavir, Ritonavir, Valganciclovir, Peramivir, Lenacapavir.",
+                "Antifungals Amphotericin-B, Nystatin, Natamycin, Griseofulvin, Clotrimazole, Econazole, Butoconazole, Oxiconazole, Tioconazole, Miconazole, Ketoconazole*, Terconazole, Itraconazole, Fluconazole, Naftifine, Tolnaftate, Posaconazole, Isavuconazole.",
                 "Anthelmintics Diethylcarbamazine, Thiabendazole, Mebendazole, Albendazole*, Niclosamide, Oxamniquine, Praziquantel, Ivermectin.",
                 "Urinary Tract Anti-infective Agents Nalidixic acid, Norfloxacin, Enoxacin, Ciprofloxacin*, Ofloxacin, Lomefloxacin, Sparfloxacin, Gatifloxacin, Furazolidone, Nitrofurantoin, Methenamine, Moxifloxacin.",
                 "SAR of Quinolones.",
@@ -2503,28 +2376,22 @@ const SEM5: Subject[] = [
             num: "III", hours: "8 Hours", title: "Antibiotics and Sulfa Drugs", topics: [
                 "Antibiotics Penicillins, Cephalosporins, β-Lactamase inhibitors, Monobactams Aminoglycosides: Streptomycin, Neomycin, Kanamycin, Tetracyclines:",
                 "TETRACYCLINE, OXYTETRACYCLINE, MINOCYCLINE, DOXYCYCLINE, MACROLIDES",
-                "Erythromycin, Clarithromycin, Azithromycin Chloramphenicol*.",
-                "Clindamycin, Clavulanic acid SAR of Penicillins, Tetracyclines, and Cephalosporins.",
+                "Erythromycin, Clarithromycin, Azithromycin Chloramphenicol*, Clindamycin, Clavulanic acid SAR of Penicillins, Tetracyclines, and Cephalosporins.",
                 "Sulfa Drugs Sulphamethizole, Sulfisoxazole, Sulphapyridine, Sulphathiazole, Sulfacetamide, Sulphamethoxazole,Sulphadiazine, Mefenide, Sulfasalazine, Trimethoprim, Cotrimoxazole, Dapsone*.",
                 "SAR of Sulfonamides.",
             ]
         },
         {
             num: "IV", hours: "6 Hours", title: "Antineoplastic Agents", topics: [
-                "Mechlorethamine, Cyclophosphamide, Melphalan, Chlorambucil.",
-                "Busulfan, Thiotepa, Mercaptopurine*, Thioguanine, Fluorouracil, Floxuridine, Cytarabine, Methotrexate*, Azathioprine, Dactinomycin, Daunorubicin, Doxorubicin, Bleomycin, Etoposide, Vinblastine, Vincristine, Paclitaxel, Camptothecin, Cisplatin, Mitotane, Carboplatin.",
+                "Mechlorethamine, Cyclophosphamide, Melphalan, Chlorambucil, Busulfan, Thiotepa, Mercaptopurine*, Thioguanine, Fluorouracil, Floxuridine, Cytarabine, Methotrexate*, Azathioprine, Dactinomycin, Daunorubicin, Doxorubicin, Bleomycin, Etoposide, Vinblastine, Vincristine, Paclitaxel, Camptothecin, Cisplatin, Mitotane, Carboplatin.",
             ]
         },
         {
             num: "V", hours: "9 Hours", title: "Endocrine Drugs, Antidiabetic Agents and Narcotic Analgesics", topics: [
-                "ENDOCRINE DRUGS SEX HORMONES: Testosterone, Nandrolone, Progesterone, Oestriol, Oestradiol, Oestrone, Diethylstilbestrol Drugs for erectile dysfunction: Sildenafil, Tadalafil Oral contraceptives: Mifepristone, Norgestrel, Levonorgestrel Corticosteroids: Cortisone, Hydrocortisone, Prednisolone.",
-                "Betamethasone, Dexamethasone Thyroid and antithyroid drugs: L-Thyroxine, L-Thyronine.",
-                "Propylthiouracil, Methimazole.",
-                "Antidiabetic Agents Insulin and preparations, Tolbutamide*, Chlorpropamide, Glipizide.",
-                "Glimepiride.",
+                "ENDOCRINE DRUGS SEX HORMONES: Testosterone, Nandrolone, Progesterone, Oestriol, Oestradiol, Oestrone, Diethylstilbestrol Drugs for erectile dysfunction: Sildenafil, Tadalafil Oral contraceptives: Mifepristone, Norgestrel, Levonorgestrel Corticosteroids: Cortisone, Hydrocortisone, Prednisolone, Betamethasone, Dexamethasone Thyroid and antithyroid drugs: L-Thyroxine, L-Thyronine, Propylthiouracil, Methimazole.",
+                "Antidiabetic Agents Insulin and preparations, Tolbutamide*, Chlorpropamide, Glipizide, Glimepiride.",
                 "BIGUANIDES: Metformin Thiazolidinediones: Pioglitazone, Rosiglitazone Repaglinide, Nateglinide, Acarbose, Voglibose.",
-                "Narcotic Analgesics Morphine, Codeine, Meperidine, Anilerdine, Diphenoxylate.",
-                "Loperamide, Fentanyl*, Methadone, Propoxyphene, Pentazocine, Levorphanol.",
+                "Narcotic Analgesics Morphine, Codeine, Meperidine, Anilerdine, Diphenoxylate, Loperamide, Fentanyl*, Methadone, Propoxyphene, Pentazocine, Levorphanol.",
                 "Nalorphine, Levallorphan, Naloxone.",
                 "SAR of Morphine analogues.",
             ]
@@ -2553,9 +2420,9 @@ const SEM5: Subject[] = [
             num: "I", hours: "8 Hours", title: "Industrial Extraction and Scale-Up Processing", topics: [
                 "General Introduction to Herbal Industries, institutions and trade status of herbals.",
                 "Role of medicinal and aromatic plants trade in national economy of a country and introduction of Current trade status and potential of some commercially important medicinal plants/natural products like Ashwagandha, Turmeric, Ginseng, Amla and essential oils.",
-                "A brief account of bioeconomy, biodiversity hot spots and plant- based industries and institutions involved in research work on medicinal and aromatic plants in India.",
+                "A brief account of bioeconomy, biodiversity hot spots and plantbased industries and institutions involved in research work on medicinal and aromatic plants in India.",
                 "Emerging therapeutic categories of Herbal Medicinal Products available in market, their composition with rationale for Aphrodisiac, Antistress, anti-diabetics, antihyperlipidemic, immunomodulator, hepatoprotective and kidney disorders.",
-                "EMERGING HERBAL COSMECEUTICALS: Anti-Aging, Depigmenting, anti- acne, sunscreen, detoxifying, anti-irritant, nutricosmetics.",
+                "EMERGING HERBAL COSMECEUTICALS: Anti-Aging, Depigmenting, antiacne, sunscreen, detoxifying, anti-irritant, nutricosmetics.",
             ]
         },
         {
@@ -2563,15 +2430,13 @@ const SEM5: Subject[] = [
                 "Significance of AYUSH/ WHO-GMP, GLP and USFDA compliant facility in production of quality herbal products.",
                 "Commercial production of standardized herbal extracts with clinical relevance: Coleus, Amla, Turmeric, Ashwagandha and Senna.",
                 "Commercial production and standardization of volatile oils:",
-                "Eucalyptus oils, Lavender oil and Peppermint oil, Rosemary oil Preparation and standardization of Ayush formulations viz Aristas and Asawas, Ghutika/Habb, Churna/ Shafoof Arq.",
-                "Sharbat, Tincture and Bhasma.",
+                "Eucalyptus oils, Lavender oil and Peppermint oil, Rosemary oil Preparation and standardization of Ayush formulations viz Aristas and Asawas, Ghutika/Habb, Churna/ Shafoof Arq, Sharbat, Tincture and Bhasma.",
             ]
         },
         {
             num: "III", hours: "12 Hours", title: "Modern Methods of Analysis of Plants and Plant-based Products", topics: [
                 "Basic principles and applications in analysis of botanicals:",
-                "SPECTROSCOPIC METHODS: UV-Visible spectroscopy, IR Spectroscopy, NMR spectroscopy and Mass spectroscopy, Atomic Absorption Scpectroscopy Chromatographic methods: HPTLC.",
-                "HPLC, UPLC, GC.",
+                "SPECTROSCOPIC METHODS: UV-Visible spectroscopy, IR Spectroscopy, NMR spectroscopy and Mass spectroscopy, Atomic Absorption Scpectroscopy Chromatographic methods: HPTLC, HPLC, UPLC, GC.",
             ]
         },
         {
@@ -2582,12 +2447,7 @@ const SEM5: Subject[] = [
         },
         {
             num: "V", hours: "07 Hours", title: "International Regulatory Perspectives", topics: [
-                "Overview of global regulations for herbal products (e.g., World Health Organization, United States Food and Drug Administration – Dietary Supplement Health and Education Act, European.",
-                "Medicines Agency, TGA-ARG Therapeutic Goods Administration – Australian Regulatory Guidelines for Complementary Medicines.",
-                "Natural Health Products (Canada).",
-                "Harmonization challenges and mutual recognition of traditional medicine.",
-                "Importance of safety, efficacy and pharmacovigilance in herbal product regulation.",
-                "Study of Monographs on herbal drugs and botanicals related to Indian Pharmacopoeia, United States Pharmacopoeia Herbal Medicine and Dietary Supplement, Ayurvedic Pharmacopoeia of India and Unani Pharmacopoeia of India.",
+                "Overview of global regulations for herbal products (e.g., World Health Organization, United States Food and Drug Administration – Dietary Supplement Health and Education Act, European Medicines Agency, TGA-ARG Therapeutic Goods Administration Australian Regulatory Guidelines for Complementary Medicines, Natural Health Products (Canada) (b) Harmonization challenges and mutual recognition of traditional medicine (c) Importance of safety, efficacy and pharmacovigilance in herbal product regulation (d) Study of Monographs on herbal drugs and botanicals related to Indian Pharmacopoeia, United States Pharmacopoeia Herbal Medicine and Dietary Supplement, Ayurvedic Pharmacopoeia of India and Unani Pharmacopoeia of India.).",
             ]
         },
     ], false,
@@ -2612,8 +2472,8 @@ const SEM5: Subject[] = [
     ]),
     s("BP503T", "Innovation and Startup Ecosystem", 2, "T", [
         {
-            num: "I", hours: "06 Hours", title: "Introduction to Innovation and", topics: [
-                "Entrepreneurship Defining Innovation and Entrepreneurship.",
+            num: "I", hours: "06 Hours", title: "Introduction to Innovation and Entrepreneurship", topics: [
+                "Defining Innovation and Entrepreneurship.",
                 "What is Innovation?",
                 "TYPES OF INNOVATION: Product, Process, Business.",
                 "Model, Social.",
@@ -2628,14 +2488,7 @@ const SEM5: Subject[] = [
                 "Case Studies.",
                 "Innovative companies (e.g., Apple, Google, Tesla).",
                 "Introduction to the Startup Ecosystem.",
-                "Key components.",
-                "Entrepreneurs.",
-                "Incubators/Accelerators.",
-                "Mentors.",
-                "Investors.",
-                "Government.",
-                "Academia.",
-                "Support Services.",
+                "KEY COMPONENTS: Entrepreneurs, Incubators/Accelerators, Mentors, Investors, Government, Academia, Support Services.",
                 "Role of each component in fostering innovation.",
                 "PRACTICAL ASPECT",
                 "Participation in National Innovation Day and National Startup Day.",
@@ -2645,18 +2498,11 @@ const SEM5: Subject[] = [
             num: "II", hours: "06 Hours", title: "Ideation and Opportunity Identification", topics: [
                 "Identifying Problems and Market Gaps.",
                 "Problem-solving approach to entrepreneurship.",
-                "Techniques for problem identification.",
-                "Observation.",
-                "Empathy mapping.",
-                "User interviews.",
+                "TECHNIQUES FOR PROBLEM IDENTIFICATION: Observation, Empathy mapping, User interviews.",
                 "Market research basics.",
                 "Understanding customer needs and pain points.",
                 "Generating Innovative Ideas.",
-                "Brainstorming techniques.",
-                "SCAMPER.",
-                "Mind Mapping.",
-                "Design Thinking principles for ideation.",
-                "Lateral thinking and divergent thinking.",
+                "BRAINSTORMING TECHNIQUES: SCAMPER, Mind Mapping, Design Thinking principles for ideation, Lateral thinking and divergent thinking.",
                 "FROM PROBLEM TO SOLUTION: developing initial concepts.",
                 "Opportunity Analysis and Feasibility.",
                 "Market sizing and potential.",
@@ -2672,9 +2518,7 @@ const SEM5: Subject[] = [
                 "Lean Startup Methodology.",
                 "Introduction to Lean Startup principles.",
                 "BUILD: Measure–Learn feedback loop.",
-                "Concept of MVP.",
-                "Importance.",
-                "Scope and objectives.",
+                "CONCEPT OF MVP: Importance, Scope and objectives.",
                 "Designing and Developing an MVP.",
                 "Different types of MVPs.",
                 "Tools and resources for rapid prototyping.",
@@ -2684,8 +2528,7 @@ const SEM5: Subject[] = [
                 "A/B testing and split testing.",
                 "Pivoting vs Persevering.",
                 "PRACTICAL ASPECT",
-                "Participation in sessions/workshops on Prototype.",
-                "MVP, and Product Development.",
+                "Participation in sessions/workshops on Prototype, MVP, and Product Development.",
             ]
         },
         {
@@ -2694,18 +2537,9 @@ const SEM5: Subject[] = [
                 "Introduction to the 9 building blocks of BMC.",
                 "Developing a BMC for a new venture.",
                 "Value Proposition Design Legal and Financial Aspects for Startups.",
-                "Legal structures.",
-                "Sole Proprietorship.",
-                "Partnership.",
-                "Private Limited Company.",
-                "Intellectual Property Rights (IPR).",
-                "Patents.",
-                "Trademarks.",
-                "Copyrights.",
-                "Startup funding.",
-                "Bootstrapping.",
-                "Angel investors.",
-                "Venture capital.",
+                "LEGAL STRUCTURES: Sole Proprietorship, Partnership, Private Limited Company.",
+                "Intellectual Property Rights (IPR): Patents, Trademarks, Copyrights.",
+                "STARTUP FUNDING: Bootstrapping, Angel investors, Venture capital.",
                 "Team Building and Mentorship.",
                 "Importance of a strong founding team.",
                 "Roles and responsibilities in a startup.",
@@ -2715,23 +2549,17 @@ const SEM5: Subject[] = [
             ]
         },
         {
-            num: "V", hours: "06 Hours", title: "Scaling, Ecosystem Engagement, and", topics: [
-                "Future Trends.",
+            num: "V", hours: "06 Hours", title: "Scaling, Ecosystem Engagement, and Future Trends", topics: [
                 "Growth Strategies and Scaling Up.",
                 "Marketing and sales for startups.",
                 "User acquisition and retention.",
                 "Challenges of scaling and solutions.",
-                "Exit strategies.",
-                "Acquisition.",
+                "EXIT STRATEGIES: Acquisition, IPO.",
                 "Engaging with the Startup Ecosystem.",
                 "Networking with investors, mentors, and entrepreneurs.",
                 "Participation in startup competitions and pitch events.",
                 "Leveraging incubators and accelerators Future Trends in Innovation and Entrepreneurship.",
-                "Emerging technologies.",
-                "Artificial Intelligence.",
-                "Blockchain.",
-                "Internet of Things (IoT).",
-                "Sustainable Technologies.",
+                "EMERGING TECHNOLOGIES: Artificial Intelligence, Blockchain, Internet of Things (IoT), Sustainable Technologies.",
                 "Social entrepreneurship and impact investing.",
                 "Global startup trends.",
                 "PRACTICAL ASPECT",
@@ -2761,7 +2589,7 @@ const SEM5: Subject[] = [
                 "FOUNDATIONS: Need, advantages/limitations; monophasic vs biphasic; solubility-enhancement techniques.",
                 "Vehicles & solvents: Pharmaceutical waters (types; manufacturing & Quality Control of Purified/Distilled); classes of solvents as per toxicity.",
                 "Formulation & manufacturing: Raw-material considerations and additives; processing; Quality Control of solutions/syrups/elixirs; powders for reconstitution as solutions.",
-                "Measuring, filling & packaging: Techniques; container– closure integrity; automation in liquid manufacturing.",
+                "Measuring, filling & packaging: Techniques; containerclosure integrity; automation in liquid manufacturing.",
             ]
         },
         {
@@ -2884,7 +2712,7 @@ const SEM5: Subject[] = [
         {
             num: "II", hours: "07 Hours", title: "Pharmacology of Drugs Used in Psychiatry", topics: [
                 "Antipsychotics, antidepressants, anti-anxiety drugs, mood stabilizers, CNS stimulants, and hallucinogens.",
-                "Substance abuse, drug addiction, and general principles of de- addiction.",
+                "Substance abuse, drug addiction, and general principles of deaddiction.",
             ]
         },
         {
@@ -2894,8 +2722,7 @@ const SEM5: Subject[] = [
                 "Concept of selective targeting in chemotherapy.",
                 "Classification of antimicrobial agents based on mechanism of action.",
                 "Concept of superinfection, chemoprophylaxis, and combined use of antibiotics.",
-                "ANTIMICROBIAL RESISTANCE: causes, mechanisms, and preventive measures ii) Antimicrobial Agents Classification, mechanism of action, adverse drug reactions, and therapeutic uses.",
-                "Sulphonamides and cotrimoxazole.",
+                "ANTIMICROBIAL RESISTANCE: causes, mechanisms, and preventive measures ii) Antimicrobial Agents Classification, mechanism of action, adverse drug reactions, and therapeutic uses of: Sulphonamides and cotrimoxazole.",
                 "Fluoroquinolones.",
                 "Penicillins and cephalosporins.",
                 "Macrolides and tetracyclines.",
@@ -2903,16 +2730,7 @@ const SEM5: Subject[] = [
                 "Carbapenems and monobactams.",
                 "Chloramphenicol and aminoglycosides.",
                 "iii) Chemotherapy of Diseases.",
-                "Drugs used in the treatment.",
-                "Fungal infections.",
-                "Viral infections.",
-                "Helminthiasis.",
-                "Urinary tract infections.",
-                "Tuberculosis.",
-                "Leprosy.",
-                "Malaria.",
-                "Amoebiasis.",
-                "Neoplastic diseases.",
+                "Drugs used in the treatment of: Fungal infections, Viral infections, Helminthiasis, Urinary tract infections, Tuberculosis, Leprosy, Malaria, Amoebiasis, Neoplastic diseases.",
             ]
         },
         {
@@ -2923,8 +2741,7 @@ const SEM5: Subject[] = [
                 "Insulin and oral hypoglycaemic agents.",
                 "ACTH and corticosteroids.",
                 "Oral contraceptives.",
-                "Drugs acting on the uterus.",
-                "PCOD.",
+                "Drugs acting on the uterus, PCOD.",
             ]
         },
         {
@@ -2932,7 +2749,7 @@ const SEM5: Subject[] = [
                 "Drugs used in peptic ulcer.",
                 "Drugs used for constipation and diarrhoea.",
                 "Emetics and anti-emetics.",
-                "DIGESTANTS, CARMINATIVES, APPETIZERS, AND ANORECTICS: definitions and examples.",
+                "Digestants, carminatives, appetizers, and anorectics definitions and examples.",
             ]
         },
     ], false,
@@ -3104,7 +2921,7 @@ const SEM6: Subject[] = [
         },
         {
             num: "III", hours: "10 Hours", title: "Modern Techniques in Natural Product Discovery", topics: [
-                "Role of artificial intelligence (AI), Machine learning and big data in Drug discovery from natural Products. Molecular docking, Virtual Screening and Pharmacophore modelling, Use of Genomic and transcriptomic tools in medicinal plant research, High-throughput screening (HTS) and bioautography.",
+                "Role of artificial intelligence (AI), Machine learning and big data in Drug discovery from natural Products. Molecular docking, Virtual Screening and Pharmacophore modelling, Use of Genomic and transcriptomic tools in medicinal plant research, High-throughput screening (HTS) and bioautography, .",
             ]
         },
         {
@@ -3145,13 +2962,12 @@ const SEM6: Subject[] = [
         },
         {
             num: "II", hours: "10 Hours", title: "Drug Distribution, Binding and Elimination", topics: [
-                "BIOAVAILABILITY AND BIOEQUIVALENCE: Definition and Objectives of bioavailability, absolute and relative bioavailability, Introduction to BCS and biopharmaceutical drug disposition classification system, methods of measurement of bioavailability (Plasma data, Urinary excretion data), Protocol for assessment of bioavailability and bioequivalence studies. in- vitro drug dissolution methods (test apparatus I-VII), biorelevant dissolution mediums, in-vitro in-vivo correlations: Concept and Applications, Biowaivers, Methods of enhancement of bioavailability.",
+                "BIOAVAILABILITY AND BIOEQUIVALENCE: Definition and Objectives of bioavailability, absolute and relative bioavailability, Introduction to BCS and biopharmaceutical drug disposition classification system, methods of measurement of bioavailability (Plasma data, Urinary excretion data), Protocol for assessment of bioavailability and bioequivalence studies. invitro drug dissolution methods (test apparatus I-VII), biorelevant dissolution mediums, in-vitro in-vivo correlations: Concept and Applications, Biowaivers, Methods of enhancement of bioavailability.",
             ]
         },
         {
             num: "III", hours: "10 Hours", title: "Pharmacokinetics — One-Compartment and Multicompartment Models", topics: [
-                "PHARMACOKINETIC MODELS: Compartment Models: Definition, Basis of classification, Properties of compartment, Advantages and disadvantages of compartment modelling. Kinetic considerations of One compartment open model. (a). Intravenous Injection (Bolus/rapid) (b). Intravenous infusion and Extra-vascular administration. (with emphasis on Curve Fitting, Wagner.",
-                "–Nelson, Loo Riegelman) Introduction to non - compartment model: Principles, estimation of PK parameters (AUC, AUMC, MRT, MAT statistical moment theory).",
+                "PHARMACOKINETIC MODELS: Compartment Models: Definition, Basis of classification, Properties of compartment, Advantages and disadvantages of compartment modelling. Kinetic considerations of One compartment open model. (a). Intravenous Injection (Bolus/rapid) (b). Intravenous infusion and (c) Extra-vascular administration. (with emphasis on Curve Fitting, Wagner –Nelson, Loo Riegelman) Introduction to non - compartment model: Principles, estimation of PK parameters (AUC, AUMC, MRT, MAT statistical moment theory).",
             ]
         },
         {
@@ -3162,8 +2978,8 @@ const SEM6: Subject[] = [
             ]
         },
         {
-            num: "V", hours: "6 Hours", title: "Nonlinear Pharmacokinetics: Introduction, Reasons for Non-linearity", topics: [
-                "Michaelis-menton method of estimating parameters, Explanation with example of drugs.",
+            num: "V", hours: "6 Hours", title: "Bioavailability, Bioequivalence and Clinical Pharmacokinetics", topics: [
+                "NONLINEAR PHARMACOKINETICS: Introduction, Reasons for Non-linearity, Michaelis-menton method of estimating parameters, Explanation with example of drugs.",
                 "APPLICATION OF PK SOFTWARE: Introduction of various in -silico methods for calculating various PK parameters.",
             ]
         },
@@ -3191,7 +3007,7 @@ const SEM6: Subject[] = [
         },
         {
             num: "II", hours: "6 Hours", title: "Patents – Fundamentals and Process", topics: [
-                "Definition and objectives of patents, Criteria for patentability such as Novelty/innovations, Non-obviousness, Utility, Types of patents and non- patentable inventions in India, Procedure for filing a patent in India, Rights of a patent holder and term of patent protection.",
+                "Definition and objectives of patents, Criteria for patentability such as Novelty/innovations, Non-obviousness, Utility, Types of patents and nonpatentable inventions in India, Procedure for filing a patent in India, Rights of a patent holder and term of patent protection.",
             ]
         },
         {
@@ -3275,7 +3091,7 @@ const SEM6: Subject[] = [
                 "Correlation analysis for identifying process variability.",
                 "Logistic regression models for batch pass/fail prediction.",
                 "Feature importance in process monitoring, predictive maintenance concepts.",
-                "Ethical and regulatory considerations in automated decision- making, and limitations of predictive models in manufacturing environments.",
+                "Ethical and regulatory considerations in automated decisionmaking, and limitations of predictive models in manufacturing environments.",
             ]
         },
         {
@@ -3319,7 +3135,7 @@ const SEM6: Subject[] = [
         {
             num: "II", hours: "10 Hours", title: "Spectroscopy", topics: [
                 "FUNDAMENTALS OF SPECTROSCOPY: Properties of electromagnetic radiation, electromagnetic spectrum.",
-                "UV VISIBLE SPECTROSCOPY: Beer and Lambert’s law, Derivation and deviations. Electronic transitions, chromophores, auxochromes, spectral shifts, solvent effect on absorption spectra, Instrumentation - Sources of radiation, wavelength selectors, sample cells, detectors (Photo tube, Photomultiplier tube, Photo voltaic cell, Silicon Photodiode). Applications - single and multi component analysis of pharmaceuticals.",
+                "UV VISIBLE SPECTROSCOPY: Beer and Lambert’s law, Derivation and deviations. Electronic transitions, chromophores, auxochromes, spectral shifts, solvent effect on absorption spectra, Instrumentation - Sources of radiation, wavelength selectors, sample cells, detectors (Photo tube, Photomultiplier tube, Photo voltaic cell, Silicon Photodiode). Applications single and multi component analysis of pharmaceuticals.",
                 "IR SPECTROSCOPY: Introduction, fundamental modes of vibrations in poly atomic molecules, factors affecting vibrations, Instrumentation of dispersive Infrared spectrophotometer (including sample handling Techniques) and FTIR.",
                 "Pharmaceutical applications.",
             ]
@@ -3371,8 +3187,7 @@ const SEM6: Subject[] = [
         },
         {
             num: "II", hours: "10 Hours", title: "Drugs and Cosmetics Act, 1940 and Its Rules 1945", topics: [
-                "Detailed study of Schedule G, H, H1, M, N, P, T, U, V, X, Y.",
-                "Sch F, Part XII B.",
+                "Detailed study of Schedule G, H, H1, M, N, P, T, U, V, X, Y, Sch F, Part XII B.",
                 "SALE OF DRUGS: Wholesale, Retail sale and Restricted license.",
                 "Offences and penalties.",
                 "Labeling & packing of drugs- General labeling requirements and specimen labels for drugs and cosmetics, List of permitted colors. Offences and penalties.",
@@ -3389,16 +3204,14 @@ const SEM6: Subject[] = [
         {
             num: "IV", hours: "8 Hours", title: "Narcotic Drugs and Psychotropic Substances (NDPS) Act 1985 & Medical Termination of Pregnancy Act", topics: [
                 "Study of Salient Features of Drugs and Magic Remedies Act and its rules: Objectives, Definitions, Prohibition of certain advertisements, Classes of Exempted advertisements, Offences and Penalties.",
-                "Prevention of Cruelty to animals Act-1960: Objectives, Definitions, Institutional Animal Ethics Committee, CCSEA guidelines for Breeding and Stocking of Animals, Performance of Experiments, Transfer and acquisition of animals for experiment, Records, Power to suspend or revoke registration.",
-                "Offences and Penalties.",
+                "Prevention of Cruelty to animals Act-1960: Objectives, Definitions, Institutional Animal Ethics Committee, CCSEA guidelines for Breeding and Stocking of Animals, Performance of Experiments, Transfer and acquisition of animals for experiment, Records, Power to suspend or revoke registration, Offences and Penalties.",
                 "NATIONAL PHARMACEUTICAL PRICING AUTHORITY: Drugs Price Control Order (DPCO)- 2013. Objectives, Definitions, Sale prices of bulk drugs, Retail price of formulations, Retail price and ceiling price of scheduled formulations, National List of Essential Medicines (NLEM).",
             ]
         },
         {
             num: "V", hours: "9 Hours", title: "DPCO, Patent Act, Prevention of Cruelty to Animals Act & CDSCO Regulatory System", topics: [
                 "PHARMACEUTICAL LEGISLATIONS: A brief review, Introduction, Study of drugs enquiry committee, Health survey and development committee, Hathi committee and Mudaliar committee.",
-                "CODE OF PHARMACEUTICAL ETHICS: Definition, Pharmacist in relation to his job, trade, medical profession and his profession.",
-                "Medical Termination of Pregnancy Act.",
+                "CODE OF PHARMACEUTICAL ETHICS: Definition, Pharmacist in relation to his job, trade, medical profession and his profession, • Medical Termination of Pregnancy Act.",
                 "Brief Introduction to Right to Information Act.",
                 "Introduction New Drugs and Clinical Trials Rules, 2019 and amendments.",
                 "Cosmetic rules 2020.",
@@ -3559,8 +3372,7 @@ const SEM6: Subject[] = [
         {
             num: "VI", hours: "15 Hours", title: "Option 6: BP607T AEC6 — Active Pharmaceutical Ingredients and Excipient Sciences (15 Hours)", topics: [
                 "Introduction to APIs and Excipients",
-                "Definitions, classifications, and sources (synthetic, natural, biotech APIs",
-                "functional excipients).",
+                "Definitions, classifications, and sources (synthetic, natural, biotech APIs; functional excipients).",
                 "Physicochemical properties: Solubility, polymorphism, hygroscopicity, particle characteristics.",
                 "Roles in formulations: Bioavailability enhancement, stability, manufacturability.",
                 "Industry overview: Global market trends, common examples (e.g., paracetamol API, HPMC excipient). Methodologies for Selection and Pre-formulation",
@@ -3873,9 +3685,8 @@ const SEM7: Subject[] = [
         },
         {
             num: "III", hours: "9 Hours", title: "Correlation and Regression Analysis", topics: [
-                "CORRELATION ANALYSIS: Introduction to the concept of correlation between two variables, positive and negative correlation, no correlation, examples of positive, negative and no correlation.",
-                "MEASUREMENT OF CORRELATION: Pearson’s Correlation Co-efficient – Definition and formula, assumptions, range of Pearson’s correlation co-efficient, interpretation of sign and magnitude.",
-                "Spearman’s Rank Correlation Co- efficient – Concept and when to use, procedure for calculation Spearman’s Rank Correlation Co- efficient.",
+                "CORRELATION ANALYSIS: Introduction to the concept of correlation between two variables, positive and negative correlation, no correlation, examples of positive, negative and no correlation Measurement of correlation • Pearson’s Correlation Co-efficient – Definition and formula, assumptions, range of Pearson’s correlation co-efficient, interpretation of sign and magnitude.",
+                "Spearman’s Rank Correlation Co- efficient – Concept and when to use, procedure for calculation Spearman’s Rank Correlation Coefficient.",
                 "Real life applications in pharmaceutical and health sciences Problems on calculation of these two types of correlation co-efficient, use of scatter plot.",
                 "MULTIPLE CORRELATION: Concept and applications.",
                 "REGRESSION ANALYSIS: Concept of regression, dependent and independent variables in regression analysis, simple linear regression, simple linear regression equation (method of least squares), calculation of slope and intercept, co-efficient of determination, interpretation of output of regression analysis, applications of regression analysis. Relationship between regression co-efficient and correlation co-efficient Problems on simple linear regression analysis for predicting values of dependent variables (pharmaceutical examples) Multiple linear regression-Concept and applications, meaning of overfitting and underfitting.",
@@ -3884,10 +3695,8 @@ const SEM7: Subject[] = [
         {
             num: "IV", hours: "12 Hours", title: "Inferential Statistics", topics: [
                 "STATISTICAL ESTIMATION: Point estimates and interval estimates of population parameters from sample statistics Concept of confidence intervals. Confidence intervals for means using t values. Problems on generating confidence intervals.",
-                "HYPOTHESIS TESTING: Concept, steps involved, type I and type II error, sample size and power of the test, p values, applications of hypothesis testing Parametric tests - t- tests (single sample t test, two independent samples t test, paired t test) ANOVA (one way and two way).",
-                "Assumptions, procedure and applications (case studies using t tests and ANOVA) Hypothesis testing in regression analysis and correlation.",
-                "NON-PARAMETRIC TESTS: Mann Whitney U test, Wilcoxon Sign Rank test, Kruskal Wallis test.",
-                "Friedman test, Chi square tests.",
+                "Hypothesis testing Concept, steps involved, type I and type II error, sample size and power of the test, p values, applications of hypothesis testing Parametric tests - t- tests (single sample t test, two independent samples t test, paired t test) ANOVA (one way and two way).",
+                "Assumptions, procedure and applications (case studies using t tests and ANOVA) Hypothesis testing in regression analysis and correlation Non-parametric tests Mann Whitney U test, Wilcoxon Sign Rank test, Kruskal Wallis test, Friedman test, Chi square tests.",
                 "Assumptions, procedure and applications (problems on non-parametric tests).",
             ]
         },
@@ -3895,7 +3704,7 @@ const SEM7: Subject[] = [
             num: "V", hours: "6 Hours", title: "Research Methodology", topics: [
                 "RESEARCH: Meaning, importance and types.",
                 "Types of research designs Research methodology – Based on the research question, selection of research design, defining the population and sample, selecting the sample size and sampling method, method of data collection and data analysis.",
-                "Decision tree approach for selection of statistical tests on the basis of research question and type of data Descriptive research design – Examples of application Observational research design – Examples of application Experimental research design – Examples of application Scientific report writing, plagiarism, referencing styles, selection of research journals, abstracting services and databases Screening and Optimization – Concept and experimental designs used for screening and optimization including Plackett Burman design, factorial designs, D optimal design, sequential simplex design, central composite design and response surface methodology, blocking and confounding in experimental designs.",
+                "Decision tree approach for selection of statistical tests on the basis of research question and type of data Descriptive research design – Examples of application Observational research design – Examples of application Experimental research design Examples of application Scientific report writing, plagiarism, referencing styles, selection of research journals, abstracting services and databases Screening and Optimization – Concept and experimental designs used for screening and optimization including Plackett Burman design, factorial designs, D optimal design, sequential simplex design, central composite design and response surface methodology, blocking and confounding in experimental designs.",
             ]
         },
     ], false,
@@ -3918,8 +3727,8 @@ const SEM7: Subject[] = [
             ]
         },
         {
-            num: "II", hours: "6 Hours", title: "Common Skin Problems (dry Skin, Oily Skin, Pimples and Acne", topics: [
-                "Pigmentation, Prickly heat and Sun burn) and general composition, method for preparation, packing and evaluation of the skin Cosmetics and cosmeceuticals. Herbal cosmetics for skin.",
+            num: "II", hours: "6 Hours", title: "Skin Care, Hair Care and Oral Care Cosmetics", topics: [
+                "Common skin problems (Dry Skin, Oily skin, Pimples and acne, Pigmentation, Prickly heat and Sun burn) and general composition, method for preparation, packing and evaluation of the skin Cosmetics and cosmeceuticals. Herbal cosmetics for skin.",
                 "Types of soaps, syndet bars, general composition, method for preparation, packing and evaluation of soaps.",
                 "Introduction to Perfumes and toiletries.",
             ]
@@ -3974,8 +3783,7 @@ const SEM7: Subject[] = [
         {
             num: "II", hours: "6 Hours", title: "AI in Drug Safety & Pharmacovigilance", topics: [
                 "Overview of pharmacovigilance systems.",
-                "Structure and data formats from real systems (e.g. FAERS.",
-                "EudraVigilance).",
+                "Structure and data formats from real systems (e.g. FAERS, EudraVigilance).",
                 "Conceptual overview of frequency analysis and signal detection.",
                 "Logistic regression for ADR risk prediction.",
                 "Confusion matrix and clinical performance metrics.",
@@ -4005,8 +3813,8 @@ const SEM7: Subject[] = [
             ]
         },
         {
-            num: "V", hours: "6 Hours", title: "Guided Supervised Learning Project – Pharmaceutical and", topics: [
-                "Clinical Applications Students will undertake a guided supervised learning project (individually or in groups) applying regression or classification models to pharmaceutical or clinical datasets.",
+            num: "V", hours: "6 Hours", title: "Guided Supervised Learning Project – Pharmaceutical and Clinical Applications", topics: [
+                "Students will undertake a guided supervised learning project (individually or in groups) applying regression or classification models to pharmaceutical or clinical datasets.",
                 "The project should include the following steps.",
                 "Identification and definition of a relevant pharmaceutical or clinical problem.",
                 "Selection of an appropriate publicly available dataset.",
@@ -4043,7 +3851,7 @@ const SEM7: Subject[] = [
                 "NUCLEAR MAGNETIC RESONANCE SPECTROSCOPY",
                 "Principles of ¹H-NMR and ¹³C-NMR, various solvents used, chemical shift, factors affecting chemical shift, coupling constant, spin–spin coupling, relaxation, instrumentation of FT-NMR and its applications.",
                 "MASS SPECTROMETRY",
-                "Principles, fragmentation and its rules, ionization techniques – Electron impact, chemical ionization, MALDI, FAB, API, analyzers – Time of flight and quadrupole, ion trap, detectors and applications.",
+                "Principles, fragmentation and its rules, ionization techniques Electron impact, chemical ionization, MALDI, FAB, API, analyzers – Time of flight and quadrupole, ion trap, detectors and applications.",
             ]
         },
         {
@@ -4057,8 +3865,7 @@ const SEM7: Subject[] = [
         {
             num: "III", hours: "10 Hours", title: "Hyphenated Mass Spectrometry (LC-MS/MS, GC-MS/MS)", topics: [
                 "UPLC AND NANO LC: Principle, advantages over LC and applications.",
-                "Principle and applications of hyphenated techniques: GC-MS, LC-.",
-                "MS/MS, ICP-MS.",
+                "Principle and applications of hyphenated techniques: GC-MS, LCMS/MS, ICP-MS.",
                 "SUPERCRITICAL CHROMATOGRAPHY AND FLASH CHROMATOGRAPHY: principles and applications.",
             ]
         },
@@ -4067,8 +3874,7 @@ const SEM7: Subject[] = [
                 "GREEN ANALYTICAL CHEMISTRY",
                 "Types of green solvents, various computational tools used to assess the greenness and its applications in sample preparation and analytical method development.",
                 "BIO-ANALYTICAL METHODS",
-                "Introduction to bioanalytical method development, extraction of drugs and metabolites from biological fluids – SPE, LLE, PPE, BCS classification, PK-PD interaction, microsomal assays, MTT assay.",
-                "BA & BE study protocol, biosimilars.",
+                "Introduction to bioanalytical method development, extraction of drugs and metabolites from biological fluids – SPE, LLE, PPE, BCS classification, PK-PD interaction, microsomal assays, MTT assay, BA & BE study protocol, biosimilars.",
                 "RADIO IMMUNE ASSAYS AND ELISA",
                 "Importance, various components, principle, different methods, limitations and applications of radio immunoassay and ELISA.",
             ]
@@ -4101,26 +3907,18 @@ const SEM7: Subject[] = [
         {
             num: "I", hours: "10 Hours", title: "Fundamentals of Pharmacovigilance", topics: [
                 "Concept, history, and importance of pharmacovigilance.",
-                "Basic drug classification systems (introductory overview only).",
-                "ATC classification, ICD.",
-                "ATC system.",
+                "Basic drug classification systems (introductory overview only): ATC classification, ICD, ATC system, ICD.",
                 "Drug-related problems and medication safety.",
-                "Drug safety considerations in special populations.",
-                "Paediatrics.",
-                "Geriatrics.",
-                "Pregnancy and lactation.",
+                "Drug safety considerations in special populations: Paediatrics, Geriatrics, Pregnancy and lactation.",
             ]
         },
         {
             num: "II", hours: "10 Hours", title: "Pharmacovigilance Systems and Regulatory Framework", topics: [
                 "Objectives and functions of pharmacovigilance.",
-                "Methods of pharmacovigilance data collection.",
-                "Spontaneous reporting.",
-                "Cohort and case-control studies.",
+                "METHODS OF PHARMACOVIGILANCE DATA COLLECTION: Spontaneous reporting, Cohort and case-control studies.",
                 "Global pharmacovigilance systems.",
                 "WHO International Drug Monitoring Programme.",
-                "Role of CIOMS and major regulatory agencies (e.g., USFDA.",
-                "EMA).",
+                "Role of CIOMS and major regulatory agencies (e.g., USFDA, EMA).",
                 "Pharmacovigilance Programme of India (PvPI).",
                 "Establishment and role of ADR Monitoring Centres.",
             ]
@@ -4132,8 +3930,7 @@ const SEM7: Subject[] = [
                 "Methods of ADR monitoring, detection, and reporting.",
                 "Assessment of causality, severity, predictability, and preventability of ADRs.",
                 "Management of ADRs.",
-                "Online reporting mechanisms and databases (WHO-ART, VigiBase, Vigiflow, Oracle Argus, OpenVigil software).",
-                "MEDRA.",
+                "Online reporting mechanisms and databases (WHO-ART, VigiBase, Vigiflow, Oracle Argus, OpenVigil software)., MEDRA.",
             ]
         },
         {
@@ -4181,8 +3978,7 @@ const SEM7: Subject[] = [
     s("BP706T", "Pharmacy Practice", 3, "T", [
         {
             num: "I", hours: "8 Hours", title: "Introduction to Pharmacy Practice", topics: [
-                "Definition, scope and evolution.",
-                "Hospital and clinical pharmacy.",
+                "Definition, scope and evolution of: Hospital and clinical pharmacy.",
                 "Pharmacist's role from dispenser to healthcare provider.",
                 "WHO and FIP guidelines on pharmacy practice.",
                 "Pharmacy practice regulations in India.",
@@ -4191,8 +3987,7 @@ const SEM7: Subject[] = [
                 "Concepts of Good Pharmacy Practice.",
                 "PHARMACY PRACTICE SETTINGS: inpatient, outpatient.",
                 "Concept of healthcare delivery system and interprofessional collaboration.",
-                "Primary (PHC), Secondary (CHC), Tertiary (District Hospitals.",
-                "Medical Colleges) – role of pharmacists at various levels of care.",
+                "Primary (PHC), Secondary (CHC), Tertiary (District Hospitals, Medical Colleges) – role of pharmacists at various levels of care.",
             ]
         },
         {
@@ -4296,8 +4091,7 @@ const SEM7: Subject[] = [
             num: "IV", hours: "6 Hours", title: "International Regulatory Systems & Global Drug Registration", topics: [
                 "TYPES OF REGULATORY APPLICATIONS: Investigational New Drug (IND), New Drug Application (NDA), Abbreviated New.",
                 "Drug Application (ANDA).",
-                "Drug Master Files (DMF), Common Technical Document (CTD), electronic CTD (eCTD), ASEAN CTD (ACTD).",
-                "Registration procedure for Indian drug products in overseas markets, Post-approval changes to NDA and ANDA.",
+                "Drug Master Files (DMF), Common Technical Document (CTD), electronic CTD (eCTD), ASEAN CTD (ACTD), • Registration procedure for Indian drug products in overseas markets, Post-approval changes to NDA and ANDA.",
             ]
         },
         {
@@ -4382,8 +4176,7 @@ const SEM7: Subject[] = [
                 "GOI’s initiatives and National Medical Device Policy.",
                 "Regulatory frameworks (CDSCO; State FDA; USFDA; EU-CE, etc.)",
                 "Medical device design and development process",
-                "Definition and Classification of Medical Devices (India",
-                "EU) Medical Device Design, Biomaterials and Biocompatibility:",
+                "Definition and Classification of Medical Devices (India; US; EU) Medical Device Design, Biomaterials and Biocompatibility:",
                 "Medical Device Design principles and methodologies, safety analysis",
                 "Properties and selection of materials &amp",
                 "biomaterials for devices",
@@ -4559,8 +4352,7 @@ const SEM8: Subject[] = [
                 "Training vs testing vs validation datasets.",
                 "Cross-validation (conceptual understanding).",
                 "Model drift and performance degradation, data leakage in modeling.",
-                "DOCUMENTATION PRACTICES: Documentation and reproducibility.",
-                "Basics of model auditing.",
+                "DOCUMENTATION PRACTICES: Documentation and reproducibility, Basics of model auditing.",
             ]
         },
         {
@@ -4568,8 +4360,7 @@ const SEM8: Subject[] = [
                 "Overview of AI in regulatory submissions.",
                 "Explainable AI (XAI) concept.",
                 "Transparency and interpretability.",
-                "Overview of regulatory guidance on AI (EU AI Act, FDA/.",
-                "CDSCO frameworks).",
+                "Overview of regulatory guidance on AI (EU AI Act, FDA/CDSCO frameworks).",
                 "Accountability in automated decision systems.",
                 "Risk-based classification of AI systems.",
             ]
@@ -4588,8 +4379,7 @@ const SEM8: Subject[] = [
         {
             num: "IV", hours: "6 Hours", title: "AI in in Public Health & Real-world Data Analytics", topics: [
                 "Overview of real-world data sources (EHR, claims, surveillance systems).",
-                "Conceptual knowledge of AI in outbreak prediction.",
-                "Population-level risk modeling.",
+                "Conceptual knowledge of AI in outbreak prediction, Population-level risk modeling.",
                 "Regression models in epidemiology.",
                 "AI in vaccination forecasting.",
                 "CASE STUDIES: AI applications in epidemiological trend analysis (e.g. COVID-19 vaccination hesitancy, diabetes prevalence forecasting, antibiotic resistance trends etc.).",
@@ -4688,8 +4478,7 @@ const SEM8: Subject[] = [
         {
             num: "II", hours: "9 Hours", title: "Technology Development and Transfer", topics: [
                 "WHO guidelines for Technology Transfer(TT): Terminology, Technology transfer protocol, Quality risk management, Transfer from R & D to production (Process, packaging and cleaning), Granularity of TT Process (API, excipients, finished products, packaging materials) Documentation, Premises and equipments, qualification and validation, quality control and analytical method transfer.",
-                "TT AGENCIES IN INDIA: APCTD, NRDC, TIFAC, BCIL, TBSE / SIDBI.",
-                "TT RELATED DOCUMENTATION: confidentiality agreement, licensing, MoUs, legal issues.",
+                "TT AGENCIES IN INDIA: APCTD, NRDC, TIFAC, BCIL, TBSE / SIDBI; TT related documentation - confidentiality agreement, licensing, MoUs, legal issues.",
             ]
         },
         {
@@ -4758,7 +4547,7 @@ const SEM8: Subject[] = [
         },
         {
             num: "V", hours: "6 Hours", title: "Operations & Supply Chain Management in Pharmaceuticals", topics: [
-                "Operations Management, Production planning and control in pharmaceutical manufacturing, Inventory management and optimization, Lean manufacturing and Six Sigma in the pharmaceutical industry, Supply Chain Management, Logistics management and drug distribution channels, Cold chain management and the role of technology in SCM, E- commerce and its role in pharmaceutical distribution, Risk Management and Sustainability.",
+                "Operations Management, Production planning and control in pharmaceutical manufacturing, Inventory management and optimization, Lean manufacturing and Six Sigma in the pharmaceutical industry, Supply Chain Management, Logistics management and drug distribution channels, Cold chain management and the role of technology in SCM, Ecommerce and its role in pharmaceutical distribution, Risk Management and Sustainability.",
             ]
         },
     ], false,
@@ -4779,8 +4568,7 @@ const SEM8: Subject[] = [
         {
             num: "I", hours: "12 Hours", title: "Fundamentals, Polymers & Materials for NDDS", topics: [
                 "Limitations of conventional dosage forms (e.g., solubility, permeability, toxicity, first-pass metabolism).",
-                "CLASSIFICATION OF NDDS: Controlled Release, Targeted, Stimuli-.",
-                "Responsive (Smart), Chronotherapeutic, Transdermal and Mucosal, Implantable and Injectable Depot Systems, Vesicular, Polymeric, Ocular, Pulmonary, and Nasal Drug Delivery Systems.",
+                "CLASSIFICATION OF NDDS: Controlled Release, Targeted, StimuliResponsive (Smart), Chronotherapeutic, Transdermal and Mucosal, Implantable and Injectable Depot Systems, Vesicular, Polymeric, Ocular, Pulmonary, and Nasal Drug Delivery Systems.",
                 "BIODEGRADABLE AND BIOCOMPATIBLE POLYMERS: PLA, PLGA, PCL, chitosan, gelatin.",
                 "LIPIDS AND SURFACTANTS: lecithin, phospholipids, Span/Tween, SLNs.",
                 "INORGANIC SYSTEMS: silica, gold nanoparticles, iron oxide, MOFs.",
@@ -4790,7 +4578,7 @@ const SEM8: Subject[] = [
         {
             num: "II", hours: "6 Hours", title: "Oral and Mucosal Delivery Systems", topics: [
                 "GASTRO-RETENTIVE SYSTEMS: floating, bioadhesive, expandable systems.",
-                "COLON-TARGETED SYSTEMS: pH-triggered, microbially-triggered, time- dependent systems.",
+                "COLON-TARGETED SYSTEMS: pH-triggered, microbially-triggered, timedependent systems.",
                 "BUCCAL, NASAL, AND PULMONARY CARRIERS: films, sprays, DPIs, liposomes.",
                 "IVIVC and biorelevant dissolution testing.",
             ]
@@ -4807,18 +4595,15 @@ const SEM8: Subject[] = [
                 "PREFORMULATION AND QBD: QTPP, CQAs, CPPs.",
                 "CHARACTERIZATION METHODS: particle size, zeta potential, SEM/TEM, in-vitro release, permeability assays (PAMPA, Caco-2).",
                 "NON-CLINICAL EVALUATION: PK/PD modeling, biodistribution, toxicology.",
-                "REGULATORY PATHWAYS: 505(b)(2), complex generics, ICH Q8–Q10.",
-                "EMA pathways.",
-                "CASE STUDIES: Liposomal Amphotericin B for Fungal Infections, mRNA-Lipid Nanoparticle Vaccines (e.g., COVID-19 Vaccines), Depot Antipsychotic Injections (e.g., Risperidone Microspheres), Transdermal Patch for Hormone Replacement Therapy, Ocular Inserts for Glaucoma Management, Oral Colon-Targeted Delivery for Inflammatory Bowel Disease, Inhalable Insulin for Diabetes Mellitus, Dendrimers for Targeted Cancer Therapy, Chronotherapeutic Drug Delivery in Hypertension.",
-                "Nanosystems and precision medicine.",
+                "REGULATORY PATHWAYS: 505(b)(2), complex generics, ICH Q8–Q10, EMA pathways.",
+                "CASE STUDIES: Liposomal Amphotericin B for Fungal Infections, mRNA-Lipid Nanoparticle Vaccines (e.g., COVID-19 Vaccines), Depot Antipsychotic Injections (e.g., Risperidone Microspheres), Transdermal Patch for Hormone Replacement Therapy, Ocular Inserts for Glaucoma Management, Oral Colon-Targeted Delivery for Inflammatory Bowel Disease, Inhalable Insulin for Diabetes Mellitus, Dendrimers for Targeted Cancer Therapy, Chronotherapeutic Drug Delivery in Hypertension., Nanosystems and precision medicine.",
                 "Liposomes, niosomes, transferosomes, polymeric nanoparticles, solid-lipid nanoparticles, dendrimers.",
-                "PRECISION MEDICINE: definition and scope, evolution from” one- size-fits-all” to personalized approaches.",
+                "PRECISION MEDICINE: definition and scope, evolution from” onesize-fits-all” to personalized approaches.",
             ]
         },
         {
             num: "V", hours: "14 Hours", title: "Sterile Dosage Forms (parenteral & Ophthalmic)", topics: [
-                "Introduction & classification: SVP vs LVP; routes.",
-                "Advantages/limitations.",
+                "Introduction & classification: SVP vs LVP; routes; Advantages/limitations.",
                 "Water for Injection (WFI): Types, preparation, storage/distribution; pharmacopoeial requirements.",
                 "FORMULATION COMPONENTS: Vehicles, buffers, co-solvents, surfactants, antioxidants, preservatives, chelators; isotonicity & osmolality.",
                 "MANUFACTURING: Aseptic vs terminal sterilisation; filtration; lyophilisation principles; environmental controls.",
