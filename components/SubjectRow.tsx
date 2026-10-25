@@ -38,7 +38,7 @@ export default function SubjectRow({ subject, semColor, semNum }: Props) {
             >
                 {/* Left: Direct Link to Subject Page (always in HTML for Googlebot) */}
                 <Link
-                    href={subject.type === "T" ? `/syllabus/semester-${semNum}/${subject.slug}/` : `/syllabus/semester-${semNum}/`}
+                    href={`/syllabus/semester-${semNum}/${subject.slug}/`}
                     className="px-3 sm:px-4 py-3 sm:py-3.5 flex items-start sm:items-center gap-2 sm:gap-3 flex-1 min-w-0 group"
                 >
                     <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2.5 flex-1 min-w-0">
@@ -69,7 +69,7 @@ export default function SubjectRow({ subject, semColor, semNum }: Props) {
                         {subject.credits}cr
                     </span>
 
-                    {subject.type === "T" && (
+                    {hasUnits && (
                         <Link
                             href={`/syllabus/semester-${semNum}/${subject.slug}/`}
                             className="inline-flex items-center gap-1 text-[11px] sm:text-[12px] font-semibold text-[#4C6EF5] hover:text-[#1A2B6B] px-1.5 py-1 rounded-[6px] hover:bg-[#EEF2FF] transition-colors"

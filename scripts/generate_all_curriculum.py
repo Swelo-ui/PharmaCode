@@ -321,15 +321,41 @@ def extract_elective_group(g):
             raw_topics = []
             cur = ""
             for l in lines:
-                if re.match(r"^(?:I|II|III|IV|V)\b", l) or re.match(r"^\d+\.\s+", l) or l.startswith("•") or l.startswith("-"):
-                    if cur: raw_topics.append(cur)
-                    cur = re.sub(r"^(?:I|II|III|IV|V)\b\s*", "", l).strip()
-                elif cur:
-                    cur += " " + l
+                lc = l.strip()
+                # Skip lines that are just Roman numerals or hours
+                if re.match(r"^(?:I|II|III|IV|V)\s*(?:\d+\s*(?:hours|hrs))?$", lc, re.IGNORECASE):
+                    continue
+                if re.match(r"^\d+\s*(?:hours|hrs)$", lc, re.IGNORECASE):
+                    continue
+
+                # Strip Roman numerals and stray hours from current line
+                lc = re.sub(r"^(?:I|II|III|IV|V)\b\s*", "", lc).strip()
+                lc = re.sub(r"\b\d+\s*(?:hours|hrs)\b", "", lc, flags=re.IGNORECASE).strip()
+                if not lc:
+                    continue
+
+                is_bullet = lc.startswith("•") or lc.startswith("-") or lc.startswith("*") or re.match(r"^o\s+", lc) or re.match(r"^\d+\.\s+", lc)
+                if is_bullet:
+                    if cur:
+                        raw_topics.append(cur)
+                    cur = re.sub(r"^[•\-\*]\s*|^o\s+|^\d+\.\s+", "", lc).strip()
                 else:
-                    cur = l
-            if cur: raw_topics.append(cur)
-            topics = refine_topics(raw_topics) if raw_topics else [f"Comprehensive theoretical study of {opt['title']}"]
+                    if cur:
+                        cur += " " + lc
+                    else:
+                        cur = lc
+            if cur:
+                raw_topics.append(cur)
+
+            cleaned_topics = []
+            for t in raw_topics:
+                t_clean = " ".join(t.split()).strip()
+                t_clean = re.sub(r"^[•\-\*]\s*|^o\s+|^\d+\.\s+", "", t_clean).strip()
+                t_clean = re.sub(r"\b\d+\s*(?:hours|hrs)\b", "", t_clean, flags=re.IGNORECASE).strip()
+                if len(t_clean) > 3 and not re.match(r"^\d+$", t_clean):
+                    cleaned_topics.append(t_clean)
+
+            topics = refine_topics(cleaned_topics) if cleaned_topics else [f"Comprehensive theoretical study of {opt['title']}"]
 
         romans = ["I", "II", "III", "IV", "V", "VI"]
         num_label = romans[idx] if idx < len(romans) else str(idx + 1)
