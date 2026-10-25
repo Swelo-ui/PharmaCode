@@ -855,7 +855,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
           // Footer
           Container(
             padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 12, top: 12),
-            child: Text('PharmaCode v1.0.15 · PCI NEP 2020',
+            child: Text('PharmaCode v1.0.17 · PCI NEP 2020',
               style: GoogleFonts.dmSans(color: AppTheme.textMuted, fontSize: 11)),
           ),
         ],

@@ -712,7 +712,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // Footer
             Center(
               child: Text(
-                'PharmaCode v1.0.15 • B.Pharm PCI NEP 2020\nCrafted with ❤️ for Pharmacy Students',
+                'PharmaCode v1.0.17 • B.Pharm PCI NEP 2020\nCrafted with ❤️ for Pharmacy Students',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.dmSans(color: AppTheme.textMuted, fontSize: 11, height: 1.5),
               ),
