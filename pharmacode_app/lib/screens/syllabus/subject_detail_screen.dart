@@ -52,6 +52,105 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
     openInAppUrl(context, 'https://pharmacode.vercel.app/notes/');
   }
 
+  Widget _buildTopicItem(String rawTopic) {
+    final cleanT = rawTopic.replaceAll('**', '').replaceAll('*', '').trim();
+    if (cleanT.isEmpty) return const SizedBox.shrink();
+
+    final colonIndex = cleanT.indexOf(':');
+    final hasColonPrefix = colonIndex != -1 && colonIndex <= 55;
+    final isOverview = cleanT.toLowerCase().startsWith('definition, etiopathogenesis') ||
+        cleanT.toLowerCase().startsWith('overview of management');
+
+    if (isOverview) {
+      return Container(
+        margin: const EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF8FAFC),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: const Color(0xFFE2E8F0)),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(top: 2),
+              child: Icon(Icons.info_outline_rounded, size: 15, color: Color(0xFF64748B)),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                cleanT,
+                style: GoogleFonts.dmSans(
+                  color: const Color(0xFF334155),
+                  fontSize: 12.5,
+                  fontStyle: FontStyle.italic,
+                  height: 1.45,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    String prefix = '';
+    String body = cleanT;
+    if (hasColonPrefix) {
+      prefix = cleanT.substring(0, colonIndex + 1).trim();
+      body = cleanT.substring(colonIndex + 1).trim();
+    }
+
+    final isUpper = prefix.isNotEmpty && prefix == prefix.toUpperCase() && prefix.contains(RegExp(r'[A-Z]'));
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 9),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: 6),
+            width: 6,
+            height: 6,
+            decoration: BoxDecoration(
+              color: isUpper ? const Color(0xFF4F46E5) : const Color(0xFF6366F1),
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: RichText(
+              text: TextSpan(
+                children: [
+                  if (prefix.isNotEmpty)
+                    TextSpan(
+                      text: '$prefix ',
+                      style: GoogleFonts.dmSans(
+                        color: isUpper ? const Color(0xFF0F172A) : const Color(0xFF1E293B),
+                        fontWeight: isUpper ? FontWeight.w800 : FontWeight.w700,
+                        fontSize: 13,
+                        letterSpacing: isUpper ? 0.2 : 0,
+                      ),
+                    ),
+                  TextSpan(
+                    text: body,
+                    style: GoogleFonts.dmSans(
+                      color: const Color(0xFF475569),
+                      fontSize: 13,
+                      height: 1.5,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final s = widget.subject;
@@ -370,11 +469,16 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                         initiallyExpanded: index == 0,
                         tilePadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
                         leading: Container(
-                          width: 38,
-                          height: 38,
+                          width: 40,
+                          height: 40,
                           decoration: BoxDecoration(
-                            color: const Color(0xFFEEF2FF),
-                            borderRadius: BorderRadius.circular(10),
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFFEEF2FF), Color(0xFFE0E7FF)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: const Color(0xFFC7D2FE), width: 1),
                           ),
                           alignment: Alignment.center,
                           child: FittedBox(
@@ -384,9 +488,9 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                               child: Text(
                                 unit.num,
                                 style: GoogleFonts.dmSans(
-                                  color: const Color(0xFF4C6EF5),
+                                  color: const Color(0xFF3730A3),
                                   fontWeight: FontWeight.w900,
-                                  fontSize: 12,
+                                  fontSize: 12.5,
                                 ),
                               ),
                             ),
@@ -397,56 +501,50 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                           style: GoogleFonts.dmSans(
                             color: AppTheme.primaryNavy,
                             fontWeight: FontWeight.w800,
-                            fontSize: 13,
+                            fontSize: 13.5,
+                            height: 1.3,
                           ),
                         ),
-                        subtitle: unit.hours.isNotEmpty
-                            ? Text(
-                                unit.hours,
+                        subtitle: Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Row(
+                            children: [
+                              if (unit.hours.isNotEmpty) ...[
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFF1F5F9),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Text(
+                                    unit.hours,
+                                    style: GoogleFonts.dmSans(
+                                      color: const Color(0xFF475569),
+                                      fontSize: 10.5,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                              ],
+                              Text(
+                                '${unit.topics.length} topics',
                                 style: GoogleFonts.dmSans(
                                   color: AppTheme.textMuted,
                                   fontSize: 11,
                                   fontWeight: FontWeight.w600,
                                 ),
-                              )
-                            : null,
-                        childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                              ),
+                            ],
+                          ),
+                        ),
+                        childrenPadding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
                         children: [
                           const Divider(color: Color(0xFFF0F4FF), height: 1),
                           const SizedBox(height: 12),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: unit.topics.map((t) {
-                              final cleanT = t.replaceAll('**', '').replaceAll('*', '').trim();
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 8),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(top: 6),
-                                      width: 6,
-                                      height: 6,
-                                      decoration: const BoxDecoration(
-                                        color: Color(0xFF4C6EF5),
-                                        shape: BoxShape.circle,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child: Text(
-                                        cleanT,
-                                        style: GoogleFonts.dmSans(
-                                          color: AppTheme.textDark,
-                                          fontSize: 13,
-                                          height: 1.45,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }).toList(),
+                            children: unit.topics.map(_buildTopicItem).toList(),
                           ),
                           const SizedBox(height: 12),
                           SizedBox(

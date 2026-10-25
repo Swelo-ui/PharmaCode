@@ -119,21 +119,42 @@ function UnitCard({
             {/* Sub-topics list */}
             {unit.topics.length > 0 && (
                 <div className="px-4 sm:px-5 pt-3 pb-2">
-                    <ul className="flex flex-col gap-2">
-                        {unit.topics.map((topic, i) => (
-                            <li key={i} className="flex gap-2.5 items-start">
-                                <span
-                                    className="shrink-0 mt-[6px] w-[5px] h-[5px] rounded-sm rotate-45"
-                                    style={{ background: semColor, minWidth: 5 }}
-                                />
-                                <span
-                                    className="font-[DM_Sans] text-[12px] sm:text-[13px] text-[#4B5563] leading-[1.65]"
-                                    style={{ wordBreak: "break-word" }}
-                                >
-                                    {topic}
-                                </span>
-                            </li>
-                        ))}
+                    <ul className="flex flex-col gap-2.5">
+                        {unit.topics.map((topic, i) => {
+                            const colonIdx = topic.indexOf(":");
+                            const isOverview = topic.toLowerCase().startsWith("definition, etiopathogenesis") || topic.toLowerCase().startsWith("overview of management");
+                            if (isOverview) {
+                                return (
+                                    <li key={i} className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-[8px] p-2.5 sm:p-3 text-[12px] sm:text-[13px] text-[#334155] italic font-medium leading-relaxed">
+                                        {topic}
+                                    </li>
+                                );
+                            }
+                            const hasPrefix = colonIdx !== -1 && colonIdx <= 55;
+                            const prefix = hasPrefix ? topic.slice(0, colonIdx + 1) : "";
+                            const body = hasPrefix ? topic.slice(colonIdx + 1).trim() : topic;
+                            const isUpper = prefix.length > 0 && prefix === prefix.toUpperCase() && /[A-Z]/.test(prefix);
+
+                            return (
+                                <li key={i} className="flex gap-2.5 items-start">
+                                    <span
+                                        className="shrink-0 mt-[6px] w-[5px] h-[5px] rounded-sm rotate-45"
+                                        style={{ background: isUpper ? semColor : "#64748B", minWidth: 5 }}
+                                    />
+                                    <span
+                                        className="font-[DM_Sans] text-[12px] sm:text-[13px] text-[#475569] leading-[1.65]"
+                                        style={{ wordBreak: "break-word" }}
+                                    >
+                                        {prefix && (
+                                            <strong className={isUpper ? "text-[#0F172A] font-extrabold tracking-wide" : "text-[#1E293B] font-bold"}>
+                                                {prefix}{" "}
+                                            </strong>
+                                        )}
+                                        {body}
+                                    </span>
+                                </li>
+                            );
+                        })}
                     </ul>
                 </div>
             )}
