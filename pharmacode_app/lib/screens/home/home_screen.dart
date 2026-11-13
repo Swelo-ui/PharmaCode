@@ -224,9 +224,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   children: [
                     _statChip('8', 'Semesters'),
                     const SizedBox(width: 8),
-                    _statChip('193', 'Credits'),
+                    _statChip(
+                      SyllabusService().isLoaded && SyllabusService().totalCredits > 0
+                          ? '${SyllabusService().totalCredits}'
+                          : '193',
+                      'Credits',
+                    ),
                     const SizedBox(width: 8),
-                    _statChip('77+', 'Subjects'),
+                    _statChip(
+                      SyllabusService().isLoaded && SyllabusService().totalSubjects > 0
+                          ? '${SyllabusService().totalSubjects}'
+                          : '88',
+                      'Subjects',
+                    ),
                     const SizedBox(width: 8),
                     _statChip('100%', 'Free'),
                   ],

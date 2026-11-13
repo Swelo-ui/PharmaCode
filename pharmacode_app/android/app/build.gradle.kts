@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.pharmacode.bpharm"
-    compileSdk = 36  // ✅ Fixed: SDK 36 is the real latest. SDK 37 does not exist officially.
+    compileSdk = 37
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -49,7 +49,7 @@ android {
         release {
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
-            isShrinkResources = true
+            isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

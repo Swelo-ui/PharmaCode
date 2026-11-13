@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
+import '../../core/ads/ad_service.dart';
+import '../../core/billing/in_app_purchase_service.dart';
 import '../../core/in_app_browser.dart';
 import '../../core/theme.dart';
 import '../../features/bookmarks/presentation/bookmarks_controller.dart';
 import '../../models/syllabus_models.dart';
+import '../../services/syllabus_service.dart';
 import '../ai/pharma_helper_screen.dart';
 import '../../widgets/pharma_mascot_widget.dart';
 
@@ -48,8 +51,52 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
     );
   }
 
+  void _openNotesWithAd(String targetUrl) {
+    final isVip = InAppPurchaseService.instance.isVipUnlocked;
+    if (isVip) {
+      openInAppUrl(context, targetUrl);
+    } else {
+      AdService.instance.showInterstitialAd(
+        force: true,
+        onDismissed: () {
+          if (mounted) {
+            openInAppUrl(context, targetUrl);
+          }
+        },
+      );
+    }
+  }
+
   void _openNotes() {
-    openInAppUrl(context, 'https://pharmacode.vercel.app/notes/');
+    int? semNum;
+    for (final sem in SyllabusService().semesters) {
+      if (sem.subjects.any((s) => s.code == widget.subject.code)) {
+        semNum = sem.num;
+        break;
+      }
+    }
+
+    final targetUrl = (semNum != null && widget.subject.slug.isNotEmpty)
+        ? 'https://pharmacode.vercel.app/syllabus/semester-$semNum/${widget.subject.slug}/'
+        : 'https://pharmacode.vercel.app/notes/';
+
+    _openNotesWithAd(targetUrl);
+  }
+
+  void _downloadUnitNotes(SubjectUnit unit) {
+    int? semNum;
+    for (final sem in SyllabusService().semesters) {
+      if (sem.subjects.any((s) => s.code == widget.subject.code)) {
+        semNum = sem.num;
+        break;
+      }
+    }
+
+    final targetUrl = (semNum != null && widget.subject.slug.isNotEmpty)
+        ? 'https://pharmacode.vercel.app/syllabus/semester-$semNum/${widget.subject.slug}/'
+        : 'https://pharmacode.vercel.app/notes/';
+
+    _openNotesWithAd(targetUrl);
   }
 
   Widget _buildTopicItem(String rawTopic) {
@@ -547,32 +594,57 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                             children: unit.topics.map(_buildTopicItem).toList(),
                           ),
                           const SizedBox(height: 12),
-                          SizedBox(
-                            width: double.infinity,
-                            child: OutlinedButton.icon(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => PharmaHelperScreen(
-                                      attachedSubject: widget.subject,
-                                      initialPrompt: 'Explain Unit ${unit.num}: ${unit.title} in detail with important 5-mark and 10-mark exam questions.',
-                                    ),
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: ElevatedButton.icon(
+                                  onPressed: () => _downloadUnitNotes(unit),
+                                  icon: const Icon(Icons.download_rounded, size: 16),
+                                  label: Text(
+                                    'Download Unit Notes',
+                                    style: GoogleFonts.dmSans(fontWeight: FontWeight.w800, fontSize: 11.5),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                );
-                              },
-                              icon: const PharmaMascotWidget(size: 18, showBadge: false),
-                              label: Text(
-                                'Explain Unit ${unit.num} with AI Tutor',
-                                style: GoogleFonts.dmSans(fontWeight: FontWeight.w800, fontSize: 12),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF2563EB),
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 8),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                    elevation: 0,
+                                  ),
+                                ),
                               ),
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: const Color(0xFF2563EB),
-                                side: const BorderSide(color: Color(0xFFBFDBFE)),
-                                padding: const EdgeInsets.symmetric(vertical: 8),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                flex: 2,
+                                child: OutlinedButton.icon(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => PharmaHelperScreen(
+                                          attachedSubject: widget.subject,
+                                          initialPrompt: 'Explain Unit ${unit.num}: ${unit.title} in detail with important 5-mark and 10-mark exam questions.',
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  icon: const PharmaMascotWidget(size: 16, showBadge: false),
+                                  label: Text(
+                                    'AI Tutor',
+                                    style: GoogleFonts.dmSans(fontWeight: FontWeight.w800, fontSize: 11.5),
+                                  ),
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor: const Color(0xFF2563EB),
+                                    side: const BorderSide(color: Color(0xFFBFDBFE)),
+                                    padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 8),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
                         ],
                       ),

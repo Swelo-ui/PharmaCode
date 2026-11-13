@@ -50,3 +50,4 @@ key.properties
 *.apk
 *.aab
 mapping.txt
+.data/

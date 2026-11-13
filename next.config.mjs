@@ -14,6 +14,14 @@ const nextConfig = {
             },
         ],
     },
+    async rewrites() {
+        return [
+            {
+                source: "/swelo-hub/",
+                destination: "/swelo-control/",
+            },
+        ];
+    },
     async headers() {
         return [
             {

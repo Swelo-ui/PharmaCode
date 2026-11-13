@@ -148,4 +148,18 @@ class AuthRepository {
     await _firebaseAuth.signOut();
     await _secureStorage.clearAll();
   }
+
+  Future<void> deleteAccount() async {
+    final user = _firebaseAuth.currentUser;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('user_avatar');
+    await prefs.remove('user_college');
+    await prefs.remove('user_batch');
+    await prefs.remove('user_semester');
+    await _secureStorage.clearAll();
+    if (user != null) {
+      await user.delete();
+    }
+    await _googleSignIn.signOut();
+  }
 }

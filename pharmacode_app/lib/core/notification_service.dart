@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -24,6 +26,16 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   } catch (e) {
     debugPrint('Firebase background init note: $e');
   }
+
+  // Check user preference
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    final enabled = prefs.getBool('pref_notifications') ?? true;
+    if (!enabled) {
+      debugPrint('FCM background notification skipped: user muted notifications');
+      return;
+    }
+  } catch (_) {}
 
   final title = message.notification?.title ??
       message.data['title'] ??
@@ -254,8 +266,69 @@ class NotificationService {
 
       _isInitialized = true;
       await _loadStoredNotifications();
+      unawaited(syncRemoteNotifications());
     } catch (e) {
       debugPrint('Notification initialization error: $e');
+    }
+  }
+
+  /// Syncs notifications broadcast from Admin Panel and records active user heartbeat
+  Future<void> syncRemoteNotifications() async {
+    try {
+      // 1. Send anonymous heartbeat for active users count
+      try {
+        final heartbeatUri = Uri.parse('https://pharmacode.vercel.app/api/admin/analytics');
+        unawaited(http.post(
+          heartbeatUri,
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({'platform': 'Android App'}),
+        ).timeout(const Duration(seconds: 4)));
+      } catch (_) {}
+
+      // 2. Fetch remote notifications feed from Admin Panel
+      final feedUri = Uri.parse('https://pharmacode.vercel.app/api/notifications');
+      final res = await http.get(feedUri).timeout(const Duration(seconds: 6));
+      if (res.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(res.body);
+        final List<dynamic> remoteList = data['notifications'] ?? [];
+
+        bool updated = false;
+        final existingIds = _notificationsHistory.map((n) => n.id).toSet();
+        final existingTitles = _notificationsHistory.map((n) => n.title.trim()).toSet();
+
+        for (final item in remoteList.reversed) {
+          final id = item['id']?.toString() ?? '';
+          final title = item['title']?.toString() ?? '';
+          final body = item['body']?.toString() ?? '';
+          final deepLink = item['deepLink']?.toString();
+          final timestamp = item['timestamp']?.toString() ?? 'Recent';
+
+          // Avoid duplicates
+          if (id.isNotEmpty && !existingIds.contains(id) && !existingTitles.contains(title.trim())) {
+            _notificationsHistory.insert(
+              0,
+              AppNotification(
+                id: id,
+                title: title,
+                body: body,
+                timestamp: timestamp,
+                deepLink: deepLink,
+                isRead: false,
+              ),
+            );
+            existingIds.add(id);
+            existingTitles.add(title.trim());
+            updated = true;
+          }
+        }
+
+        if (updated) {
+          _updateUnreadCount();
+          await _persistNotifications();
+        }
+      }
+    } catch (e) {
+      debugPrint('Remote notification sync note (offline or server unreachable): $e');
     }
   }
 
@@ -386,6 +459,37 @@ class NotificationService {
     }
   }
 
+  Future<void> setNotificationsEnabled(bool enabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('pref_notifications', enabled);
+
+    try {
+      final messaging = FirebaseMessaging.instance;
+      const topics = ['all_students', 'all', 'updates', 'general', 'announcements'];
+      if (enabled) {
+        for (final topic in topics) {
+          await messaging.subscribeToTopic(topic);
+        }
+      } else {
+        for (final topic in topics) {
+          await messaging.unsubscribeFromTopic(topic);
+        }
+        await _notificationsPlugin.cancelAll();
+      }
+    } catch (e) {
+      debugPrint('Error updating FCM topic subscriptions: $e');
+    }
+  }
+
+  static Future<bool> areNotificationsEnabled() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getBool('pref_notifications') ?? true;
+    } catch (_) {
+      return true;
+    }
+  }
+
   Future<void> markAllAsRead() async {
     for (var n in _notificationsHistory) {
       n.isRead = true;
@@ -421,6 +525,12 @@ class NotificationService {
     _notificationsHistory.insert(0, notif);
     _updateUnreadCount();
     await _persistNotifications();
+
+    final enabled = await areNotificationsEnabled();
+    if (!enabled) {
+      debugPrint('Local notification sound/alert suppressed because user disabled notifications.');
+      return;
+    }
 
     // ✅ Unique ID using microseconds to prevent collision / suppression
     final notifId =

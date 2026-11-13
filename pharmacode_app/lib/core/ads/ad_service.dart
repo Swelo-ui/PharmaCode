@@ -80,12 +80,14 @@ class AdService {
   }
 
   /// Shows an interstitial ad if available and not within cooldown period (3.5 mins).
+  /// Pass [force] = true to bypass the cooldown (e.g. user explicitly tapped a download link).
   /// Always calls [onDismissed] so screen navigation / action proceeds seamlessly.
-  bool showInterstitialAd({VoidCallback? onDismissed}) {
+  bool showInterstitialAd({VoidCallback? onDismissed, bool force = false}) {
     final now = DateTime.now();
 
-    // Check frequency capping (3.5 mins)
-    if (_lastInterstitialShowTime != null &&
+    // Check frequency capping (3.5 mins) unless force is true
+    if (!force &&
+        _lastInterstitialShowTime != null &&
         now.difference(_lastInterstitialShowTime!) < interstitialCooldown) {
       debugPrint('Interstitial skipped: Frequency cap active (cooldown).');
       onDismissed?.call();

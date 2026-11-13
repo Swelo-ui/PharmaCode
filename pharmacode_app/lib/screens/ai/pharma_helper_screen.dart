@@ -6,11 +6,10 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/theme.dart';
 import '../../core/widgets/ad_banner_widget.dart';
+import '../../core/widgets/ai_settings_sheet.dart';
 import '../../models/syllabus_models.dart';
 import '../../models/ai_bookmark_model.dart';
 import '../../services/ai_bookmark_service.dart';
-import '../../services/ai/ai_config.dart';
-import '../../services/ai/ai_key_manager.dart';
 import '../../services/ai/ai_rotation_service.dart';
 import '../../services/ai/pharma_prompt_templates.dart';
 import '../../widgets/pharma_mascot_widget.dart';
@@ -38,7 +37,6 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
   final TextEditingController _textCtrl = TextEditingController();
   final ScrollController _scrollCtrl = ScrollController();
   final AiRotationService _aiService = AiRotationService();
-  final AiKeyManager _keyManager = AiKeyManager();
 
   final List<ChatMessage> _messages = [];
   bool _isLoading = false;
@@ -268,7 +266,14 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (ctx) => _buildSettingsSheet(ctx),
+      builder: (ctx) => AiSettingsSheet(
+        onClearChat: () {
+          setState(() {
+            _messages.clear();
+            _loadInitialGreeting();
+          });
+        },
+      ),
     );
   }
 
@@ -1780,255 +1785,5 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
   /// Unified rich formatted text rendering using PharmaMarkdownWidget
   Widget _renderFormattedText(String text) {
     return PharmaMarkdownWidget(text: text);
-  }
-
-  Widget _buildSettingsSheet(BuildContext ctx) {
-    final statuses = _keyManager.getProviderStatuses();
-    final groqCtrl = TextEditingController(text: _keyManager.getCustomKey(AiProvider.groq) ?? '');
-    final geminiCtrl = TextEditingController(text: _keyManager.getCustomKey(AiProvider.gemini) ?? '');
-    final nvidiaCtrl = TextEditingController(text: _keyManager.getCustomKey(AiProvider.nvidia) ?? '');
-    final openRouterCtrl = TextEditingController(text: _keyManager.getCustomKey(AiProvider.openrouter) ?? '');
-
-    bool obscureKeys = true;
-
-    return StatefulBuilder(
-      builder: (context, setSheetState) {
-        return ConstrainedBox(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * 0.88,
-          ),
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-            ),
-            padding: EdgeInsets.only(
-              left: 20,
-              right: 20,
-              top: 20,
-              bottom: MediaQuery.of(context).viewInsets.bottom + 24,
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Container(
-                    width: 40,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFCBD5E1),
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    const Icon(Icons.tune_rounded, color: Color(0xFF2563EB)),
-                    const SizedBox(width: 8),
-                    Text(
-                      'AI Engine & Provider Failover',
-                      style: GoogleFonts.dmSans(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800,
-                        color: AppTheme.primaryNavy,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  'PharmaCode comes with pre-configured high-speed AI (Groq + Gemini + NVIDIA NIM). All students get instant intelligent responses out-of-the-box! Optional personal keys can be configured below as backups.',
-                  style: GoogleFonts.inter(fontSize: 12, color: const Color(0xFF64748B)),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'ACTIVE ROTATION STATUS',
-                  style: GoogleFonts.inter(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w800,
-                    color: const Color(0xFF94A3B8),
-                    letterSpacing: 0.5,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                for (final entry in statuses.entries)
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 6),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF8FAFC),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: const Color(0xFFE2E8F0)),
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            AiConfig.providers[entry.key]?.displayName ?? entry.key.name,
-                            style: GoogleFonts.inter(fontSize: 12.5, fontWeight: FontWeight.w600),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                          decoration: BoxDecoration(
-                            color: entry.value.contains('Online') || entry.value.contains('Active')
-                                ? const Color(0xFFDCFCE7)
-                                : (entry.value.contains('Cooldown')
-                                    ? const Color(0xFFFEF3C7)
-                                    : const Color(0xFFEFF6FF)),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: Text(
-                            entry.value,
-                            style: GoogleFonts.inter(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w700,
-                              color: entry.value.contains('Online') || entry.value.contains('Active')
-                                  ? const Color(0xFF166534)
-                                  : (entry.value.contains('Cooldown')
-                                      ? const Color(0xFF92400E)
-                                      : const Color(0xFF1D4ED8)),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'CUSTOM BACKUP KEYS (OPTIONAL)',
-                      style: GoogleFonts.inter(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w800,
-                        color: const Color(0xFF94A3B8),
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(obscureKeys ? Icons.visibility_off_outlined : Icons.visibility_outlined, size: 18, color: const Color(0xFF64748B)),
-                      tooltip: obscureKeys ? 'Show keys' : 'Hide keys',
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                      onPressed: () => setSheetState(() => obscureKeys = !obscureKeys),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: groqCtrl,
-                  obscureText: obscureKeys,
-                  decoration: InputDecoration(
-                    labelText: 'Groq Cloud API Key',
-                    helperText: 'Default active. Free at console.groq.com',
-                    helperStyle: GoogleFonts.inter(fontSize: 10.5, color: const Color(0xFF64748B)),
-                    hintText: 'gsk_...',
-                    isDense: true,
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: geminiCtrl,
-                  obscureText: obscureKeys,
-                  decoration: InputDecoration(
-                    labelText: 'Google Gemini API Key',
-                    helperText: 'Default active. Free at aistudio.google.com',
-                    helperStyle: GoogleFonts.inter(fontSize: 10.5, color: const Color(0xFF64748B)),
-                    hintText: 'AQ... or AIza...',
-                    isDense: true,
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: nvidiaCtrl,
-                  obscureText: obscureKeys,
-                  decoration: InputDecoration(
-                    labelText: 'NVIDIA NIM API Key',
-                    helperText: 'Default active. Free at build.nvidia.com',
-                    helperStyle: GoogleFonts.inter(fontSize: 10.5, color: const Color(0xFF64748B)),
-                    hintText: 'nvapi-...',
-                    isDense: true,
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: openRouterCtrl,
-                  obscureText: obscureKeys,
-                  decoration: InputDecoration(
-                    labelText: 'OpenRouter API Key',
-                    helperText: 'Optional tier at openrouter.ai/keys',
-                    helperStyle: GoogleFonts.inter(fontSize: 10.5, color: const Color(0xFF64748B)),
-                    hintText: 'sk-or-v1-...',
-                    isDense: true,
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                  ),
-                ),
-                const SizedBox(height: 14),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF2563EB),
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                        ),
-                        onPressed: () async {
-                          final messenger = ScaffoldMessenger.of(context);
-                          await _keyManager.setCustomKey(AiProvider.groq, groqCtrl.text);
-                          await _keyManager.setCustomKey(AiProvider.gemini, geminiCtrl.text);
-                          await _keyManager.setCustomKey(AiProvider.nvidia, nvidiaCtrl.text);
-                          await _keyManager.setCustomKey(AiProvider.openrouter, openRouterCtrl.text);
-                          if (ctx.mounted) {
-                            Navigator.pop(ctx);
-                            messenger.showSnackBar(
-                              const SnackBar(
-                                content: Text('API Keys updated successfully!'),
-                                backgroundColor: Color(0xFF10B981),
-                              ),
-                            );
-                          }
-                        },
-                        child: Text('Save Custom Keys', style: GoogleFonts.inter(fontWeight: FontWeight.w700)),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: const Color(0xFFEF4444),
-                        side: const BorderSide(color: Color(0xFFEF4444)),
-                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _messages.clear();
-                          _loadInitialGreeting();
-                        });
-                        Navigator.pop(ctx);
-                      },
-                      child: const Text('Clear Chat'),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    },
-    );
   }
 }

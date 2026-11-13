@@ -1,25 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/animations.dart';
+import '../../core/billing/in_app_purchase_service.dart';
 import '../../core/in_app_browser.dart';
+import '../../core/notification_service.dart';
 import '../../core/theme.dart';
 import '../../core/tour/guided_tour_service.dart';
+import '../../core/widgets/ai_settings_sheet.dart';
+import '../../core/widgets/premium_pdf_sheet.dart';
 import '../../services/auth_service.dart';
 import '../../widgets/user_avatar.dart';
+import '../auth/login_screen.dart';
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends ConsumerStatefulWidget {
   final VoidCallback? onProfileUpdated;
 
   const ProfileScreen({super.key, this.onProfileUpdated});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   final AuthService _auth = AuthService();
 
   String _name = '';
@@ -377,7 +382,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() => _avatarKey = key);
     widget.onProfileUpdated?.call();
     if (ctx.mounted) Navigator.pop(ctx);
-    if (_hapticEnabled) HapticFeedback.selectionClick();
+    if (_hapticEnabled) AppHaptics.selectionClick();
   }
 
   // ── 3. SEMESTER SELECTOR MODAL ──────────────────────────────────────────────
@@ -442,7 +447,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       setState(() => _selectedSemester = semNum);
                       widget.onProfileUpdated?.call();
                       if (ctx.mounted) Navigator.pop(ctx);
-                      if (_hapticEnabled) HapticFeedback.selectionClick();
+                      if (_hapticEnabled) AppHaptics.selectionClick();
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -538,7 +543,266 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // ── 5. LOGOUT CONFIRMATION ──────────────────────────────────────────────────
+  // ── 5. BATCH SELECTOR MODAL ────────────────────────────────────────────────
+  void _showBatchPicker() {
+    final batches = [
+      'Batch 2021–25',
+      'Batch 2022–26',
+      'Batch 2023–27',
+      'Batch 2024–28',
+      'Batch 2025–29',
+      'Batch 2026–30',
+      'Batch 2027–31',
+    ];
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        return Container(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 42,
+                  height: 4.5,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Select Academic Batch',
+                style: GoogleFonts.dmSans(
+                  color: AppTheme.primaryNavy,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Select your 4-year B.Pharm academic batch.',
+                style: GoogleFonts.dmSans(color: AppTheme.textMuted, fontSize: 12),
+              ),
+              const SizedBox(height: 16),
+              Flexible(
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  itemCount: batches.length,
+                  separatorBuilder: (context, index) => const Divider(height: 1),
+                  itemBuilder: (context, i) {
+                    final b = batches[i];
+                    final isSelected = _batch == b;
+                    return ListTile(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                      leading: Icon(
+                        isSelected ? Icons.radio_button_checked_rounded : Icons.radio_button_off_rounded,
+                        color: isSelected ? AppTheme.brandBlue : AppTheme.textMuted,
+                      ),
+                      title: Text(
+                        b,
+                        style: GoogleFonts.dmSans(
+                          fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                          color: isSelected ? AppTheme.brandBlue : AppTheme.textDark,
+                          fontSize: 14,
+                        ),
+                      ),
+                      trailing: isSelected
+                          ? Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFEFF6FF),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                'Current',
+                                style: GoogleFonts.dmSans(
+                                  color: AppTheme.brandBlue,
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            )
+                          : null,
+                      onTap: () async {
+                        await _auth.setUserBatch(b);
+                        setState(() => _batch = b);
+                        widget.onProfileUpdated?.call();
+                        if (ctx.mounted) Navigator.pop(ctx);
+                        if (_hapticEnabled) AppHaptics.selectionClick();
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // ── 6. AI SETTINGS SHEET ───────────────────────────────────────────────────
+  void _openAiSettingsSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => const AiSettingsSheet(),
+    );
+  }
+
+  // ── 8. CLEAR CACHE DIALOG ──────────────────────────────────────────────────
+  void _showClearCacheDialog() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        title: Row(
+          children: [
+            Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: const Color(0xFFEFF6FF),
+                borderRadius: BorderRadius.circular(9),
+              ),
+              alignment: Alignment.center,
+              child: const Icon(Icons.cleaning_services_rounded, color: AppTheme.brandTeal, size: 18),
+            ),
+            const SizedBox(width: 10),
+            Text(
+              'Clear App Cache',
+              style: GoogleFonts.dmSans(
+                fontWeight: FontWeight.w900,
+                color: AppTheme.primaryNavy,
+                fontSize: 17,
+              ),
+            ),
+          ],
+        ),
+        content: Text(
+          'This will clear cached images and temporary study data to free up storage space. Your saved notes, bookmarks, and semester settings will remain safe.',
+          style: GoogleFonts.dmSans(fontSize: 13, color: AppTheme.textDark, height: 1.45),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(
+              'Cancel',
+              style: GoogleFonts.dmSans(fontWeight: FontWeight.w700, color: AppTheme.textMuted),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              PaintingBinding.instance.imageCache.clear();
+              PaintingBinding.instance.imageCache.clearLiveImages();
+              Navigator.pop(ctx);
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('App cache cleared successfully! 🧹✨'),
+                    backgroundColor: Color(0xFF10B981),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.brandTeal,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+            child: Text('Clear Cache', style: GoogleFonts.dmSans(fontWeight: FontWeight.w800)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── 9. DELETE ACCOUNT CONFIRMATION ──────────────────────────────────────────
+  void _showDeleteAccountConfirmation() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            Container(
+              width: 38,
+              height: 38,
+              decoration: BoxDecoration(
+                color: const Color(0xFFFEF2F2),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(Icons.delete_forever_rounded, color: Color(0xFFDC2626), size: 20),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              'Delete Account',
+              style: GoogleFonts.dmSans(color: const Color(0xFFDC2626), fontWeight: FontWeight.w900, fontSize: 18),
+            ),
+          ],
+        ),
+        content: Text(
+          'Are you sure you want to permanently delete your student account and personal profile data? This action is permanent and cannot be undone.',
+          style: GoogleFonts.dmSans(color: AppTheme.textBody, fontSize: 13, height: 1.45),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text('Cancel', style: GoogleFonts.dmSans(color: AppTheme.textMuted, fontWeight: FontWeight.w700)),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.pop(ctx);
+              try {
+                await _auth.deleteAccount();
+                widget.onProfileUpdated?.call();
+                if (mounted) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Account permanently deleted.'),
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: Color(0xFFDC2626),
+                    ),
+                  );
+                }
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(e.toString()),
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: const Color(0xFFDC2626),
+                    ),
+                  );
+                }
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFDC2626),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+            child: Text('Delete Permanently', style: GoogleFonts.dmSans(fontWeight: FontWeight.w800)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── 10. LOGOUT CONFIRMATION ─────────────────────────────────────────────────
   void _showLogoutConfirmation() {
     showDialog(
       context: context,
@@ -601,8 +865,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _shareApp() {
     SharePlus.instance.share(
       ShareParams(
-        text: '🎓 PharmaCode App — Complete B.Pharm PCI NEP 2020 Syllabus, Free Notes & Career Kits!\nhttps://pharmacode.vercel.app',
-        subject: 'PharmaCode - B.Pharm Study Companion',
+        text: '🎓 *PharmaCode — Complete B.Pharm & D.Pharm Study Companion*\n\n'
+            'Hey batchmate! Checkout PharmaCode for official PCI NEP 2020 syllabus:\n\n'
+            '📚 All 8 Semesters Unit-Wise Notes & PDFs\n'
+            '⚡ GPAT & NIPER Rapid Revision Formula Kits\n'
+            '🤖 24/7 AI Pharma Tutor for Instant Doubt Solving\n'
+            '📝 Solved Model Papers & Previous Year Questions\n\n'
+            '📲 *Download Android App on Google Play Store:*\n'
+            'https://play.google.com/store/apps/details?id=com.pharmacode.bpharm\n\n'
+            '🌐 *Visit Official Website & Web Portal:*\n'
+            'https://pharmacode.vercel.app',
+        subject: 'PharmaCode — Complete B.Pharm Study Companion',
       ),
     );
   }
@@ -678,34 +951,102 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             const SizedBox(height: 24),
 
-            // ── 5. LOGOUT BUTTON ──────────────────────────────────────────────
-            BouncingCard(
-              onTap: _showLogoutConfirmation,
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFEF2F2),
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: const Color(0xFFFECACA), width: 1.5),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.logout_rounded, color: Color(0xFFDC2626), size: 18),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Sign Out of Account',
-                      style: GoogleFonts.dmSans(
-                        color: const Color(0xFFDC2626),
-                        fontWeight: FontWeight.w900,
-                        fontSize: 14,
+            // ── 5. LOGOUT / ACCOUNT ACTIONS ──────────────────────────────────────────
+            if (_auth.currentUser != null) ...[
+              BouncingCard(
+                onTap: _showLogoutConfirmation,
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFEF2F2),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: const Color(0xFFFECACA), width: 1.5),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.logout_rounded, color: Color(0xFFDC2626), size: 18),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Sign Out of Account',
+                        style: GoogleFonts.dmSans(
+                          color: const Color(0xFFDC2626),
+                          fontWeight: FontWeight.w900,
+                          fontSize: 14,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
+              const SizedBox(height: 10),
+              Center(
+                child: TextButton.icon(
+                  onPressed: _showDeleteAccountConfirmation,
+                  icon: const Icon(Icons.delete_outline_rounded, color: Color(0xFF991B1B), size: 16),
+                  label: Text(
+                    'Delete Account & Reset Data',
+                    style: GoogleFonts.dmSans(
+                      color: const Color(0xFF991B1B),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ),
+            ] else ...[
+              BouncingCard(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => LoginScreen(
+                        onLoginSuccess: () {
+                          _loadProfile();
+                          widget.onProfileUpdated?.call();
+                        },
+                      ),
+                    ),
+                  ).then((_) {
+                    _loadProfile();
+                    widget.onProfileUpdated?.call();
+                  });
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF2563EB), Color(0xFF1D4ED8)],
+                    ),
+                    borderRadius: BorderRadius.circular(14),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF2563EB).withValues(alpha: 0.25),
+                        blurRadius: 8,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.login_rounded, color: Colors.white, size: 18),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Sign In to Sync Bookmarks & Profile',
+                        style: GoogleFonts.dmSans(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
 
             const SizedBox(height: 20),
 
@@ -830,67 +1171,131 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
           const SizedBox(height: 12),
 
-          // Badges Row
-          Wrap(
-            spacing: 8,
-            runSpacing: 6,
-            alignment: WrapAlignment.center,
-            children: [
-              // Provider Badge
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFEFF6FF),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: const Color(0xFFBFDBFE)),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      isGoogleUser ? Icons.verified_user_rounded : Icons.mark_email_read_rounded,
-                      size: 13,
-                      color: const Color(0xFF2563EB),
+          // Badges / Guest Action
+          if (_auth.currentUser == null) ...[
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+              decoration: BoxDecoration(
+                color: const Color(0xFFEFF6FF),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: const Color(0xFFBFDBFE)),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.person_outline_rounded, size: 14, color: Color(0xFF2563EB)),
+                  const SizedBox(width: 5),
+                  Text(
+                    'Guest Student (Offline)',
+                    style: GoogleFonts.dmSans(
+                      color: const Color(0xFF1E40AF),
+                      fontWeight: FontWeight.w800,
+                      fontSize: 11,
                     ),
-                    const SizedBox(width: 5),
-                    Text(
-                      isGoogleUser ? 'Google Verified' : 'Email Account',
-                      style: GoogleFonts.dmSans(
-                        color: const Color(0xFF1E40AF),
-                        fontWeight: FontWeight.w800,
-                        fontSize: 10.5,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => LoginScreen(
+                        onLoginSuccess: () {
+                          _loadProfile();
+                          widget.onProfileUpdated?.call();
+                        },
                       ),
                     ),
-                  ],
+                  ).then((_) {
+                    _loadProfile();
+                    widget.onProfileUpdated?.call();
+                  });
+                },
+                icon: const Icon(Icons.login_rounded, size: 18),
+                label: Text(
+                  'Sign In / Create Free Account',
+                  style: GoogleFonts.dmSans(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 14,
+                    letterSpacing: -0.2,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.brandBlue,
+                  foregroundColor: Colors.white,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                 ),
               ),
+            ),
+          ] else ...[
+            Wrap(
+              spacing: 8,
+              runSpacing: 6,
+              alignment: WrapAlignment.center,
+              children: [
+                // Provider Badge
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEFF6FF),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: const Color(0xFFBFDBFE)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        isGoogleUser ? Icons.verified_user_rounded : Icons.mark_email_read_rounded,
+                        size: 13,
+                        color: const Color(0xFF2563EB),
+                      ),
+                      const SizedBox(width: 5),
+                      Text(
+                        isGoogleUser ? 'Google Verified' : 'Email Account',
+                        style: GoogleFonts.dmSans(
+                          color: const Color(0xFF1E40AF),
+                          fontWeight: FontWeight.w800,
+                          fontSize: 10.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
 
-              // Student Status Badge
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFECFDF5),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: const Color(0xFFA7F3D0)),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const PulsingLiveDot(color: Color(0xFF059669), size: 6),
-                    const SizedBox(width: 5),
-                    Text(
-                      'B.Pharm Student Active',
-                      style: GoogleFonts.dmSans(
-                        color: const Color(0xFF065F46),
-                        fontWeight: FontWeight.w800,
-                        fontSize: 10.5,
+                // Student Status Badge
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFECFDF5),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: const Color(0xFFA7F3D0)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const PulsingLiveDot(color: Color(0xFF059669), size: 6),
+                      const SizedBox(width: 5),
+                      Text(
+                        'B.Pharm Student Active',
+                        style: GoogleFonts.dmSans(
+                          color: const Color(0xFF065F46),
+                          fontWeight: FontWeight.w800,
+                          fontSize: 10.5,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
+          ],
         ],
       ),
     );
@@ -1000,6 +1405,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
               '$_batch • PCI 2026–27',
               style: GoogleFonts.dmSans(color: AppTheme.textMuted, fontSize: 12),
             ),
+            trailing: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFFBEB),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  Text(
+                    'Change',
+                    style: TextStyle(color: Color(0xFFD97706), fontWeight: FontWeight.w800, fontSize: 11),
+                  ),
+                  SizedBox(width: 2),
+                  Icon(Icons.chevron_right_rounded, size: 14, color: Color(0xFFD97706)),
+                ],
+              ),
+            ),
+            onTap: _showBatchPicker,
           ),
         ],
       ),
@@ -1016,6 +1440,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       child: Column(
         children: [
+          // 1. Study Tips & Notifications
           SwitchListTile(
             value: _notificationsEnabled,
             activeThumbColor: AppTheme.brandBlue,
@@ -1039,12 +1464,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               style: GoogleFonts.dmSans(color: AppTheme.textMuted, fontSize: 12),
             ),
             onChanged: (val) async {
-              final prefs = await SharedPreferences.getInstance();
-              await prefs.setBool('pref_notifications', val);
+              await NotificationService().setNotificationsEnabled(val);
               setState(() => _notificationsEnabled = val);
             },
           ),
           const Divider(height: 1),
+
+          // 2. Haptic Touch
           SwitchListTile(
             value: _hapticEnabled,
             activeThumbColor: AppTheme.brandBlue,
@@ -1070,21 +1496,137 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onChanged: (val) async {
               final prefs = await SharedPreferences.getInstance();
               await prefs.setBool('pref_haptic', val);
+              AppHaptics.setEnabled(val);
               setState(() => _hapticEnabled = val);
-              if (val) HapticFeedback.mediumImpact();
+              if (val) AppHaptics.mediumImpact();
             },
           ),
           const Divider(height: 1),
+
+          // 3. Pre-Booking: VIP Study Material Pass (Google Play Billing)
+          ValueListenableBuilder<Set<String>>(
+            valueListenable: InAppPurchaseService.instance.unlockedNotifier,
+            builder: (context, unlockedSet, _) {
+              final isVip = InAppPurchaseService.instance.isVipUnlocked;
+              return ListTile(
+                leading: Container(
+                  width: 38,
+                  height: 38,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFFEF3C7), Color(0xFFFDE68A)],
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  alignment: Alignment.center,
+                  child: const Icon(Icons.workspace_premium_rounded, color: Color(0xFFB45309), size: 20),
+                ),
+                title: Text(
+                  'Pre-Book Study Pass (VIP)',
+                  style: GoogleFonts.dmSans(fontWeight: FontWeight.w800, fontSize: 14),
+                ),
+                subtitle: Text(
+                  isVip
+                      ? 'VIP Study Pass Active ✨ · WhatsApp Support Unlocked'
+                      : 'All future notes free + WhatsApp & Email support',
+                  style: GoogleFonts.dmSans(
+                    color: isVip ? const Color(0xFF10B981) : AppTheme.textMuted,
+                    fontSize: 12,
+                    fontWeight: isVip ? FontWeight.w700 : FontWeight.w500,
+                  ),
+                ),
+                trailing: isVip
+                    ? Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFECFDF5),
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(color: const Color(0xFF10B981)),
+                            ),
+                            child: Text(
+                              'ACTIVE',
+                              style: GoogleFonts.dmSans(
+                                color: const Color(0xFF10B981),
+                                fontSize: 10,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          const Icon(Icons.chevron_right_rounded, color: AppTheme.textMuted),
+                        ],
+                      )
+                    : const Icon(Icons.chevron_right_rounded, color: AppTheme.textMuted),
+                onTap: () => showPreBookVipSheet(context),
+              );
+            },
+          ),
+          const Divider(height: 1),
+
+          // 4. AI Engine & Failover Keys
           ListTile(
             leading: Container(
               width: 38,
               height: 38,
               decoration: BoxDecoration(
-                color: const Color(0xFFEFF6FF),
+                color: const Color(0xFFF3E8FF),
                 borderRadius: BorderRadius.circular(10),
               ),
               alignment: Alignment.center,
-              child: const Icon(Icons.explore_rounded, color: AppTheme.brandBlue, size: 18),
+              child: const Icon(Icons.smart_toy_rounded, color: Color(0xFF7C3AED), size: 18),
+            ),
+            title: Text(
+              'AI Engine & Backup Keys',
+              style: GoogleFonts.dmSans(fontWeight: FontWeight.w800, fontSize: 14),
+            ),
+            subtitle: Text(
+              'Configure Groq, Gemini & NVIDIA NIM keys & failover',
+              style: GoogleFonts.dmSans(color: AppTheme.textMuted, fontSize: 12),
+            ),
+            trailing: const Icon(Icons.chevron_right_rounded, color: AppTheme.textMuted),
+            onTap: _openAiSettingsSheet,
+          ),
+          const Divider(height: 1),
+
+          // 6. Storage & Clear Cache
+          ListTile(
+            leading: Container(
+              width: 38,
+              height: 38,
+              decoration: BoxDecoration(
+                color: const Color(0xFFECFDF5),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              alignment: Alignment.center,
+              child: const Icon(Icons.cleaning_services_rounded, color: Color(0xFF059669), size: 18),
+            ),
+            title: Text(
+              'Storage & Offline Cache',
+              style: GoogleFonts.dmSans(fontWeight: FontWeight.w800, fontSize: 14),
+            ),
+            subtitle: Text(
+              'Clear cached images & temporary study data',
+              style: GoogleFonts.dmSans(color: AppTheme.textMuted, fontSize: 12),
+            ),
+            trailing: const Icon(Icons.chevron_right_rounded, color: AppTheme.textMuted),
+            onTap: _showClearCacheDialog,
+          ),
+          const Divider(height: 1),
+
+          // 6. App Feature Tour
+          ListTile(
+            leading: Container(
+              width: 38,
+              height: 38,
+              decoration: BoxDecoration(
+                color: const Color(0xFFFEF3C7),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              alignment: Alignment.center,
+              child: const Icon(Icons.explore_rounded, color: Color(0xFFD97706), size: 18),
             ),
             title: Text(
               'App Feature Tour',

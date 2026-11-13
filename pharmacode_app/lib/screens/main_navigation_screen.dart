@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
+import '../core/animations.dart';
 import '../core/in_app_browser.dart';
 import '../core/theme.dart';
 import '../core/tour/guided_tour_model.dart';
@@ -97,7 +97,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
       TourStep(
         id: 'syllabus_tab',
         title: 'PCI NEP 2020 Syllabus',
-        description: 'Explore all 8 semesters, 77+ subjects, and 193 credits mapped unit-by-unit with official learning objectives and reference textbooks.',
+        description: 'Explore all 8 semesters, 88 subjects, and 193 credits mapped unit-by-unit with official learning objectives and reference textbooks.',
         targetKey: _keySyllabusTab,
         targetPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         borderRadius: 16,
@@ -149,46 +149,43 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
   void _shareApp() {
     SharePlus.instance.share(
       ShareParams(
-        text: '📱 PharmaCode App — Complete B.Pharm NEP 2020 Syllabus, Free Notes, Python & AI Guides!\nhttps://pharmacode.vercel.app',
-        subject: 'PharmaCode - B.Pharm NEP 2020 Study Companion',
+        text: '🎓 *PharmaCode — Complete B.Pharm & D.Pharm Study Companion*\n\n'
+            'Hey batchmate! Checkout PharmaCode for official PCI NEP 2020 syllabus:\n\n'
+            '📚 All 8 Semesters Unit-Wise Notes & PDFs\n'
+            '⚡ GPAT & NIPER Rapid Revision Formula Kits\n'
+            '🤖 24/7 AI Pharma Tutor for Instant Doubt Solving\n'
+            '📝 Solved Model Papers & Previous Year Questions\n\n'
+            '📲 *Download Android App on Google Play Store:*\n'
+            'https://play.google.com/store/apps/details?id=com.pharmacode.bpharm\n\n'
+            '🌐 *Visit Official Website & Web Portal:*\n'
+            'https://pharmacode.vercel.app',
+        subject: 'PharmaCode — Complete B.Pharm Study Companion',
       ),
     );
   }
 
   void _onProfileButtonTapped() {
-    final isLoggedIn = ref.read(isLoggedInProvider);
-    if (isLoggedIn) {
-      Navigator.push<bool>(
-        context,
-        MaterialPageRoute(
-          builder: (_) => ProfileScreen(
-            onProfileUpdated: () {
-              ref.read(authControllerProvider.notifier).refreshUser();
-            },
-          ),
+    _openProfileScreen();
+  }
+
+  void _openProfileScreen() {
+    Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ProfileScreen(
+          onProfileUpdated: () {
+            ref.read(authControllerProvider.notifier).refreshUser();
+          },
         ),
-      ).then((result) {
-        ref.read(authControllerProvider.notifier).refreshUser();
-        if (result == true && mounted) {
-          Future.delayed(const Duration(milliseconds: 250), () {
-            if (mounted) _startGuidedTour();
-          });
-        }
-      });
-    } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => LoginScreen(
-            onLoginSuccess: () {
-              ref.read(authControllerProvider.notifier).refreshUser();
-            },
-          ),
-        ),
-      ).then((_) {
-        ref.read(authControllerProvider.notifier).refreshUser();
-      });
-    }
+      ),
+    ).then((result) {
+      ref.read(authControllerProvider.notifier).refreshUser();
+      if (result == true && mounted) {
+        Future.delayed(const Duration(milliseconds: 250), () {
+          if (mounted) _startGuidedTour();
+        });
+      }
+    });
   }
 
   @override
@@ -352,7 +349,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
             color: _currentIndex == 2 ? AppTheme.brandBlue : AppTheme.primaryNavy,
           ),
           onPressed: () {
-            HapticFeedback.selectionClick();
+            AppHaptics.selectionClick();
             setState(() => _currentIndex = 2);
           },
           tooltip: 'Free Notes & Downloads',
@@ -460,7 +457,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
                 child: AiNavButton(
                   key: _keyAiNav,
                   onTap: () {
-                    HapticFeedback.lightImpact();
+                    AppHaptics.lightImpact();
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (_) => const PharmaHelperScreen()),
@@ -501,7 +498,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
       child: InkWell(
         key: key,
         onTap: () {
-          HapticFeedback.selectionClick();
+          AppHaptics.selectionClick();
           setState(() => _currentIndex = index);
         },
         splashColor: Colors.transparent,
@@ -716,41 +713,62 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
                           ],
                         )
                       else
-                        SizedBox(
-                          width: double.infinity,
-                          height: 38,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                              _onProfileButtonTapped();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              elevation: 0,
-                              padding: const EdgeInsets.symmetric(horizontal: 12),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(Icons.login_rounded, size: 14, color: AppTheme.primaryNavy),
-                                const SizedBox(width: 6),
-                                Flexible(
-                                  child: Text(
-                                    'Sign In to Sync Bookmarks',
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                        Row(
+                          children: [
+                            Expanded(
+                              child: SizedBox(
+                                height: 35,
+                                child: ElevatedButton.icon(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => LoginScreen(
+                                          onLoginSuccess: () {
+                                            ref.read(authControllerProvider.notifier).refreshUser();
+                                          },
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  icon: const Icon(Icons.login_rounded, size: 14, color: AppTheme.primaryNavy),
+                                  label: Text(
+                                    'Sign In / Register',
                                     style: GoogleFonts.dmSans(
                                       color: AppTheme.primaryNavy,
                                       fontSize: 11.5,
                                       fontWeight: FontWeight.w800,
                                     ),
                                   ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    elevation: 0,
+                                    padding: EdgeInsets.zero,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(9)),
+                                  ),
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
+                            const SizedBox(width: 8),
+                            SizedBox(
+                              height: 35,
+                              width: 38,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  _openProfileScreen();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white.withValues(alpha: 0.15),
+                                  elevation: 0,
+                                  padding: EdgeInsets.zero,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(9)),
+                                ),
+                                child: const Icon(Icons.settings_rounded, size: 16, color: Colors.white),
+                              ),
+                            ),
+                          ],
                         ),
                     ],
                   ),
@@ -824,6 +842,15 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen()));
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.settings_rounded, color: AppTheme.brandBlue, size: 22),
+                  title: Text('Settings & Preferences', style: GoogleFonts.dmSans(fontWeight: FontWeight.w700, fontSize: 14)),
+                  subtitle: Text('Theme, AI engine, batch & alerts', style: GoogleFonts.dmSans(color: AppTheme.textMuted, fontSize: 11)),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _openProfileScreen();
                   },
                 ),
                 ListTile(

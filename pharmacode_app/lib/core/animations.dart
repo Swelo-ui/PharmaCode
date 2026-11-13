@@ -1,5 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+/// Centralized Haptic Touch Feedback Manager (Synchronized with App Settings)
+class AppHaptics {
+  static bool isEnabled = true;
+
+  static Future<void> init() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      isEnabled = prefs.getBool('pref_haptic') ?? true;
+    } catch (_) {}
+  }
+
+  static void setEnabled(bool enabled) {
+    isEnabled = enabled;
+  }
+
+  static void selectionClick() {
+    if (isEnabled) {
+      HapticFeedback.selectionClick();
+    }
+  }
+
+  static void mediumImpact() {
+    if (isEnabled) {
+      HapticFeedback.mediumImpact();
+    }
+  }
+
+  static void lightImpact() {
+    if (isEnabled) {
+      HapticFeedback.lightImpact();
+    }
+  }
+}
 
 /// ─────────────────────────────────────────────────────────────────────────────
 /// BouncingCard / TouchScale
@@ -58,7 +93,7 @@ class _BouncingCardState extends State<BouncingCard>
   void _onTapDown(TapDownDetails details) {
     if (widget.onTap != null) {
       _controller.forward();
-      HapticFeedback.selectionClick();
+      AppHaptics.selectionClick();
     }
   }
 

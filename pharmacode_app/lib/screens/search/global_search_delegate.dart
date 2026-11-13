@@ -20,6 +20,7 @@ class GlobalSearchDelegate extends SearchDelegate<Subject?> {
   ThemeData appBarTheme(BuildContext context) {
     return ThemeData(
       useMaterial3: true,
+      brightness: Brightness.light,
       scaffoldBackgroundColor: AppTheme.background,
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.white,
@@ -29,7 +30,10 @@ class GlobalSearchDelegate extends SearchDelegate<Subject?> {
       ),
       inputDecorationTheme: InputDecorationTheme(
         border: InputBorder.none,
-        hintStyle: GoogleFonts.dmSans(color: AppTheme.textMuted, fontSize: 15),
+        hintStyle: GoogleFonts.dmSans(
+          color: AppTheme.textMuted,
+          fontSize: 15,
+        ),
       ),
     );
   }
@@ -177,50 +181,113 @@ class GlobalSearchDelegate extends SearchDelegate<Subject?> {
         final sub = results[index];
 
         return Container(
-          margin: const EdgeInsets.only(bottom: 10),
+          margin: const EdgeInsets.only(bottom: 12),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: AppTheme.borderSoft, width: 1.5),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.02),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
           child: Material(
             color: Colors.transparent,
-            child: ListTile(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-              leading: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFEEF2FF),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  sub.code,
-                  style: GoogleFonts.dmSans(
-                    color: const Color(0xFF3730A3),
-                    fontWeight: FontWeight.w900,
-                    fontSize: 11,
-                  ),
-                ),
-              ),
-              title: Text(
-                sub.name,
-                style: GoogleFonts.dmSans(
-                  color: AppTheme.textDark,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 13,
-                ),
-              ),
-              subtitle: Text(
-                '${sub.credits} Credits · ${sub.typeLabel} · ${sub.units.length} Units',
-                style: GoogleFonts.dmSans(color: AppTheme.textMuted, fontSize: 11),
-              ),
-              trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: AppTheme.textMuted),
+            borderRadius: BorderRadius.circular(16),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(16),
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => SubjectDetailScreen(subject: sub)),
                 );
               },
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Top Row: Code Badge + Meta Tag + Chevron
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFEEF2FF),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            sub.code,
+                            style: GoogleFonts.dmSans(
+                              color: const Color(0xFF3730A3),
+                              fontWeight: FontWeight.w900,
+                              fontSize: 11.5,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF1F5F9),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            '${sub.credits} Credits · ${sub.typeLabel}',
+                            style: GoogleFonts.dmSans(
+                              color: const Color(0xFF475569),
+                              fontWeight: FontWeight.w700,
+                              fontSize: 11,
+                            ),
+                          ),
+                        ),
+                        const Spacer(),
+                        const Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 13,
+                          color: AppTheme.textMuted,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+
+                    // Full-width Subject Name (No squeezing or weird multi-line wrapping)
+                    Text(
+                      sub.name,
+                      style: GoogleFonts.dmSans(
+                        color: AppTheme.primaryNavy,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 14.5,
+                        height: 1.35,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+
+                    // Bottom info: Units & Syllabus indicator
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.menu_book_rounded,
+                          size: 14,
+                          color: AppTheme.brandBlue,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          '${sub.units.length} Units PCI Syllabus & Study Notes',
+                          style: GoogleFonts.dmSans(
+                            color: AppTheme.textMuted,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         );

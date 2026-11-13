@@ -33,6 +33,11 @@ class NotificationListNotifier extends StateNotifier<List<AppNotification>> {
     state = _service.history;
   }
 
+  Future<void> sync() async {
+    await _service.syncRemoteNotifications();
+    state = _service.history;
+  }
+
   Future<void> triggerTest() async {
     await _service.triggerTestNotification();
     state = _service.history;

@@ -173,6 +173,31 @@ class AuthService {
     }
   }
 
+  /// Delete Account & clear personal profile data (Google Play Data Safety compliant)
+  Future<void> deleteAccount() async {
+    try {
+      final user = _auth.currentUser;
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('user_avatar');
+      await prefs.remove('user_college');
+      await prefs.remove('user_batch');
+      await prefs.remove('user_semester');
+
+      if (user != null) {
+        await user.delete();
+      }
+      await _googleSignIn.signOut();
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'requires-recent-login') {
+        throw 'For security reasons, please log out and log back in before deleting your account.';
+      }
+      throw _handleAuthException(e);
+    } catch (e) {
+      debugPrint('Error deleting account: $e');
+      throw 'Failed to delete account. Please try again.';
+    }
+  }
+
   /// Clean user-friendly error messages
   String _handleAuthException(FirebaseAuthException e) {
     switch (e.code) {

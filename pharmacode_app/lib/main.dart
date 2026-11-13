@@ -2,13 +2,18 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'core/animations.dart';
+import 'core/billing/in_app_purchase_service.dart';
 import 'core/theme.dart';
 import 'screens/splash_screen.dart';
 
-final themeModeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.light);
+final themeModeProvider = Provider<ThemeMode>((ref) => ThemeMode.light);
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Haptic touch settings
+  await AppHaptics.init();
 
   // ✅ CRITICAL: Firebase MUST be initialized before any Firebase plugin usage
   // This was the #1 root cause of the APK instant crash on launch.
@@ -28,6 +33,13 @@ void main() async {
     ),
   );
 
+  // Initialize In-App Purchases (Google Play Billing)
+  try {
+    await InAppPurchaseService.instance.init();
+  } catch (e) {
+    debugPrint('InAppPurchaseService initialization error: $e');
+  }
+
   runApp(
     const ProviderScope(
       child: PharmaCodeApp(),
@@ -35,19 +47,16 @@ void main() async {
   );
 }
 
-class PharmaCodeApp extends ConsumerWidget {
+class PharmaCodeApp extends StatelessWidget {
   const PharmaCodeApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeModeProvider);
-
+  Widget build(BuildContext context) {
     return MaterialApp(
       title: 'PharmaCode',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: themeMode,
+      themeMode: ThemeMode.light,
       home: const SplashScreen(),
     );
   }

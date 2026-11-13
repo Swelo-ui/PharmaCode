@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/ads/ad_service.dart';
+import '../../core/billing/in_app_purchase_service.dart';
 import '../../core/in_app_browser.dart';
 import '../../core/theme.dart';
 import '../../core/widgets/ad_banner_widget.dart';
+import '../../core/widgets/prebook_vip_sheet.dart';
 import '../../models/syllabus_models.dart';
 import '../../services/syllabus_service.dart';
 import '../syllabus/subject_detail_screen.dart';
@@ -17,49 +19,6 @@ class NotesScreen extends StatefulWidget {
 
 class _NotesScreenState extends State<NotesScreen> {
   int _selectedSemester = 0; // 0 = All
-  String _searchQuery = '';
-
-  void _unlockGpatFormulaKit() {
-    AdService.instance.showRewardedAd(
-      onUserEarnedReward: (reward) {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const Icon(Icons.stars_rounded, color: Colors.amber, size: 22),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    'Unlocked! Enjoy full GPAT Formula & Rapid Revision Kit.',
-                    style: GoogleFonts.dmSans(fontWeight: FontWeight.w700),
-                  ),
-                ),
-              ],
-            ),
-            backgroundColor: AppTheme.primaryNavy,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          ),
-        );
-        openInAppUrl(context, 'https://pharmacode.vercel.app/notes/');
-      },
-      onFailed: () {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Opening GPAT Rapid Revision Kit directly...',
-              style: GoogleFonts.dmSans(fontWeight: FontWeight.w600),
-            ),
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          ),
-        );
-        openInAppUrl(context, 'https://pharmacode.vercel.app/notes/');
-      },
-    );
-  }
 
   void _downloadNote(Subject subject, int semNum) {
     showModalBottomSheet(
@@ -140,14 +99,19 @@ class _NotesScreenState extends State<NotesScreen> {
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context);
-                        AdService.instance.showInterstitialAd(
-                          onDismissed: () {
-                            final targetUrl = subject.slug.isNotEmpty
-                                ? 'https://pharmacode.vercel.app/syllabus/semester-$semNum/${subject.slug}/'
-                                : 'https://pharmacode.vercel.app/notes/';
-                            openInAppUrl(context, targetUrl);
-                          },
-                        );
+                        final isVip = InAppPurchaseService.instance.isVipUnlocked;
+                        final targetUrl = subject.slug.isNotEmpty
+                            ? 'https://pharmacode.vercel.app/syllabus/semester-$semNum/${subject.slug}/'
+                            : 'https://pharmacode.vercel.app/notes/';
+                        if (isVip) {
+                          openInAppUrl(context, targetUrl);
+                        } else {
+                          AdService.instance.showInterstitialAd(
+                            onDismissed: () {
+                              openInAppUrl(context, targetUrl);
+                            },
+                          );
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: semColor,
@@ -163,7 +127,22 @@ class _NotesScreenState extends State<NotesScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                child: TextButton.icon(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    showPreBookVipSheet(context);
+                  },
+                  icon: const Icon(Icons.workspace_premium_rounded, color: Color(0xFFD97706), size: 18),
+                  label: Text(
+                    'Pre-Book Study Material Pass @ ₹199 (VIP)',
+                    style: GoogleFonts.dmSans(fontWeight: FontWeight.w800, fontSize: 12, color: AppTheme.brandBlue),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 6),
             ],
           ),
         );
@@ -171,363 +150,239 @@ class _NotesScreenState extends State<NotesScreen> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final semesters = SyllabusService().semesters;
+  Widget _buildPreBookBanner() {
+    return ValueListenableBuilder<Set<String>>(
+      valueListenable: InAppPurchaseService.instance.unlockedNotifier,
+      builder: (context, unlockedSet, _) {
+        final isVip = InAppPurchaseService.instance.isVipUnlocked;
 
-    final List<MapEntry<int, Subject>> notesList = [];
-    for (var sem in semesters) {
-      if (_selectedSemester == 0 || _selectedSemester == sem.num) {
-        for (var sub in sem.subjects) {
-          if (sub.type == 'T' && sub.units.isNotEmpty) {
-            final matchesQuery = _searchQuery.isEmpty ||
-                sub.code.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-                sub.name.toLowerCase().contains(_searchQuery.toLowerCase());
-            if (matchesQuery) {
-              notesList.add(MapEntry(sem.num, sub));
-            }
-          }
-        }
-      }
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // ── Top Header Strip ─────────────────────────────────────────
-        Container(
-          color: Colors.white,
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFEEF2FF),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    alignment: Alignment.center,
-                    child: const Icon(Icons.download_rounded, color: Color(0xFF4C6EF5), size: 22),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'B.Pharm Notes — Free Download',
-                          style: GoogleFonts.dmSans(
-                            color: AppTheme.primaryNavy,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: -0.3,
-                          ),
-                        ),
-                        Text(
-                          'PCI NEP 2020 · All 8 Semesters · 100% Free',
-                          style: GoogleFonts.dmSans(color: AppTheme.textMuted, fontSize: 11),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+        return InkWell(
+          onTap: () => showPreBookVipSheet(context),
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFF0F172A), Color(0xFF1E3A8A)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-              const SizedBox(height: 14),
-
-              // Search Field
-              TextField(
-                onChanged: (val) {
-                  setState(() {
-                    _searchQuery = val;
-                  });
-                },
-                decoration: InputDecoration(
-                  hintText: 'Search notes by subject name or code...',
-                  prefixIcon: const Icon(Icons.search_rounded, color: AppTheme.textMuted, size: 20),
-                  suffixIcon: _searchQuery.isNotEmpty
-                      ? IconButton(
-                          icon: const Icon(Icons.close_rounded, color: AppTheme.textMuted, size: 18),
-                          onPressed: () => setState(() => _searchQuery = ''),
-                        )
-                      : null,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF1E3A8A).withValues(alpha: 0.2),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
                 ),
-              ),
-              const SizedBox(height: 12),
-
-              // Semester Horizontal Filter Pills
-              SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    _buildSemFilterChip('All Semesters', 0),
-                    ...List.generate(8, (i) => _buildSemFilterChip('Sem ${i + 1}', i + 1)),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 12),
-
-              // GPAT & Rapid Revision Kit (Rewarded Ad trigger)
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF0F1D5C), Color(0xFF1E3A8A)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+              ],
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(9),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFF59E0B), Color(0xFFD97706)],
+                    ),
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  borderRadius: BorderRadius.circular(14),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF0F1D5C).withValues(alpha: 0.15),
-                      blurRadius: 10,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
+                  child: const Icon(Icons.stars_rounded, color: Colors.white, size: 22),
                 ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Icon(Icons.workspace_premium_rounded, color: Colors.amber, size: 22),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
                         children: [
                           Text(
-                            'GPAT Rapid Revision Sheets',
+                            isVip ? 'VIP Study Pass Active' : 'Pre-Book Study Material',
                             style: GoogleFonts.dmSans(
                               color: Colors.white,
-                              fontWeight: FontWeight.w800,
-                              fontSize: 13,
+                              fontWeight: FontWeight.w900,
+                              fontSize: 13.5,
                             ),
                           ),
-                          Text(
-                            'Watch 1 quick clip to unlock formula notes',
-                            style: GoogleFonts.dmSans(
-                              color: Colors.white.withValues(alpha: 0.8),
-                              fontSize: 11,
-                              fontWeight: FontWeight.w500,
+                          const SizedBox(width: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: isVip ? const Color(0xFF10B981) : Colors.amber,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Text(
+                              isVip ? 'ACTIVE' : '₹199 ONLY',
+                              style: GoogleFonts.dmSans(
+                                color: isVip ? Colors.white : const Color(0xFF0F172A),
+                                fontWeight: FontWeight.w900,
+                                fontSize: 9.5,
+                              ),
                             ),
                           ),
                         ],
                       ),
-                    ),
-                    ElevatedButton(
-                      onPressed: _unlockGpatFormulaKit,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.amber,
-                        foregroundColor: const Color(0xFF0F1D5C),
-                        elevation: 0,
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      const SizedBox(height: 3),
+                      Text(
+                        isVip
+                            ? 'All future notes & guides unlocked + WhatsApp mentor support'
+                            : 'All future notes free + Real-time WhatsApp & Email support',
+                        style: GoogleFonts.dmSans(
+                          color: Colors.white.withValues(alpha: 0.85),
+                          fontSize: 11,
+                          height: 1.25,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 6),
+                const Icon(Icons.arrow_forward_ios_rounded, color: Colors.white70, size: 14),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildNoteCard(Subject sub, int semNum) {
+    final semColor = AppTheme.getSemesterColor(semNum);
+    final semBg = AppTheme.getSemesterBg(semNum);
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppTheme.borderSoft, width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(16),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: () => _downloadNote(sub, semNum),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: semBg,
+                        borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
-                        'Unlock',
-                        style: GoogleFonts.dmSans(fontWeight: FontWeight.w900, fontSize: 12),
+                        'Sem $semNum',
+                        style: GoogleFonts.dmSans(
+                          color: semColor,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 10.5,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFEEF2FF),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        sub.code,
+                        style: GoogleFonts.dmSans(
+                          color: const Color(0xFF3730A3),
+                          fontWeight: FontWeight.w900,
+                          fontSize: 10.5,
+                        ),
+                      ),
+                    ),
+                    const Spacer(),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFECFDF5),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.check_circle_rounded, size: 12, color: Color(0xFF059669)),
+                          const SizedBox(width: 4),
+                          Text(
+                            '${sub.units.length} Units Notes',
+                            style: GoogleFonts.dmSans(
+                              color: const Color(0xFF059669),
+                              fontWeight: FontWeight.w800,
+                              fontSize: 10,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
-        ),
-
-        const Divider(height: 1, color: AppTheme.borderSoft),
-
-        // ── Notes List ─────────────────────────────────────────────
-        Expanded(
-          child: notesList.isEmpty
-              ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(32),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.search_off_rounded, size: 48, color: AppTheme.textMuted),
-                        const SizedBox(height: 12),
-                        Text(
-                          'No study notes found',
-                          style: GoogleFonts.dmSans(
-                            color: AppTheme.textDark,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          'Try searching for another term or selecting All Semesters',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.dmSans(color: AppTheme.textMuted, fontSize: 13),
-                        ),
-                      ],
-                    ),
+                const SizedBox(height: 12),
+                Text(
+                  sub.name,
+                  style: GoogleFonts.dmSans(
+                    color: AppTheme.textDark,
+                    fontSize: 14.5,
+                    fontWeight: FontWeight.w800,
+                    height: 1.35,
                   ),
-                )
-              : ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.fromLTRB(16, 14, 16, 24),
-                  itemCount: notesList.length,
-                  itemBuilder: (context, index) {
-                    final item = notesList[index];
-                    final semNum = item.key;
-                    final sub = item.value;
-                    final semColor = AppTheme.getSemesterColor(semNum);
-                    final semBg = AppTheme.getSemesterBg(semNum);
-
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 12),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Text(
+                      '${sub.credits} Credits · Theory',
+                      style: GoogleFonts.dmSans(
+                        color: AppTheme.textMuted,
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const Spacer(),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: AppTheme.borderSoft, width: 1.5),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.02),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
+                        color: semColor.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.download_rounded, size: 14, color: semColor),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Get PDF',
+                            style: GoogleFonts.dmSans(
+                              color: semColor,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 11,
+                            ),
                           ),
                         ],
                       ),
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () => _downloadNote(sub, semNum),
-                          borderRadius: BorderRadius.circular(16),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                      decoration: BoxDecoration(
-                                        color: semBg,
-                                        borderRadius: BorderRadius.circular(6),
-                                        border: Border.all(color: semColor.withValues(alpha: 0.3)),
-                                      ),
-                                      child: Text(
-                                        'Sem $semNum',
-                                        style: GoogleFonts.dmSans(
-                                          color: semColor,
-                                          fontWeight: FontWeight.w900,
-                                          fontSize: 10,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFFEEF2FF),
-                                        borderRadius: BorderRadius.circular(6),
-                                      ),
-                                      child: Text(
-                                        sub.code,
-                                        style: GoogleFonts.dmSans(
-                                          color: const Color(0xFF3730A3),
-                                          fontWeight: FontWeight.w900,
-                                          fontSize: 10,
-                                        ),
-                                      ),
-                                    ),
-                                    const Spacer(),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFFECFDF5),
-                                        borderRadius: BorderRadius.circular(6),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const Icon(Icons.check_circle_rounded, size: 10, color: Color(0xFF059669)),
-                                          const SizedBox(width: 3),
-                                          Text(
-                                            '${sub.units.length} Units Notes',
-                                            style: GoogleFonts.dmSans(
-                                              color: const Color(0xFF059669),
-                                              fontWeight: FontWeight.w800,
-                                              fontSize: 9,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  sub.name,
-                                  style: GoogleFonts.dmSans(
-                                    color: AppTheme.textDark,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w800,
-                                    height: 1.3,
-                                  ),
-                                ),
-                                const SizedBox(height: 12),
-                                Row(
-                                  children: [
-                                    Text(
-                                      '${sub.credits} Credits · Theory',
-                                      style: GoogleFonts.dmSans(
-                                        color: AppTheme.textMuted,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    const Spacer(),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                      decoration: BoxDecoration(
-                                        color: semColor.withValues(alpha: 0.1),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Icon(Icons.download_rounded, size: 14, color: semColor),
-                                          const SizedBox(width: 4),
-                                          Text(
-                                            'Get PDF',
-                                            style: GoogleFonts.dmSans(
-                                              color: semColor,
-                                              fontWeight: FontWeight.w800,
-                                              fontSize: 11,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
+                    ),
+                  ],
                 ),
+              ],
+            ),
+          ),
         ),
-        // Bottom Banner Ad
-        const AdBannerWidget(),
-      ],
+      ),
     );
   }
 
@@ -546,7 +401,7 @@ class _NotesScreenState extends State<NotesScreen> {
         borderRadius: BorderRadius.circular(10),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           decoration: BoxDecoration(
             color: isSelected ? color : const Color(0xFFF4F7FB),
             borderRadius: BorderRadius.circular(10),
@@ -560,11 +415,111 @@ class _NotesScreenState extends State<NotesScreen> {
             style: GoogleFonts.dmSans(
               color: isSelected ? Colors.white : AppTheme.textMuted,
               fontWeight: FontWeight.w800,
-              fontSize: 11,
+              fontSize: 11.5,
             ),
           ),
         ),
       ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final semesters = SyllabusService().semesters;
+
+    final List<MapEntry<int, Subject>> notesList = [];
+    for (var sem in semesters) {
+      if (_selectedSemester == 0 || _selectedSemester == sem.num) {
+        for (var sub in sem.subjects) {
+          if (sub.type == 'T' && sub.units.isNotEmpty) {
+            notesList.add(MapEntry(sem.num, sub));
+          }
+        }
+      }
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // ── Sticky Semester Filter Strip (Compact & Clean) ───────────
+        Container(
+          color: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                _buildSemFilterChip('All Semesters', 0),
+                ...List.generate(8, (i) => _buildSemFilterChip('Sem ${i + 1}', i + 1)),
+              ],
+            ),
+          ),
+        ),
+        const Divider(height: 1, color: AppTheme.borderSoft),
+
+        // ── Scrollable Body: Banners + Full-Height Notes List ─────────
+        Expanded(
+          child: ListView(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+            children: [
+              // 1. Pre-Booking VIP Study Material Pass Banner
+              _buildPreBookBanner(),
+              const SizedBox(height: 14),
+
+              // 2. Notes Section Header with Count
+              Row(
+                children: [
+                  Text(
+                    _selectedSemester == 0 ? 'All PCI Study Notes' : 'Semester $_selectedSemester Notes',
+                    style: GoogleFonts.dmSans(
+                      color: AppTheme.primaryNavy,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -0.2,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFEFF6FF),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      '${notesList.length} Notes',
+                      style: GoogleFonts.dmSans(
+                        color: const Color(0xFF2563EB),
+                        fontWeight: FontWeight.w800,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+
+              // 4. Notes Cards
+              if (notesList.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.all(40),
+                  child: Center(
+                    child: Text(
+                      'No study notes available for this semester.',
+                      style: GoogleFonts.dmSans(color: AppTheme.textMuted, fontSize: 13),
+                    ),
+                  ),
+                )
+              else
+                ...notesList.map((item) => _buildNoteCard(item.value, item.key)),
+            ],
+          ),
+        ),
+
+        // Bottom Banner Ad
+        const AdBannerWidget(),
+      ],
     );
   }
 }

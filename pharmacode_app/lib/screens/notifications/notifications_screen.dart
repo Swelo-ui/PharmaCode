@@ -45,18 +45,30 @@ class NotificationsScreen extends ConsumerWidget {
             ),
         ],
       ),
-      body: list.isEmpty
-          ? const EmptyStateView(
-              icon: Icons.notifications_none_rounded,
-              title: 'No Notifications Yet',
-              message: 'You are all caught up! New exam updates, notes & announcements will appear here.',
-            )
-          : ListView.separated(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              itemCount: list.length,
-              separatorBuilder: (ctx, idx) => const SizedBox(height: 10),
-              itemBuilder: (context, index) {
+      body: RefreshIndicator(
+        color: AppTheme.brandBlue,
+        backgroundColor: Colors.white,
+        onRefresh: () async {
+          await ref.read(notificationsListProvider.notifier).sync();
+        },
+        child: list.isEmpty
+            ? ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                children: const [
+                  SizedBox(height: 100),
+                  EmptyStateView(
+                    icon: Icons.notifications_none_rounded,
+                    title: 'No Notifications Yet',
+                    message: 'You are all caught up! New exam updates, notes & announcements will appear here.',
+                  ),
+                ],
+              )
+            : ListView.separated(
+                physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                itemCount: list.length,
+                separatorBuilder: (ctx, idx) => const SizedBox(height: 10),
+                itemBuilder: (context, index) {
                 final notif = list[index];
                 return Container(
                   decoration: BoxDecoration(
@@ -156,6 +168,7 @@ class NotificationsScreen extends ConsumerWidget {
                 );
               },
             ),
+      ),
     );
   }
 }
