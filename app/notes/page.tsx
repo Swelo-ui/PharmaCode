@@ -6,9 +6,11 @@ import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbSchema, itemListSchema } from "@/lib/schema";
 import { absUrl } from "@/lib/site";
 import { Download, FileText, Star, BookOpen, CheckCircle2 } from "lucide-react";
-import { getStoredPdfs } from "@/lib/admin-store";
+import { getStoredPdfsAsync } from "@/lib/admin-store";
 
-export const revalidate = 0; // Always fresh dynamically
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
 
 export const metadata: Metadata = {
     title: "B.Pharm Notes PDF Free Download — All 8 Semesters NEP 2020 | PharmaCode",
@@ -44,13 +46,13 @@ export const metadata: Metadata = {
     },
 };
 
-export default function NotesPage() {
+export default async function NotesPage() {
     const breadcrumbs = [
         { name: "Home", href: "/" },
         { name: "Notes", href: "/notes/" },
     ];
 
-    const adminPdfs = getStoredPdfs();
+    const adminPdfs = await getStoredPdfsAsync();
 
     // ItemList schema — theory subjects
     const allNotes = SEMESTERS.flatMap((sem) =>

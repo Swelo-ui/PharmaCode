@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import { getStoredPdfs } from '@/lib/admin-store';
+import { getStoredPdfsAsync } from '@/lib/admin-store';
 
 export async function GET() {
-  const pdfs = getStoredPdfs();
+  const pdfs = await getStoredPdfsAsync();
   const res = NextResponse.json({
     success: true,
     pdfs,

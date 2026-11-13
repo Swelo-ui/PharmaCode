@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -99,10 +98,8 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> _initCoreServices() async {
     try {
-      // Firebase is already initialized in main() — do not call initializeApp() again.
-      // Just register the background message handler and start background services.
-      FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-      // Run heavy push notifications and AdMob in background without delaying splash
+      // Background message handler is already registered in main()
+      // Run push notifications, PDF sync and AdMob in background without delaying splash
       unawaited(NotificationService().initialize());
       unawaited(PdfService.instance.initialize());
       unawaited(AdService.instance.initialize());

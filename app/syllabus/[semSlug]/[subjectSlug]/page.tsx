@@ -23,7 +23,6 @@ import {
     Target,
 } from "lucide-react";
 import type { Metadata } from "next";
-import { getStoredPdfs } from "@/lib/admin-store";
 
 /* ── Static params ─────────────────────────────────── */
 export async function generateStaticParams() {
@@ -93,18 +92,7 @@ function UnitCard({
     semBg: string;
     subjectCode: string;
 }) {
-    const pdfs = getStoredPdfs();
-    const matchingPdf = pdfs.find(
-        (p) =>
-            p.subjectCode.toUpperCase() === subjectCode.toUpperCase() &&
-            (p.unit.toLowerCase().includes(`unit ${index + 1}`) ||
-             p.unit.toLowerCase().includes('complete') ||
-             p.unit.toLowerCase().includes('all'))
-    ) || pdfs.find((p) => p.subjectCode.toUpperCase() === subjectCode.toUpperCase());
-
-    const downloadUrl = matchingPdf
-        ? `/api/pdfs/download?id=${matchingPdf.id}`
-        : `/notes/`;
+    const downloadUrl = `/api/pdfs/download/?subjectCode=${encodeURIComponent(subjectCode)}&unit=${encodeURIComponent(unit.title)}`;
 
     return (
         <div className="bg-white rounded-[14px] overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 border border-[#F0F4FF]">
@@ -179,7 +167,7 @@ function UnitCard({
             <div className="px-4 sm:px-5 py-3">
                 <a
                     href={downloadUrl}
-                    target={matchingPdf ? "_blank" : "_self"}
+                    target="_blank"
                     rel="noreferrer"
                     className="w-full flex items-center justify-center gap-2 py-2 sm:py-2.5 rounded-[10px] text-[12px] sm:text-[13px] font-semibold font-[DM_Sans] transition-all duration-150 hover:opacity-90 active:scale-[0.98]"
                     style={{
@@ -189,7 +177,7 @@ function UnitCard({
                     }}
                 >
                     <Download size={13} />
-                    {matchingPdf ? `Download Unit ${index + 1} Notes PDF (${matchingPdf.fileSize})` : `Unit ${index + 1} Notes PDF`}
+                    Download Unit {index + 1} Notes PDF
                 </a>
             </div>
         </div>

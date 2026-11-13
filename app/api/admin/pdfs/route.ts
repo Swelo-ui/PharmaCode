@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {
   verifySessionToken,
-  getStoredPdfs,
+  getStoredPdfsAsync,
   savePdf,
   deletePdf,
 } from '@/lib/admin-store';
 
 export async function GET() {
-  const pdfs = getStoredPdfs();
+  const pdfs = await getStoredPdfsAsync();
   return NextResponse.json({
     success: true,
     pdfs,
@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const saved = savePdf({
+    const saved = await savePdf({
       title: title.trim(),
       subjectCode: subjectCode.trim().toUpperCase(),
       subjectName: (subjectName || subjectCode).trim(),
@@ -67,6 +67,6 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: 'ID parameter required.' }, { status: 400 });
   }
 
-  const deleted = deletePdf(id);
+  const deleted = await deletePdf(id);
   return NextResponse.json({ success: deleted });
 }

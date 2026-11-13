@@ -1,9 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/animations.dart';
 import 'core/billing/in_app_purchase_service.dart';
+import 'core/notification_service.dart';
 import 'core/theme.dart';
 import 'screens/splash_screen.dart';
 
@@ -16,9 +18,10 @@ void main() async {
   await AppHaptics.init();
 
   // ✅ CRITICAL: Firebase MUST be initialized before any Firebase plugin usage
-  // This was the #1 root cause of the APK instant crash on launch.
   try {
     await Firebase.initializeApp();
+    // Register background messaging handler in main isolate so notifications fire when app is closed
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   } catch (e) {
     debugPrint('Firebase initialization error: $e');
   }

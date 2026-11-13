@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import { getStoredNotifications } from '@/lib/admin-store';
+import { getStoredNotificationsAsync } from '@/lib/admin-store';
 
 export async function GET() {
-  const notifications = getStoredNotifications();
+  const notifications = await getStoredNotificationsAsync();
   const res = NextResponse.json({
     success: true,
     notifications,

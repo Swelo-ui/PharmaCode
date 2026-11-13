@@ -183,6 +183,7 @@ class NotificationService {
       FlutterLocalNotificationsPlugin();
 
   bool _isInitialized = false;
+  bool _hasInitialSynced = false;
   String? _fcmToken;
   final List<AppNotification> _notificationsHistory = [];
   final Set<String> _alertedNotifIds = {};
@@ -270,8 +271,65 @@ class NotificationService {
       await _loadStoredNotifications();
       startPeriodicSync();
       unawaited(syncRemoteNotifications());
+      unawaited(scheduleRecurringStudyNotifications());
     } catch (e) {
       debugPrint('Notification initialization error: $e');
+    }
+  }
+
+  /// Automatically schedules high-yield PCI exam & study alerts using Android native AlarmManager.
+  /// Works reliably even when the app is completely closed / killed.
+  Future<void> scheduleRecurringStudyNotifications() async {
+    try {
+      final enabled = await areNotificationsEnabled();
+      if (!enabled) return;
+
+      tz.initializeTimeZones();
+      final now = tz.TZDateTime.now(tz.local);
+
+      // Study Reminder 1: Scheduled for next morning 10:00 AM
+      var nextTipTime = tz.TZDateTime(tz.local, now.year, now.month, now.day + 1, 10, 0);
+      if (nextTipTime.isBefore(now)) {
+        nextTipTime = nextTipTime.add(const Duration(days: 1));
+      }
+
+      const AndroidNotificationDetails studyDetails = AndroidNotificationDetails(
+        channelId,
+        channelName,
+        channelDescription: _kChannelDesc,
+        importance: Importance.max,
+        priority: Priority.high,
+        playSound: true,
+        sound: RawResourceAndroidNotificationSound(soundResourceName),
+        icon: '@mipmap/ic_notification',
+        enableVibration: true,
+        enableLights: true,
+        visibility: NotificationVisibility.public,
+      );
+
+      await _notificationsPlugin.zonedSchedule(
+        id: 9101,
+        title: '🎓 GPAT 2027 Rapid Study Tip',
+        body: 'Master unit headings first — over 60% of exam questions are framed directly from standard PCI syllabus topics!',
+        scheduledDate: nextTipTime,
+        notificationDetails: const NotificationDetails(android: studyDetails),
+        payload: '/notes',
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      );
+
+      // Study Reminder 2: Scheduled for 2 days later at 6:30 PM
+      var nextRevTime = tz.TZDateTime(tz.local, now.year, now.month, now.day + 2, 18, 30);
+      await _notificationsPlugin.zonedSchedule(
+        id: 9102,
+        title: '📚 B.Pharm Rapid Revision Alert',
+        body: 'Check out newly uploaded verified Unit Notes and Formula Kits in your PharmaCode offline library.',
+        scheduledDate: nextRevTime,
+        notificationDetails: const NotificationDetails(android: studyDetails),
+        payload: '/notes',
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      );
+    } catch (e) {
+      debugPrint('Error scheduling study reminders: $e');
     }
   }
 
@@ -318,6 +376,7 @@ class NotificationService {
         bool updated = false;
         final existingIds = _notificationsHistory.map((n) => n.id).toSet();
         final enabled = prefs.getBool('pref_notifications') ?? true;
+        final bool isFirstRunDone = prefs.getBool('notifications_first_run_completed') ?? false;
 
         for (final item in remoteList) {
           final id = item['id']?.toString() ?? '';
@@ -328,40 +387,45 @@ class NotificationService {
 
           if (id.isEmpty) continue;
 
-          // Check if this notification has NOT been alerted as a system notification yet
-          if (!_alertedNotifIds.contains(id)) {
+          // ✅ BULLETPROOF: On app launch or initial sync, mark all existing historical
+          // notifications as alerted quietly so that NO POPUPS/BANNERS occur when opening the app!
+          if (!_hasInitialSynced || !isFirstRunDone) {
             _alertedNotifIds.add(id);
-            updated = true;
+          } else {
+            // Trigger local system banner & sound ONLY for genuine NEW broadcasts that arrive WHILE app is open/polling
+            if (!_alertedNotifIds.contains(id)) {
+              _alertedNotifIds.add(id);
+              updated = true;
 
-            // Trigger local system notification banner & sound if user hasn't muted notifications
-            if (enabled) {
-              final notifId = (id.hashCode.abs()) % 2147483647;
-              const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
-                channelId,
-                channelName,
-                channelDescription: _kChannelDesc,
-                importance: Importance.max,
-                priority: Priority.high,
-                showWhen: true,
-                playSound: true,
-                sound: RawResourceAndroidNotificationSound(soundResourceName),
-                icon: '@mipmap/ic_notification',
-                enableVibration: true,
-                enableLights: true,
-                visibility: NotificationVisibility.public,
-              );
+              if (enabled) {
+                final notifId = (id.hashCode.abs()) % 2147483647;
+                const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+                  channelId,
+                  channelName,
+                  channelDescription: _kChannelDesc,
+                  importance: Importance.max,
+                  priority: Priority.high,
+                  showWhen: true,
+                  playSound: true,
+                  sound: RawResourceAndroidNotificationSound(soundResourceName),
+                  icon: '@mipmap/ic_notification',
+                  enableVibration: true,
+                  enableLights: true,
+                  visibility: NotificationVisibility.public,
+                );
 
-              await _notificationsPlugin.show(
-                id: notifId,
-                title: title,
-                body: body,
-                notificationDetails: const NotificationDetails(android: androidDetails),
-                payload: deepLink,
-              );
+                await _notificationsPlugin.show(
+                  id: notifId,
+                  title: title,
+                  body: body,
+                  notificationDetails: const NotificationDetails(android: androidDetails),
+                  payload: deepLink,
+                );
+              }
             }
           }
 
-          // Also ensure it is present in in-app notification center
+          // Ensure it is added to the in-app Notification Center list
           if (!existingIds.contains(id)) {
             _notificationsHistory.insert(
               0,
@@ -379,10 +443,13 @@ class NotificationService {
           }
         }
 
+        _hasInitialSynced = true;
+        await prefs.setBool('notifications_first_run_completed', true);
+        await prefs.setStringList('alerted_notification_ids', _alertedNotifIds.toList());
+
         if (updated) {
           _updateUnreadCount();
           await _persistNotifications();
-          await prefs.setStringList('alerted_notification_ids', _alertedNotifIds.toList());
         }
       }
     } catch (e) {
@@ -476,31 +543,8 @@ class NotificationService {
           list.map((item) => AppNotification.fromMap(item as Map<String, dynamic>)),
         );
       } else {
-        // Welcome notifications
-        _notificationsHistory.addAll([
-          AppNotification(
-            id: 'notif-1',
-            title: 'Welcome to PharmaCode!',
-            body: 'Access complete B.Pharm NEP 2020 syllabus, unit-wise notes & career guides anytime offline.',
-            timestamp: 'Just now',
-            isRead: false,
-          ),
-          AppNotification(
-            id: 'notif-2',
-            title: 'New Subject Added: BP604T',
-            body: 'AI Applications in Pharmaceutical Sciences syllabus and notes are now live.',
-            timestamp: 'Yesterday',
-            isRead: false,
-          ),
-          AppNotification(
-            id: 'notif-3',
-            title: 'GPAT 2027 Preparation Alert',
-            body: 'Check high-yield unit headings in Pharmacology & Medicinal Chemistry.',
-            timestamp: '3 days ago',
-            isRead: true,
-          ),
-        ]);
-        await _persistNotifications();
+        // Fresh install: notification center starts clean, then pulls real broadcasts from server
+        _notificationsHistory.clear();
       }
     } catch (e) {
       debugPrint('Error loading saved notifications: $e');
