@@ -70,97 +70,140 @@ class NotificationsScreen extends ConsumerWidget {
                 separatorBuilder: (ctx, idx) => const SizedBox(height: 10),
                 itemBuilder: (context, index) {
                 final notif = list[index];
-                return Container(
-                  decoration: BoxDecoration(
-                    color: notif.isRead ? Colors.white : const Color(0xFFF0F7FF),
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(
-                      color: notif.isRead
-                          ? const Color(0xFFE2E8F0)
-                          : const Color(0xFFBFDBFE),
-                      width: notif.isRead ? 1 : 1.2,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.02),
-                        blurRadius: 6,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () {
-                        ref.read(notificationsListProvider.notifier).markAsRead(notif.id);
-                        if (notif.deepLink != null && notif.deepLink!.trim().isNotEmpty) {
-                          final link = notif.deepLink!.trim();
-                          final fullUrl = link.startsWith('http')
-                              ? link
-                              : 'https://pharmacode.vercel.app${link.startsWith('/') ? link : '/$link'}';
-                          openInAppUrl(context, fullUrl);
-                        }
-                      },
+                return Dismissible(
+                  key: Key('notif_${notif.id}'),
+                  direction: DismissDirection.endToStart,
+                  background: Container(
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.only(right: 20),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFEF4444),
                       borderRadius: BorderRadius.circular(14),
-                      child: Padding(
-                        padding: const EdgeInsets.all(14),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: 8,
-                              height: 8,
-                              margin: const EdgeInsets.only(top: 5, right: 10),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: notif.isRead
-                                    ? Colors.transparent
-                                    : const Color(0xFF2563EB),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        const Icon(Icons.delete_outline_rounded, color: Colors.white, size: 20),
+                        const SizedBox(width: 6),
+                        Text(
+                          'Delete',
+                          style: GoogleFonts.dmSans(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  onDismissed: (direction) {
+                    ref.read(notificationsListProvider.notifier).deleteNotification(notif.id);
+                    ScaffoldMessenger.of(context).clearSnackBars();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Notification deleted',
+                          style: GoogleFonts.dmSans(fontSize: 13, fontWeight: FontWeight.w600),
+                        ),
+                        duration: const Duration(seconds: 2),
+                        behavior: SnackBarBehavior.floating,
+                        backgroundColor: AppTheme.primaryNavy,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: notif.isRead ? Colors.white : const Color(0xFFF0F7FF),
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                        color: notif.isRead
+                            ? const Color(0xFFE2E8F0)
+                            : const Color(0xFFBFDBFE),
+                        width: notif.isRead ? 1 : 1.2,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.02),
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          ref.read(notificationsListProvider.notifier).markAsRead(notif.id);
+                          if (notif.deepLink != null && notif.deepLink!.trim().isNotEmpty) {
+                            final link = notif.deepLink!.trim();
+                            final fullUrl = link.startsWith('http')
+                                ? link
+                                : 'https://pharmacode.vercel.app${link.startsWith('/') ? link : '/$link'}';
+                            openInAppUrl(context, fullUrl);
+                          }
+                        },
+                        borderRadius: BorderRadius.circular(14),
+                        child: Padding(
+                          padding: const EdgeInsets.all(14),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 8,
+                                height: 8,
+                                margin: const EdgeInsets.only(top: 5, right: 10),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: notif.isRead
+                                      ? Colors.transparent
+                                      : const Color(0xFF2563EB),
+                                ),
                               ),
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          notif.title,
-                                          style: GoogleFonts.dmSans(
-                                            color: AppTheme.primaryNavy,
-                                            fontSize: 13.5,
-                                            fontWeight: notif.isRead
-                                                ? FontWeight.w700
-                                                : FontWeight.w900,
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            notif.title,
+                                            style: GoogleFonts.dmSans(
+                                              color: AppTheme.primaryNavy,
+                                              fontSize: 13.5,
+                                              fontWeight: notif.isRead
+                                                  ? FontWeight.w700
+                                                  : FontWeight.w900,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      Text(
-                                        notif.timestamp,
-                                        style: GoogleFonts.inter(
-                                          color: const Color(0xFF94A3B8),
-                                          fontSize: 10.5,
-                                          fontWeight: FontWeight.w500,
+                                        Text(
+                                          notif.timestamp,
+                                          style: GoogleFonts.inter(
+                                            color: const Color(0xFF94A3B8),
+                                            fontSize: 10.5,
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Text(
-                                    notif.body,
-                                    style: GoogleFonts.inter(
-                                      color: notif.isRead
-                                          ? const Color(0xFF64748B)
-                                          : const Color(0xFF334155),
-                                      fontSize: 12,
-                                      height: 1.4,
+                                      ],
                                     ),
-                                  ),
-                                ],
+                                    const SizedBox(height: 5),
+                                    Text(
+                                      notif.body,
+                                      style: GoogleFonts.inter(
+                                        color: notif.isRead
+                                            ? const Color(0xFF64748B)
+                                            : const Color(0xFF334155),
+                                        fontSize: 12,
+                                        height: 1.4,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),

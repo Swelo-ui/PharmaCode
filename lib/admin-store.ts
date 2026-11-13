@@ -47,6 +47,24 @@ export interface AdminAnalytics {
   recentEvents: { id: string; action: string; platform: string; time: string }[];
 }
 
+export interface WebsiteConfig {
+  announcement: {
+    enabled: boolean;
+    text: string;
+    badge: string;
+    link: string;
+    variant: 'indigo' | 'emerald' | 'amber' | 'rose';
+  };
+  maintenanceMode: boolean;
+  maintenanceMessage: string;
+  supportWhatsApp: string;
+  supportEmail: string;
+  vipPassPrice: number;
+  vipPassOriginalPrice: number;
+  discountPercentage: number;
+  updatedAt: string;
+}
+
 // ─── STORAGE RESOLUTION (WORKS ON VERCEL SERVERLESS & LOCAL) ───────────────────
 const DATA_DIR = process.env.VERCEL
   ? path.join(os.tmpdir(), 'pharmacode_store')
@@ -55,11 +73,31 @@ const DATA_DIR = process.env.VERCEL
 const NOTIFS_FILE = path.join(DATA_DIR, 'notifications.json');
 const PDFS_FILE = path.join(DATA_DIR, 'pdfs.json');
 const ANALYTICS_FILE = path.join(DATA_DIR, 'analytics.json');
+const CONFIG_FILE = path.join(DATA_DIR, 'config.json');
+
+const BASELINE_CONFIG: WebsiteConfig = {
+  announcement: {
+    enabled: true,
+    text: '🎉 GPAT 2027 Rapid Revision Strategy & Formulas are live! Download free verified notes.',
+    badge: 'NEW',
+    link: '/notes/',
+    variant: 'indigo',
+  },
+  maintenanceMode: false,
+  maintenanceMessage: 'PharmaCode is undergoing scheduled maintenance to upgrade study material. We will be back shortly.',
+  supportWhatsApp: '6265643703',
+  supportEmail: 'pharmacode.connect@gmail.com',
+  vipPassPrice: 199,
+  vipPassOriginalPrice: 999,
+  discountPercentage: 80,
+  updatedAt: new Date().toISOString(),
+};
 
 interface MemoryStore {
   notifications: AdminNotification[];
   pdfs: AdminPdf[];
   analytics: AdminAnalytics;
+  config: WebsiteConfig;
   fcmServerKey?: string;
   activeIps: Map<string, number>;
   lastCloudSync: number;
@@ -181,6 +219,7 @@ const BASELINE_PDFS: AdminPdf[] = [
 async function fetchCloudStore(): Promise<{
   pdfs?: AdminPdf[];
   notifications?: AdminNotification[];
+  config?: WebsiteConfig;
   fcmServerKey?: string;
 } | null> {
   return new Promise((resolve) => {
@@ -226,6 +265,7 @@ async function fetchCloudStore(): Promise<{
 async function pushCloudStore(data: {
   pdfs: AdminPdf[];
   notifications: AdminNotification[];
+  config?: WebsiteConfig;
   fcmServerKey?: string;
 }): Promise<boolean> {
   return new Promise((resolve) => {
@@ -276,6 +316,7 @@ function getMemoryStore(): MemoryStore {
 
     let notifs = BASELINE_NOTIFICATIONS;
     let pdfs = BASELINE_PDFS;
+    let config = BASELINE_CONFIG;
 
     try {
       if (fs.existsSync(NOTIFS_FILE)) {
@@ -289,11 +330,18 @@ function getMemoryStore(): MemoryStore {
       }
     } catch (_) {}
 
+    try {
+      if (fs.existsSync(CONFIG_FILE)) {
+        config = JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8'));
+      }
+    } catch (_) {}
+
     const totalDownloads = pdfs.reduce((sum, p) => sum + (p.downloadsCount || 0), 0);
 
     globalThis.__pharma_memory_store__ = {
       notifications: notifs,
       pdfs: pdfs,
+      config: config,
       fcmServerKey: process.env.FIREBASE_SERVER_KEY || process.env.FCM_SERVER_KEY || '',
       analytics: {
         activeUsersToday: 1,
@@ -318,6 +366,9 @@ function getMemoryStore(): MemoryStore {
         }
         if (Array.isArray(cloud.notifications)) {
           globalThis.__pharma_memory_store__!.notifications = cloud.notifications;
+        }
+        if (cloud.config) {
+          globalThis.__pharma_memory_store__!.config = { ...BASELINE_CONFIG, ...cloud.config };
         }
         if (cloud.fcmServerKey) {
           globalThis.__pharma_memory_store__!.fcmServerKey = cloud.fcmServerKey;
@@ -639,6 +690,86 @@ function addRealEvent(action: string, platform: string): void {
   store.analytics.recentEvents = [newEvent, ...store.analytics.recentEvents.slice(0, 14)];
 }
 
+export async function updatePdf(
+  id: string,
+  updates: Partial<Omit<AdminPdf, 'id' | 'uploadedAt' | 'downloadsCount'>>
+): Promise<AdminPdf | null> {
+  const store = getMemoryStore();
+  const index = store.pdfs.findIndex((p) => p.id === id);
+  if (index === -1) return null;
+
+  store.pdfs[index] = {
+    ...store.pdfs[index],
+    ...updates,
+    id, // preserve id
+  };
+
+  addRealEvent(`Updated PDF Note: ${store.pdfs[index].title}`, 'PDF Manager');
+  ensureDataDir();
+  try {
+    fs.writeFileSync(PDFS_FILE, JSON.stringify(store.pdfs, null, 2), 'utf8');
+  } catch (_) {}
+
+  await pushCloudStore({
+    pdfs: store.pdfs,
+    notifications: store.notifications,
+    config: store.config,
+    fcmServerKey: store.fcmServerKey,
+  });
+
+  return store.pdfs[index];
+}
+
+export function getWebsiteConfig(): WebsiteConfig {
+  const store = getMemoryStore();
+  return store.config;
+}
+
+export async function getWebsiteConfigAsync(): Promise<WebsiteConfig> {
+  const store = getMemoryStore();
+  const now = Date.now();
+  if (now - store.lastCloudSync > 4000) {
+    const cloud = await fetchCloudStore();
+    if (cloud) {
+      if (cloud.config) {
+        store.config = { ...BASELINE_CONFIG, ...cloud.config };
+      }
+      if (Array.isArray(cloud.pdfs) && cloud.pdfs.length > 0) {
+        store.pdfs = cloud.pdfs;
+      }
+      if (Array.isArray(cloud.notifications) && cloud.notifications.length > 0) {
+        store.notifications = cloud.notifications;
+      }
+      store.lastCloudSync = now;
+    }
+  }
+  return store.config;
+}
+
+export async function updateWebsiteConfig(updates: Partial<WebsiteConfig>): Promise<WebsiteConfig> {
+  const store = getMemoryStore();
+  store.config = {
+    ...store.config,
+    ...updates,
+    updatedAt: new Date().toISOString(),
+  };
+
+  addRealEvent(`Updated Website Controls (${Object.keys(updates).join(', ')})`, 'Admin Action');
+  ensureDataDir();
+  try {
+    fs.writeFileSync(CONFIG_FILE, JSON.stringify(store.config, null, 2), 'utf8');
+  } catch (_) {}
+
+  await pushCloudStore({
+    pdfs: store.pdfs,
+    notifications: store.notifications,
+    config: store.config,
+    fcmServerKey: store.fcmServerKey,
+  });
+
+  return store.config;
+}
+
 export function getFcmServerKey(): string {
   const store = getMemoryStore();
   return store.fcmServerKey || process.env.FIREBASE_SERVER_KEY || process.env.FCM_SERVER_KEY || '';
@@ -650,6 +781,7 @@ export async function setFcmServerKey(key: string): Promise<void> {
   await pushCloudStore({
     pdfs: store.pdfs,
     notifications: store.notifications,
+    config: store.config,
     fcmServerKey: store.fcmServerKey,
   });
 }

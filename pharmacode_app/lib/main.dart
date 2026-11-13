@@ -43,6 +43,13 @@ void main() async {
     debugPrint('InAppPurchaseService initialization error: $e');
   }
 
+  // Initialize Notification Service (loads saved notifications, read IDs & deleted IDs)
+  try {
+    await NotificationService().initialize();
+  } catch (e) {
+    debugPrint('NotificationService initialization error: $e');
+  }
+
   runApp(
     const ProviderScope(
       child: PharmaCodeApp(),

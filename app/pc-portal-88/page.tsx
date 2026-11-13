@@ -23,6 +23,18 @@ import {
   Layers,
   Radio,
   Zap,
+  Globe,
+  Sliders,
+  Edit2,
+  Search,
+  Filter,
+  Check,
+  Eye,
+  X,
+  Phone,
+  Mail,
+  CreditCard,
+  Flame,
 } from 'lucide-react';
 
 interface NotificationItem {
@@ -53,6 +65,24 @@ interface PdfItem {
   downloadsCount: number;
 }
 
+interface WebsiteConfig {
+  announcement: {
+    enabled: boolean;
+    text: string;
+    badge: string;
+    link: string;
+    variant: 'indigo' | 'emerald' | 'amber' | 'rose';
+  };
+  maintenanceMode: boolean;
+  maintenanceMessage: string;
+  supportWhatsApp: string;
+  supportEmail: string;
+  vipPassPrice: number;
+  vipPassOriginalPrice: number;
+  discountPercentage: number;
+  updatedAt: string;
+}
+
 interface AnalyticsData {
   activeUsersToday: number;
   activeUsersWeekly: number;
@@ -69,8 +99,8 @@ export default function AdminPage() {
   const [loginError, setLoginError] = useState('');
   const [isSubmittingLogin, setIsSubmittingLogin] = useState(false);
 
-  // Active Tab: 'notifications' | 'pdfs' | 'analytics' | 'security'
-  const [activeTab, setActiveTab] = useState<'notifications' | 'pdfs' | 'analytics' | 'security'>('notifications');
+  // Active Tab: 'notifications' | 'pdfs' | 'website' | 'analytics' | 'security'
+  const [activeTab, setActiveTab] = useState<'notifications' | 'pdfs' | 'website' | 'analytics' | 'security'>('notifications');
 
   // Notifications State
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
@@ -89,6 +119,12 @@ export default function AdminPage() {
   const [pdfs, setPdfs] = useState<PdfItem[]>([]);
   const [isAddingPdf, setIsAddingPdf] = useState(false);
   const [pdfSuccessMsg, setPdfSuccessMsg] = useState('');
+  const [editingPdf, setEditingPdf] = useState<PdfItem | null>(null);
+  const [isUpdatingPdf, setIsUpdatingPdf] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterSemester, setFilterSemester] = useState<number | 'all'>('all');
+  const [filterCategory, setFilterCategory] = useState<string>('all');
+
   const [pdfForm, setPdfForm] = useState({
     title: '',
     subjectCode: 'BP101T',
@@ -100,6 +136,27 @@ export default function AdminPage() {
     fileSize: '3.5 MB',
     pages: 35,
   });
+
+  // Website Live Config State
+  const [websiteConfig, setWebsiteConfig] = useState<WebsiteConfig>({
+    announcement: {
+      enabled: true,
+      text: '🎉 GPAT 2027 Rapid Revision Strategy & Formulas are live! Download free verified notes.',
+      badge: 'NEW',
+      link: '/notes/',
+      variant: 'indigo',
+    },
+    maintenanceMode: false,
+    maintenanceMessage: 'PharmaCode is undergoing scheduled maintenance to upgrade study material. We will be back shortly.',
+    supportWhatsApp: '6265643703',
+    supportEmail: 'pharmacode.connect@gmail.com',
+    vipPassPrice: 199,
+    vipPassOriginalPrice: 999,
+    discountPercentage: 80,
+    updatedAt: '',
+  });
+  const [isSavingConfig, setIsSavingConfig] = useState(false);
+  const [configSuccessMsg, setConfigSuccessMsg] = useState('');
 
   // Analytics State
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
@@ -130,10 +187,11 @@ export default function AdminPage() {
   async function loadAllData() {
     setIsLoadingData(true);
     try {
-      const [notifsRes, pdfsRes, analyticsRes] = await Promise.all([
+      const [notifsRes, pdfsRes, analyticsRes, configRes] = await Promise.all([
         fetch('/api/admin/notifications'),
         fetch('/api/admin/pdfs'),
         fetch('/api/admin/analytics'),
+        fetch('/api/admin/config'),
       ]);
 
       if (notifsRes.ok) {
@@ -147,6 +205,12 @@ export default function AdminPage() {
       if (analyticsRes.ok) {
         const aData = await analyticsRes.json();
         setAnalytics(aData.analytics || null);
+      }
+      if (configRes.ok) {
+        const cData = await configRes.json();
+        if (cData.config) {
+          setWebsiteConfig(cData.config);
+        }
       }
     } catch (e) {
       console.error('Error fetching admin data:', e);
@@ -320,6 +384,33 @@ export default function AdminPage() {
     }
   }
 
+  // Update PDF
+  async function handleUpdatePdf(e: React.FormEvent) {
+    e.preventDefault();
+    if (!editingPdf) return;
+
+    setIsUpdatingPdf(true);
+    try {
+      const res = await fetch('/api/admin/pdfs', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editingPdf),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setPdfs((prev) => prev.map((p) => (p.id === data.pdf.id ? data.pdf : p)));
+        setEditingPdf(null);
+      } else {
+        alert(data.error || 'Failed to update PDF');
+      }
+    } catch (_) {
+      alert('Error updating PDF');
+    } finally {
+      setIsUpdatingPdf(false);
+    }
+  }
+
   // Delete PDF
   async function handleDeletePdf(id: string) {
     if (!confirm('Remove this PDF from the library?')) return;
@@ -328,6 +419,46 @@ export default function AdminPage() {
       setPdfs((prev) => prev.filter((p) => p.id !== id));
     }
   }
+
+  // Save Website Live Config
+  async function handleSaveWebsiteConfig(e: React.FormEvent) {
+    e.preventDefault();
+    setIsSavingConfig(true);
+    setConfigSuccessMsg('');
+
+    try {
+      const res = await fetch('/api/admin/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(websiteConfig),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setConfigSuccessMsg('🎉 Website Controls Saved! Changes are active immediately on the live website.');
+        setWebsiteConfig(data.config);
+        setTimeout(() => setConfigSuccessMsg(''), 5000);
+      } else {
+        alert(data.error || 'Failed to save configuration');
+      }
+    } catch (_) {
+      alert('Error connecting to config API');
+    } finally {
+      setIsSavingConfig(false);
+    }
+  }
+
+  // Filtered PDFs
+  const filteredPdfs = pdfs.filter((p) => {
+    const matchesSearch =
+      searchQuery === '' ||
+      p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.subjectCode.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.unit.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSem = filterSemester === 'all' || p.semester === filterSemester;
+    const matchesCat = filterCategory === 'all' || p.category === filterCategory;
+    return matchesSearch && matchesSem && matchesCat;
+  });
 
   // ─── LOGIN SCREEN ─────────────────────────────────────────────────────────────
   if (isAuthenticated === false) {
@@ -340,7 +471,7 @@ export default function AdminPage() {
             </div>
             <h1 className="text-2xl font-bold text-white tracking-tight">PharmaCode Admin</h1>
             <p className="text-sm text-slate-400 mt-1">
-              Secure Central Command for Android App & Web Portal
+              Secure Central Command for Android App &amp; Web Portal
             </p>
           </div>
 
@@ -354,17 +485,17 @@ export default function AdminPage() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter admin password"
-                  autoFocus
+                  placeholder="Enter administrator password"
                   required
-                  className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3.5 text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                  autoFocus
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all placeholder:text-slate-600"
                 />
-                <Lock className="w-4 h-4 text-slate-500 absolute right-4 top-4 pointer-events-none" />
+                <Lock className="w-4 h-4 text-slate-500 absolute right-3.5 top-3.5 pointer-events-none" />
               </div>
             </div>
 
             {loginError && (
-              <div className="flex items-center gap-2 p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-xs text-red-400">
+              <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-xl flex items-center gap-2 text-xs text-red-400">
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{loginError}</span>
               </div>
@@ -372,8 +503,8 @@ export default function AdminPage() {
 
             <button
               type="submit"
-              disabled={isSubmittingLogin || !password}
-              className="w-full bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 disabled:opacity-50 text-white font-semibold py-3.5 px-4 rounded-xl text-sm transition-all shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2"
+              disabled={isSubmittingLogin}
+              className="w-full bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 active:scale-[0.98] text-white font-semibold py-3 px-4 rounded-xl text-sm transition-all shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {isSubmittingLogin ? (
                 <>
@@ -383,7 +514,7 @@ export default function AdminPage() {
               ) : (
                 <>
                   <Unlock className="w-4 h-4" />
-                  <span>Authenticate & Enter Console</span>
+                  <span>Authenticate &amp; Enter Console</span>
                 </>
               )}
             </button>
@@ -426,7 +557,7 @@ export default function AdminPage() {
             <div className="flex items-center gap-2">
               <h1 className="font-bold text-white text-base tracking-tight">PharmaCode Admin Hub</h1>
               <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold tracking-wide uppercase">
-                Live Broadcast
+                Real-Time Cloud Connected
               </span>
             </div>
             <p className="text-[11px] text-slate-400">Control APK &amp; Website in Real-Time</p>
@@ -505,14 +636,21 @@ export default function AdminPage() {
 
           <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 relative overflow-hidden">
             <div className="flex items-center justify-between text-slate-400 mb-2">
-              <span className="text-xs font-semibold uppercase tracking-wider">APK &amp; Cloud Gateway</span>
-              <Zap className="w-4 h-4 text-amber-400" />
+              <span className="text-xs font-semibold uppercase tracking-wider">Live Top Banner</span>
+              <Globe className="w-4 h-4 text-amber-400" />
             </div>
-            <div className="text-2xl sm:text-3xl font-extrabold text-emerald-400 flex items-center gap-2">
-              <span>Operational</span>
+            <div className="text-xl sm:text-2xl font-bold flex items-center gap-2">
+              {websiteConfig.announcement.enabled ? (
+                <span className="text-emerald-400 flex items-center gap-1">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+                  Active on Web
+                </span>
+              ) : (
+                <span className="text-slate-500">Disabled</span>
+              )}
             </div>
             <div className="mt-1 flex items-center gap-1 text-[11px] text-slate-400">
-              <span>Google Play Policy: Compliant</span>
+              <span>VIP Pass: ₹{websiteConfig.vipPassPrice}</span>
             </div>
           </div>
         </div>
@@ -547,6 +685,18 @@ export default function AdminPage() {
             <span className="ml-1 px-1.5 py-0.2 rounded-full bg-slate-900/60 text-[10px]">
               {pdfs.length}
             </span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('website')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap ${
+              activeTab === 'website'
+                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+            }`}
+          >
+            <Globe className="w-4 h-4" />
+            <span>Website &amp; Live Controls</span>
           </button>
 
           <button
@@ -604,193 +754,123 @@ export default function AdminPage() {
               </div>
             </div>
 
-            {/* Notification Composer + Live Phone Preview */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              {/* Composer */}
-              <div className="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <Send className="w-4 h-4 text-indigo-400" />
-                    <h2 className="text-base font-bold text-white">Broadcast Real-Time Push Notification</h2>
-                  </div>
-                  <span className="text-xs text-slate-400">Offline &amp; Online Instant Sync</span>
+            {/* Notification Composer */}
+            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <Send className="w-4 h-4 text-indigo-400" />
+                  <h2 className="text-base font-bold text-white">Broadcast Real-Time Push Notification</h2>
+                </div>
+                <span className="text-xs text-slate-400">Offline &amp; Online Instant Sync</span>
+              </div>
+
+              <form onSubmit={handleSendNotification} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                    Notification Title <span className="text-indigo-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={notifForm.title}
+                    onChange={(e) => setNotifForm({ ...notifForm, title: e.target.value })}
+                    placeholder="e.g. 🎓 GPAT 2027 Rapid Revision Strategy"
+                    required
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
                 </div>
 
-                <form onSubmit={handleSendNotification} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                    Notification Message / Body <span className="text-indigo-400">*</span>
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={notifForm.body}
+                    onChange={(e) => setNotifForm({ ...notifForm, body: e.target.value })}
+                    placeholder="Detailed update or advice for pharmacy students..."
+                    required
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                      Notification Title <span className="text-indigo-400">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={notifForm.title}
-                      onChange={(e) => setNotifForm({ ...notifForm, title: e.target.value })}
-                      placeholder="e.g. 🎓 GPAT 2027 Rapid Revision Strategy"
-                      required
-                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    />
+                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">Category</label>
+                    <select
+                      value={notifForm.category}
+                      onChange={(e) => setNotifForm({ ...notifForm, category: e.target.value })}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    >
+                      <option value="exam">Exam &amp; GPAT</option>
+                      <option value="notes">New Notes &amp; Syllabus</option>
+                      <option value="tips">Study Tips</option>
+                      <option value="announcement">Announcement</option>
+                      <option value="update">App / Portal Update</option>
+                    </select>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                      Notification Message / Body <span className="text-indigo-400">*</span>
-                    </label>
-                    <textarea
-                      rows={3}
-                      value={notifForm.body}
-                      onChange={(e) => setNotifForm({ ...notifForm, body: e.target.value })}
-                      placeholder="Detailed update or advice for pharmacy students..."
-                      required
-                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1.5">Category</label>
-                      <select
-                        value={notifForm.category}
-                        onChange={(e) => setNotifForm({ ...notifForm, category: e.target.value })}
-                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      >
-                        <option value="announcement">📢 Announcement</option>
-                        <option value="notes">📚 New Notes</option>
-                        <option value="exam">🎓 GPAT / Exam</option>
-                        <option value="tips">💡 Study Tip</option>
-                        <option value="update">⚡ App Update</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1.5">Target Audience</label>
-                      <select
-                        value={notifForm.topic}
-                        onChange={(e) => setNotifForm({ ...notifForm, topic: e.target.value })}
-                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      >
-                        <option value="all_students">All Students (all_students)</option>
-                        <option value="all">Universal Broadcast (all)</option>
-                        <option value="updates">Updates Topic</option>
-                        <option value="announcements">Announcements Topic</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1.5">Priority</label>
-                      <select
-                        value={notifForm.priority}
-                        onChange={(e) => setNotifForm({ ...notifForm, priority: e.target.value })}
-                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      >
-                        <option value="high">High (Popup &amp; Sound)</option>
-                        <option value="urgent">Urgent Alert</option>
-                        <option value="normal">Normal (Silent Tray)</option>
-                      </select>
-                    </div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">Priority</label>
+                    <select
+                      value={notifForm.priority}
+                      onChange={(e) => setNotifForm({ ...notifForm, priority: e.target.value })}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    >
+                      <option value="urgent">Urgent (Immediate Banner + Sound)</option>
+                      <option value="high">High</option>
+                      <option value="normal">Normal</option>
+                    </select>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                      In-App Deep Link / Screen Route
-                    </label>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">Deep Link / Route</label>
                     <input
                       type="text"
                       value={notifForm.deepLink}
                       onChange={(e) => setNotifForm({ ...notifForm, deepLink: e.target.value })}
-                      placeholder="e.g. /notes, /syllabus, or https://..."
-                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    />
-                    <p className="text-[11px] text-slate-500 mt-1">
-                      Tapping the notification opens this route directly inside the app.
-                    </p>
+                      placeholder="/notes or /syllabus"
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    >
+                    </input>
                   </div>
+                </div>
 
-                  {notifSuccessMsg && (
-                    <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl flex items-center gap-2 text-xs text-emerald-400">
-                      <CheckCircle2 className="w-4 h-4 shrink-0" />
-                      <span>{notifSuccessMsg}</span>
-                    </div>
+                {notifSuccessMsg && (
+                  <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl flex items-center gap-2 text-xs text-emerald-400">
+                    <CheckCircle2 className="w-4 h-4 shrink-0" />
+                    <span>{notifSuccessMsg}</span>
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={isSendingNotif}
+                  className="w-full bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 active:scale-[0.98] text-white font-semibold py-3 px-4 rounded-xl text-sm transition-all shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2"
+                >
+                  {isSendingNotif ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                      <span>Broadcasting across devices...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      <span>Send Realtime Broadcast Now</span>
+                    </>
                   )}
-
-                  <button
-                    type="submit"
-                    disabled={isSendingNotif}
-                    className="w-full bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-xl text-sm transition-all shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2"
-                  >
-                    {isSendingNotif ? (
-                      <>
-                        <RefreshCw className="w-4 h-4 animate-spin" />
-                        <span>Sending to All Devices...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-4 h-4" />
-                        <span>Broadcast Notification to All Apps Now</span>
-                      </>
-                    )}
-                  </button>
-                </form>
-              </div>
-
-              {/* Live Device Notification Drawer Preview */}
-              <div className="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col items-center justify-center">
-                <div className="w-full text-left mb-4 flex items-center gap-2">
-                  <Smartphone className="w-4 h-4 text-slate-400" />
-                  <span className="text-xs font-semibold text-slate-300">Live Device Notification Preview</span>
-                </div>
-
-                <div className="w-full max-w-sm bg-slate-950 border border-slate-800 rounded-2xl p-4 shadow-xl relative">
-                  {/* Fake Android Status bar */}
-                  <div className="flex items-center justify-between text-[11px] text-slate-500 mb-3 border-b border-slate-800/60 pb-2">
-                    <span>12:45 PM</span>
-                    <span className="flex items-center gap-1">
-                      <span>5G</span>
-                      <span>100%</span>
-                    </span>
-                  </div>
-
-                  {/* Notification Card */}
-                  <div className="bg-slate-900/90 border border-slate-700/60 rounded-xl p-3 shadow-md">
-                    <div className="flex items-center justify-between mb-1.5">
-                      <div className="flex items-center gap-1.5">
-                        <div className="w-4 h-4 rounded-full bg-indigo-600 flex items-center justify-center text-[9px] font-bold text-white">
-                          P
-                        </div>
-                        <span className="text-[11px] font-bold text-slate-300">PharmaCode</span>
-                      </div>
-                      <span className="text-[10px] text-slate-500">Just now</span>
-                    </div>
-
-                    <div className="text-xs font-bold text-white mb-0.5 line-clamp-1">
-                      {notifForm.title || 'Notification Title Preview'}
-                    </div>
-                    <div className="text-[11px] text-slate-300 leading-relaxed line-clamp-3">
-                      {notifForm.body || 'Your notification body text will appear here on students’ Android devices.'}
-                    </div>
-
-                    {notifForm.deepLink && (
-                      <div className="mt-2 text-[10px] text-indigo-400 font-semibold flex items-center gap-1">
-                        <span>Tap to open: {notifForm.deepLink}</span>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="mt-4 text-center text-[10px] text-slate-500">
-                    Delivered via Firebase Cloud Messaging &amp; In-App History
-                  </div>
-                </div>
-              </div>
+                </button>
+              </form>
             </div>
 
-            {/* Sent Notifications History Table */}
+            {/* Broadcast History */}
             <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-base font-bold text-white">Broadcast History ({notifications.length})</h3>
-                <span className="text-xs text-slate-400">All notifications persist in student app history</span>
+                <h3 className="text-base font-bold text-white">Broadcast History &amp; Delivery Log ({notifications.length})</h3>
+                <span className="text-xs text-slate-400">Delivered via FCM &amp; In-App History</span>
               </div>
 
               {notifications.length === 0 ? (
-                <div className="text-center py-8 text-xs text-slate-500">No notifications sent yet.</div>
+                <div className="text-center py-8 text-xs text-slate-500">No broadcasts recorded yet.</div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs text-slate-300">
@@ -991,15 +1071,56 @@ export default function AdminPage() {
               </form>
             </div>
 
-            {/* Published PDFs Table */}
+            {/* Published PDFs Table + Search & Filter */}
             <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-base font-bold text-white">Managed Study PDFs ({pdfs.length})</h3>
-                <span className="text-xs text-slate-400">Synchronized with mobile APK download buttons</span>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
+                <div>
+                  <h3 className="text-base font-bold text-white">Managed Study PDFs ({filteredPdfs.length} / {pdfs.length})</h3>
+                  <p className="text-xs text-slate-400">Synchronized with website /notes/ page and mobile APK</p>
+                </div>
+
+                {/* Search & Filter Bar */}
+                <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                  <div className="relative flex-1 sm:w-48">
+                    <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search PDF..."
+                      className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-8 pr-3 py-1.5 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                    />
+                  </div>
+
+                  <select
+                    value={filterSemester}
+                    onChange={(e) => setFilterSemester(e.target.value === 'all' ? 'all' : Number(e.target.value))}
+                    className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  >
+                    <option value="all">All Semesters</option>
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
+                      <option key={s} value={s}>
+                        Sem {s}
+                      </option>
+                    ))}
+                  </select>
+
+                  <select
+                    value={filterCategory}
+                    onChange={(e) => setFilterCategory(e.target.value)}
+                    className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  >
+                    <option value="all">All Types</option>
+                    <option value="Notes">Notes</option>
+                    <option value="Question Paper">Question Paper</option>
+                    <option value="Revision Sheet">Revision Sheet</option>
+                    <option value="Lab Manual">Lab Manual</option>
+                  </select>
+                </div>
               </div>
 
-              {pdfs.length === 0 ? (
-                <div className="text-center py-8 text-xs text-slate-500">No PDFs uploaded yet.</div>
+              {filteredPdfs.length === 0 ? (
+                <div className="text-center py-8 text-xs text-slate-500">No matching PDFs found.</div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs text-slate-300">
@@ -1014,7 +1135,7 @@ export default function AdminPage() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-800/60">
-                      {pdfs.map((pdf) => (
+                      {filteredPdfs.map((pdf) => (
                         <tr key={pdf.id} className="hover:bg-slate-800/30 transition-colors">
                           <td className="py-3 px-3 font-semibold text-white">
                             <div className="line-clamp-1">{pdf.title}</div>
@@ -1033,7 +1154,14 @@ export default function AdminPage() {
                           <td className="py-3 px-3 font-medium text-emerald-400">
                             {pdf.downloadsCount.toLocaleString()}
                           </td>
-                          <td className="py-3 px-3 text-right space-x-2">
+                          <td className="py-3 px-3 text-right space-x-1.5 whitespace-nowrap">
+                            <button
+                              onClick={() => setEditingPdf(pdf)}
+                              title="Edit Details"
+                              className="p-1.5 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 transition-colors inline-block"
+                            >
+                              <Edit2 className="w-3.5 h-3.5" />
+                            </button>
                             <a
                               href={pdf.url}
                               target="_blank"
@@ -1058,10 +1186,418 @@ export default function AdminPage() {
                 </div>
               )}
             </div>
+
+            {/* Edit PDF Modal */}
+            {editingPdf && (
+              <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+                <div className="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-4">
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                    <h3 className="font-bold text-white text-base">Edit Study PDF Details</h3>
+                    <button
+                      onClick={() => setEditingPdf(null)}
+                      className="p-1 rounded-lg text-slate-400 hover:text-white"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  <form onSubmit={handleUpdatePdf} className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1">Title</label>
+                      <input
+                        type="text"
+                        value={editingPdf.title}
+                        onChange={(e) => setEditingPdf({ ...editingPdf, title: e.target.value })}
+                        required
+                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-300 mb-1">Subject Code</label>
+                        <input
+                          type="text"
+                          value={editingPdf.subjectCode}
+                          onChange={(e) => setEditingPdf({ ...editingPdf, subjectCode: e.target.value.toUpperCase() })}
+                          required
+                          className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white uppercase"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-300 mb-1">Semester</label>
+                        <select
+                          value={editingPdf.semester}
+                          onChange={(e) => setEditingPdf({ ...editingPdf, semester: Number(e.target.value) })}
+                          className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
+                        >
+                          {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
+                            <option key={s} value={s}>
+                              Semester {s}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-300 mb-1">Unit</label>
+                        <input
+                          type="text"
+                          value={editingPdf.unit}
+                          onChange={(e) => setEditingPdf({ ...editingPdf, unit: e.target.value })}
+                          className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-300 mb-1">Category</label>
+                        <select
+                          value={editingPdf.category}
+                          onChange={(e) => setEditingPdf({ ...editingPdf, category: e.target.value })}
+                          className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
+                        >
+                          <option value="Notes">Notes</option>
+                          <option value="Question Paper">Question Paper</option>
+                          <option value="Revision Sheet">Revision Sheet</option>
+                          <option value="Lab Manual">Lab Manual</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1">Download URL</label>
+                      <input
+                        type="url"
+                        value={editingPdf.url}
+                        onChange={(e) => setEditingPdf({ ...editingPdf, url: e.target.value })}
+                        required
+                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-300 mb-1">File Size</label>
+                        <input
+                          type="text"
+                          value={editingPdf.fileSize}
+                          onChange={(e) => setEditingPdf({ ...editingPdf, fileSize: e.target.value })}
+                          className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-300 mb-1">Total Pages</label>
+                        <input
+                          type="number"
+                          value={editingPdf.pages}
+                          onChange={(e) => setEditingPdf({ ...editingPdf, pages: Number(e.target.value) })}
+                          className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-800">
+                      <button
+                        type="button"
+                        onClick={() => setEditingPdf(null)}
+                        className="px-4 py-2 rounded-xl text-xs text-slate-400 hover:text-white"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={isUpdatingPdf}
+                        className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 font-semibold text-xs text-white shadow-lg shadow-indigo-600/30 flex items-center gap-1.5"
+                      >
+                        {isUpdatingPdf ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
+                        <span>Save Changes</span>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
-        {/* ─── TAB 3: ACTIVE USERS & ANALYTICS ─────────────────────────────────── */}
+        {/* ─── TAB 3: WEBSITE & LIVE CONTROLS ───────────────────────────────────── */}
+        {activeTab === 'website' && (
+          <div className="space-y-6">
+            <form onSubmit={handleSaveWebsiteConfig} className="space-y-6">
+              {/* 1. Global Announcement Banner */}
+              <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                  <div className="flex items-center gap-2">
+                    <Globe className="w-5 h-5 text-indigo-400" />
+                    <div>
+                      <h2 className="text-base font-bold text-white">Live Top Announcement Banner (Website Header)</h2>
+                      <p className="text-xs text-slate-400">Displays at the very top of all website pages in real-time</p>
+                    </div>
+                  </div>
+
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={websiteConfig.announcement.enabled}
+                      onChange={(e) =>
+                        setWebsiteConfig({
+                          ...websiteConfig,
+                          announcement: { ...websiteConfig.announcement, enabled: e.target.checked },
+                        })
+                      }
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                  </label>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">Badge Text</label>
+                    <input
+                      type="text"
+                      value={websiteConfig.announcement.badge}
+                      onChange={(e) =>
+                        setWebsiteConfig({
+                          ...websiteConfig,
+                          announcement: { ...websiteConfig.announcement, badge: e.target.value.toUpperCase() },
+                        })
+                      }
+                      placeholder="NEW / ALERT / UPDATE"
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-mono uppercase"
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">Banner Message</label>
+                    <input
+                      type="text"
+                      value={websiteConfig.announcement.text}
+                      onChange={(e) =>
+                        setWebsiteConfig({
+                          ...websiteConfig,
+                          announcement: { ...websiteConfig.announcement, text: e.target.value },
+                        })
+                      }
+                      placeholder="Announcement shown to all students..."
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">Color Theme</label>
+                    <select
+                      value={websiteConfig.announcement.variant}
+                      onChange={(e) =>
+                        setWebsiteConfig({
+                          ...websiteConfig,
+                          announcement: {
+                            ...websiteConfig.announcement,
+                            variant: e.target.value as any,
+                          },
+                        })
+                      }
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
+                    >
+                      <option value="indigo">Indigo / Royal Blue</option>
+                      <option value="emerald">Emerald Green</option>
+                      <option value="amber">Amber Gold</option>
+                      <option value="rose">Rose Red</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">Button Destination Link</label>
+                  <input
+                    type="text"
+                    value={websiteConfig.announcement.link}
+                    onChange={(e) =>
+                      setWebsiteConfig({
+                        ...websiteConfig,
+                        announcement: { ...websiteConfig.announcement, link: e.target.value },
+                      })
+                    }
+                    placeholder="/notes/ or /syllabus/"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-mono"
+                  />
+                </div>
+
+                {/* Banner Live Preview */}
+                <div className="mt-3 p-3 bg-slate-950/60 rounded-xl border border-slate-800/80">
+                  <div className="text-[11px] text-slate-400 font-semibold mb-2">Live Website Preview:</div>
+                  <div className={`p-2 rounded-lg text-xs flex items-center justify-center gap-2 ${
+                    websiteConfig.announcement.variant === 'emerald'
+                      ? 'bg-emerald-950 text-emerald-200 border border-emerald-800'
+                      : websiteConfig.announcement.variant === 'amber'
+                      ? 'bg-amber-950 text-amber-200 border border-amber-800'
+                      : websiteConfig.announcement.variant === 'rose'
+                      ? 'bg-rose-950 text-rose-200 border border-rose-800'
+                      : 'bg-indigo-950 text-indigo-200 border border-indigo-800'
+                  }`}>
+                    <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-white/20">
+                      {websiteConfig.announcement.badge || 'NEW'}
+                    </span>
+                    <span>{websiteConfig.announcement.text || 'Preview text'}</span>
+                    <span className="underline font-bold text-[11px]">Explore &rarr;</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* 2. Official Helpdesk & Support Contacts */}
+              <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+                <div className="flex items-center gap-2 pb-3 border-b border-slate-800">
+                  <Phone className="w-5 h-5 text-emerald-400" />
+                  <div>
+                    <h2 className="text-base font-bold text-white">Student Helpline &amp; Mentor Support Contacts</h2>
+                    <p className="text-xs text-slate-400">Used for WhatsApp doubt solver &amp; email queries across app &amp; site</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
+                      <Phone className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>WhatsApp Mentor Mobile Number</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={websiteConfig.supportWhatsApp}
+                      onChange={(e) => setWebsiteConfig({ ...websiteConfig, supportWhatsApp: e.target.value })}
+                      placeholder="6265643703"
+                      required
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white font-mono"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
+                      <Mail className="w-3.5 h-3.5 text-blue-400" />
+                      <span>Official Support Email Address</span>
+                    </label>
+                    <input
+                      type="email"
+                      value={websiteConfig.supportEmail}
+                      onChange={(e) => setWebsiteConfig({ ...websiteConfig, supportEmail: e.target.value })}
+                      placeholder="pharmacode.connect@gmail.com"
+                      required
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white font-mono"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* 3. VIP Pre-Booking Study Pass Pricing */}
+              <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+                <div className="flex items-center gap-2 pb-3 border-b border-slate-800">
+                  <CreditCard className="w-5 h-5 text-amber-400" />
+                  <div>
+                    <h2 className="text-base font-bold text-white">VIP Pre-Booking Study Pass Settings</h2>
+                    <p className="text-xs text-slate-400">Controls VIP Pass pricing displayed in Settings &amp; Notes screen</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">VIP Pass Offer Price (₹)</label>
+                    <input
+                      type="number"
+                      value={websiteConfig.vipPassPrice}
+                      onChange={(e) => setWebsiteConfig({ ...websiteConfig, vipPassPrice: Number(e.target.value) })}
+                      placeholder="199"
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white font-mono"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">Original Price (₹)</label>
+                    <input
+                      type="number"
+                      value={websiteConfig.vipPassOriginalPrice}
+                      onChange={(e) => setWebsiteConfig({ ...websiteConfig, vipPassOriginalPrice: Number(e.target.value) })}
+                      placeholder="999"
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white font-mono"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">Discount Percentage (%)</label>
+                    <input
+                      type="number"
+                      value={websiteConfig.discountPercentage}
+                      onChange={(e) => setWebsiteConfig({ ...websiteConfig, discountPercentage: Number(e.target.value) })}
+                      placeholder="80"
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white font-mono"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* 4. Maintenance Mode */}
+              <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                  <div className="flex items-center gap-2">
+                    <Sliders className="w-5 h-5 text-rose-400" />
+                    <div>
+                      <h2 className="text-base font-bold text-white">Emergency Maintenance Mode</h2>
+                      <p className="text-xs text-slate-400">Temporarily displays maintenance message to users during major upgrades</p>
+                    </div>
+                  </div>
+
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={websiteConfig.maintenanceMode}
+                      onChange={(e) => setWebsiteConfig({ ...websiteConfig, maintenanceMode: e.target.checked })}
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-rose-600"></div>
+                  </label>
+                </div>
+
+                {websiteConfig.maintenanceMode && (
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">Maintenance Notice Message</label>
+                    <textarea
+                      rows={2}
+                      value={websiteConfig.maintenanceMessage}
+                      onChange={(e) => setWebsiteConfig({ ...websiteConfig, maintenanceMessage: e.target.value })}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
+                    />
+                  </div>
+                )}
+              </div>
+
+              {configSuccessMsg && (
+                <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl flex items-center gap-2 text-xs text-emerald-400">
+                  <CheckCircle2 className="w-4 h-4 shrink-0" />
+                  <span>{configSuccessMsg}</span>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={isSavingConfig}
+                className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold py-3.5 px-4 rounded-xl text-sm transition-all shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2"
+              >
+                {isSavingConfig ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                    <span>Pushing updates to cloud...</span>
+                  </>
+                ) : (
+                  <>
+                    <Check className="w-4 h-4" />
+                    <span>Save &amp; Publish Website Controls</span>
+                  </>
+                )}
+              </button>
+            </form>
+          </div>
+        )}
+
+        {/* ─── TAB 4: ACTIVE USERS & ANALYTICS ─────────────────────────────────── */}
         {activeTab === 'analytics' && (
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -1152,7 +1688,7 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* ─── TAB 4: SECURITY & GOOGLE PLAY POLICIES ─────────────────────────── */}
+        {/* ─── TAB 5: SECURITY & GOOGLE PLAY POLICIES ─────────────────────────── */}
         {activeTab === 'security' && (
           <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6">
             <div>

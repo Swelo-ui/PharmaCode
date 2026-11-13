@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
+import { AnnouncementBanner } from "@/components/AnnouncementBanner";
 import { Footer } from "@/components/Footer";
 import { SITE, absUrl } from "@/lib/site";
 import { organizationSchema, websiteSchema } from "@/lib/schema";
@@ -164,6 +165,7 @@ export default function RootLayout({
                 />
             </head>
             <body className="font-sans min-h-screen bg-[#FAFBFF]">
+                <AnnouncementBanner />
                 <Navbar />
                 <main className="w-full mx-auto">{children}</main>
                 <Footer />

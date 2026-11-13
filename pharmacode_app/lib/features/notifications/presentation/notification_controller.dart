@@ -10,32 +10,39 @@ class NotificationListNotifier extends StateNotifier<List<AppNotification>> {
 
   NotificationListNotifier(this._service) : super([]) {
     _load();
+    _service.notificationsNotifier.addListener(_load);
     _service.unreadCountNotifier.addListener(_load);
   }
 
   @override
   void dispose() {
+    _service.notificationsNotifier.removeListener(_load);
     _service.unreadCountNotifier.removeListener(_load);
     super.dispose();
   }
 
   void _load() {
-    state = _service.history;
+    state = List.from(_service.history);
   }
 
   Future<void> markAsRead(String id) async {
     await _service.markAsRead(id);
-    state = _service.history;
+    state = List.from(_service.history);
   }
 
   Future<void> markAllAsRead() async {
     await _service.markAllAsRead();
-    state = _service.history;
+    state = List.from(_service.history);
+  }
+
+  Future<void> deleteNotification(String id) async {
+    await _service.deleteNotification(id);
+    state = List.from(_service.history);
   }
 
   Future<void> sync() async {
     await _service.syncRemoteNotifications();
-    state = _service.history;
+    state = List.from(_service.history);
   }
 
   Future<void> triggerTest() async {

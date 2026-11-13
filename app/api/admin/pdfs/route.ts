@@ -70,3 +70,32 @@ export async function DELETE(req: NextRequest) {
   const deleted = await deletePdf(id);
   return NextResponse.json({ success: deleted });
 }
+
+export async function PATCH(req: NextRequest) {
+  const sessionCookie = req.cookies.get('pharmacode_admin_session')?.value;
+  if (!verifySessionToken(sessionCookie)) {
+    return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
+  }
+
+  try {
+    const body = await req.json();
+    const { id, ...updates } = body;
+    if (!id) {
+      return NextResponse.json({ error: 'PDF ID is required for update.' }, { status: 400 });
+    }
+
+    const { updatePdf } = await import('@/lib/admin-store');
+    const updated = await updatePdf(id, updates);
+    if (!updated) {
+      return NextResponse.json({ error: 'PDF not found.' }, { status: 404 });
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: 'PDF updated successfully!',
+      pdf: updated,
+    });
+  } catch (err: any) {
+    return NextResponse.json({ error: err?.message || 'Server error.' }, { status: 500 });
+  }
+}

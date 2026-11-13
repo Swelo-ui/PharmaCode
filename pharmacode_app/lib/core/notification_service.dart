@@ -184,11 +184,16 @@ class NotificationService {
 
   bool _isInitialized = false;
   bool _hasInitialSynced = false;
+  Completer<void>? _initCompleter;
   String? _fcmToken;
   final List<AppNotification> _notificationsHistory = [];
   final Set<String> _alertedNotifIds = {};
+  final Set<String> _readNotifIds = {};
+  final Set<String> _deletedNotifIds = {};
   Timer? _pollingTimer;
   final ValueNotifier<int> unreadCountNotifier = ValueNotifier<int>(0);
+  final ValueNotifier<List<AppNotification>> notificationsNotifier =
+      ValueNotifier<List<AppNotification>>([]);
 
   List<AppNotification> get history => List.unmodifiable(_notificationsHistory);
   int get unreadCount => _notificationsHistory.where((n) => !n.isRead).length;
@@ -203,8 +208,25 @@ class NotificationService {
     return _fcmToken;
   }
 
-  void _updateUnreadCount() {
-    unreadCountNotifier.value = _notificationsHistory.where((n) => !n.isRead).length;
+  void _notifyListeners() {
+    notificationsNotifier.value = List.unmodifiable(_notificationsHistory);
+    unreadCountNotifier.value =
+        _notificationsHistory.where((n) => !n.isRead).length;
+  }
+
+  void _updateUnreadCount() => _notifyListeners();
+
+  Future<void> ensureInitialized() async {
+    if (_isInitialized) return;
+    if (_initCompleter != null) {
+      await _initCompleter!.future;
+      return;
+    }
+    _initCompleter = Completer<void>();
+    await initialize();
+    if (!_initCompleter!.isCompleted) {
+      _initCompleter!.complete();
+    }
   }
 
   Future<void> initialize() async {
@@ -347,6 +369,7 @@ class NotificationService {
 
   /// Syncs notifications broadcast from Admin Panel and records active user heartbeat
   Future<void> syncRemoteNotifications() async {
+    await ensureInitialized();
     try {
       final prefs = await SharedPreferences.getInstance();
 
@@ -367,14 +390,14 @@ class NotificationService {
       } catch (_) {}
 
       // 2. Fetch remote notifications feed from Admin Panel with cache-buster
-      final feedUri = Uri.parse('https://pharmacode.vercel.app/api/notifications?t=${DateTime.now().millisecondsSinceEpoch}');
+      final feedUri = Uri.parse('https://pharmacode.vercel.app/api/notifications/?t=${DateTime.now().millisecondsSinceEpoch}');
       final res = await http.get(feedUri).timeout(const Duration(seconds: 6));
       if (res.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(res.body);
         final List<dynamic> remoteList = data['notifications'] ?? [];
 
         bool updated = false;
-        final existingIds = _notificationsHistory.map((n) => n.id).toSet();
+        final existingMap = {for (var n in _notificationsHistory) n.id: n};
         final enabled = prefs.getBool('pref_notifications') ?? true;
         final bool isFirstRunDone = prefs.getBool('notifications_first_run_completed') ?? false;
 
@@ -386,6 +409,9 @@ class NotificationService {
           final timestamp = item['timestamp']?.toString() ?? 'Recent';
 
           if (id.isEmpty) continue;
+
+          // ❌ If the user swiped away/deleted this notification, NEVER bring it back!
+          if (_deletedNotifIds.contains(id)) continue;
 
           // ✅ BULLETPROOF: On app launch or initial sync, mark all existing historical
           // notifications as alerted quietly so that NO POPUPS/BANNERS occur when opening the app!
@@ -425,20 +451,27 @@ class NotificationService {
             }
           }
 
-          // Ensure it is added to the in-app Notification Center list
-          if (!existingIds.contains(id)) {
-            _notificationsHistory.insert(
-              0,
-              AppNotification(
-                id: id,
-                title: title,
-                body: body,
-                timestamp: timestamp,
-                deepLink: deepLink,
-                isRead: false,
-              ),
+          // Check if already in history
+          if (existingMap.containsKey(id)) {
+            // If already in history, preserve read state! If user read it, ensure it stays read!
+            final existing = existingMap[id]!;
+            if (_readNotifIds.contains(id) && !existing.isRead) {
+              existing.isRead = true;
+              updated = true;
+            }
+          } else {
+            // New notification from server
+            final bool isRead = _readNotifIds.contains(id);
+            final notifObj = AppNotification(
+              id: id,
+              title: title,
+              body: body,
+              timestamp: timestamp,
+              deepLink: deepLink,
+              isRead: isRead,
             );
-            existingIds.add(id);
+            _notificationsHistory.insert(0, notifObj);
+            existingMap[id] = notifObj;
             updated = true;
           }
         }
@@ -448,7 +481,7 @@ class NotificationService {
         await prefs.setStringList('alerted_notification_ids', _alertedNotifIds.toList());
 
         if (updated) {
-          _updateUnreadCount();
+          _notifyListeners();
           await _persistNotifications();
         }
       }
@@ -456,7 +489,6 @@ class NotificationService {
       debugPrint('Remote notification sync note (offline or server unreachable): $e');
     }
   }
-
 
   Future<void> _initializeFirebaseMessaging() async {
     try {
@@ -535,21 +567,34 @@ class NotificationService {
       if (alerted != null) {
         _alertedNotifIds.addAll(alerted);
       }
+      final readIds = prefs.getStringList('read_notification_ids');
+      if (readIds != null) {
+        _readNotifIds.addAll(readIds);
+      }
+      final deletedIds = prefs.getStringList('deleted_notification_ids');
+      if (deletedIds != null) {
+        _deletedNotifIds.addAll(deletedIds);
+      }
+
       final storedJson = prefs.getString('saved_notifications');
+      _notificationsHistory.clear();
       if (storedJson != null) {
         final List<dynamic> list = jsonDecode(storedJson);
-        _notificationsHistory.clear();
-        _notificationsHistory.addAll(
-          list.map((item) => AppNotification.fromMap(item as Map<String, dynamic>)),
-        );
-      } else {
-        // Fresh install: notification center starts clean, then pulls real broadcasts from server
-        _notificationsHistory.clear();
+        for (final item in list) {
+          final n = AppNotification.fromMap(item as Map<String, dynamic>);
+          // Never reload a notification that was swiped/deleted by user
+          if (_deletedNotifIds.contains(n.id)) continue;
+          // If user marked as read, guarantee isRead = true
+          if (_readNotifIds.contains(n.id)) {
+            n.isRead = true;
+          }
+          _notificationsHistory.add(n);
+        }
       }
     } catch (e) {
       debugPrint('Error loading saved notifications: $e');
     } finally {
-      _updateUnreadCount();
+      _notifyListeners();
     }
   }
 
@@ -597,20 +642,47 @@ class NotificationService {
   }
 
   Future<void> markAllAsRead() async {
+    await ensureInitialized();
     for (var n in _notificationsHistory) {
       n.isRead = true;
+      _readNotifIds.add(n.id);
     }
-    _updateUnreadCount();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setStringList('read_notification_ids', _readNotifIds.toList());
+    } catch (_) {}
+    _notifyListeners();
     await _persistNotifications();
   }
 
   Future<void> markAsRead(String id) async {
+    await ensureInitialized();
     final index = _notificationsHistory.indexWhere((n) => n.id == id);
     if (index != -1) {
       _notificationsHistory[index].isRead = true;
-      _updateUnreadCount();
+      _readNotifIds.add(id);
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setStringList('read_notification_ids', _readNotifIds.toList());
+      } catch (_) {}
+      _notifyListeners();
       await _persistNotifications();
     }
+  }
+
+  /// Deletes a notification (swipe-to-dismiss) and permanently records it so it never reappears
+  Future<void> deleteNotification(String id) async {
+    await ensureInitialized();
+    _notificationsHistory.removeWhere((n) => n.id == id);
+    _deletedNotifIds.add(id);
+    _readNotifIds.remove(id);
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setStringList('deleted_notification_ids', _deletedNotifIds.toList());
+    } catch (_) {}
+    _notifyListeners();
+    await _persistNotifications();
   }
 
   /// Shows a local notification immediately AND adds it to in-app notification center.
