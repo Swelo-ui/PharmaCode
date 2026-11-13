@@ -17,8 +17,8 @@ const nextConfig = {
     async rewrites() {
         return [
             {
-                source: "/swelo-hub/",
-                destination: "/swelo-control/",
+                source: "/pc-master-88/",
+                destination: "/pc-portal-88/",
             },
         ];
     },
