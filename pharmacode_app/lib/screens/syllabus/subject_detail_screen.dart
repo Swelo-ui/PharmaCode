@@ -9,6 +9,7 @@ import '../../core/theme.dart';
 import '../../features/bookmarks/presentation/bookmarks_controller.dart';
 import '../../models/syllabus_models.dart';
 import '../../services/syllabus_service.dart';
+import '../../services/pdf_service.dart';
 import '../ai/pharma_helper_screen.dart';
 import '../../widgets/pharma_mascot_widget.dart';
 
@@ -76,9 +77,12 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
       }
     }
 
-    final targetUrl = (semNum != null && widget.subject.slug.isNotEmpty)
-        ? 'https://pharmacode.vercel.app/syllabus/semester-$semNum/${widget.subject.slug}/'
-        : 'https://pharmacode.vercel.app/notes/';
+    final adminPdf = PdfService.instance.getPdfForSubject(widget.subject.code);
+    final targetUrl = adminPdf != null
+        ? PdfService.instance.getTrackedDownloadUrl(adminPdf.id)
+        : ((semNum != null && widget.subject.slug.isNotEmpty)
+            ? 'https://pharmacode.vercel.app/syllabus/semester-$semNum/${widget.subject.slug}/'
+            : 'https://pharmacode.vercel.app/notes/');
 
     _openNotesWithAd(targetUrl);
   }
@@ -92,9 +96,12 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
       }
     }
 
-    final targetUrl = (semNum != null && widget.subject.slug.isNotEmpty)
-        ? 'https://pharmacode.vercel.app/syllabus/semester-$semNum/${widget.subject.slug}/'
-        : 'https://pharmacode.vercel.app/notes/';
+    final adminPdf = PdfService.instance.getPdfForSubject(widget.subject.code, unit: unit.title);
+    final targetUrl = adminPdf != null
+        ? PdfService.instance.getTrackedDownloadUrl(adminPdf.id)
+        : ((semNum != null && widget.subject.slug.isNotEmpty)
+            ? 'https://pharmacode.vercel.app/syllabus/semester-$semNum/${widget.subject.slug}/'
+            : 'https://pharmacode.vercel.app/notes/');
 
     _openNotesWithAd(targetUrl);
   }

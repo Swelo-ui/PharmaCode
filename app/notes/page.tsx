@@ -5,7 +5,10 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbSchema, itemListSchema } from "@/lib/schema";
 import { absUrl } from "@/lib/site";
-import { Download, FileText, Star } from "lucide-react";
+import { Download, FileText, Star, BookOpen, CheckCircle2 } from "lucide-react";
+import { getStoredPdfs } from "@/lib/admin-store";
+
+export const revalidate = 0; // Always fresh dynamically
 
 export const metadata: Metadata = {
     title: "B.Pharm Notes PDF Free Download — All 8 Semesters NEP 2020 | PharmaCode",
@@ -47,7 +50,9 @@ export default function NotesPage() {
         { name: "Notes", href: "/notes/" },
     ];
 
-    // ItemList schema — sab theory subjects ki list
+    const adminPdfs = getStoredPdfs();
+
+    // ItemList schema — theory subjects
     const allNotes = SEMESTERS.flatMap((sem) =>
         sem.subjects
             .filter((s) => s.type === "T" && s.units.length > 0)
@@ -64,14 +69,91 @@ export default function NotesPage() {
             <JsonLd data={itemListSchema(allNotes)} />
             <Breadcrumb items={breadcrumbs} />
 
-
             <h1 className="fade-up mb-2 font-display text-[26px] sm:text-[32px] font-black text-primary leading-tight flex items-center gap-3">
                 <Download size={28} strokeWidth={2.5} className="text-secondary shrink-0" />
                 B.Pharm Notes — Free Download
             </h1>
             <p className="fade-up fade-up-1 mb-7 font-[DM_Sans] text-[13px] sm:text-[14px] text-[#6B7FA3]">
-                PCI NEP 2020 · All 8 Semesters · PDF format · No login required
+                PCI NEP 2020 · All 8 Semesters · Verified PDF Kits · No login required
             </p>
+
+            {/* Direct Admin Verified PDFs Section */}
+            {adminPdfs && adminPdfs.length > 0 && (
+                <div className="mb-10">
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2">
+                            <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-indigo-100 text-indigo-700">
+                                <BookOpen size={14} />
+                            </span>
+                            <h2 className="font-display text-[18px] sm:text-[20px] font-bold text-primary">
+                                Verified Direct Study PDF Downloads
+                            </h2>
+                        </div>
+                        <span className="text-[12px] font-medium text-emerald-600 bg-emerald-50 border border-emerald-200 rounded-full px-2.5 py-0.5">
+                            {adminPdfs.length} Verified Kits Live
+                        </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
+                        {adminPdfs.map((pdf) => (
+                            <div
+                                key={pdf.id}
+                                className="flex flex-col justify-between rounded-[14px] border border-indigo-100 bg-gradient-to-br from-white to-indigo-50/30 p-4 shadow-sm hover:border-indigo-300 transition-all"
+                            >
+                                <div>
+                                    <div className="flex items-center justify-between gap-2 mb-2">
+                                        <div className="flex items-center gap-1.5">
+                                            <span className="rounded-md bg-indigo-600 px-2 py-0.5 font-mono text-[11px] font-bold text-white">
+                                                {pdf.subjectCode}
+                                            </span>
+                                            <span className="rounded-md bg-indigo-100 px-2 py-0.5 text-[11px] font-semibold text-indigo-800">
+                                                Sem {pdf.semester}
+                                            </span>
+                                        </div>
+                                        <span className="text-[11px] font-semibold text-slate-500">
+                                            {pdf.unit}
+                                        </span>
+                                    </div>
+                                    <h3 className="text-[14px] font-bold text-slate-900 leading-snug mb-1">
+                                        {pdf.title}
+                                    </h3>
+                                    <div className="flex items-center gap-3 text-[11px] text-slate-500 mt-2">
+                                        <span className="flex items-center gap-1">
+                                            <FileText size={12} className="text-slate-400" />
+                                            {pdf.fileSize} · {pdf.pages} Pages
+                                        </span>
+                                        <span className="flex items-center gap-1 text-emerald-600 font-medium">
+                                            <Download size={12} />
+                                            {pdf.downloadsCount} downloads
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-3">
+                                    <span className="text-[10px] text-slate-400 flex items-center gap-1">
+                                        <CheckCircle2 size={12} className="text-emerald-500" />
+                                        PCI Compliant
+                                    </span>
+                                    <a
+                                        href={`/api/pdfs/download?id=${pdf.id}`}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3.5 py-1.5 text-[12px] font-bold text-white shadow-sm hover:bg-indigo-700 active:scale-95 transition-all"
+                                    >
+                                        <Download size={13} />
+                                        Download PDF Now
+                                    </a>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            <h2 className="font-display text-[18px] sm:text-[20px] font-bold text-primary mb-4 flex items-center gap-2">
+                <FileText size={18} className="text-secondary" />
+                All Semester Theory Subjects Notes &amp; Syllabus
+            </h2>
 
             <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 md:grid-cols-3">
                 {SEMESTERS.flatMap((sem, si) =>
@@ -115,15 +197,14 @@ export default function NotesPage() {
                                     </div>
                                 </div>
                                 <div className="space-y-2.5">
-                                    {/* Stats row — handles wrapping cleanly */}
                                     <div className="flex flex-wrap items-center justify-between gap-1 text-[10px] sm:text-[11px] text-[#9CA3AF]">
                                         <span className="flex items-center gap-1">
                                             <FileText size={11} strokeWidth={2} />
-                                            PDF · ~2.4 MB · {s.units.length} Units
+                                            PDF · {s.units.length} Units
                                         </span>
                                         <span className="whitespace-nowrap flex items-center gap-1">
                                             <Download size={11} strokeWidth={2} />
-                                            1.4k downloads
+                                            100% Free
                                         </span>
                                     </div>
                                     <Link

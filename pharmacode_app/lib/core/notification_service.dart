@@ -185,6 +185,8 @@ class NotificationService {
   bool _isInitialized = false;
   String? _fcmToken;
   final List<AppNotification> _notificationsHistory = [];
+  final Set<String> _alertedNotifIds = {};
+  Timer? _pollingTimer;
   final ValueNotifier<int> unreadCountNotifier = ValueNotifier<int>(0);
 
   List<AppNotification> get history => List.unmodifiable(_notificationsHistory);
@@ -266,27 +268,48 @@ class NotificationService {
 
       _isInitialized = true;
       await _loadStoredNotifications();
+      startPeriodicSync();
       unawaited(syncRemoteNotifications());
     } catch (e) {
       debugPrint('Notification initialization error: $e');
     }
   }
 
+  void startPeriodicSync() {
+    _pollingTimer?.cancel();
+    // Poll every 15 seconds while app is in foreground/memory for instant alert broadcast
+    _pollingTimer = Timer.periodic(const Duration(seconds: 15), (_) {
+      syncRemoteNotifications();
+    });
+  }
+
+  void stopPeriodicSync() {
+    _pollingTimer?.cancel();
+  }
+
   /// Syncs notifications broadcast from Admin Panel and records active user heartbeat
   Future<void> syncRemoteNotifications() async {
     try {
+      final prefs = await SharedPreferences.getInstance();
+
       // 1. Send anonymous heartbeat for active users count
       try {
+        var deviceId = prefs.getString('device_unique_id');
+        if (deviceId == null) {
+          deviceId = 'apk_${DateTime.now().millisecondsSinceEpoch}_${(1000 + (DateTime.now().microsecond % 9000))}';
+          await prefs.setString('device_unique_id', deviceId);
+        }
+
         final heartbeatUri = Uri.parse('https://pharmacode.vercel.app/api/admin/analytics');
         unawaited(http.post(
           heartbeatUri,
           headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({'platform': 'Android App'}),
+          body: jsonEncode({'platform': 'Android App', 'deviceId': deviceId}),
         ).timeout(const Duration(seconds: 4)));
       } catch (_) {}
 
-      // 2. Fetch remote notifications feed from Admin Panel
-      final feedUri = Uri.parse('https://pharmacode.vercel.app/api/notifications');
+      // 2. Fetch remote notifications feed from Admin Panel with cache-buster
+      final feedUri = Uri.parse('https://pharmacode.vercel.app/api/notifications?t=${DateTime.now().millisecondsSinceEpoch}');
       final res = await http.get(feedUri).timeout(const Duration(seconds: 6));
       if (res.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(res.body);
@@ -294,17 +317,52 @@ class NotificationService {
 
         bool updated = false;
         final existingIds = _notificationsHistory.map((n) => n.id).toSet();
-        final existingTitles = _notificationsHistory.map((n) => n.title.trim()).toSet();
+        final enabled = prefs.getBool('pref_notifications') ?? true;
 
-        for (final item in remoteList.reversed) {
+        for (final item in remoteList) {
           final id = item['id']?.toString() ?? '';
           final title = item['title']?.toString() ?? '';
           final body = item['body']?.toString() ?? '';
           final deepLink = item['deepLink']?.toString();
           final timestamp = item['timestamp']?.toString() ?? 'Recent';
 
-          // Avoid duplicates
-          if (id.isNotEmpty && !existingIds.contains(id) && !existingTitles.contains(title.trim())) {
+          if (id.isEmpty) continue;
+
+          // Check if this notification has NOT been alerted as a system notification yet
+          if (!_alertedNotifIds.contains(id)) {
+            _alertedNotifIds.add(id);
+            updated = true;
+
+            // Trigger local system notification banner & sound if user hasn't muted notifications
+            if (enabled) {
+              final notifId = (id.hashCode.abs()) % 2147483647;
+              const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+                channelId,
+                channelName,
+                channelDescription: _kChannelDesc,
+                importance: Importance.max,
+                priority: Priority.high,
+                showWhen: true,
+                playSound: true,
+                sound: RawResourceAndroidNotificationSound(soundResourceName),
+                icon: '@mipmap/ic_notification',
+                enableVibration: true,
+                enableLights: true,
+                visibility: NotificationVisibility.public,
+              );
+
+              await _notificationsPlugin.show(
+                id: notifId,
+                title: title,
+                body: body,
+                notificationDetails: const NotificationDetails(android: androidDetails),
+                payload: deepLink,
+              );
+            }
+          }
+
+          // Also ensure it is present in in-app notification center
+          if (!existingIds.contains(id)) {
             _notificationsHistory.insert(
               0,
               AppNotification(
@@ -317,7 +375,6 @@ class NotificationService {
               ),
             );
             existingIds.add(id);
-            existingTitles.add(title.trim());
             updated = true;
           }
         }
@@ -325,6 +382,7 @@ class NotificationService {
         if (updated) {
           _updateUnreadCount();
           await _persistNotifications();
+          await prefs.setStringList('alerted_notification_ids', _alertedNotifIds.toList());
         }
       }
     } catch (e) {
@@ -406,6 +464,10 @@ class NotificationService {
   Future<void> _loadStoredNotifications() async {
     try {
       final prefs = await SharedPreferences.getInstance();
+      final alerted = prefs.getStringList('alerted_notification_ids');
+      if (alerted != null) {
+        _alertedNotifIds.addAll(alerted);
+      }
       final storedJson = prefs.getString('saved_notifications');
       if (storedJson != null) {
         final List<dynamic> list = jsonDecode(storedJson);

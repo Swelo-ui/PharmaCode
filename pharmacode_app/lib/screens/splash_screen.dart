@@ -7,6 +7,7 @@ import '../core/ads/ad_service.dart';
 import '../core/theme.dart';
 import '../core/tour/guided_tour_service.dart';
 import '../services/syllabus_service.dart';
+import '../services/pdf_service.dart';
 import '../core/notification_service.dart';
 import 'main_navigation_screen.dart';
 import 'onboarding/onboarding_screen.dart';
@@ -103,6 +104,7 @@ class _SplashScreenState extends State<SplashScreen>
       FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
       // Run heavy push notifications and AdMob in background without delaying splash
       unawaited(NotificationService().initialize());
+      unawaited(PdfService.instance.initialize());
       unawaited(AdService.instance.initialize());
     } catch (e) {
       debugPrint('Core services initialization notice: $e');

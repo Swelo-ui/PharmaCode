@@ -470,10 +470,10 @@ export default function AdminPage() {
               <Users className="w-4 h-4 text-indigo-400" />
             </div>
             <div className="text-2xl sm:text-3xl font-extrabold text-white">
-              {analytics?.activeUsersToday || 486}
+              {analytics?.activeUsersToday ?? 0}
             </div>
             <div className="mt-1 flex items-center gap-1 text-[11px] text-emerald-400 font-medium">
-              <span>+18% active this week</span>
+              <span>{analytics ? `${analytics.activeUsersWeekly} active this week` : 'Live session tracking'}</span>
             </div>
           </div>
 
@@ -499,7 +499,7 @@ export default function AdminPage() {
               {pdfs.length} Published
             </div>
             <div className="mt-1 flex items-center gap-1 text-[11px] text-slate-400">
-              <span>{analytics?.totalNotesDownloads || '14.8k'} Total Downloads</span>
+              <span>{(analytics?.totalNotesDownloads ?? pdfs.reduce((sum, p) => sum + (p.downloadsCount || 0), 0)).toLocaleString()} Total Downloads</span>
             </div>
           </div>
 
@@ -1075,10 +1075,10 @@ export default function AdminPage() {
                         <Smartphone className="w-3.5 h-3.5 text-emerald-400" />
                         Android APK App
                       </span>
-                      <span className="font-bold text-white">86%</span>
+                      <span className="font-bold text-white">{analytics?.appPlatformShare?.android ?? 80}%</span>
                     </div>
                     <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
-                      <div className="bg-emerald-500 h-full rounded-full" style={{ width: '86%' }}></div>
+                      <div className="bg-emerald-500 h-full rounded-full" style={{ width: `${analytics?.appPlatformShare?.android ?? 80}%` }}></div>
                     </div>
                   </div>
 
@@ -1088,10 +1088,10 @@ export default function AdminPage() {
                         <ExternalLink className="w-3.5 h-3.5 text-blue-400" />
                         Web Portal (Vercel)
                       </span>
-                      <span className="font-bold text-white">14%</span>
+                      <span className="font-bold text-white">{analytics?.appPlatformShare?.web ?? 20}%</span>
                     </div>
                     <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
-                      <div className="bg-blue-500 h-full rounded-full" style={{ width: '14%' }}></div>
+                      <div className="bg-blue-500 h-full rounded-full" style={{ width: `${analytics?.appPlatformShare?.web ?? 20}%` }}></div>
                     </div>
                   </div>
                 </div>
@@ -1104,13 +1104,13 @@ export default function AdminPage() {
                   <div className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800/80">
                     <div className="text-[11px] text-slate-400 font-medium">Weekly Active Students</div>
                     <div className="text-xl font-bold text-white mt-1">
-                      {analytics?.activeUsersWeekly.toLocaleString() || '2,940'}
+                      {(analytics?.activeUsersWeekly ?? 0).toLocaleString()}
                     </div>
                   </div>
                   <div className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800/80">
-                    <div className="text-[11px] text-slate-400 font-medium">Total Downloads</div>
+                    <div className="text-[11px] text-slate-400 font-medium">Total Notes Downloads</div>
                     <div className="text-xl font-bold text-white mt-1">
-                      {analytics?.totalNotesDownloads.toLocaleString() || '14,890'}
+                      {(analytics?.totalNotesDownloads ?? pdfs.reduce((sum, p) => sum + (p.downloadsCount || 0), 0)).toLocaleString()}
                     </div>
                   </div>
                   <div className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800/80">

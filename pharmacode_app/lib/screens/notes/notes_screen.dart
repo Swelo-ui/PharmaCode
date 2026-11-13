@@ -8,6 +8,7 @@ import '../../core/widgets/ad_banner_widget.dart';
 import '../../core/widgets/prebook_vip_sheet.dart';
 import '../../models/syllabus_models.dart';
 import '../../services/syllabus_service.dart';
+import '../../services/pdf_service.dart';
 import '../syllabus/subject_detail_screen.dart';
 
 class NotesScreen extends StatefulWidget {
@@ -100,9 +101,12 @@ class _NotesScreenState extends State<NotesScreen> {
                       onPressed: () {
                         Navigator.pop(context);
                         final isVip = InAppPurchaseService.instance.isVipUnlocked;
-                        final targetUrl = subject.slug.isNotEmpty
-                            ? 'https://pharmacode.vercel.app/syllabus/semester-$semNum/${subject.slug}/'
-                            : 'https://pharmacode.vercel.app/notes/';
+                        final adminPdf = PdfService.instance.getPdfForSubject(subject.code);
+                        final targetUrl = adminPdf != null
+                            ? PdfService.instance.getTrackedDownloadUrl(adminPdf.id)
+                            : (subject.slug.isNotEmpty
+                                ? 'https://pharmacode.vercel.app/syllabus/semester-$semNum/${subject.slug}/'
+                                : 'https://pharmacode.vercel.app/notes/');
                         if (isVip) {
                           openInAppUrl(context, targetUrl);
                         } else {

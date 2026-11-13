@@ -1,21 +1,11 @@
 import crypto from 'crypto';
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 
 // ─── SECURITY CONSTANTS ────────────────────────────────────────────────────────
-// The admin password requested by the user
 const ADMIN_PASSWORD_PLAIN = 'swelo';
-// Salt for HMAC signature
 const SESSION_SECRET = process.env.ADMIN_SESSION_SECRET || 'pharmacode-super-secure-secret-key-2026-v1';
-
-// Rate limiting state (in-memory for active instances)
-interface RateLimitEntry {
-  attempts: number;
-  lockedUntil?: number;
-}
-const failedAttemptsMap = new Map<string, RateLimitEntry>();
-const MAX_ATTEMPTS = 5;
-const LOCKOUT_DURATION_MS = 15 * 60 * 1000; // 15 minutes
 
 export interface AdminNotification {
   id: string;
@@ -55,11 +45,28 @@ export interface AdminAnalytics {
   recentEvents: { id: string; action: string; platform: string; time: string }[];
 }
 
-// ─── STORAGE FILE PATHS ───────────────────────────────────────────────────────
-const DATA_DIR = path.join(process.cwd(), '.data');
+// ─── STORAGE RESOLUTION (WORKS ON VERCEL SERVERLESS & LOCAL) ───────────────────
+// /var/task is read-only on Vercel; os.tmpdir() (/tmp) is writable in serverless lambdas.
+const DATA_DIR = process.env.VERCEL
+  ? path.join(os.tmpdir(), 'pharmacode_store')
+  : path.join(process.cwd(), '.data');
+
 const NOTIFS_FILE = path.join(DATA_DIR, 'notifications.json');
 const PDFS_FILE = path.join(DATA_DIR, 'pdfs.json');
 const ANALYTICS_FILE = path.join(DATA_DIR, 'analytics.json');
+
+// In-memory singleton cache to guarantee 0ms latency across warm Lambda invocations
+interface MemoryStore {
+  notifications: AdminNotification[];
+  pdfs: AdminPdf[];
+  analytics: AdminAnalytics;
+  activeIps: Map<string, number>; // IP/deviceId -> last seen timestamp
+}
+
+declare global {
+  // eslint-disable-next-line no-var
+  var __pharma_memory_store__: MemoryStore | undefined;
+}
 
 function ensureDataDir() {
   if (!fs.existsSync(DATA_DIR)) {
@@ -69,10 +76,10 @@ function ensureDataDir() {
   }
 }
 
-// ─── INITIAL SEED DATA ────────────────────────────────────────────────────────
-const INITIAL_NOTIFICATIONS: AdminNotification[] = [
+// Baseline Initial Data
+const BASELINE_NOTIFICATIONS: AdminNotification[] = [
   {
-    id: 'notif-seed-1',
+    id: 'notif-1',
     title: '🎓 GPAT 2027 Rapid Revision Strategy',
     body: 'Master high-yield SAR shortcuts and key mechanisms in Pharmacology. Boost your preparation now!',
     category: 'exam',
@@ -84,155 +91,133 @@ const INITIAL_NOTIFICATIONS: AdminNotification[] = [
     deliveryStatus: 'Delivered',
   },
   {
-    id: 'notif-seed-2',
+    id: 'notif-2',
     title: '📚 New Semester 6 Notes Added: BP604T',
     body: 'AI Applications in Pharmaceutical Sciences unit-wise notes & diagrams are now live for free download.',
     category: 'notes',
     topic: 'all_students',
     deepLink: '/syllabus/semester-6/bp604t-ai-applications-in-pharmaceutical-sciences',
     priority: 'high',
-    timestamp: 'Yesterday',
+    timestamp: 'Today',
     sentAt: Date.now() - 86400000,
     deliveryStatus: 'Delivered',
   },
   {
-    id: 'notif-seed-3',
+    id: 'notif-3',
     title: '💡 Daily PCI Study Tip',
     body: 'Environmental Sciences & Ethics are credit-bearing theory subjects under NEP 2020. Read Unit 1 notes today.',
     category: 'tips',
     topic: 'all_students',
     deepLink: '/syllabus',
     priority: 'normal',
-    timestamp: '3 days ago',
-    sentAt: Date.now() - 259200000,
+    timestamp: 'Yesterday',
+    sentAt: Date.now() - 172800000,
     deliveryStatus: 'Delivered',
   },
 ];
 
-const INITIAL_PDFS: AdminPdf[] = [
+const BASELINE_PDFS: AdminPdf[] = [
   {
-    id: 'pdf-seed-1',
-    title: 'Basics of Python for Pharma — Unit I & II Complete Notes',
+    id: 'pdf-1',
+    title: 'Basics of Python for Pharmaceutical Sciences — Unit I & II Notes',
     subjectCode: 'BP101T',
     subjectName: 'Basics of Python Programming for Pharmaceutical Sciences',
     semester: 1,
     unit: 'Unit I & II',
     category: 'Notes',
-    url: 'https://pharmacode.vercel.app/notes/bp101t-unit-1-2.pdf',
+    url: 'https://pharmacode.vercel.app/notes/',
     fileSize: '3.4 MB',
     pages: 38,
     uploadedAt: '2026-11-10',
-    downloadsCount: 1420,
+    downloadsCount: 142,
   },
   {
-    id: 'pdf-seed-2',
-    title: 'General Pharmacy — Complete All Units Lecture Notes',
+    id: 'pdf-2',
+    title: 'General Pharmacy — Complete Lecture Study Notes',
     subjectCode: 'BP102T',
     subjectName: 'General Pharmacy',
     semester: 1,
     unit: 'Complete (Units I-V)',
     category: 'Notes',
-    url: 'https://pharmacode.vercel.app/notes/bp102t-complete.pdf',
+    url: 'https://pharmacode.vercel.app/notes/',
     fileSize: '5.8 MB',
     pages: 64,
     uploadedAt: '2026-11-08',
-    downloadsCount: 2890,
+    downloadsCount: 289,
   },
   {
-    id: 'pdf-seed-3',
-    title: 'AI Applications in Pharmaceutical Sciences — Official Study Kit',
+    id: 'pdf-3',
+    title: 'AI Applications in Pharmaceutical Sciences — Official Unit Study Kit',
     subjectCode: 'BP604T',
     subjectName: 'AI Applications in Pharmaceutical Sciences',
     semester: 6,
     unit: 'Units I-V Complete',
     category: 'Notes',
-    url: 'https://pharmacode.vercel.app/notes/bp604t-ai-notes.pdf',
+    url: 'https://pharmacode.vercel.app/notes/',
     fileSize: '4.2 MB',
     pages: 52,
     uploadedAt: '2026-11-12',
-    downloadsCount: 940,
+    downloadsCount: 94,
   },
   {
-    id: 'pdf-seed-4',
+    id: 'pdf-4',
     title: 'GPAT High-Yield Medicinal Chemistry SAR Sheet',
     subjectCode: 'BP501T',
     subjectName: 'Biomedicinal Chemistry',
     semester: 5,
     unit: 'Full Formula Kit',
     category: 'Revision Sheet',
-    url: 'https://pharmacode.vercel.app/notes/gpat-medchem-sar.pdf',
+    url: 'https://pharmacode.vercel.app/notes/',
     fileSize: '2.1 MB',
     pages: 24,
     uploadedAt: '2026-11-05',
-    downloadsCount: 3750,
+    downloadsCount: 375,
   },
 ];
 
-const INITIAL_ANALYTICS: AdminAnalytics = {
-  activeUsersToday: 486,
-  activeUsersWeekly: 2940,
-  totalAppInstalls: 5820,
-  totalNotesDownloads: 14890,
-  totalNotificationsSent: 28,
-  appPlatformShare: { android: 86, web: 14 },
-  recentEvents: [
-    { id: 'ev-1', action: 'App Opened (Active Session)', platform: 'Android App', time: '1 min ago' },
-    { id: 'ev-2', action: 'Downloaded BP102T Notes', platform: 'Android App', time: '3 mins ago' },
-    { id: 'ev-3', action: 'Syllabus Search: BP604T AI', platform: 'Android App', time: '7 mins ago' },
-    { id: 'ev-4', action: 'Notification Received: GPAT Strategy', platform: 'Android App', time: '12 mins ago' },
-    { id: 'ev-5', action: 'Web Visitor: Semester 1 Syllabus', platform: 'Web Browser', time: '15 mins ago' },
-  ],
-};
+function getMemoryStore(): MemoryStore {
+  if (!globalThis.__pharma_memory_store__) {
+    ensureDataDir();
+
+    let notifs = BASELINE_NOTIFICATIONS;
+    let pdfs = BASELINE_PDFS;
+
+    try {
+      if (fs.existsSync(NOTIFS_FILE)) {
+        notifs = JSON.parse(fs.readFileSync(NOTIFS_FILE, 'utf8'));
+      }
+    } catch (_) {}
+
+    try {
+      if (fs.existsSync(PDFS_FILE)) {
+        pdfs = JSON.parse(fs.readFileSync(PDFS_FILE, 'utf8'));
+      }
+    } catch (_) {}
+
+    const totalDownloads = pdfs.reduce((sum, p) => sum + (p.downloadsCount || 0), 0);
+
+    globalThis.__pharma_memory_store__ = {
+      notifications: notifs,
+      pdfs: pdfs,
+      analytics: {
+        activeUsersToday: 1,
+        activeUsersWeekly: 4,
+        totalAppInstalls: 12,
+        totalNotesDownloads: totalDownloads,
+        totalNotificationsSent: notifs.length,
+        appPlatformShare: { android: 80, web: 20 },
+        recentEvents: [
+          { id: 'ev-init', action: 'Admin Console Live', platform: 'System', time: 'Just now' },
+        ],
+      },
+      activeIps: new Map<string, number>([['127.0.0.1', Date.now()]]),
+    };
+  }
+  return globalThis.__pharma_memory_store__;
+}
 
 // ─── AUTHENTICATION HELPERS ───────────────────────────────────────────────────
 
-/**
- * Check if the given client IP is currently rate-limited
- */
-export function checkRateLimit(clientIp: string): { allowed: boolean; remainingMs?: number } {
-  const entry = failedAttemptsMap.get(clientIp);
-  if (!entry) return { allowed: true };
-
-  const now = Date.now();
-  if (entry.lockedUntil && entry.lockedUntil > now) {
-    return { allowed: false, remainingMs: entry.lockedUntil - now };
-  }
-
-  // If lockout expired, reset
-  if (entry.lockedUntil && entry.lockedUntil <= now) {
-    failedAttemptsMap.delete(clientIp);
-  }
-
-  return { allowed: true };
-}
-
-/**
- * Record a failed login attempt for brute-force protection
- */
-export function recordFailedAttempt(clientIp: string): { locked: boolean; attemptsLeft: number } {
-  const entry = failedAttemptsMap.get(clientIp) || { attempts: 0 };
-  entry.attempts += 1;
-
-  if (entry.attempts >= MAX_ATTEMPTS) {
-    entry.lockedUntil = Date.now() + LOCKOUT_DURATION_MS;
-    failedAttemptsMap.set(clientIp, entry);
-    return { locked: true, attemptsLeft: 0 };
-  }
-
-  failedAttemptsMap.set(clientIp, entry);
-  return { locked: false, attemptsLeft: MAX_ATTEMPTS - entry.attempts };
-}
-
-/**
- * Reset rate limit counter upon successful authentication
- */
-export function resetRateLimit(clientIp: string): void {
-  failedAttemptsMap.delete(clientIp);
-}
-
-/**
- * Timing-safe comparison to prevent timing attacks
- */
 export function verifyAdminPassword(password: string): boolean {
   if (!password || typeof password !== 'string') return false;
 
@@ -241,7 +226,6 @@ export function verifyAdminPassword(password: string): boolean {
   const expectedBuffer = Buffer.from(expected);
 
   if (passwordBuffer.length !== expectedBuffer.length) {
-    // Constant-time dummy comparison to prevent length timing leaks
     crypto.timingSafeEqual(expectedBuffer, expectedBuffer);
     return false;
   }
@@ -249,13 +233,10 @@ export function verifyAdminPassword(password: string): boolean {
   return crypto.timingSafeEqual(passwordBuffer, expectedBuffer);
 }
 
-/**
- * Generate a cryptographically signed session token
- */
 export function createSessionToken(): string {
   const payload = JSON.stringify({
     role: 'admin',
-    exp: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
+    exp: Date.now() + 24 * 60 * 60 * 1000,
     nonce: crypto.randomBytes(16).toString('hex'),
   });
   const encodedPayload = Buffer.from(payload).toString('base64url');
@@ -267,9 +248,6 @@ export function createSessionToken(): string {
   return `${encodedPayload}.${signature}`;
 }
 
-/**
- * Verify session token validity and expiration
- */
 export function verifySessionToken(token: string | undefined | null): boolean {
   if (!token || typeof token !== 'string') return false;
 
@@ -299,22 +277,54 @@ export function verifySessionToken(token: string | undefined | null): boolean {
   }
 }
 
-// ─── DATA ACCESS METHODS ──────────────────────────────────────────────────────
+// Rate limiting state
+const failedAttemptsMap = new Map<string, { attempts: number; lockedUntil?: number }>();
 
-export function getStoredNotifications(): AdminNotification[] {
-  ensureDataDir();
-  try {
-    if (fs.existsSync(NOTIFS_FILE)) {
-      const data = fs.readFileSync(NOTIFS_FILE, 'utf8');
-      return JSON.parse(data);
-    }
-  } catch (_) {}
-  return INITIAL_NOTIFICATIONS;
+export function checkRateLimit(clientIp: string): { allowed: boolean; remainingMs?: number } {
+  const entry = failedAttemptsMap.get(clientIp);
+  if (!entry) return { allowed: true };
+
+  const now = Date.now();
+  if (entry.lockedUntil && entry.lockedUntil > now) {
+    return { allowed: false, remainingMs: entry.lockedUntil - now };
+  }
+
+  if (entry.lockedUntil && entry.lockedUntil <= now) {
+    failedAttemptsMap.delete(clientIp);
+  }
+
+  return { allowed: true };
 }
 
-export function saveNotification(notif: Omit<AdminNotification, 'id' | 'sentAt' | 'deliveryStatus'>): AdminNotification {
-  ensureDataDir();
-  const current = getStoredNotifications();
+export function recordFailedAttempt(clientIp: string): { locked: boolean; attemptsLeft: number } {
+  const entry = failedAttemptsMap.get(clientIp) || { attempts: 0 };
+  entry.attempts += 1;
+
+  if (entry.attempts >= 5) {
+    entry.lockedUntil = Date.now() + 15 * 60 * 1000;
+    failedAttemptsMap.set(clientIp, entry);
+    return { locked: true, attemptsLeft: 0 };
+  }
+
+  failedAttemptsMap.set(clientIp, entry);
+  return { locked: false, attemptsLeft: 5 - entry.attempts };
+}
+
+export function resetRateLimit(clientIp: string): void {
+  failedAttemptsMap.delete(clientIp);
+}
+
+// ─── DATA ACCESS & DYNAMIC SYNCHRONIZATION ────────────────────────────────────
+
+export function getStoredNotifications(): AdminNotification[] {
+  const store = getMemoryStore();
+  return store.notifications;
+}
+
+export function saveNotification(
+  notif: Omit<AdminNotification, 'id' | 'sentAt' | 'deliveryStatus'>
+): AdminNotification {
+  const store = getMemoryStore();
   const newNotif: AdminNotification = {
     ...notif,
     id: `notif-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
@@ -322,44 +332,47 @@ export function saveNotification(notif: Omit<AdminNotification, 'id' | 'sentAt' 
     deliveryStatus: 'Delivered',
   };
 
-  const updated = [newNotif, ...current];
-  try {
-    fs.writeFileSync(NOTIFS_FILE, JSON.stringify(updated, null, 2), 'utf8');
-  } catch (_) {}
+  store.notifications = [newNotif, ...store.notifications];
+  store.analytics.totalNotificationsSent = store.notifications.length;
 
-  // Update analytics counter
-  recordNotificationEvent(newNotif.title);
+  // Add real event
+  addRealEvent(`Broadcast Sent: "${newNotif.title.slice(0, 30)}..."`, 'Admin Broadcast');
+
+  // Try saving to disk
+  ensureDataDir();
+  try {
+    fs.writeFileSync(NOTIFS_FILE, JSON.stringify(store.notifications, null, 2), 'utf8');
+  } catch (_) {}
 
   return newNotif;
 }
 
 export function deleteNotification(id: string): boolean {
-  ensureDataDir();
-  const current = getStoredNotifications();
-  const filtered = current.filter((n) => n.id !== id);
-  if (filtered.length !== current.length) {
+  const store = getMemoryStore();
+  const prevCount = store.notifications.length;
+  store.notifications = store.notifications.filter((n) => n.id !== id);
+
+  if (store.notifications.length !== prevCount) {
+    store.analytics.totalNotificationsSent = store.notifications.length;
+    addRealEvent(`Deleted Notification ID: ${id}`, 'Admin Action');
+    ensureDataDir();
     try {
-      fs.writeFileSync(NOTIFS_FILE, JSON.stringify(filtered, null, 2), 'utf8');
-      return true;
+      fs.writeFileSync(NOTIFS_FILE, JSON.stringify(store.notifications, null, 2), 'utf8');
     } catch (_) {}
+    return true;
   }
   return false;
 }
 
 export function getStoredPdfs(): AdminPdf[] {
-  ensureDataDir();
-  try {
-    if (fs.existsSync(PDFS_FILE)) {
-      const data = fs.readFileSync(PDFS_FILE, 'utf8');
-      return JSON.parse(data);
-    }
-  } catch (_) {}
-  return INITIAL_PDFS;
+  const store = getMemoryStore();
+  return store.pdfs;
 }
 
-export function savePdf(pdfData: Omit<AdminPdf, 'id' | 'uploadedAt' | 'downloadsCount'>): AdminPdf {
-  ensureDataDir();
-  const current = getStoredPdfs();
+export function savePdf(
+  pdfData: Omit<AdminPdf, 'id' | 'uploadedAt' | 'downloadsCount'>
+): AdminPdf {
+  const store = getMemoryStore();
   const newPdf: AdminPdf = {
     ...pdfData,
     id: `pdf-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
@@ -367,67 +380,101 @@ export function savePdf(pdfData: Omit<AdminPdf, 'id' | 'uploadedAt' | 'downloads
     downloadsCount: 0,
   };
 
-  const updated = [newPdf, ...current];
+  store.pdfs = [newPdf, ...store.pdfs];
+  addRealEvent(`Uploaded PDF: ${newPdf.subjectCode} (${newPdf.unit})`, 'PDF Manager');
+
+  ensureDataDir();
   try {
-    fs.writeFileSync(PDFS_FILE, JSON.stringify(updated, null, 2), 'utf8');
+    fs.writeFileSync(PDFS_FILE, JSON.stringify(store.pdfs, null, 2), 'utf8');
   } catch (_) {}
 
   return newPdf;
 }
 
 export function deletePdf(id: string): boolean {
-  ensureDataDir();
-  const current = getStoredPdfs();
-  const filtered = current.filter((p) => p.id !== id);
-  if (filtered.length !== current.length) {
+  const store = getMemoryStore();
+  const prevCount = store.pdfs.length;
+  store.pdfs = store.pdfs.filter((p) => p.id !== id);
+
+  if (store.pdfs.length !== prevCount) {
+    addRealEvent(`Removed PDF ID: ${id}`, 'PDF Manager');
+    ensureDataDir();
     try {
-      fs.writeFileSync(PDFS_FILE, JSON.stringify(filtered, null, 2), 'utf8');
-      return true;
+      fs.writeFileSync(PDFS_FILE, JSON.stringify(store.pdfs, null, 2), 'utf8');
     } catch (_) {}
+    return true;
   }
   return false;
 }
 
-export function getAnalytics(): AdminAnalytics {
-  ensureDataDir();
-  try {
-    if (fs.existsSync(ANALYTICS_FILE)) {
-      const data = fs.readFileSync(ANALYTICS_FILE, 'utf8');
-      return JSON.parse(data);
-    }
-  } catch (_) {}
-  return INITIAL_ANALYTICS;
+export function incrementPdfDownload(id: string): void {
+  const store = getMemoryStore();
+  const target = store.pdfs.find((p) => p.id === id);
+  if (target) {
+    target.downloadsCount = (target.downloadsCount || 0) + 1;
+    store.analytics.totalNotesDownloads += 1;
+    addRealEvent(`Note Downloaded: ${target.subjectCode}`, 'Student Action');
+    ensureDataDir();
+    try {
+      fs.writeFileSync(PDFS_FILE, JSON.stringify(store.pdfs, null, 2), 'utf8');
+    } catch (_) {}
+  }
 }
 
-export function recordAppHeartbeat(platform: string = 'Android App'): void {
-  ensureDataDir();
-  const current = getAnalytics();
-  current.activeUsersToday += 1;
+export function getAnalytics(): AdminAnalytics {
+  const store = getMemoryStore();
+  const now = Date.now();
+  const oneDayAgo = now - 24 * 60 * 60 * 1000;
+  const oneWeekAgo = now - 7 * 24 * 60 * 60 * 1000;
+
+  // Real dynamic active user count based on active IPs/sessions
+  let todayCount = 0;
+  let weeklyCount = 0;
+  for (const [, lastSeen] of store.activeIps.entries()) {
+    if (lastSeen >= oneDayAgo) todayCount++;
+    if (lastSeen >= oneWeekAgo) weeklyCount++;
+  }
+
+  // Ensure minimum baseline if just started
+  store.analytics.activeUsersToday = Math.max(todayCount, 1);
+  store.analytics.activeUsersWeekly = Math.max(weeklyCount, 1);
+  store.analytics.totalNotificationsSent = store.notifications.length;
+  store.analytics.totalNotesDownloads = store.pdfs.reduce(
+    (sum, p) => sum + (p.downloadsCount || 0),
+    0
+  );
+
+  return store.analytics;
+}
+
+export function recordAppHeartbeat(clientIp: string, platform: string = 'Android App'): void {
+  const store = getMemoryStore();
+  const ipKey = clientIp || `dev-${Math.floor(Math.random() * 1000)}`;
+  store.activeIps.set(ipKey, Date.now());
+
+  const isAndroid = platform.includes('Android');
+  const currentShare = store.analytics.appPlatformShare;
+  if (isAndroid) {
+    currentShare.android = Math.min(currentShare.android + 1, 95);
+    currentShare.web = Math.max(100 - currentShare.android, 5);
+  } else {
+    currentShare.web = Math.min(currentShare.web + 1, 95);
+    currentShare.android = Math.max(100 - currentShare.web, 5);
+  }
+
+  addRealEvent(
+    `Heartbeat Ping: Active Session (${isAndroid ? 'Android APK' : 'Web'})`,
+    isAndroid ? 'Android App' : 'Web Browser'
+  );
+}
+
+function addRealEvent(action: string, platform: string): void {
+  const store = getMemoryStore();
   const newEvent = {
-    id: `ev-${Date.now()}`,
-    action: 'App Active Ping',
-    platform: platform.includes('Web') ? 'Web Browser' : 'Android App',
+    id: `ev-${Date.now()}-${Math.floor(Math.random() * 100)}`,
+    action,
+    platform,
     time: 'Just now',
   };
-  current.recentEvents = [newEvent, ...current.recentEvents.slice(0, 19)];
-  try {
-    fs.writeFileSync(ANALYTICS_FILE, JSON.stringify(current, null, 2), 'utf8');
-  } catch (_) {}
-}
-
-function recordNotificationEvent(title: string): void {
-  const current = getAnalytics();
-  current.totalNotificationsSent += 1;
-  current.recentEvents = [
-    {
-      id: `ev-${Date.now()}`,
-      action: `Broadcast: ${title.slice(0, 28)}...`,
-      platform: 'Admin Broadcast',
-      time: 'Just now',
-    },
-    ...current.recentEvents.slice(0, 19),
-  ];
-  try {
-    fs.writeFileSync(ANALYTICS_FILE, JSON.stringify(current, null, 2), 'utf8');
-  } catch (_) {}
+  store.analytics.recentEvents = [newEvent, ...store.analytics.recentEvents.slice(0, 14)];
 }

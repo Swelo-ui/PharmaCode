@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
+import '../core/notification_service.dart';
 import '../core/animations.dart';
 import '../core/in_app_browser.dart';
 import '../core/theme.dart';
@@ -31,7 +32,7 @@ class MainNavigationScreen extends ConsumerStatefulWidget {
 }
 
 class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   int _currentIndex = 0;
   int _targetSemester = 1;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -46,9 +47,24 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkAndLaunchGuidedTour();
+      NotificationService().syncRemoteNotifications();
     });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      NotificationService().syncRemoteNotifications();
+    }
   }
 
   Future<void> _checkAndLaunchGuidedTour() async {
