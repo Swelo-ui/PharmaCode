@@ -35,6 +35,23 @@ export interface AdminPdf {
   pages: number;
   uploadedAt: string;
   downloadsCount: number;
+  isPremium?: boolean;
+  playProductId?: string;
+  priceRupees?: number;
+  previewPages?: number;
+  description?: string;
+}
+
+export interface UserEntitlement {
+  id: string;
+  userId: string;
+  productId: string;
+  orderId?: string;
+  purchaseToken: string;
+  packageName: string;
+  purchasedAt: string;
+  status: 'ACTIVE' | 'REFUNDED' | 'REVOKED';
+  deviceInfo?: string;
 }
 
 export interface AdminAnalytics {
@@ -80,6 +97,7 @@ const PDFS_FILE = path.join(DATA_DIR, 'pdfs.json');
 const DELETED_PDFS_FILE = path.join(DATA_DIR, 'deleted_pdfs.json');
 const ANALYTICS_FILE = path.join(DATA_DIR, 'analytics.json');
 const CONFIG_FILE = path.join(DATA_DIR, 'config.json');
+const ENTITLEMENTS_FILE = path.join(DATA_DIR, 'entitlements.json');
 
 const BASELINE_CONFIG: WebsiteConfig = {
   announcement: {
@@ -109,6 +127,8 @@ interface MemoryStore {
   deletedPdfIds: Set<string>;
   analytics: AdminAnalytics;
   config: WebsiteConfig;
+  entitlements: UserEntitlement[];
+  usedTokens: Set<string>;
   fcmServerKey?: string;
   activeIps: Map<string, number>;
   lastCloudSync: number;
@@ -250,6 +270,7 @@ async function pushCloudStore(data: {
   notifications: AdminNotification[];
   config?: WebsiteConfig;
   fcmServerKey?: string;
+  entitlements?: UserEntitlement[];
 }): Promise<boolean> {
   return new Promise((resolve) => {
     try {
@@ -328,6 +349,14 @@ function getMemoryStore(): MemoryStore {
     const deletedSet = new Set<string>(deletedIds);
     pdfs = pdfs.filter((p) => !deletedSet.has(p.id));
 
+    let entitlements: UserEntitlement[] = [];
+    try {
+      if (fs.existsSync(ENTITLEMENTS_FILE)) {
+        entitlements = JSON.parse(fs.readFileSync(ENTITLEMENTS_FILE, 'utf8'));
+      }
+    } catch (_) {}
+    const usedTokens = new Set<string>(entitlements.map((e) => e.purchaseToken));
+
     const totalDownloads = pdfs.reduce((sum, p) => sum + (p.downloadsCount || 0), 0);
 
     globalThis.__pharma_memory_store__ = {
@@ -335,6 +364,8 @@ function getMemoryStore(): MemoryStore {
       pdfs: pdfs,
       deletedPdfIds: deletedSet,
       config: config,
+      entitlements: entitlements,
+      usedTokens: usedTokens,
       fcmServerKey: process.env.FIREBASE_SERVER_KEY || process.env.FCM_SERVER_KEY || '',
       analytics: {
         activeUsersToday: 1,
@@ -780,5 +811,90 @@ export async function setFcmServerKey(key: string): Promise<void> {
     notifications: store.notifications,
     config: store.config,
     fcmServerKey: store.fcmServerKey,
+    entitlements: store.entitlements,
   });
+}
+
+// ─── USER ENTITLEMENT & IN-APP PURCHASE VERIFICATION ──────────────────────────
+
+export function getUserEntitlements(userId: string): UserEntitlement[] {
+  const store = getMemoryStore();
+  return store.entitlements.filter(
+    (e) => e.userId === userId && e.status === 'ACTIVE'
+  );
+}
+
+export function isProductEntitled(userId: string, productId: string): boolean {
+  const store = getMemoryStore();
+  return store.entitlements.some(
+    (e) => e.userId === userId && e.productId === productId && e.status === 'ACTIVE'
+  );
+}
+
+export function isPurchaseTokenUsed(purchaseToken: string): boolean {
+  const store = getMemoryStore();
+  return store.usedTokens.has(purchaseToken);
+}
+
+export async function verifyAndRecordPurchase(params: {
+  userId: string;
+  productId: string;
+  purchaseToken: string;
+  packageName?: string;
+  orderId?: string;
+  deviceInfo?: string;
+}): Promise<{ success: boolean; entitlement?: UserEntitlement; error?: string }> {
+  const store = getMemoryStore();
+
+  if (!params.userId || !params.productId || !params.purchaseToken) {
+    return { success: false, error: 'Missing required purchase verification parameters' };
+  }
+
+  // Prevent duplicate token replay attack
+  const existingWithToken = store.entitlements.find(
+    (e) => e.purchaseToken === params.purchaseToken
+  );
+  if (existingWithToken) {
+    if (existingWithToken.userId !== params.userId) {
+      return { success: false, error: 'This Google Play purchase token has already been claimed by another account.' };
+    }
+    // Same user restoring purchase
+    return { success: true, entitlement: existingWithToken };
+  }
+
+  const entitlement: UserEntitlement = {
+    id: `ent-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+    userId: params.userId,
+    productId: params.productId,
+    orderId: params.orderId || `GPA.${Date.now()}`,
+    purchaseToken: params.purchaseToken,
+    packageName: params.packageName || 'com.pharmacode.bpharm',
+    purchasedAt: new Date().toISOString(),
+    status: 'ACTIVE',
+    deviceInfo: params.deviceInfo,
+  };
+
+  store.entitlements.push(entitlement);
+  store.usedTokens.add(params.purchaseToken);
+
+  addRealEvent(`VIP Purchase Verified: ${params.productId} (${params.userId.slice(0, 6)}...)`, 'Google Play Billing');
+  ensureDataDir();
+  try {
+    fs.writeFileSync(ENTITLEMENTS_FILE, JSON.stringify(store.entitlements, null, 2), 'utf8');
+  } catch (_) {}
+
+  await pushCloudStore({
+    pdfs: store.pdfs,
+    notifications: store.notifications,
+    config: store.config,
+    fcmServerKey: store.fcmServerKey,
+    entitlements: store.entitlements,
+  });
+
+  return { success: true, entitlement };
+}
+
+export function getAllEntitlements(): UserEntitlement[] {
+  const store = getMemoryStore();
+  return store.entitlements;
 }

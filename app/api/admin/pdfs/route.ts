@@ -33,7 +33,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: deleted });
     }
 
-    const { title, subjectCode, subjectName, semester, unit, category, url, fileSize, pages } = body;
+    const {
+      title,
+      subjectCode,
+      subjectName,
+      semester,
+      unit,
+      category,
+      url,
+      fileSize,
+      pages,
+      isPremium,
+      playProductId,
+      priceRupees,
+      previewPages,
+      description,
+    } = body;
 
     if (!title || !subjectCode || !url) {
       return NextResponse.json(
@@ -52,6 +67,11 @@ export async function POST(req: NextRequest) {
       url: url.trim(),
       fileSize: fileSize ? fileSize.trim() : '3.5 MB',
       pages: Number(pages) || 20,
+      isPremium: Boolean(isPremium),
+      playProductId: playProductId ? playProductId.trim() : undefined,
+      priceRupees: priceRupees ? Number(priceRupees) : undefined,
+      previewPages: previewPages ? Number(previewPages) : undefined,
+      description: description ? description.trim() : undefined,
     });
 
     return NextResponse.json({

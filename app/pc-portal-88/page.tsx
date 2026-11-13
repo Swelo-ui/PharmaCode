@@ -144,6 +144,10 @@ export default function AdminPage() {
     url: '',
     fileSize: '3.5 MB',
     pages: 35,
+    isPremium: false,
+    playProductId: '',
+    priceRupees: 199,
+    description: '',
   });
 
   // Website Live Config State
@@ -400,6 +404,10 @@ export default function AdminPage() {
           url: '',
           fileSize: '3.5 MB',
           pages: 35,
+          isPremium: false,
+          playProductId: '',
+          priceRupees: 199,
+          description: '',
         });
         setTimeout(() => setPdfSuccessMsg(''), 5000);
       } else {
@@ -1093,6 +1101,71 @@ export default function AdminPage() {
                   </div>
                 </div>
 
+                {/* Free vs Premium Paid Guide Toggle */}
+                <div className="p-3.5 bg-slate-950/70 border border-slate-800 rounded-xl space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                        <span>💎 Lock as Premium Paid Study Guide</span>
+                        <span className="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded font-mono font-medium">Google Play In-App Purchase</span>
+                      </span>
+                      <p className="text-[11px] text-slate-400 mt-0.5">
+                        Students must purchase this guide via Google Play to read it in the secure anti-piracy reader.
+                      </p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={pdfForm.isPremium}
+                        onChange={(e) => setPdfForm({ ...pdfForm, isPremium: e.target.checked })}
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-600"></div>
+                    </label>
+                  </div>
+
+                  {pdfForm.isPremium && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-800/80">
+                      <div>
+                        <label className="block text-[11px] font-semibold text-amber-300 mb-1">
+                          Google Play Product ID *
+                        </label>
+                        <input
+                          type="text"
+                          value={pdfForm.playProductId}
+                          onChange={(e) => setPdfForm({ ...pdfForm, playProductId: e.target.value })}
+                          placeholder="e.g. guide_interview_pv_199"
+                          className="w-full bg-slate-900 border border-amber-500/40 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-amber-500 font-mono"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-semibold text-slate-300 mb-1">
+                          Fallback Price (₹)
+                        </label>
+                        <input
+                          type="number"
+                          value={pdfForm.priceRupees}
+                          onChange={(e) => setPdfForm({ ...pdfForm, priceRupees: Number(e.target.value) })}
+                          placeholder="199"
+                          className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        />
+                      </div>
+                      <div className="sm:col-span-2">
+                        <label className="block text-[11px] font-semibold text-slate-300 mb-1">
+                          Brief Description / Highlights (Shown on Purchase Sheet)
+                        </label>
+                        <input
+                          type="text"
+                          value={pdfForm.description}
+                          onChange={(e) => setPdfForm({ ...pdfForm, description: e.target.value })}
+                          placeholder="Complete 44-Page Interview Questions, Mock Cases & SAR Diagrams"
+                          className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+
                 {pdfSuccessMsg && (
                   <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl flex items-center gap-2 text-xs text-emerald-400">
                     <CheckCircle2 className="w-4 h-4 shrink-0" />
@@ -1188,9 +1261,20 @@ export default function AdminPage() {
                         <tr key={pdf.id} className="hover:bg-slate-800/30 transition-colors">
                           <td className="py-3 px-3 font-semibold text-white">
                             <div className="line-clamp-1">{pdf.title}</div>
-                            <span className="text-[10px] px-1.5 py-0.2 rounded bg-indigo-900/40 text-indigo-300 font-normal">
-                              {pdf.category}
-                            </span>
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                              <span className="text-[10px] px-1.5 py-0.2 rounded bg-indigo-900/40 text-indigo-300 font-normal">
+                                {pdf.category}
+                              </span>
+                              {(pdf as any).isPremium ? (
+                                <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold flex items-center gap-1">
+                                  💎 VIP Paid Guide · {(pdf as any).playProductId || 'Play Store IAP'}
+                                </span>
+                              ) : (
+                                <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-normal">
+                                  🆓 Free Kit
+                                </span>
+                              )}
+                            </div>
                           </td>
                           <td className="py-3 px-3">
                             <div className="font-mono text-indigo-300">{pdf.subjectCode}</div>

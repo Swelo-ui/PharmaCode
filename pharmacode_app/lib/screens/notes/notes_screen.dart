@@ -5,11 +5,13 @@ import '../../core/billing/in_app_purchase_service.dart';
 import '../../core/in_app_browser.dart';
 import '../../core/theme.dart';
 import '../../core/widgets/ad_banner_widget.dart';
+import '../../core/widgets/guide_purchase_sheet.dart';
 import '../../core/widgets/prebook_vip_sheet.dart';
 import '../../models/syllabus_models.dart';
 import '../../services/syllabus_service.dart';
 import '../../services/pdf_service.dart';
 import '../syllabus/subject_detail_screen.dart';
+import 'secure_pdf_reader_screen.dart';
 
 class NotesScreen extends StatefulWidget {
   const NotesScreen({super.key});
@@ -100,13 +102,35 @@ class _NotesScreenState extends State<NotesScreen> {
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context);
-                        final isVip = InAppPurchaseService.instance.isVipUnlocked;
                         final adminPdf = PdfService.instance.getPdfForSubject(subject.code);
-                        final targetUrl = adminPdf != null
-                            ? PdfService.instance.getTrackedDownloadUrl(adminPdf.id)
-                            : (subject.slug.isNotEmpty
-                                ? 'https://pharmacode.vercel.app/syllabus/semester-$semNum/${subject.slug}/'
-                                : 'https://pharmacode.vercel.app/notes/');
+                        if (adminPdf != null) {
+                          if (adminPdf.isPremium) {
+                            final isUnlocked = InAppPurchaseService.instance.isUnlocked(adminPdf.playProductId);
+                            if (isUnlocked) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => SecurePdfReaderScreen(pdfItem: adminPdf),
+                                ),
+                              );
+                            } else {
+                              GuidePurchaseSheet.show(context, adminPdf);
+                            }
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => SecurePdfReaderScreen(pdfItem: adminPdf),
+                              ),
+                            );
+                          }
+                          return;
+                        }
+
+                        final isVip = InAppPurchaseService.instance.isVipUnlocked;
+                        final targetUrl = subject.slug.isNotEmpty
+                            ? 'https://pharmacode.vercel.app/syllabus/semester-$semNum/${subject.slug}/'
+                            : 'https://pharmacode.vercel.app/notes/';
                         if (isVip) {
                           openInAppUrl(context, targetUrl);
                         } else {
@@ -246,6 +270,223 @@ class _NotesScreenState extends State<NotesScreen> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildFeaturedStudyGuides() {
+    final allPdfs = PdfService.instance.allPdfs;
+    final filtered = _selectedSemester == 0
+        ? allPdfs
+        : allPdfs.where((p) => p.semester == _selectedSemester).toList();
+
+    if (filtered.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              'Verified Study Guides & Kits',
+              style: GoogleFonts.dmSans(
+                color: AppTheme.primaryNavy,
+                fontSize: 15,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.2,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+              decoration: BoxDecoration(
+                color: const Color(0xFFECFDF5),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Text(
+                '${filtered.length} Live',
+                style: GoogleFonts.dmSans(
+                  color: const Color(0xFF059669),
+                  fontWeight: FontWeight.w800,
+                  fontSize: 10.5,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        ...filtered.map((pdf) {
+          final isUnlocked = InAppPurchaseService.instance.isUnlocked(pdf.playProductId);
+
+          return Container(
+            margin: const EdgeInsets.only(bottom: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: pdf.isPremium ? const Color(0xFFFDE68A) : AppTheme.borderSoft,
+                width: 1.5,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.02),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Material(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(16),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(16),
+                onTap: () {
+                  if (pdf.isPremium) {
+                    if (isUnlocked) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => SecurePdfReaderScreen(pdfItem: pdf),
+                        ),
+                      );
+                    } else {
+                      GuidePurchaseSheet.show(context, pdf);
+                    }
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => SecurePdfReaderScreen(pdfItem: pdf),
+                      ),
+                    );
+                  }
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF1E3A8A).withValues(alpha: 0.08),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              pdf.subjectCode,
+                              style: const TextStyle(
+                                fontFamily: 'JetBrains Mono',
+                                color: Color(0xFF1E3A8A),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 10.5,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Sem ${pdf.semester} · ${pdf.unit}',
+                            style: GoogleFonts.dmSans(
+                              color: AppTheme.textMuted,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const Spacer(),
+                          if (pdf.isPremium)
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: isUnlocked ? const Color(0xFFECFDF5) : const Color(0xFFFEF3C7),
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all(
+                                  color: isUnlocked ? const Color(0xFFA7F3D0) : const Color(0xFFFDE68A),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    isUnlocked ? Icons.lock_open_rounded : Icons.workspace_premium_rounded,
+                                    size: 12,
+                                    color: isUnlocked ? const Color(0xFF059669) : const Color(0xFFD97706),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    isUnlocked ? 'UNLOCKED' : '₹${pdf.priceRupees}',
+                                    style: TextStyle(
+                                      fontFamily: 'Nunito',
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w800,
+                                      color: isUnlocked ? const Color(0xFF059669) : const Color(0xFFD97706),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          else
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFECFDF5),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                'FREE KIT',
+                                style: GoogleFonts.dmSans(
+                                  color: const Color(0xFF059669),
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 10,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        pdf.title,
+                        style: GoogleFonts.dmSans(
+                          color: AppTheme.textDark,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w800,
+                          height: 1.3,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Text(
+                            '${pdf.pages} Pages · ${pdf.fileSize}',
+                            style: GoogleFonts.dmSans(
+                              color: AppTheme.textMuted,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const Spacer(),
+                          Text(
+                            pdf.isPremium
+                                ? (isUnlocked ? 'Read Now →' : 'Unlock Guide →')
+                                : 'Read in App →',
+                            style: GoogleFonts.dmSans(
+                              color: pdf.isPremium && !isUnlocked
+                                  ? const Color(0xFFD97706)
+                                  : const Color(0xFF1E3A8A),
+                              fontSize: 11.5,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        }),
+        const SizedBox(height: 10),
+      ],
     );
   }
 
@@ -472,7 +713,10 @@ class _NotesScreenState extends State<NotesScreen> {
               _buildPreBookBanner(),
               const SizedBox(height: 14),
 
-              // 2. Notes Section Header with Count
+              // 2. Verified Study Guides & Kits (Classplus-style in-app reader & VIP guides)
+              _buildFeaturedStudyGuides(),
+
+              // 3. Notes Section Header with Count
               Row(
                 children: [
                   Text(

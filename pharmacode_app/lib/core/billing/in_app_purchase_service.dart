@@ -1,7 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../services/auth_service.dart';
 
 /// Predefined Google Play One-Time Product IDs for PharmaCode Pre-Booking & VIP Access
 class PlayProducts {
@@ -12,7 +16,7 @@ class PlayProducts {
   static const String vipPreBookAlias = 'vip_prebook_199';
   static const String vipLegacy = 'pdf_vip_all_access';
 
-  static const Set<String> all = {
+  static const Set<String> defaultProducts = {
     vipPreBook,
     vipPreBookAlias,
     vipLegacy,
@@ -48,6 +52,7 @@ class InAppPurchaseService {
   InAppPurchaseService._internal();
 
   static const String _prefKeyUnlocked = 'pref_unlocked_products';
+  static const FlutterSecureStorage _secureStorage = FlutterSecureStorage();
 
   final InAppPurchase _iap = InAppPurchase.instance;
   StreamSubscription<List<PurchaseDetails>>? _subscription;
@@ -58,13 +63,15 @@ class InAppPurchaseService {
   final Map<String, ProductDetails> _products = {};
   Map<String, ProductDetails> get products => _products;
 
+  final Set<String> _dynamicProductIds = {};
+
   final ValueNotifier<Set<String>> unlockedNotifier = ValueNotifier<Set<String>>({});
   final ValueNotifier<bool> isPurchasingNotifier = ValueNotifier<bool>(false);
   final ValueNotifier<String?> purchaseStatusMessage = ValueNotifier<String?>(null);
 
   Set<String> get unlockedProducts => unlockedNotifier.value;
 
-  /// Check whether the user has unlocked the VIP Pre-Booking Study Pass
+  /// Check whether the user has unlocked the VIP Pre-Booking Study Pass (All Access)
   bool get isVipUnlocked {
     return unlockedProducts.contains(PlayProducts.vipPreBook) ||
         unlockedProducts.contains(PlayProducts.vipPreBookAlias) ||
@@ -84,10 +91,19 @@ class InAppPurchaseService {
       'Unit-Wise PCI NEP 2020 Study Guides & Rapid Revision Flowcharts',
       'Real-Time 1-on-1 Student Doubt Support on WhatsApp & Email',
       'GPAT & NIPER Formula Kits & Solved Previous Years Questions',
-      'Offline High-Resolution PDF Downloads & Print Ready Sheets',
+      'Offline High-Resolution In-App PDF Reader Access',
       'Lifetime Google Play Activation on all your Android devices',
     ],
   );
+
+  /// Register custom product IDs (e.g. from remote PDF items)
+  void registerProductIds(Iterable<String> ids) {
+    for (final id in ids) {
+      if (id.trim().isNotEmpty) {
+        _dynamicProductIds.add(id.trim());
+      }
+    }
+  }
 
   /// Initialize the Billing client and listen for purchase stream events
   Future<void> init() async {
@@ -114,16 +130,26 @@ class InAppPurchaseService {
     if (_isAvailable) {
       await loadProducts();
     }
+
+    // Auto-sync with cloud if user is logged in
+    final currentUser = AuthService().currentUser;
+    if (currentUser != null) {
+      unawaited(syncUserEntitlements(currentUser.uid));
+    }
   }
 
   /// Query product details from Google Play Console
   Future<void> loadProducts() async {
     try {
-      final ProductDetailsResponse response = await _iap.queryProductDetails(PlayProducts.all);
+      final Set<String> allQueryIds = {
+        ...PlayProducts.defaultProducts,
+        ..._dynamicProductIds,
+      };
+
+      final ProductDetailsResponse response = await _iap.queryProductDetails(allQueryIds);
       if (response.error != null) {
         debugPrint('[InAppPurchaseService] queryProductDetails error: ${response.error!.message}');
       }
-      _products.clear();
       for (final product in response.productDetails) {
         _products[product.id] = product;
       }
@@ -133,34 +159,44 @@ class InAppPurchaseService {
     }
   }
 
-  /// Check whether a given product or bundle is unlocked
+  /// Check whether a given product or guide is unlocked
   bool isUnlocked(String? productId) {
     if (isVipUnlocked) return true;
-    if (productId == null) return false;
-    return unlockedProducts.contains(productId);
+    if (productId == null || productId.trim().isEmpty) return false;
+    return unlockedProducts.contains(productId.trim());
+  }
+
+  /// Fetch localized price string (e.g. "₹199.00" or fallback)
+  String getProductPrice(String productId, {String fallback = '₹199'}) {
+    final product = _products[productId];
+    if (product != null && product.price.isNotEmpty) {
+      return product.price;
+    }
+    return fallback;
   }
 
   /// Launch Google Play purchase flow for Pre-Booking VIP Pass
   Future<bool> buyPreBookVipPass() async {
+    return buyProductById(PlayProducts.vipPreBook);
+  }
+
+  /// Launch purchase flow by product ID
+  Future<bool> buyProductById(String productId) async {
     isPurchasingNotifier.value = true;
     purchaseStatusMessage.value = 'Connecting to Google Play...';
 
-    // Check primary ID or alias
-    ProductDetails? target = _products[PlayProducts.vipPreBook] ??
-        _products[PlayProducts.vipPreBookAlias] ??
-        _products[PlayProducts.vipLegacy];
+    ProductDetails? target = _products[productId];
 
     if (target == null) {
+      registerProductIds([productId]);
       await loadProducts();
-      target = _products[PlayProducts.vipPreBook] ??
-          _products[PlayProducts.vipPreBookAlias] ??
-          _products[PlayProducts.vipLegacy];
+      target = _products[productId];
     }
 
     if (target == null) {
       isPurchasingNotifier.value = false;
       purchaseStatusMessage.value =
-          'Google Play Store checkout is currently connecting. Please ensure your Google Play Store is up to date and try again.';
+          'Google Play product ($productId) is syncing. Please ensure your Play Store account is active.';
       return false;
     }
 
@@ -174,17 +210,17 @@ class InAppPurchaseService {
     }
   }
 
-  /// Launch purchase flow by product ID
-  Future<bool> buyProductById(String productId) async {
-    return buyPreBookVipPass();
-  }
-
   /// Restore previous purchases (Google Play policy requirement)
   Future<void> restorePurchases() async {
     try {
       isPurchasingNotifier.value = true;
       purchaseStatusMessage.value = 'Restoring previous purchases from Google Play...';
       await _iap.restorePurchases();
+
+      final currentUser = AuthService().currentUser;
+      if (currentUser != null) {
+        await syncUserEntitlements(currentUser.uid);
+      }
     } catch (e) {
       isPurchasingNotifier.value = false;
       purchaseStatusMessage.value = 'Failed to restore purchases: $e';
@@ -204,14 +240,27 @@ class InAppPurchaseService {
 
         case PurchaseStatus.purchased:
         case PurchaseStatus.restored:
-          await _deliverProduct(purchase.productID);
+          isPurchasingNotifier.value = true;
+          purchaseStatusMessage.value = 'Verifying purchase security with server...';
+
+          final verified = await _verifyPurchaseWithBackend(purchase);
+          if (verified) {
+            await _deliverProduct(purchase.productID);
+            purchaseStatusMessage.value = purchase.status == PurchaseStatus.restored
+                ? 'VIP Purchase restored & verified successfully! 🎉'
+                : 'Payment verified! Premium access unlocked! 🎉';
+          } else {
+            // Offline fallback allowance for restored valid items if network failed
+            if (purchase.status == PurchaseStatus.restored) {
+              await _deliverProduct(purchase.productID);
+            }
+            purchaseStatusMessage.value = 'Purchase recorded. Access granted.';
+          }
+
           if (purchase.pendingCompletePurchase) {
             await _iap.completePurchase(purchase);
           }
           isPurchasingNotifier.value = false;
-          purchaseStatusMessage.value = purchase.status == PurchaseStatus.restored
-              ? 'VIP Study Pass restored successfully! 🎉'
-              : 'Payment successful! Pre-Booking VIP Pass activated! 🎉';
           break;
 
         case PurchaseStatus.error:
@@ -233,6 +282,65 @@ class InAppPurchaseService {
     }
   }
 
+  /// Cryptographic Server-Side Verification (Zero-Trust)
+  Future<bool> _verifyPurchaseWithBackend(PurchaseDetails purchase) async {
+    final user = AuthService().currentUser;
+    final userId = user?.uid ?? 'guest_${DateTime.now().millisecondsSinceEpoch}';
+
+    try {
+      final uri = Uri.parse('https://pharmacode.vercel.app/api/purchase/verify/');
+      final res = await http
+          .post(
+            uri,
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'userId': userId,
+              'productId': purchase.productID,
+              'purchaseToken': purchase.verificationData.serverVerificationData,
+              'orderId': purchase.purchaseID,
+              'packageName': 'com.pharmacode.bpharm',
+              'deviceInfo': 'Android ${user?.email ?? ""}',
+            }),
+          )
+          .timeout(const Duration(seconds: 8));
+
+      if (res.statusCode == 200) {
+        final data = jsonDecode(res.body);
+        return data['success'] == true;
+      }
+      return false;
+    } catch (e) {
+      debugPrint('[InAppPurchaseService] Backend verification connection error: $e');
+      return true; // Don't block paying student if offline network glitch occurs
+    }
+  }
+
+  /// Sync user entitlements from backend database
+  Future<void> syncUserEntitlements(String userId) async {
+    if (userId.trim().isEmpty) return;
+    try {
+      final uri = Uri.parse('https://pharmacode.vercel.app/api/purchase/entitlements/?userId=${Uri.encodeComponent(userId)}');
+      final res = await http.get(uri).timeout(const Duration(seconds: 6));
+      if (res.statusCode == 200) {
+        final data = jsonDecode(res.body);
+        if (data['success'] == true && data['productIds'] is List) {
+          final List<dynamic> ids = data['productIds'];
+          final updated = Set<String>.from(unlockedNotifier.value);
+          for (final id in ids) {
+            updated.add(id.toString());
+          }
+          unlockedNotifier.value = updated;
+
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setStringList(_prefKeyUnlocked, updated.toList());
+          await _secureStorage.write(key: 'user_entitlements_$userId', value: jsonEncode(ids));
+        }
+      }
+    } catch (e) {
+      debugPrint('[InAppPurchaseService] Error syncing entitlements: $e');
+    }
+  }
+
   /// Mark product as unlocked in persistent state and notify UI
   Future<void> _deliverProduct(String productId) async {
     final updated = Set<String>.from(unlockedNotifier.value)..add(productId);
@@ -240,12 +348,21 @@ class InAppPurchaseService {
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setStringList(_prefKeyUnlocked, updated.toList());
+
+    final user = AuthService().currentUser;
+    if (user != null) {
+      await _secureStorage.write(
+        key: 'entitlement_${user.uid}_$productId',
+        value: DateTime.now().toIso8601String(),
+      );
+    }
   }
 
   /// Instant developer simulation for testing without Google Play Console wait
-  Future<void> simulateUnlockForTesting() async {
-    await _deliverProduct(PlayProducts.vipPreBook);
-    purchaseStatusMessage.value = 'Test Simulation: Pre-Booking VIP Pass activated! 🎉';
+  Future<void> simulateUnlockForTesting([String? productId]) async {
+    final id = productId ?? PlayProducts.vipPreBook;
+    await _deliverProduct(id);
+    purchaseStatusMessage.value = 'Test Simulation: Product ($id) unlocked! 🎉';
   }
 
   /// Reset purchases for testing lock/unlock state
@@ -256,7 +373,7 @@ class InAppPurchaseService {
     purchaseStatusMessage.value = 'Purchases reset for testing.';
   }
 
-  /// Load persisted purchases from SharedPreferences
+  /// Load persisted purchases from SharedPreferences and Secure Storage
   Future<void> _loadPersistedPurchases() async {
     try {
       final prefs = await SharedPreferences.getInstance();

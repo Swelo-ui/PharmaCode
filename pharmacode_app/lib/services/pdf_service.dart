@@ -16,6 +16,11 @@ class AdminPdfItem {
   final String fileSize;
   final int pages;
   final int downloadsCount;
+  final bool isPremium;
+  final String playProductId;
+  final int priceRupees;
+  final int previewPages;
+  final String description;
 
   AdminPdfItem({
     required this.id,
@@ -29,6 +34,11 @@ class AdminPdfItem {
     required this.fileSize,
     required this.pages,
     required this.downloadsCount,
+    this.isPremium = false,
+    this.playProductId = '',
+    this.priceRupees = 199,
+    this.previewPages = 3,
+    this.description = '',
   });
 
   factory AdminPdfItem.fromJson(Map<String, dynamic> json) {
@@ -44,6 +54,11 @@ class AdminPdfItem {
       fileSize: json['fileSize']?.toString() ?? '3.5 MB',
       pages: (json['pages'] is num) ? (json['pages'] as num).toInt() : 20,
       downloadsCount: (json['downloadsCount'] is num) ? (json['downloadsCount'] as num).toInt() : 0,
+      isPremium: json['isPremium'] == true,
+      playProductId: json['playProductId']?.toString() ?? '',
+      priceRupees: (json['priceRupees'] is num) ? (json['priceRupees'] as num).toInt() : 199,
+      previewPages: (json['previewPages'] is num) ? (json['previewPages'] as num).toInt() : 3,
+      description: json['description']?.toString() ?? '',
     );
   }
 
@@ -59,6 +74,11 @@ class AdminPdfItem {
     'fileSize': fileSize,
     'pages': pages,
     'downloadsCount': downloadsCount,
+    'isPremium': isPremium,
+    'playProductId': playProductId,
+    'priceRupees': priceRupees,
+    'previewPages': previewPages,
+    'description': description,
   };
 }
 
@@ -94,7 +114,7 @@ class PdfService {
 
   Future<List<AdminPdfItem>> fetchPdfs() async {
     try {
-      final uri = Uri.parse('https://pharmacode.vercel.app/api/pdfs?t=${DateTime.now().millisecondsSinceEpoch}');
+      final uri = Uri.parse('https://pharmacode.vercel.app/api/pdfs/?t=${DateTime.now().millisecondsSinceEpoch}');
       final res = await http.get(uri).timeout(const Duration(seconds: 6));
       if (res.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(res.body);
@@ -159,6 +179,6 @@ class PdfService {
   }
 
   String getTrackedDownloadUrl(String id) {
-    return 'https://pharmacode.vercel.app/api/pdfs/download?id=$id';
+    return 'https://pharmacode.vercel.app/api/pdfs/download/?id=$id';
   }
 }
