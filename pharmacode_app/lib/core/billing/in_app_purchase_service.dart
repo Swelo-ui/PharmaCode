@@ -16,10 +16,16 @@ class PlayProducts {
   static const String vipPreBookAlias = 'vip_prebook_199';
   static const String vipLegacy = 'pdf_vip_all_access';
 
+  /// Premium Individual Guides
+  static const String guidePvInterview = 'guide_pv_interview_49';
+  static const String guideRaDossier = 'guide_ra_dossier_99';
+
   static const Set<String> defaultProducts = {
     vipPreBook,
     vipPreBookAlias,
     vipLegacy,
+    guidePvInterview,
+    guideRaDossier,
   };
 }
 
@@ -87,6 +93,7 @@ class InAppPurchaseService {
     originalPrice: '₹999',
     discountTag: '80% OFF · Early Bird',
     bulletPoints: [
+      '⭐ Automatically Unlocks BOTH PV Master Guide (₹49) & RA Dossier Guide (₹99) FREE',
       'All Future Semester Notes & PDFs Free (Zero extra charges forever)',
       'Unit-Wise PCI NEP 2020 Study Guides & Rapid Revision Flowcharts',
       'Real-Time 1-on-1 Student Doubt Support on WhatsApp & Email',
@@ -167,12 +174,15 @@ class InAppPurchaseService {
   }
 
   /// Fetch localized price string (e.g. "₹199.00" or fallback)
-  String getProductPrice(String productId, {String fallback = '₹199'}) {
+  String getProductPrice(String productId, {String? fallback}) {
     final product = _products[productId];
     if (product != null && product.price.isNotEmpty) {
       return product.price;
     }
-    return fallback;
+    if (fallback != null) return fallback;
+    if (productId == PlayProducts.guidePvInterview) return '₹49';
+    if (productId == PlayProducts.guideRaDossier) return '₹99';
+    return '₹199';
   }
 
   /// Launch Google Play purchase flow for Pre-Booking VIP Pass

@@ -3,6 +3,7 @@ import '../../services/auth_service.dart';
 import '../../services/pdf_service.dart';
 import '../billing/in_app_purchase_service.dart';
 import '../../screens/notes/secure_pdf_reader_screen.dart';
+import 'prebook_vip_sheet.dart';
 
 /// Classplus-Style Modal Sheet for Purchasing Individual Premium Study Guides
 /// Requires Firebase Auth login before purchase so entitlements are permanently tied to account.
@@ -293,7 +294,56 @@ class _GuidePurchaseSheetState extends State<GuidePurchaseSheet> {
 
           const SizedBox(height: 16),
 
-          // Feature points
+          // VIP Pass Upsell Banner (Unlocks both PV + RA + all future notes for ₹199)
+          InkWell(
+            onTap: () {
+              Navigator.pop(context);
+              showPreBookVipSheet(context);
+            },
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFEF3C7),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFFFDE68A)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.stars_rounded, color: Color(0xFFD97706), size: 20),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Text(
+                          '💡 Unlock ALL Guides with ₹199 VIP Pass',
+                          style: TextStyle(
+                            fontFamily: 'Nunito',
+                            fontSize: 12,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFF92400E),
+                          ),
+                        ),
+                        Text(
+                          'Unlocks PV Guide (₹49) + RA Guide (₹99) + all notes forever!',
+                          style: TextStyle(
+                            fontFamily: 'Nunito',
+                            fontSize: 10.5,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFFB45309),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Icon(Icons.arrow_forward_ios_rounded, color: Color(0xFFD97706), size: 12),
+                ],
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 16),
           _buildFeatureRow(Icons.offline_pin_rounded, 'Encrypted In-App Offline Reading', 'Read anywhere inside the app without high data usage.'),
           _buildFeatureRow(Icons.shield_rounded, 'Classplus-Grade Anti-Piracy Protection', 'Screenshot & screen recording completely blocked to protect verified notes.'),
           _buildFeatureRow(Icons.devices_rounded, 'Permanent Account Binding', 'Bound to your Google account — stays active after app reinstalls.'),
