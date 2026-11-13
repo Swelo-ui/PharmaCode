@@ -137,7 +137,7 @@ export default async function NotesPage() {
                                         PCI Compliant
                                     </span>
                                     <a
-                                        href={`/api/pdfs/download?id=${pdf.id}`}
+                                        href={`/api/pdfs/download/?id=${pdf.id}`}
                                         target="_blank"
                                         rel="noreferrer"
                                         className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3.5 py-1.5 text-[12px] font-bold text-white shadow-sm hover:bg-indigo-700 active:scale-95 transition-all"

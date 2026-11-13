@@ -6,6 +6,9 @@ import {
   deletePdf,
 } from '@/lib/admin-store';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function GET() {
   const pdfs = await getStoredPdfsAsync();
   return NextResponse.json({
@@ -23,6 +26,13 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
+
+    // Direct deletion fallback via POST
+    if (body._action === 'delete' && body.id) {
+      const deleted = await deletePdf(body.id);
+      return NextResponse.json({ success: deleted });
+    }
+
     const { title, subjectCode, subjectName, semester, unit, category, url, fileSize, pages } = body;
 
     if (!title || !subjectCode || !url) {
@@ -61,7 +71,14 @@ export async function DELETE(req: NextRequest) {
   }
 
   const { searchParams } = new URL(req.url);
-  const id = searchParams.get('id');
+  let id = searchParams.get('id');
+
+  if (!id) {
+    try {
+      const body = await req.json().catch(() => ({}));
+      id = body?.id;
+    } catch (_) {}
+  }
 
   if (!id) {
     return NextResponse.json({ error: 'ID parameter required.' }, { status: 400 });

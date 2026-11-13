@@ -35,7 +35,12 @@ import {
   Mail,
   CreditCard,
   Flame,
+  ChevronDown,
+  ChevronUp,
+  FolderDown,
+  Link2,
 } from 'lucide-react';
+import { SEMESTERS } from '@/lib/syllabus';
 
 interface NotificationItem {
   id: string;
@@ -80,6 +85,10 @@ interface WebsiteConfig {
   vipPassPrice: number;
   vipPassOriginalPrice: number;
   discountPercentage: number;
+  globalDownloadUrl: string;
+  downloadMode: 'direct' | 'ad_interstitial' | 'notes_page';
+  adInterstitialUrl?: string;
+  syllabusSubjectLinks: Record<string, string>;
   updatedAt: string;
 }
 
@@ -153,10 +162,29 @@ export default function AdminPage() {
     vipPassPrice: 199,
     vipPassOriginalPrice: 999,
     discountPercentage: 80,
+    globalDownloadUrl: 'https://pharmacode.vercel.app/notes/',
+    downloadMode: 'direct',
+    adInterstitialUrl: '',
+    syllabusSubjectLinks: {},
     updatedAt: '',
   });
   const [isSavingConfig, setIsSavingConfig] = useState(false);
   const [configSuccessMsg, setConfigSuccessMsg] = useState('');
+
+  // Syllabus Download Links State
+  const [selectedSemForLinks, setSelectedSemForLinks] = useState<number>(1);
+  const [syllabusSearchQuery, setSyllabusSearchQuery] = useState('');
+  const [expandedSubjectCode, setExpandedSubjectCode] = useState<string | null>(null);
+
+  function handleSetSubjectLink(key: string, url: string) {
+    setWebsiteConfig((prev) => ({
+      ...prev,
+      syllabusSubjectLinks: {
+        ...(prev.syllabusSubjectLinks || {}),
+        [key]: url.trim(),
+      },
+    }));
+  }
 
   // Analytics State
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
@@ -170,7 +198,7 @@ export default function AdminPage() {
 
   async function checkSession() {
     try {
-      const res = await fetch('/api/admin/session');
+      const res = await fetch('/api/admin/session/');
       const data = await res.json();
       if (data.authenticated) {
         setIsAuthenticated(true);
@@ -188,10 +216,10 @@ export default function AdminPage() {
     setIsLoadingData(true);
     try {
       const [notifsRes, pdfsRes, analyticsRes, configRes] = await Promise.all([
-        fetch('/api/admin/notifications'),
-        fetch('/api/admin/pdfs'),
-        fetch('/api/admin/analytics'),
-        fetch('/api/admin/config'),
+        fetch('/api/admin/notifications/'),
+        fetch('/api/admin/pdfs/'),
+        fetch('/api/admin/analytics/'),
+        fetch('/api/admin/config/'),
       ]);
 
       if (notifsRes.ok) {
@@ -226,7 +254,7 @@ export default function AdminPage() {
     setIsSubmittingLogin(true);
 
     try {
-      const res = await fetch('/api/admin/login', {
+      const res = await fetch('/api/admin/login/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password }),
@@ -249,7 +277,7 @@ export default function AdminPage() {
 
   // 4. Handle Logout
   async function handleLogout() {
-    await fetch('/api/admin/logout', { method: 'POST' });
+    await fetch('/api/admin/logout/', { method: 'POST' });
     setIsAuthenticated(false);
   }
 
@@ -262,7 +290,7 @@ export default function AdminPage() {
     setNotifSuccessMsg('');
 
     try {
-      const res = await fetch('/api/admin/notifications', {
+      const res = await fetch('/api/admin/notifications/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(notifForm),
@@ -337,7 +365,7 @@ export default function AdminPage() {
   // Delete Notification
   async function handleDeleteNotification(id: string) {
     if (!confirm('Are you sure you want to remove this notification?')) return;
-    const res = await fetch(`/api/admin/notifications?id=${id}`, { method: 'DELETE' });
+    const res = await fetch(`/api/admin/notifications/?id=${id}`, { method: 'DELETE' });
     if (res.ok) {
       setNotifications((prev) => prev.filter((n) => n.id !== id));
     }
@@ -352,7 +380,7 @@ export default function AdminPage() {
     setPdfSuccessMsg('');
 
     try {
-      const res = await fetch('/api/admin/pdfs', {
+      const res = await fetch('/api/admin/pdfs/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(pdfForm),
@@ -391,7 +419,7 @@ export default function AdminPage() {
 
     setIsUpdatingPdf(true);
     try {
-      const res = await fetch('/api/admin/pdfs', {
+      const res = await fetch('/api/admin/pdfs/', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editingPdf),
@@ -414,8 +442,29 @@ export default function AdminPage() {
   // Delete PDF
   async function handleDeletePdf(id: string) {
     if (!confirm('Remove this PDF from the library?')) return;
-    const res = await fetch(`/api/admin/pdfs?id=${id}`, { method: 'DELETE' });
-    if (res.ok) {
+    try {
+      // 1. Primary DELETE request with trailing slash
+      const res = await fetch(`/api/admin/pdfs/?id=${id}`, { method: 'DELETE' });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success) {
+        setPdfs((prev) => prev.filter((p) => p.id !== id));
+        return;
+      }
+
+      // 2. Direct POST fallback
+      const resPost = await fetch('/api/admin/pdfs/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ _action: 'delete', id }),
+      });
+      const dataPost = await resPost.json().catch(() => ({}));
+      if (resPost.ok && dataPost.success) {
+        setPdfs((prev) => prev.filter((p) => p.id !== id));
+        return;
+      }
+      alert('Failed to remove PDF: ' + (data.error || dataPost.error || 'Server error'));
+    } catch (_) {
+      // Optimistic delete in UI if network issue
       setPdfs((prev) => prev.filter((p) => p.id !== id));
     }
   }
@@ -427,7 +476,7 @@ export default function AdminPage() {
     setConfigSuccessMsg('');
 
     try {
-      const res = await fetch('/api/admin/config', {
+      const res = await fetch('/api/admin/config/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(websiteConfig),
@@ -1567,6 +1616,233 @@ export default function AdminPage() {
                     />
                   </div>
                 )}
+              </div>
+
+              {/* 5. Syllabus Subjects & Units Download Controller */}
+              <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+                  <div className="flex items-center gap-2.5">
+                    <FolderDown className="w-5 h-5 text-indigo-400" />
+                    <div>
+                      <h2 className="text-base font-bold text-white">Syllabus &amp; Notes Download Controller (Website Real-Time)</h2>
+                      <p className="text-xs text-slate-400">Website ke sabhi syllabus subjects aur unit download buttons ka direct control</p>
+                    </div>
+                  </div>
+
+                  <div className="text-xs text-slate-400 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800 font-mono">
+                    {Object.keys(websiteConfig.syllabusSubjectLinks || {}).length} Custom Links Active
+                  </div>
+                </div>
+
+                {/* Global Master Download URL & Mode */}
+                <div className="p-4 bg-slate-950/70 border border-slate-800 rounded-xl space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="md:col-span-2">
+                      <label className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
+                        <Link2 className="w-3.5 h-3.5 text-indigo-400" />
+                        <span>Master Universal Google Drive / Notes Folder</span>
+                      </label>
+                      <input
+                        type="url"
+                        value={websiteConfig.globalDownloadUrl}
+                        onChange={(e) => setWebsiteConfig({ ...websiteConfig, globalDownloadUrl: e.target.value })}
+                        placeholder="https://drive.google.com/drive/folders/... or master notes link"
+                        className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-mono"
+                      />
+                      <p className="text-[11px] text-slate-500 mt-1">
+                        Kisi bhi subject ya unit ka individual link na hone par, student ke &quot;Download Unit Notes&quot; dabane par ye master link direct open hoga.
+                      </p>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1.5">Download Button Action Mode</label>
+                      <select
+                        value={websiteConfig.downloadMode}
+                        onChange={(e) => setWebsiteConfig({ ...websiteConfig, downloadMode: e.target.value as any })}
+                        className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
+                      >
+                        <option value="direct">Direct Link (Opens Google Drive / PDF)</option>
+                        <option value="ad_interstitial">Ad Interstitial (Monetization Gate)</option>
+                        <option value="notes_page">Redirect to Notes Library (/notes/)</option>
+                      </select>
+                      <p className="text-[11px] text-slate-500 mt-1">
+                        Select how download buttons behave when clicked.
+                      </p>
+                    </div>
+                  </div>
+
+                  {websiteConfig.downloadMode === 'ad_interstitial' && (
+                    <div className="pt-3 border-t border-slate-800/80">
+                      <label className="block text-xs font-semibold text-amber-300 mb-1.5">Ad Interstitial / Link Shortener URL</label>
+                      <input
+                        type="url"
+                        value={websiteConfig.adInterstitialUrl || ''}
+                        onChange={(e) => setWebsiteConfig({ ...websiteConfig, adInterstitialUrl: e.target.value })}
+                        placeholder="https://shortner.com/go"
+                        className="w-full bg-slate-900 border border-amber-800/50 rounded-xl px-3 py-2 text-xs text-white font-mono"
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* Semester Selector Tabs */}
+                <div>
+                  <div className="text-xs font-semibold text-slate-300 mb-2">Select Semester to Manage Unit Links:</div>
+                  <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none">
+                    {SEMESTERS.map((sem) => (
+                      <button
+                        key={sem.num}
+                        type="button"
+                        onClick={() => setSelectedSemForLinks(sem.num)}
+                        className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+                          selectedSemForLinks === sem.num
+                            ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
+                            : 'bg-slate-950 text-slate-400 hover:text-white border border-slate-800'
+                        }`}
+                      >
+                        Sem {sem.num} ({sem.subjects.filter((s) => s.type === 'T').length} Subjects)
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Search filter within semester */}
+                <div className="relative">
+                  <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
+                  <input
+                    type="text"
+                    value={syllabusSearchQuery}
+                    onChange={(e) => setSyllabusSearchQuery(e.target.value)}
+                    placeholder="Search subjects in this semester (e.g. BP101T, Python, Pharmacy, Chemistry)..."
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-xs text-white"
+                  />
+                </div>
+
+                {/* Subjects List */}
+                <div className="space-y-3">
+                  {SEMESTERS.find((s) => s.num === selectedSemForLinks)
+                    ?.subjects.filter((s) => s.type === 'T')
+                    .filter((s) => {
+                      if (!syllabusSearchQuery) return true;
+                      const q = syllabusSearchQuery.toLowerCase();
+                      return s.code.toLowerCase().includes(q) || s.name.toLowerCase().includes(q);
+                    })
+                    .map((subj) => {
+                      const isExpanded = expandedSubjectCode === subj.code;
+                      const masterLink = websiteConfig.syllabusSubjectLinks?.[subj.code] || '';
+                      const hasCustomLinks = Boolean(
+                        masterLink ||
+                        subj.units.some((_, idx) => websiteConfig.syllabusSubjectLinks?.[`${subj.code}_unit_${idx + 1}`])
+                      );
+
+                      return (
+                        <div key={subj.code} className="bg-slate-950/70 border border-slate-800/80 rounded-xl p-4 transition-all">
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                            <div className="flex items-start gap-2.5">
+                              <span className="px-2 py-0.5 bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 rounded-md font-mono text-xs font-bold shrink-0 mt-0.5">
+                                {subj.code}
+                              </span>
+                              <div>
+                                <h4 className="text-xs font-bold text-white leading-snug">{subj.name}</h4>
+                                <div className="flex items-center gap-2 mt-1 text-[11px] text-slate-400">
+                                  <span>{subj.units.length} Units</span>
+                                  <span>·</span>
+                                  <span className={hasCustomLinks ? 'text-emerald-400 font-semibold' : 'text-slate-500'}>
+                                    {hasCustomLinks ? '🟢 Custom Link Configured' : '⚪ Using Master Drive Link'}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                              <button
+                                type="button"
+                                onClick={() => setExpandedSubjectCode(isExpanded ? null : subj.code)}
+                                className="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 flex items-center gap-1.5"
+                              >
+                                <span>{isExpanded ? 'Hide Units' : 'Configure Unit Links'}</span>
+                                {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Subject Master Link */}
+                          <div className="mt-3 pt-3 border-t border-slate-800/60 grid grid-cols-1 sm:grid-cols-4 gap-2 items-center">
+                            <div className="text-[11px] font-semibold text-slate-300 sm:col-span-1">
+                              Subject Master Link:
+                              <span className="block text-[10px] text-slate-500 font-normal">All units fallback to this</span>
+                            </div>
+                            <div className="sm:col-span-3 flex items-center gap-2">
+                              <input
+                                type="url"
+                                value={masterLink}
+                                onChange={(e) => handleSetSubjectLink(subj.code, e.target.value)}
+                                placeholder="https://drive.google.com/file/d/... or custom PDF URL"
+                                className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white font-mono"
+                              />
+                              {masterLink && (
+                                <a
+                                  href={masterLink}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs shrink-0"
+                                  title="Test Link"
+                                >
+                                  <ExternalLink className="w-3.5 h-3.5" />
+                                </a>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Expanded Units */}
+                          {isExpanded && (
+                            <div className="mt-3 pt-3 border-t border-slate-800/80 space-y-2">
+                              <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">
+                                Unit-Wise Notes Download Links:
+                              </div>
+                              {subj.units.map((unit, uIdx) => {
+                                const unitKey = `${subj.code}_unit_${uIdx + 1}`;
+                                const unitLink = websiteConfig.syllabusSubjectLinks?.[unitKey] || '';
+
+                                return (
+                                  <div key={unitKey} className="bg-slate-900/60 border border-slate-800/50 rounded-lg p-2.5 grid grid-cols-1 sm:grid-cols-4 gap-2 items-center">
+                                    <div className="sm:col-span-1 flex items-center gap-1.5">
+                                      <span className="w-5 h-5 rounded-full bg-slate-800 flex items-center justify-center text-[10px] font-bold text-slate-300 shrink-0">
+                                        {uIdx + 1}
+                                      </span>
+                                      <span className="text-[11px] font-semibold text-slate-200 line-clamp-1" title={unit.title}>
+                                        {unit.title}
+                                      </span>
+                                    </div>
+                                    <div className="sm:col-span-3 flex items-center gap-2">
+                                      <input
+                                        type="url"
+                                        value={unitLink}
+                                        onChange={(e) => handleSetSubjectLink(unitKey, e.target.value)}
+                                        placeholder={`Direct Link for Unit ${uIdx + 1} Notes`}
+                                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1 text-xs text-white font-mono"
+                                      />
+                                      {unitLink && (
+                                        <a
+                                          href={unitLink}
+                                          target="_blank"
+                                          rel="noreferrer"
+                                          className="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs shrink-0"
+                                          title="Test Link"
+                                        >
+                                          <ExternalLink className="w-3.5 h-3.5" />
+                                        </a>
+                                      )}
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                </div>
               </div>
 
               {configSuccessMsg && (

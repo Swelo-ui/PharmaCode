@@ -62,6 +62,11 @@ export interface WebsiteConfig {
   vipPassPrice: number;
   vipPassOriginalPrice: number;
   discountPercentage: number;
+  // Direct Download Controls for Website & Syllabus Buttons:
+  globalDownloadUrl: string; // Master Google Drive or fallback URL for all "Download Notes" buttons
+  downloadMode: 'direct' | 'ad_interstitial' | 'notes_page';
+  adInterstitialUrl?: string;
+  syllabusSubjectLinks: Record<string, string>; // Maps subjectCode (e.g. "BP101T") or unit (e.g. "BP101T_unit_1") to custom URL
   updatedAt: string;
 }
 
@@ -72,6 +77,7 @@ const DATA_DIR = process.env.VERCEL
 
 const NOTIFS_FILE = path.join(DATA_DIR, 'notifications.json');
 const PDFS_FILE = path.join(DATA_DIR, 'pdfs.json');
+const DELETED_PDFS_FILE = path.join(DATA_DIR, 'deleted_pdfs.json');
 const ANALYTICS_FILE = path.join(DATA_DIR, 'analytics.json');
 const CONFIG_FILE = path.join(DATA_DIR, 'config.json');
 
@@ -90,12 +96,17 @@ const BASELINE_CONFIG: WebsiteConfig = {
   vipPassPrice: 199,
   vipPassOriginalPrice: 999,
   discountPercentage: 80,
+  globalDownloadUrl: 'https://pharmacode.vercel.app/notes/',
+  downloadMode: 'direct',
+  adInterstitialUrl: '',
+  syllabusSubjectLinks: {},
   updatedAt: new Date().toISOString(),
 };
 
 interface MemoryStore {
   notifications: AdminNotification[];
   pdfs: AdminPdf[];
+  deletedPdfIds: Set<string>;
   analytics: AdminAnalytics;
   config: WebsiteConfig;
   fcmServerKey?: string;
@@ -158,20 +169,6 @@ const BASELINE_NOTIFICATIONS: AdminNotification[] = [
 
 const BASELINE_PDFS: AdminPdf[] = [
   {
-    id: 'pdf-1',
-    title: 'Basics of Python for Pharmaceutical Sciences — Unit I & II Notes',
-    subjectCode: 'BP101T',
-    subjectName: 'Basics of Python Programming for Pharmaceutical Sciences',
-    semester: 1,
-    unit: 'Unit I & II',
-    category: 'Notes',
-    url: 'https://pharmacode.vercel.app/notes/',
-    fileSize: '3.4 MB',
-    pages: 38,
-    uploadedAt: '2026-11-10',
-    downloadsCount: 142,
-  },
-  {
     id: 'pdf-2',
     title: 'General Pharmacy — Complete Lecture Study Notes',
     subjectCode: 'BP102T',
@@ -198,20 +195,6 @@ const BASELINE_PDFS: AdminPdf[] = [
     pages: 52,
     uploadedAt: '2026-11-12',
     downloadsCount: 94,
-  },
-  {
-    id: 'pdf-4',
-    title: 'GPAT High-Yield Medicinal Chemistry SAR Sheet',
-    subjectCode: 'BP501T',
-    subjectName: 'Biomedicinal Chemistry',
-    semester: 5,
-    unit: 'Full Formula Kit',
-    category: 'Revision Sheet',
-    url: 'https://pharmacode.vercel.app/notes/',
-    fileSize: '2.1 MB',
-    pages: 24,
-    uploadedAt: '2026-11-05',
-    downloadsCount: 375,
   },
 ];
 
@@ -336,11 +319,21 @@ function getMemoryStore(): MemoryStore {
       }
     } catch (_) {}
 
+    let deletedIds: string[] = ['pdf-1', 'pdf-4'];
+    try {
+      if (fs.existsSync(DELETED_PDFS_FILE)) {
+        deletedIds = JSON.parse(fs.readFileSync(DELETED_PDFS_FILE, 'utf8'));
+      }
+    } catch (_) {}
+    const deletedSet = new Set<string>(deletedIds);
+    pdfs = pdfs.filter((p) => !deletedSet.has(p.id));
+
     const totalDownloads = pdfs.reduce((sum, p) => sum + (p.downloadsCount || 0), 0);
 
     globalThis.__pharma_memory_store__ = {
       notifications: notifs,
       pdfs: pdfs,
+      deletedPdfIds: deletedSet,
       config: config,
       fcmServerKey: process.env.FIREBASE_SERVER_KEY || process.env.FCM_SERVER_KEY || '',
       analytics: {
@@ -362,7 +355,9 @@ function getMemoryStore(): MemoryStore {
     fetchCloudStore().then((cloud) => {
       if (cloud) {
         if (Array.isArray(cloud.pdfs)) {
-          globalThis.__pharma_memory_store__!.pdfs = cloud.pdfs;
+          globalThis.__pharma_memory_store__!.pdfs = cloud.pdfs.filter(
+            (p) => !globalThis.__pharma_memory_store__!.deletedPdfIds.has(p.id)
+          );
         }
         if (Array.isArray(cloud.notifications)) {
           globalThis.__pharma_memory_store__!.notifications = cloud.notifications;
@@ -519,6 +514,7 @@ export async function saveNotification(
   await pushCloudStore({
     pdfs: store.pdfs,
     notifications: store.notifications,
+    config: store.config,
     fcmServerKey: store.fcmServerKey,
   });
 
@@ -541,6 +537,7 @@ export async function deleteNotification(id: string): Promise<boolean> {
     await pushCloudStore({
       pdfs: store.pdfs,
       notifications: store.notifications,
+      config: store.config,
       fcmServerKey: store.fcmServerKey,
     });
     return true;
@@ -550,17 +547,17 @@ export async function deleteNotification(id: string): Promise<boolean> {
 
 export function getStoredPdfs(): AdminPdf[] {
   const store = getMemoryStore();
-  return store.pdfs;
+  return store.pdfs.filter((p) => !store.deletedPdfIds.has(p.id));
 }
 
 export async function getStoredPdfsAsync(): Promise<AdminPdf[]> {
   const store = getMemoryStore();
   const cloud = await fetchCloudStore();
   if (cloud && Array.isArray(cloud.pdfs)) {
-    store.pdfs = cloud.pdfs;
+    store.pdfs = cloud.pdfs.filter((p) => !store.deletedPdfIds.has(p.id));
     store.lastCloudSync = Date.now();
   }
-  return store.pdfs;
+  return store.pdfs.filter((p) => !store.deletedPdfIds.has(p.id));
 }
 
 export async function savePdf(
@@ -574,7 +571,7 @@ export async function savePdf(
     downloadsCount: 0,
   };
 
-  store.pdfs = [newPdf, ...store.pdfs];
+  store.pdfs = [newPdf, ...store.pdfs.filter((p) => !store.deletedPdfIds.has(p.id))];
   addRealEvent(`Uploaded PDF: ${newPdf.subjectCode} (${newPdf.unit})`, 'PDF Manager');
 
   ensureDataDir();
@@ -585,6 +582,7 @@ export async function savePdf(
   await pushCloudStore({
     pdfs: store.pdfs,
     notifications: store.notifications,
+    config: store.config,
     fcmServerKey: store.fcmServerKey,
   });
 
@@ -593,24 +591,23 @@ export async function savePdf(
 
 export async function deletePdf(id: string): Promise<boolean> {
   const store = getMemoryStore();
-  const prevCount = store.pdfs.length;
+  store.deletedPdfIds.add(id);
   store.pdfs = store.pdfs.filter((p) => p.id !== id);
 
-  if (store.pdfs.length !== prevCount) {
-    addRealEvent(`Removed PDF ID: ${id}`, 'PDF Manager');
-    ensureDataDir();
-    try {
-      fs.writeFileSync(PDFS_FILE, JSON.stringify(store.pdfs, null, 2), 'utf8');
-    } catch (_) {}
+  addRealEvent(`Removed PDF ID: ${id}`, 'PDF Manager');
+  ensureDataDir();
+  try {
+    fs.writeFileSync(DELETED_PDFS_FILE, JSON.stringify(Array.from(store.deletedPdfIds)), 'utf8');
+    fs.writeFileSync(PDFS_FILE, JSON.stringify(store.pdfs, null, 2), 'utf8');
+  } catch (_) {}
 
-    await pushCloudStore({
-      pdfs: store.pdfs,
-      notifications: store.notifications,
-      fcmServerKey: store.fcmServerKey,
-    });
-    return true;
-  }
-  return false;
+  await pushCloudStore({
+    pdfs: store.pdfs,
+    notifications: store.notifications,
+    config: store.config,
+    fcmServerKey: store.fcmServerKey,
+  });
+  return true;
 }
 
 export function incrementPdfDownload(id: string): void {
