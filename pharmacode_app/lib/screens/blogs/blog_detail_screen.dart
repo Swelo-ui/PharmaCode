@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
+import '../../core/ads/ad_service.dart';
 import '../../core/animations.dart';
+import '../../core/billing/in_app_purchase_service.dart';
 import '../../core/in_app_browser.dart';
 import '../../core/theme.dart';
 import '../../models/blog_model.dart';
 import '../ai/pharma_helper_screen.dart';
 import '../../widgets/pharma_mascot_widget.dart';
+import 'guide_detail_screen.dart';
 
 class BlogDetailScreen extends StatefulWidget {
   final Blog blog;
@@ -48,9 +51,46 @@ class _BlogDetailScreenState extends State<BlogDetailScreen> {
     super.dispose();
   }
 
+  bool get _isPv => widget.blog.id == 'pharmacovigilance-interview-preparation-kit';
+  bool get _isRa => widget.blog.id == 'regulatory-affairs-complete-guide';
+  bool get _isCro => widget.blog.id == 'cro-operations-manual' || widget.blog.id.contains('cro');
+
   void _openActionUrl() {
+    if (_isPv) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const GuideDetailScreen(guideType: 'pv')),
+      );
+      return;
+    }
+    if (_isRa) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const GuideDetailScreen(guideType: 'ra')),
+      );
+      return;
+    }
+    if (_isCro) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const GuideDetailScreen(guideType: 'cro')),
+      );
+      return;
+    }
     if (widget.blog.actionUrl.isNotEmpty) {
-      openInAppUrl(context, widget.blog.actionUrl);
+      final isVip = InAppPurchaseService.instance.isVipUnlocked;
+      if (isVip) {
+        openInAppUrl(context, widget.blog.actionUrl);
+      } else {
+        AdService.instance.showInterstitialAd(
+          force: true,
+          onDismissed: () {
+            if (mounted) {
+              openInAppUrl(context, widget.blog.actionUrl);
+            }
+          },
+        );
+      }
     }
   }
 
@@ -111,7 +151,7 @@ class _BlogDetailScreenState extends State<BlogDetailScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: widget.blog.actionUrl.isNotEmpty
+      bottomNavigationBar: (widget.blog.actionUrl.isNotEmpty || _isPv || _isRa || _isCro)
           ? Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
@@ -130,9 +170,15 @@ class _BlogDetailScreenState extends State<BlogDetailScreen> {
                   height: 48,
                   child: ElevatedButton.icon(
                     onPressed: _openActionUrl,
-                    icon: const Icon(Icons.open_in_browser_rounded, size: 18),
+                    icon: Icon(_isPv || _isRa || _isCro ? Icons.menu_book_rounded : Icons.open_in_browser_rounded, size: 18),
                     label: Text(
-                      widget.blog.actionLabel,
+                      _isPv
+                          ? 'Open Full PV Guide & Kit'
+                          : _isRa
+                              ? 'Open Complete RA Guide & Dossier'
+                              : _isCro
+                                  ? 'Open CRO Operations Manual'
+                                  : widget.blog.actionLabel,
                       style: GoogleFonts.dmSans(fontWeight: FontWeight.w900, fontSize: 13.5),
                     ),
                     style: ElevatedButton.styleFrom(
@@ -251,16 +297,24 @@ class _BlogDetailScreenState extends State<BlogDetailScreen> {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      'Download PDF guides, verify certification eligibility, and access supplementary question banks directly online.',
+                      _isPv || _isRa || _isCro
+                          ? 'Explore verified inside PDF sample pages, complete curriculum, and in-app reader access.'
+                          : 'Download PDF guides, verify certification eligibility, and access supplementary question banks directly online.',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.dmSans(color: AppTheme.textMuted, fontSize: 12, height: 1.4),
                     ),
                     const SizedBox(height: 12),
                     ElevatedButton.icon(
                       onPressed: _openActionUrl,
-                      icon: const Icon(Icons.open_in_browser_rounded, size: 16),
+                      icon: Icon(_isPv || _isRa || _isCro ? Icons.menu_book_rounded : Icons.open_in_browser_rounded, size: 16),
                       label: Text(
-                        widget.blog.actionLabel,
+                        _isPv
+                            ? 'Open Full PV Guide'
+                            : _isRa
+                                ? 'Open Complete RA Guide'
+                                : _isCro
+                                    ? 'Open CRO Manual'
+                                    : widget.blog.actionLabel,
                         style: GoogleFonts.dmSans(fontWeight: FontWeight.w800, fontSize: 12.5),
                       ),
                       style: ElevatedButton.styleFrom(

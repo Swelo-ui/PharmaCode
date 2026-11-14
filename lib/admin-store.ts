@@ -29,7 +29,7 @@ export interface AdminPdf {
   subjectName: string;
   semester: number;
   unit: string;
-  category: 'Notes' | 'Question Paper' | 'Revision Sheet' | 'Lab Manual';
+  category: 'Notes' | 'Question Paper' | 'Revision Sheet' | 'Lab Manual' | 'Career Guide';
   url: string;
   fileSize: string;
   pages: number;
@@ -189,36 +189,6 @@ const BASELINE_NOTIFICATIONS: AdminNotification[] = [
 
 const BASELINE_PDFS: AdminPdf[] = [
   {
-    id: 'pdf-2',
-    title: 'General Pharmacy — Complete Lecture Study Notes',
-    subjectCode: 'BP102T',
-    subjectName: 'General Pharmacy',
-    semester: 1,
-    unit: 'Complete (Units I-V)',
-    category: 'Notes',
-    url: 'https://pharmacode.vercel.app/notes/',
-    fileSize: '5.8 MB',
-    pages: 64,
-    uploadedAt: '2026-11-08',
-    downloadsCount: 289,
-    isPremium: false,
-  },
-  {
-    id: 'pdf-3',
-    title: 'AI Applications in Pharmaceutical Sciences — Official Unit Study Kit',
-    subjectCode: 'BP604T',
-    subjectName: 'AI Applications in Pharmaceutical Sciences',
-    semester: 6,
-    unit: 'Units I-V Complete',
-    category: 'Notes',
-    url: 'https://pharmacode.vercel.app/notes/',
-    fileSize: '4.2 MB',
-    pages: 52,
-    uploadedAt: '2026-11-12',
-    downloadsCount: 94,
-    isPremium: false,
-  },
-  {
     id: 'pdf-pv-guide',
     title: 'Pharmacovigilance (PV) Master Interview Guide & ICSR Cases',
     subjectCode: 'BP805ET',
@@ -227,7 +197,7 @@ const BASELINE_PDFS: AdminPdf[] = [
     unit: 'Complete Interview Kit',
     category: 'Notes',
     url: 'https://drive.google.com/uc?export=download&id=1wQPW4zOOwC-v3LRi1OIu0eDwzK2h1Nmy',
-    fileSize: '4.5 MB',
+    fileSize: '11.6 MB',
     pages: 44,
     uploadedAt: '2026-11-13',
     downloadsCount: 340,
@@ -246,8 +216,8 @@ const BASELINE_PDFS: AdminPdf[] = [
     unit: 'Modules 1-5 Dossier Kit',
     category: 'Notes',
     url: 'https://drive.google.com/uc?export=download&id=1u_RkXFNVxJwTLNqIQtmcS2O3UvRUb300',
-    fileSize: '5.2 MB',
-    pages: 58,
+    fileSize: '1.2 MB',
+    pages: 26,
     uploadedAt: '2026-11-13',
     downloadsCount: 280,
     isPremium: true,
@@ -258,21 +228,21 @@ const BASELINE_PDFS: AdminPdf[] = [
   },
   {
     id: 'pdf-career-free',
-    title: 'B.Pharm High-Growth Career Roadmap & Industry Placement Guide',
-    subjectCode: 'CAREER',
-    subjectName: 'Career & Industry Placement',
+    title: 'CRO Operations Manual – PharmaCode (2026 Edition)',
+    subjectCode: 'CRO-OPS',
+    subjectName: 'Clinical Research & CRO Operations',
     semester: 8,
-    unit: 'Placement Roadmap',
-    category: 'Revision Sheet',
+    unit: '15 Complete Chapters & Onboarding Kit',
+    category: 'Career Guide',
     url: 'https://drive.google.com/uc?export=download&id=1xvUpn2e0zPEsm-oIkEelqqehupUhTPGK',
-    fileSize: '3.8 MB',
-    pages: 32,
+    fileSize: '4.8 MB',
+    pages: 41,
     uploadedAt: '2026-11-13',
     downloadsCount: 520,
     isPremium: false,
     priceRupees: 0,
-    previewPages: 32,
-    description: '100% Free Complete Placement Roadmap for Top Pharma MNCs (Ad supported)',
+    previewPages: 41,
+    description: '15-Chapter Complete CRO Ecosystem Manual: Clinical Trials, CRA, CDM, QA, GCP & 30-Day Onboarding Checklist (100% Free)',
   },
 ];
 
@@ -636,17 +606,17 @@ export async function deleteNotification(id: string): Promise<boolean> {
 
 export function getStoredPdfs(): AdminPdf[] {
   const store = getMemoryStore();
-  return store.pdfs.filter((p) => !store.deletedPdfIds.has(p.id));
+  return store.pdfs.filter((p) => !store.deletedPdfIds.has(p.id) && p.id !== 'pdf-2' && p.id !== 'pdf-3');
 }
 
 export async function getStoredPdfsAsync(): Promise<AdminPdf[]> {
   const store = getMemoryStore();
   const cloud = await fetchCloudStore();
   if (cloud && Array.isArray(cloud.pdfs)) {
-    store.pdfs = cloud.pdfs.filter((p) => !store.deletedPdfIds.has(p.id));
+    store.pdfs = cloud.pdfs.filter((p) => !store.deletedPdfIds.has(p.id) && p.id !== 'pdf-2' && p.id !== 'pdf-3');
     store.lastCloudSync = Date.now();
   }
-  return store.pdfs.filter((p) => !store.deletedPdfIds.has(p.id));
+  return store.pdfs.filter((p) => !store.deletedPdfIds.has(p.id) && p.id !== 'pdf-2' && p.id !== 'pdf-3');
 }
 
 export async function savePdf(

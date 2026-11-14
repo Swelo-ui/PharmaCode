@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/theme.dart';
 import '../../features/auth/domain/auth_state.dart';
 import '../../features/auth/presentation/auth_controller.dart';
+import '../../services/auth_service.dart';
 import '../main_navigation_screen.dart';
 import 'login_screen.dart';
 
@@ -44,6 +46,10 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     });
 
     try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt('user_semester', _selectedSemester);
+      await AuthService().setUserSemester(_selectedSemester);
+
       final success = await ref.read(authControllerProvider.notifier).signUpWithEmail(
         name: _nameCtrl.text,
         email: _emailCtrl.text,
@@ -52,6 +58,11 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       );
 
       if (success && mounted) {
+        await prefs.setInt('user_semester', _selectedSemester);
+        await AuthService().setUserSemester(_selectedSemester);
+        await ref.read(authControllerProvider.notifier).updateProfile(semester: _selectedSemester);
+
+        if (!mounted) return;
         final user = ref.read(currentUserProvider);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -94,8 +105,14 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     });
 
     try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt('user_semester', _selectedSemester);
+      await AuthService().setUserSemester(_selectedSemester);
+
       final success = await ref.read(authControllerProvider.notifier).signInWithGoogle();
       if (success && mounted) {
+        await prefs.setInt('user_semester', _selectedSemester);
+        await AuthService().setUserSemester(_selectedSemester);
         await ref.read(authControllerProvider.notifier).updateProfile(semester: _selectedSemester);
         if (!mounted) return;
         final user = ref.read(currentUserProvider);
@@ -310,7 +327,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     controller: _nameCtrl,
                     keyboardType: TextInputType.name,
                     decoration: const InputDecoration(
-                      hintText: 'e.g. Rahul Sharma',
+                      hintText: 'e.g. Himanshu Sharma',
                       prefixIcon: Icon(Icons.person_outline_rounded, color: AppTheme.textMuted, size: 20),
                     ),
                     validator: (value) {
@@ -361,8 +378,15 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                             ),
                           );
                         }),
-                        onChanged: (val) {
-                          if (val != null) setState(() => _selectedSemester = val);
+                        onChanged: (val) async {
+                          if (val != null) {
+                            setState(() => _selectedSemester = val);
+                            try {
+                              final prefs = await SharedPreferences.getInstance();
+                              await prefs.setInt('user_semester', val);
+                              await AuthService().setUserSemester(val);
+                            } catch (_) {}
+                          }
                         },
                       ),
                     ),
@@ -380,7 +404,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     controller: _emailCtrl,
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
-                      hintText: 'e.g. rahul.sharma@gmail.com',
+                      hintText: 'e.g. himanshu.sharma@gmail.com',
                       prefixIcon: Icon(Icons.email_outlined, color: AppTheme.textMuted, size: 20),
                     ),
                     validator: (value) {

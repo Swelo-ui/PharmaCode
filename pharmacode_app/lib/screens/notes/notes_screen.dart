@@ -11,6 +11,7 @@ import '../../models/syllabus_models.dart';
 import '../../services/syllabus_service.dart';
 import '../../services/pdf_service.dart';
 import '../syllabus/subject_detail_screen.dart';
+import '../blogs/guide_detail_screen.dart';
 import 'secure_pdf_reader_screen.dart';
 
 class NotesScreen extends StatefulWidget {
@@ -340,7 +341,22 @@ class _NotesScreenState extends State<NotesScreen> {
               child: InkWell(
                 borderRadius: BorderRadius.circular(16),
                 onTap: () {
-                  if (pdf.isPremium) {
+                  if (pdf.playProductId == PlayProducts.guidePvInterview || pdf.id == 'pdf-pv-guide') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => GuideDetailScreen(guideType: 'pv', pdfItem: pdf)),
+                    );
+                  } else if (pdf.playProductId == PlayProducts.guideRaDossier || pdf.id == 'pdf-ra-guide') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => GuideDetailScreen(guideType: 'ra', pdfItem: pdf)),
+                    );
+                  } else if (pdf.id == 'pdf-career-free' || pdf.id == 'pdf-cro-manual') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => GuideDetailScreen(guideType: 'cro', pdfItem: pdf)),
+                    );
+                  } else if (pdf.isPremium) {
                     if (isUnlocked) {
                       Navigator.push(
                         context,
@@ -352,11 +368,15 @@ class _NotesScreenState extends State<NotesScreen> {
                       GuidePurchaseSheet.show(context, pdf);
                     }
                   } else {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => SecurePdfReaderScreen(pdfItem: pdf),
-                      ),
+                    AdService.instance.showInterstitialAd(
+                      onDismissed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => SecurePdfReaderScreen(pdfItem: pdf),
+                          ),
+                        );
+                      },
                     );
                   }
                 },
@@ -384,18 +404,22 @@ class _NotesScreenState extends State<NotesScreen> {
                             ),
                           ),
                           const SizedBox(width: 8),
-                          Text(
-                            'Sem ${pdf.semester} · ${pdf.unit}',
-                            style: GoogleFonts.dmSans(
-                              color: AppTheme.textMuted,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
+                          Expanded(
+                            child: Text(
+                              'Sem ${pdf.semester} · ${pdf.unit}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.dmSans(
+                                color: AppTheme.textMuted,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
-                          const Spacer(),
+                          const SizedBox(width: 8),
                           if (pdf.isPremium)
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
                               decoration: BoxDecoration(
                                 color: isUnlocked ? const Color(0xFFECFDF5) : const Color(0xFFFEF3C7),
                                 borderRadius: BorderRadius.circular(6),
@@ -416,7 +440,7 @@ class _NotesScreenState extends State<NotesScreen> {
                                     isUnlocked ? 'UNLOCKED' : '₹${pdf.priceRupees}',
                                     style: TextStyle(
                                       fontFamily: 'Nunito',
-                                      fontSize: 10,
+                                      fontSize: 10.5,
                                       fontWeight: FontWeight.w800,
                                       color: isUnlocked ? const Color(0xFF059669) : const Color(0xFFD97706),
                                     ),
@@ -426,18 +450,26 @@ class _NotesScreenState extends State<NotesScreen> {
                             )
                           else
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
                               decoration: BoxDecoration(
                                 color: const Color(0xFFECFDF5),
                                 borderRadius: BorderRadius.circular(6),
+                                border: Border.all(color: const Color(0xFFA7F3D0)),
                               ),
-                              child: Text(
-                                'FREE KIT',
-                                style: GoogleFonts.dmSans(
-                                  color: const Color(0xFF059669),
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 10,
-                                ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(Icons.stars_rounded, size: 12, color: Color(0xFF059669)),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    '100% FREE',
+                                    style: GoogleFonts.dmSans(
+                                      color: const Color(0xFF059669),
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 10,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                         ],
@@ -447,9 +479,9 @@ class _NotesScreenState extends State<NotesScreen> {
                         pdf.title,
                         style: GoogleFonts.dmSans(
                           color: AppTheme.textDark,
-                          fontSize: 14,
+                          fontSize: 14.5,
                           fontWeight: FontWeight.w800,
-                          height: 1.3,
+                          height: 1.35,
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -459,20 +491,20 @@ class _NotesScreenState extends State<NotesScreen> {
                             '${pdf.pages} Pages · ${pdf.fileSize}',
                             style: GoogleFonts.dmSans(
                               color: AppTheme.textMuted,
-                              fontSize: 11,
+                              fontSize: 11.5,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
                           const Spacer(),
                           Text(
                             pdf.isPremium
-                                ? (isUnlocked ? 'Read Now →' : 'Unlock Guide →')
-                                : 'Read in App →',
+                                ? (isUnlocked ? 'Read Full Guide →' : 'Unlock Guide →')
+                                : 'Read Full Manual →',
                             style: GoogleFonts.dmSans(
                               color: pdf.isPremium && !isUnlocked
                                   ? const Color(0xFFD97706)
-                                  : const Color(0xFF1E3A8A),
-                              fontSize: 11.5,
+                                  : const Color(0xFF059669),
+                              fontSize: 12,
                               fontWeight: FontWeight.w800,
                             ),
                           ),
@@ -713,7 +745,7 @@ class _NotesScreenState extends State<NotesScreen> {
               _buildPreBookBanner(),
               const SizedBox(height: 14),
 
-              // 2. Verified Study Guides & Kits (Classplus-style in-app reader & VIP guides)
+              // 2. Verified Study Guides & Kits (In-app reader & VIP guides)
               _buildFeaturedStudyGuides(),
 
               // 3. Notes Section Header with Count

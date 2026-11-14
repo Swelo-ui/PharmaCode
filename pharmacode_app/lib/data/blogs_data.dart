@@ -214,7 +214,7 @@ const List<Blog> blogsData = [
   Blog(
     id: 'pharmacovigilance-interview-preparation-kit',
     tag: 'PV Interview Kit',
-    title: 'Pharmacovigilance (PV) — Complete Guide & Interview Preparation Kit (44 Pages)',
+    title: 'Pharmacovigilance (PV) — Complete Guide & Interview Preparation Kit',
     date: 'Aug 2026',
     colorHex: '#DC2626',
     bgHex: '#FEF2F2',
@@ -222,8 +222,8 @@ const List<Blog> blogsData = [
     isNew: true,
     category: 'KIT',
     actionUrl: 'https://pharmacode.vercel.app/blog/pharmacovigilance-interview-preparation-kit/',
-    actionLabel: 'Download 44-Page Kit PDF',
-    description: 'The definitive 44-page PV interview handbook for freshers & professionals. Covers 15 structured chapters: ICSR case processing, MedDRA coding, WHO-UMC causality, Argus Safety, and 100+ solved interview questions.',
+    actionLabel: 'Open Full PV Guide',
+    description: 'The definitive PV interview handbook for freshers & professionals. Covers 15 structured chapters: ICSR case processing, MedDRA coding, WHO-UMC causality, Argus Safety, and 100+ solved interview questions.',
     content: '''
 SECTION: 15-Chapter Curriculum Overview
 Chapter 01: PV Fundamentals, Terminology & History (Thalidomide Tragedy & Evolution)
@@ -270,7 +270,7 @@ Answer: 1) Death, 2) Life-threatening condition, 3) In-patient hospitalization o
     isNew: true,
     category: 'KIT',
     actionUrl: 'https://pharmacode.vercel.app/blog/regulatory-affairs-complete-guide/',
-    actionLabel: 'View Full Guide on Website',
+    actionLabel: 'Open Full RA Guide',
     description: 'A comprehensive handbook for B.Pharm and M.Pharm students covering eCTD Modules 1-5, DMF filings, IND/NDA pathways, USFDA, EMA, CDSCO regulations, and freshers interview questions.',
     content: '''
 SECTION: Overview & Industry Importance

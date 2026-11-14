@@ -116,10 +116,16 @@ class _GuidePurchaseSheetState extends State<GuidePurchaseSheet> {
         right: 20,
         bottom: MediaQuery.of(context).viewInsets.bottom + 24,
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.88,
+        ),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
           // Drag handle
           Center(
             child: Container(
@@ -344,8 +350,9 @@ class _GuidePurchaseSheetState extends State<GuidePurchaseSheet> {
           ),
 
           const SizedBox(height: 16),
-          _buildFeatureRow(Icons.offline_pin_rounded, 'Encrypted In-App Offline Reading', 'Read anywhere inside the app without high data usage.'),
-          _buildFeatureRow(Icons.shield_rounded, 'Classplus-Grade Anti-Piracy Protection', 'Screenshot & screen recording completely blocked to protect verified notes.'),
+          _buildCurriculumBreakdown(),
+          _buildFeatureRow(Icons.offline_pin_rounded, 'Zero-Data In-App Offline Reading', 'Save securely in private storage and read anywhere with zero mobile data.'),
+          _buildFeatureRow(Icons.workspace_premium_rounded, 'Verified Industry Curriculum', 'Curated by experienced pharma professionals matching MNC interview standards.'),
           _buildFeatureRow(Icons.devices_rounded, 'Permanent Account Binding', 'Bound to your Google account — stays active after app reinstalls.'),
 
           const SizedBox(height: 16),
@@ -449,42 +456,136 @@ class _GuidePurchaseSheetState extends State<GuidePurchaseSheet> {
 
           const SizedBox(height: 10),
 
-          // Restore Purchases & Dev Test Simulation
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextButton(
-                onPressed: () => _billing.restorePurchases(),
-                child: const Text(
-                  'Restore Purchases',
-                  style: TextStyle(
-                    fontFamily: 'Nunito',
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF64748B),
-                  ),
+          // Restore Purchases (Official Google Play Requirement)
+          Center(
+            child: TextButton(
+              onPressed: () => _billing.restorePurchases(),
+              child: const Text(
+                'Restore Purchases',
+                style: TextStyle(
+                  fontFamily: 'Nunito',
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF64748B),
                 ),
               ),
-              const Text('•', style: TextStyle(color: Color(0xFFCBD5E1))),
-              TextButton(
-                onPressed: () {
-                  // Direct test simulation for debug/demo
-                  _billing.simulateUnlockForTesting(productId);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Test mode: Guide unlocked! Tap "Open Secure Reader".')),
-                  );
-                },
-                child: const Text(
-                  'Test Unlock',
-                  style: TextStyle(
+            ),
+          ),
+        ],
+      ),
+    ),
+  ),
+);
+  }
+
+  Widget _buildCurriculumBreakdown() {
+    final isPv = widget.pdfItem.id == 'pdf-pv-guide' || widget.pdfItem.playProductId == PlayProducts.guidePvInterview;
+    final isRa = widget.pdfItem.id == 'pdf-ra-guide' || widget.pdfItem.playProductId == PlayProducts.guideRaDossier;
+
+    if (!isPv && !isRa) return const SizedBox.shrink();
+
+    final title = isPv
+        ? '15 Core Modules & Topics Included:'
+        : '20 Structured Dossier Sections Included:';
+
+    final items = isPv
+        ? [
+            'PV Fundamentals, Key Terminology & Industry Scope',
+            'Global (WHO, FDA, EMA) & Indian CDSCO Regulations',
+            'ICSR Complete Lifecycle & Case Processing Workflow',
+            'The 4 Minimum Mandatory Reportability Criteria',
+            'MedDRA Hierarchy Coding & WHODrug Concepts',
+            'Causality Assessment: WHO-UMC & Naranjo Algorithms',
+            'Signal Detection, Management & Validation Flowcharts',
+            'Periodic Aggregate Reports: PSUR, PBRER & DSUR',
+            'Risk Management Plans (RMP) & REMS Strategies',
+            'Good Pharmacovigilance Practices (GVP) Modules',
+            'Industry Safety Databases (Argus Safety & ArisGlobal)',
+            'Top Behavioral & HR Interview Questions',
+            'Model Technical Interview Q&A with In-Depth Answers',
+            'Practical Scenario-Based Case Studies & Narratives',
+            'ATS-Optimized Resume Tips & Quick Revision Cheat Sheet',
+          ]
+        : [
+            'What is Regulatory Affairs & Industry Scope',
+            'Day-to-Day Role of the RA Professional',
+            'Global Regulatory Agencies (USFDA, EMA, MHRA, PMDA)',
+            'India Spotlight: CDSCO Structure, DCGI & 2026 Status',
+            'Drug Master File (DMF Types I-V & Open/Closed Parts)',
+            'Common Technical Document (ICH M4 CTD Triangle)',
+            'CTD Modules 1 to 5 Comprehensive Breakdown',
+            'eCTD Electronic Submissions, XML Backbone & Lifecycle',
+            'US New Drug Application (NDA Review Pathways)',
+            'IND, ANDA (Generic Hatch-Waxman) & BLA (Biologics)',
+            'EU Marketing Authorisation (Centralised, MRP, DCP)',
+            'Side-by-Side Matrix: USFDA vs EMA vs CDSCO',
+            'Lifecycle Variations, Post-Approval Changes & Annual Reports',
+            'RA Salary Growth Ladder & Hiring Companies Map',
+            'Top 10 Real Interview Questions with Model Answers',
+            'Tricky Confusions: CTD vs eCTD, NDA vs MAA Solved',
+            'Comprehensive Regulatory Acronym & Abbreviation Glossary',
+          ];
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(isPv ? Icons.biotech_rounded : Icons.account_tree_rounded, size: 16, color: const Color(0xFF1E3A8A)),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(
                     fontFamily: 'Nunito',
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF94A3B8),
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFF0F172A),
                   ),
                 ),
               ),
             ],
+          ),
+          const SizedBox(height: 10),
+          Container(
+            constraints: const BoxConstraints(maxHeight: 140),
+            child: ListView.separated(
+              shrinkWrap: true,
+              physics: const BouncingScrollPhysics(),
+              itemCount: items.length,
+              separatorBuilder: (ctx, idx) => const SizedBox(height: 4),
+              itemBuilder: (ctx, i) {
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(top: 4, right: 6),
+                      child: Icon(Icons.check_circle_rounded, size: 12, color: Color(0xFF10B981)),
+                    ),
+                    Expanded(
+                      child: Text(
+                        items[i],
+                        style: const TextStyle(
+                          fontFamily: 'Nunito',
+                          fontSize: 11.5,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF334155),
+                          height: 1.3,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
         ],
       ),

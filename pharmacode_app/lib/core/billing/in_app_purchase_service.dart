@@ -368,15 +368,17 @@ class InAppPurchaseService {
     }
   }
 
-  /// Instant developer simulation for testing without Google Play Console wait
+  /// Instant developer simulation for testing without Google Play Console wait (Debug Only)
   Future<void> simulateUnlockForTesting([String? productId]) async {
+    if (!kDebugMode) return;
     final id = productId ?? PlayProducts.vipPreBook;
     await _deliverProduct(id);
     purchaseStatusMessage.value = 'Test Simulation: Product ($id) unlocked! 🎉';
   }
 
-  /// Reset purchases for testing lock/unlock state
+  /// Reset purchases for testing lock/unlock state (Debug Only)
   Future<void> resetPurchasesForTesting() async {
+    if (!kDebugMode) return;
     unlockedNotifier.value = {};
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_prefKeyUnlocked);

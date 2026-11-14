@@ -45,7 +45,10 @@ void main() async {
 
   // Initialize Notification Service (loads saved notifications, read IDs & deleted IDs)
   try {
-    await NotificationService().initialize();
+    await NotificationService().initialize().timeout(
+      const Duration(milliseconds: 1500),
+      onTimeout: () => debugPrint('NotificationService init timed out in main (offline)'),
+    );
   } catch (e) {
     debugPrint('NotificationService initialization error: $e');
   }
@@ -67,7 +70,18 @@ class PharmaCodeApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       themeMode: ThemeMode.light,
+      scrollBehavior: const SmoothScrollBehavior(),
       home: const SplashScreen(),
     );
+  }
+}
+
+/// Global smooth bouncing scroll behavior for high refresh rate displays (90Hz / 120Hz)
+class SmoothScrollBehavior extends MaterialScrollBehavior {
+  const SmoothScrollBehavior();
+
+  @override
+  ScrollPhysics getScrollPhysics(BuildContext context) {
+    return const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
   }
 }

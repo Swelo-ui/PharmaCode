@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../core/notification_service.dart';
+import '../core/services/offline_storage_service.dart';
 import '../core/animations.dart';
 import '../core/in_app_browser.dart';
 import '../core/theme.dart';
@@ -18,6 +20,7 @@ import 'profile/profile_screen.dart';
 import 'home/home_screen.dart';
 import 'syllabus/syllabus_screen.dart';
 import 'notes/notes_screen.dart';
+import 'notes/offline_downloads_screen.dart';
 import 'blogs/blogs_screen.dart';
 import 'bookmarks/bookmarks_screen.dart';
 import 'notifications/notifications_screen.dart';
@@ -48,9 +51,17 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final savedSem = prefs.getInt('user_semester');
+        if (savedSem != null && savedSem >= 1 && savedSem <= 8 && mounted) {
+          setState(() => _targetSemester = savedSem);
+        }
+      } catch (_) {}
       _checkAndLaunchGuidedTour();
       NotificationService().syncRemoteNotifications();
+      OfflineStorageService.instance.init();
     });
   }
 
@@ -356,19 +367,54 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
           onPressed: () => showSearch(context: context, delegate: GlobalSearchDelegate()),
           tooltip: 'Search',
         ),
-        IconButton(
-          constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-          padding: const EdgeInsets.all(4),
-          icon: Icon(
-            _currentIndex == 2 ? Icons.file_download_rounded : Icons.file_download_outlined,
-            size: 20,
-            color: _currentIndex == 2 ? AppTheme.brandBlue : AppTheme.primaryNavy,
-          ),
-          onPressed: () {
-            AppHaptics.selectionClick();
-            setState(() => _currentIndex = 2);
+        ValueListenableBuilder<int>(
+          valueListenable: OfflineStorageService.instance.offlineCountNotifier,
+          builder: (context, offlineCount, _) {
+            return Stack(
+              alignment: Alignment.center,
+              children: [
+                IconButton(
+                  constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                  padding: const EdgeInsets.all(4),
+                  icon: Icon(
+                    offlineCount > 0 ? Icons.download_done_rounded : Icons.file_download_outlined,
+                    size: 20,
+                    color: offlineCount > 0 ? const Color(0xFF059669) : AppTheme.primaryNavy,
+                  ),
+                  onPressed: () {
+                    AppHaptics.selectionClick();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const OfflineDownloadsScreen()),
+                    );
+                  },
+                  tooltip: 'Offline Downloads',
+                ),
+                if (offlineCount > 0)
+                  Positioned(
+                    right: 4,
+                    top: 4,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF059669),
+                        shape: BoxShape.circle,
+                      ),
+                      constraints: const BoxConstraints(minWidth: 14, minHeight: 14),
+                      child: Text(
+                        '$offlineCount',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 8.5,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
+            );
           },
-          tooltip: 'Free Notes & Downloads',
         ),
         Stack(
           alignment: Alignment.center,

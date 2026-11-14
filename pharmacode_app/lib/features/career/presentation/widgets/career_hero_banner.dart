@@ -5,6 +5,7 @@ import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/theme.dart';
 import '../../../../models/blog_model.dart';
 import '../../../../screens/blogs/blog_detail_screen.dart';
+import '../../../../screens/blogs/guide_detail_screen.dart';
 
 class CareerHeroBanner extends StatelessWidget {
   final List<Blog> blogs;
@@ -12,6 +13,19 @@ class CareerHeroBanner extends StatelessWidget {
   const CareerHeroBanner({super.key, required this.blogs});
 
   void _openGuide(BuildContext context, String blogId) {
+    final lower = blogId.toLowerCase();
+    if (lower.contains('pv') || lower.contains('pharmacovigilance')) {
+      Navigator.push(context, MaterialPageRoute(builder: (_) => const GuideDetailScreen(guideType: 'pv')));
+      return;
+    }
+    if (lower.contains('ra') || lower.contains('regulatory')) {
+      Navigator.push(context, MaterialPageRoute(builder: (_) => const GuideDetailScreen(guideType: 'ra')));
+      return;
+    }
+    if (lower.contains('cro')) {
+      Navigator.push(context, MaterialPageRoute(builder: (_) => const GuideDetailScreen(guideType: 'cro')));
+      return;
+    }
     if (blogs.isEmpty) return;
     final blog = blogs.firstWhere((b) => b.id == blogId, orElse: () => blogs.first);
     Navigator.push(
@@ -144,7 +158,7 @@ class CareerHeroBanner extends StatelessWidget {
                       const Icon(Icons.shield_outlined, color: AppTheme.primaryNavy, size: 15),
                       const SizedBox(width: AppSpacing.xs),
                       Text(
-                        'PV Kit (44 Pages)',
+                        'PV Kit',
                         style: GoogleFonts.dmSans(
                           color: AppTheme.primaryNavy,
                           fontWeight: FontWeight.w900,
@@ -156,7 +170,7 @@ class CareerHeroBanner extends StatelessWidget {
                 ),
               ),
               BouncingCard(
-                onTap: () => _openGuide(context, 'regulatory-affairs-guide'),
+                onTap: () => _openGuide(context, 'regulatory-affairs-complete-guide'),
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
                   decoration: BoxDecoration(

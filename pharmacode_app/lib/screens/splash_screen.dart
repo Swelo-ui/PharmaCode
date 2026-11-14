@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,6 +10,7 @@ import '../services/syllabus_service.dart';
 import '../services/pdf_service.dart';
 import '../core/notification_service.dart';
 import 'main_navigation_screen.dart';
+import 'notes/offline_downloads_screen.dart';
 import 'onboarding/onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -55,17 +57,37 @@ class _SplashScreenState extends State<SplashScreen>
     _initApp();
   }
 
+  Future<bool> _checkInternetConnection() async {
+    try {
+      final res = await InternetAddress.lookup('dns.google')
+          .timeout(const Duration(milliseconds: 1200));
+      return res.isNotEmpty && res[0].rawAddress.isNotEmpty;
+    } catch (_) {
+      try {
+        final res2 = await InternetAddress.lookup('google.com')
+            .timeout(const Duration(milliseconds: 1000));
+        return res2.isNotEmpty && res2[0].rawAddress.isNotEmpty;
+      } catch (_) {
+        return false;
+      }
+    }
+  }
+
   Future<void> _initApp() async {
     final sw = Stopwatch()..start();
 
-    // Fast-path initialization: load syllabus and core services concurrently
+    bool isOnline = true;
+    // Fast-path initialization: load syllabus, core services, and test internet connection concurrently
     try {
-      await Future.wait([
+      final results = await Future.wait([
         SyllabusService().initialize(),
         _initCoreServices(),
+        _checkInternetConnection(),
       ]);
+      isOnline = results[2] as bool;
     } catch (e) {
       debugPrint('Startup initialization note: $e');
+      isOnline = false;
     }
 
     final elapsed = sw.elapsedMilliseconds;
@@ -73,6 +95,21 @@ class _SplashScreenState extends State<SplashScreen>
       await _safeDelay(1400 - elapsed);
     }
     if (!mounted) return;
+
+    // 🚀 OFFLINE RESILIENCE: If launched without internet, open directly into Offline Downloads Screen
+    if (!isOnline) {
+      debugPrint('No internet detected at launch -> Opening Offline Downloads directly.');
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          pageBuilder: (context, anim, _) => const OfflineDownloadsScreen(isOfflineLaunch: true),
+          transitionsBuilder: (context, anim, _, child) =>
+              FadeTransition(opacity: anim, child: child),
+          transitionDuration: const Duration(milliseconds: 400),
+        ),
+      );
+      return;
+    }
+
     final onboardingCompleted = await GuidedTourService().isOnboardingCompleted();
 
     if (mounted) {

@@ -440,7 +440,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     controller: _emailCtrl,
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
-                      hintText: 'e.g. rahul.sharma@gmail.com',
+                      hintText: 'e.g. himanshu.sharma@gmail.com',
                       prefixIcon: Icon(Icons.email_outlined, color: AppTheme.textMuted, size: 20),
                     ),
                     validator: (value) {

@@ -1,6 +1,8 @@
 package com.pharmacode.bpharm
 
+import android.os.Build
 import android.os.Bundle
+import android.view.Display
 import android.view.WindowManager
 import androidx.activity.enableEdgeToEdge
 import io.flutter.embedding.android.FlutterFragmentActivity
@@ -14,6 +16,45 @@ class MainActivity : FlutterFragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        setOptimalDisplayMode()
+    }
+
+    override fun onPostResume() {
+        super.onPostResume()
+        setOptimalDisplayMode()
+    }
+
+    /**
+     * Unlocks the device's peak display refresh rate (90Hz / 120Hz / 144Hz)
+     * preventing Android OS from throttling Flutter's surface to 60fps.
+     */
+    private fun setOptimalDisplayMode() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            try {
+                val display: Display? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    display
+                } else {
+                    @Suppress("DEPRECATION")
+                    windowManager.defaultDisplay
+                }
+                val modes = display?.supportedModes ?: return
+                var maxMode: Display.Mode? = null
+                var maxRefreshRate = 60.0f
+                for (mode in modes) {
+                    if (mode.refreshRate > maxRefreshRate) {
+                        maxRefreshRate = mode.refreshRate
+                        maxMode = mode
+                    }
+                }
+                if (maxMode != null) {
+                    val params = window.attributes
+                    params.preferredDisplayModeId = maxMode.modeId
+                    window.attributes = params
+                }
+            } catch (_: Exception) {
+                // Graceful fallback to default display mode
+            }
+        }
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {

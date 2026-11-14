@@ -1,21 +1,18 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../core/ads/ad_service.dart';
 import '../../core/animations.dart';
 import '../../core/billing/in_app_purchase_service.dart';
+import '../../core/security/secure_doc_resolver.dart';
 import '../../core/theme.dart';
-import '../../core/widgets/guide_purchase_sheet.dart';
 import '../../core/widgets/prebook_vip_sheet.dart';
 import '../../data/ticker_data.dart';
 import '../../data/faqs_data.dart';
-import '../../data/blogs_data.dart';
 import '../../services/pdf_service.dart';
 import '../../services/syllabus_service.dart';
 import '../syllabus/subject_detail_screen.dart';
-import '../blogs/blog_detail_screen.dart';
 import '../ai/pharma_helper_screen.dart';
-import '../notes/secure_pdf_reader_screen.dart';
+import '../blogs/guide_detail_screen.dart';
 import '../../widgets/pharma_mascot_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -104,20 +101,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           _buildSectionHeader(context, 'Key B.Pharm Subjects', Icons.star_rounded, AppTheme.brandAmber),
           _buildFeaturedSubjects(context, svc),
 
-          // ─── 5.5 PREMIUM GUIDES & CAREER KITS ──────────────────────────────
+          // ─── 5.5 CAREER KITS & PREMIUM GUIDES ─────────────────────────────
           _buildSectionHeader(
             context,
-            'Premium Guides & Career Kits',
+            'Career Kits & Premium Guides',
             Icons.workspace_premium_rounded,
             const Color(0xFFD97706),
             onMore: widget.onNavigateToBlogs,
           ),
           _buildPremiumGuidesStrip(context),
-
-          // ─── 6. LATEST GUIDES ─────────────────────────────────────────────
-          _buildSectionHeader(context, 'Career Guides & Kits', Icons.article_rounded, AppTheme.brandPurple,
-              onMore: widget.onNavigateToBlogs),
-          _buildBlogStrip(context),
 
           // ─── 7. WHY PHARMACODE ────────────────────────────────────────────
           _buildWhySection(context),
@@ -930,14 +922,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     semester: 8,
     unit: 'Complete Interview Kit',
     category: 'Notes',
-    url: 'https://drive.google.com/uc?export=download&id=1wQPW4zOOwC-v3LRi1OIu0eDwzK2h1Nmy',
-    fileSize: '4.5 MB',
+    url: SecureDocResolver.resolveSecureUrl('pdf-pv-guide'),
+    fileSize: '11.6 MB',
     pages: 44,
     downloadsCount: 340,
     isPremium: true,
     playProductId: PlayProducts.guidePvInterview,
     priceRupees: 49,
-    description: '44-Page PV Interview Questions & Cases (Included in ₹199 VIP Pass)',
+    description: 'PV Interview Questions, Argus & MedDRA Case Studies (Included in ₹199 VIP Pass)',
   );
 
   static final AdminPdfItem _defaultRaGuide = AdminPdfItem(
@@ -948,9 +940,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     semester: 7,
     unit: 'Modules 1-5 Dossier Kit',
     category: 'Notes',
-    url: 'https://drive.google.com/uc?export=download&id=1u_RkXFNVxJwTLNqIQtmcS2O3UvRUb300',
-    fileSize: '5.2 MB',
-    pages: 58,
+    url: SecureDocResolver.resolveSecureUrl('pdf-ra-guide'),
+    fileSize: '1.2 MB',
+    pages: 26,
     downloadsCount: 280,
     isPremium: true,
     playProductId: PlayProducts.guideRaDossier,
@@ -960,19 +952,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   static final AdminPdfItem _defaultCareerFreeGuide = AdminPdfItem(
     id: 'pdf-career-free',
-    title: 'B.Pharm High-Growth Career Roadmap & Industry Placement Guide',
-    subjectCode: 'CAREER',
-    subjectName: 'Career & Industry Placement',
+    title: 'CRO Operations Manual – PharmaCode (2026 Edition)',
+    subjectCode: 'CRO-OPS',
+    subjectName: 'Clinical Research & CRO Operations',
     semester: 8,
-    unit: 'Placement Roadmap',
-    category: 'Revision Sheet',
-    url: 'https://drive.google.com/uc?export=download&id=1xvUpn2e0zPEsm-oIkEelqqehupUhTPGK',
-    fileSize: '3.8 MB',
-    pages: 32,
+    unit: '15 Chapters & Onboarding Kit',
+    category: 'Career Guide',
+    url: SecureDocResolver.resolveSecureUrl('pdf-career-free'),
+    fileSize: '4.8 MB',
+    pages: 41,
     downloadsCount: 520,
     isPremium: false,
     priceRupees: 0,
-    description: '100% Free Complete Placement Roadmap for Top Pharma MNCs (Ad supported)',
+    description: '15-Chapter Complete CRO Ecosystem Manual: Clinical Trials, CRA, CDM, QA, GCP & 30-Day Onboarding Checklist (100% Free)',
   );
 
   Widget _buildPremiumGuidesStrip(BuildContext context) {
@@ -1004,70 +996,83 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         final items = [
           // 1. PV Guide
           _HomeGuideCardData(
-            tag: isPvUnlocked ? 'UNLOCKED' : '💎 ₹49 ONLY',
+            tag: isPvUnlocked ? 'UNLOCKED' : 'INTERVIEW KIT · ₹49',
+            tagIcon: isPvUnlocked ? Icons.check_circle_rounded : Icons.verified_rounded,
             tagBg: isPvUnlocked ? const Color(0xFFECFDF5) : const Color(0xFFFEF2F2),
             tagColor: isPvUnlocked ? const Color(0xFF059669) : const Color(0xFFDC2626),
             title: 'Pharmacovigilance (PV) Master Interview Guide',
-            subtitle: '44 Pages · Argus, MedDRA & Solved ICSR Case Studies',
-            buttonLabel: isPvUnlocked ? 'Read Now →' : 'Unlock for ₹49',
+            subtitle: 'ICSR Cases, Argus Safety & WHO-UMC Causality',
+            chipLabel: '15 Chapters · MedDRA & Argus Safety',
+            chipIcon: Icons.medical_services_rounded,
+            sampleBadge: '👀 8 Sample Previews Included',
+            buttonLabel: isPvUnlocked ? 'Read Kit' : 'Explore & Unlock · ₹49',
             isUnlocked: isPvUnlocked,
             onTap: () {
-              if (isPvUnlocked) {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => SecurePdfReaderScreen(pdfItem: pvPdf)));
-              } else {
-                GuidePurchaseSheet.show(context, pvPdf);
-              }
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => GuideDetailScreen(guideType: 'pv', pdfItem: pvPdf)),
+              );
             },
           ),
           // 2. RA Guide
           _HomeGuideCardData(
-            tag: isRaUnlocked ? 'UNLOCKED' : '💎 ₹99 ONLY',
+            tag: isRaUnlocked ? 'UNLOCKED' : 'DOSSIER GUIDE · ₹99',
+            tagIcon: isRaUnlocked ? Icons.check_circle_rounded : Icons.description_rounded,
             tagBg: isRaUnlocked ? const Color(0xFFECFDF5) : const Color(0xFFEFF6FF),
             tagColor: isRaUnlocked ? const Color(0xFF059669) : const Color(0xFF2563EB),
             title: 'Regulatory Affairs (RA) eCTD Dossier & Filing Guide',
-            subtitle: '58 Pages · Modules 1-5, USFDA 21 CFR & ANDA Filing',
-            buttonLabel: isRaUnlocked ? 'Read Now →' : 'Unlock for ₹99',
+            subtitle: 'Modules 1-5, USFDA 21 CFR, DMF & ANDA',
+            chipLabel: '20 Sections · CTD Triangle & CDSCO',
+            chipIcon: Icons.policy_rounded,
+            sampleBadge: '👀 6 Sample Previews Included',
+            buttonLabel: isRaUnlocked ? 'Read Guide' : 'Explore & Unlock · ₹99',
             isUnlocked: isRaUnlocked,
             onTap: () {
-              if (isRaUnlocked) {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => SecurePdfReaderScreen(pdfItem: raPdf)));
-              } else {
-                GuidePurchaseSheet.show(context, raPdf);
-              }
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => GuideDetailScreen(guideType: 'ra', pdfItem: raPdf)),
+              );
             },
           ),
-          // 3. 100% Free Placement Roadmap (Ad Supported)
+          // 3. 100% Free CRO Operations Manual (Ad Supported)
           _HomeGuideCardData(
-            tag: '🆓 100% FREE',
+            tag: '100% FREE GUIDE',
+            tagIcon: Icons.biotech_rounded,
             tagBg: const Color(0xFFECFDF5),
             tagColor: const Color(0xFF059669),
-            title: 'B.Pharm Placement Roadmap & Career Guide',
-            subtitle: '32 Pages · Step-by-Step Pharma MNC Hiring Guide',
-            buttonLabel: 'Free Read (Ad) →',
+            title: 'CRO Operations Manual (2026 Edition)',
+            subtitle: 'Complete Clinical Research & Trial Ops',
+            chipLabel: '15 Chapters · CRA, CDM, QA & GCP Manual',
+            chipIcon: Icons.verified_rounded,
+            sampleBadge: '👀 5 Sample Previews Included',
+            buttonLabel: 'Explore & Read Free',
             isUnlocked: true,
             onTap: () {
-              AdService.instance.showInterstitialAd(
-                onDismissed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => SecurePdfReaderScreen(pdfItem: careerPdf)));
-                },
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => GuideDetailScreen(guideType: 'cro', pdfItem: careerPdf)),
               );
             },
           ),
           // 4. All-Access VIP Pass Banner
           _HomeGuideCardData(
-            tag: isVip ? 'VIP ACTIVE' : '⭐ ALL ACCESS',
+            tag: isVip ? 'VIP ACTIVE' : 'ALL-ACCESS PASS · ₹199',
+            tagIcon: isVip ? Icons.check_circle_rounded : Icons.workspace_premium_rounded,
             tagBg: isVip ? const Color(0xFFECFDF5) : const Color(0xFFFEF3C7),
             tagColor: isVip ? const Color(0xFF059669) : const Color(0xFFD97706),
             title: 'PharmaCode VIP Study Pass',
-            subtitle: 'Unlocks BOTH PV (₹49) + RA (₹99) + All Future Notes Free!',
-            buttonLabel: isVip ? 'VIP Unlocked' : 'Get Pass · ₹199',
+            subtitle: 'Unlocks BOTH PV (₹49) + RA (₹99) + All Notes Free!',
+            chipLabel: 'Lifetime Access · Offline Downloads',
+            chipIcon: Icons.stars_rounded,
+            sampleBadge: '★ Unlocks All Present & Future Guides',
+            buttonLabel: isVip ? 'VIP Active' : 'Get Pass · ₹199',
             isUnlocked: isVip,
             onTap: () => showPreBookVipSheet(context),
           ),
         ];
 
         return SizedBox(
-          height: 185,
+          height: 220,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -1076,7 +1081,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             itemBuilder: (context, i) {
               final item = items[i];
               return Container(
-                width: 250,
+                width: 265,
                 margin: const EdgeInsets.only(right: 12),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -1100,7 +1105,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     borderRadius: BorderRadius.circular(16),
                     onTap: item.onTap,
                     child: Padding(
-                      padding: const EdgeInsets.all(15),
+                      padding: const EdgeInsets.all(14),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -1113,13 +1118,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   borderRadius: BorderRadius.circular(6),
                                   border: Border.all(color: item.tagColor.withValues(alpha: 0.3)),
                                 ),
-                                child: Text(
-                                  item.tag,
-                                  style: GoogleFonts.dmSans(
-                                    color: item.tagColor,
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: 10,
-                                  ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(item.tagIcon, size: 11.5, color: item.tagColor),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      item.tag,
+                                      style: GoogleFonts.dmSans(
+                                        color: item.tagColor,
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: 9.5,
+                                        letterSpacing: 0.2,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                               const Spacer(),
@@ -1130,7 +1143,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 8),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1146,35 +1159,86 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                     height: 1.25,
                                   ),
                                 ),
-                                const SizedBox(height: 4),
+                                const SizedBox(height: 3),
                                 Text(
                                   item.subtitle,
-                                  maxLines: 2,
+                                  maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: GoogleFonts.dmSans(
                                     color: AppTheme.textMuted,
                                     fontSize: 10.5,
                                     fontWeight: FontWeight.w500,
-                                    height: 1.2,
                                   ),
                                 ),
+                                const SizedBox(height: 5),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2.5),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFF1F5F9),
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(item.chipIcon, size: 11, color: const Color(0xFF475569)),
+                                      const SizedBox(width: 4),
+                                      Flexible(
+                                        child: Text(
+                                          item.chipLabel,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.dmSans(
+                                            color: const Color(0xFF334155),
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 9.5,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                if (item.sampleBadge != null)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 4),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.remove_red_eye_rounded, size: 11, color: item.tagColor),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          item.sampleBadge!,
+                                          style: GoogleFonts.dmSans(
+                                            color: item.tagColor,
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 9.5,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                               ],
                             ),
                           ),
-                          const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Text(
-                                item.buttonLabel,
-                                style: GoogleFonts.dmSans(
-                                  color: item.tagColor,
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 11.5,
+                          const SizedBox(height: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: item.tagColor.withValues(alpha: 0.08),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  item.buttonLabel,
+                                  style: GoogleFonts.dmSans(
+                                    color: item.tagColor,
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 11.5,
+                                  ),
                                 ),
-                              ),
-                              const Spacer(),
-                              Icon(Icons.arrow_forward_rounded, size: 14, color: item.tagColor),
-                            ],
+                                const Spacer(),
+                                Icon(Icons.arrow_forward_rounded, size: 13, color: item.tagColor),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -1186,73 +1250,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
         );
       },
-    );
-  }
-
-  // ─── BLOG STRIP ───────────────────────────────────────────────────────────
-  Widget _buildBlogStrip(BuildContext context) {
-    final blogs = blogsData.take(4).toList();
-    return SizedBox(
-      height: 170,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        physics: const BouncingScrollPhysics(),
-        itemCount: blogs.length,
-        itemBuilder: (context, i) {
-          final blog = blogs[i];
-          final color = AppTheme.parseHex(blog.colorHex);
-          final bg = AppTheme.parseHex(blog.bgHex);
-          return GestureDetector(
-            onTap: () => Navigator.push(context,
-              MaterialPageRoute(builder: (_) => BlogDetailScreen(blog: blog))),
-            child: Container(
-              width: 220,
-              margin: const EdgeInsets.only(right: 12),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppTheme.borderSoft, width: 1.5),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(6),
-                        border: Border.all(color: color.withValues(alpha: 0.3))),
-                      child: Text(blog.tag, style: GoogleFonts.dmSans(
-                        color: color, fontWeight: FontWeight.w900, fontSize: 9)),
-                    ),
-                    const Spacer(),
-                    if (blog.isNew)
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                        decoration: BoxDecoration(color: const Color(0xFFDC2626), borderRadius: BorderRadius.circular(4)),
-                        child: Text('NEW', style: GoogleFonts.dmSans(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 8)),
-                      ),
-                  ]),
-                  const SizedBox(height: 10),
-                  Expanded(
-                    child: Text(blog.title, maxLines: 3, overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.dmSans(
-                        color: AppTheme.textDark, fontWeight: FontWeight.w800, fontSize: 13, height: 1.3)),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(children: [
-                    Text(blog.readTime, style: GoogleFonts.dmSans(
-                      color: AppTheme.textMuted, fontSize: 10, fontWeight: FontWeight.w600)),
-                    const Spacer(),
-                    Icon(Icons.arrow_forward_rounded, size: 14, color: color),
-                  ]),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
     );
   }
 
@@ -1388,20 +1385,28 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
 class _HomeGuideCardData {
   final String tag;
+  final IconData tagIcon;
   final Color tagBg;
   final Color tagColor;
   final String title;
   final String subtitle;
+  final String chipLabel;
+  final IconData chipIcon;
+  final String? sampleBadge;
   final String buttonLabel;
   final bool isUnlocked;
   final VoidCallback onTap;
 
   _HomeGuideCardData({
     required this.tag,
+    required this.tagIcon,
     required this.tagBg,
     required this.tagColor,
     required this.title,
     required this.subtitle,
+    required this.chipLabel,
+    required this.chipIcon,
+    this.sampleBadge,
     required this.buttonLabel,
     required this.isUnlocked,
     required this.onTap,

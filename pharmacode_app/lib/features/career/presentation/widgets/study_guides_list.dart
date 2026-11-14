@@ -5,6 +5,7 @@ import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/theme.dart';
 import '../../../../models/blog_model.dart';
 import '../../../../screens/blogs/blog_detail_screen.dart';
+import '../../../../screens/blogs/guide_detail_screen.dart';
 
 class StudyGuidesList extends StatelessWidget {
   final List<Blog> blogs;
@@ -48,10 +49,27 @@ class StudyGuidesList extends StatelessWidget {
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => BlogDetailScreen(blog: blog)),
-                    );
+                    if (blog.id == 'pharmacovigilance-interview-preparation-kit') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const GuideDetailScreen(guideType: 'pv')),
+                      );
+                    } else if (blog.id == 'regulatory-affairs-complete-guide') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const GuideDetailScreen(guideType: 'ra')),
+                      );
+                    } else if (blog.id == 'cro-operations-manual' || blog.id.contains('cro')) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const GuideDetailScreen(guideType: 'cro')),
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => BlogDetailScreen(blog: blog)),
+                      );
+                    }
                   },
                   borderRadius: BorderRadius.circular(16),
                   child: Padding(

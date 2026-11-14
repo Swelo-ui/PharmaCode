@@ -11,6 +11,7 @@ import '../../core/theme.dart';
 import '../../core/tour/guided_tour_service.dart';
 import '../../core/widgets/ai_settings_sheet.dart';
 import '../../core/widgets/premium_pdf_sheet.dart';
+import '../../features/auth/presentation/auth_controller.dart';
 import '../../services/auth_service.dart';
 import '../../widgets/user_avatar.dart';
 import '../auth/login_screen.dart';
@@ -47,10 +48,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Future<void> _loadProfile() async {
     final user = _auth.currentUser;
     final avatar = await _auth.getUserAvatar();
-    final sem = await _auth.getUserSemester();
+    final prefs = await SharedPreferences.getInstance();
+    final prefSem = prefs.getInt('user_semester');
+    final userEntitySem = ref.read(currentUserProvider)?.semester;
+    final authSem = await _auth.getUserSemester();
+    final sem = (prefSem != null && prefSem >= 1 && prefSem <= 8)
+        ? prefSem
+        : (userEntitySem != null && userEntitySem >= 1 && userEntitySem <= 8)
+            ? userEntitySem
+            : authSem;
     final college = await _auth.getUserCollege();
     final batch = await _auth.getUserBatch();
-    final prefs = await SharedPreferences.getInstance();
 
     if (mounted) {
       setState(() {
@@ -444,6 +452,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   return BouncingCard(
                     onTap: () async {
                       await _auth.setUserSemester(semNum);
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.setInt('user_semester', semNum);
+                      await ref.read(authControllerProvider.notifier).updateProfile(semester: semNum);
                       setState(() => _selectedSemester = semNum);
                       widget.onProfileUpdated?.call();
                       if (ctx.mounted) Navigator.pop(ctx);

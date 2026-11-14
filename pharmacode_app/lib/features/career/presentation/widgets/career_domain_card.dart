@@ -4,6 +4,7 @@ import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/theme.dart';
 import '../../../../models/blog_model.dart';
 import '../../../../screens/blogs/blog_detail_screen.dart';
+import '../../../../screens/blogs/guide_detail_screen.dart';
 
 class CareerDomainCard extends StatelessWidget {
   final CareerDomain domain;
@@ -182,12 +183,29 @@ class CareerDomainCard extends StatelessWidget {
                 child: ElevatedButton.icon(
                   onPressed: () {
                     Navigator.pop(ctx);
-                    if (blogs.isEmpty) return;
-                    final blog = blogs.firstWhere(
-                      (b) => b.id == domain.targetGuideId,
-                      orElse: () => blogs.first,
-                    );
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => BlogDetailScreen(blog: blog)));
+                    if (domain.id == 'pharmacovigilance') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const GuideDetailScreen(guideType: 'pv')),
+                      );
+                    } else if (domain.id == 'regulatory-affairs') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const GuideDetailScreen(guideType: 'ra')),
+                      );
+                    } else if (domain.id == 'clinical-research') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const GuideDetailScreen(guideType: 'cro')),
+                      );
+                    } else {
+                      if (blogs.isEmpty) return;
+                      final blog = blogs.firstWhere(
+                        (b) => b.id == domain.targetGuideId,
+                        orElse: () => blogs.first,
+                      );
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => BlogDetailScreen(blog: blog)));
+                    }
                   },
                   icon: const Icon(Icons.menu_book_rounded, size: 18),
                   label: Text('Open Study Guide & Kit', style: GoogleFonts.dmSans(fontWeight: FontWeight.w800, fontSize: 13)),

@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../core/ads/ad_service.dart';
 import '../../core/billing/in_app_purchase_service.dart';
 import '../../core/constants/app_spacing.dart';
+import '../../core/security/secure_doc_resolver.dart';
 import '../../core/theme.dart';
 import '../../core/widgets/ad_native_card.dart';
-import '../../core/widgets/guide_purchase_sheet.dart';
 import '../../features/career/presentation/career_controller.dart';
 import '../../features/career/presentation/widgets/career_domain_card.dart';
 import '../../features/career/presentation/widgets/career_hero_banner.dart';
 import '../../features/career/presentation/widgets/community_roadmap_card.dart';
 import '../../features/career/presentation/widgets/study_guides_list.dart';
 import '../../services/pdf_service.dart';
-import '../notes/secure_pdf_reader_screen.dart';
+import 'guide_detail_screen.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class BlogsScreen extends ConsumerWidget {
@@ -23,11 +22,11 @@ class BlogsScreen extends ConsumerWidget {
 
   Widget _buildCategorySelector(BuildContext context, WidgetRef ref, String selectedCategory) {
     final categories = [
-      {'id': 'ALL', 'label': '🌟 All Guides'},
-      {'id': 'DOMAINS', 'label': '💼 6 Career Domains'},
-      {'id': 'KIT', 'label': '📑 Interview Kits'},
-      {'id': 'COURSE', 'label': '🎓 Free Certifications'},
-      {'id': 'TECH', 'label': '💻 AI & Python'},
+      {'id': 'ALL', 'label': 'All Guides', 'icon': Icons.grid_view_rounded},
+      {'id': 'DOMAINS', 'label': 'Career Domains', 'icon': Icons.business_center_rounded},
+      {'id': 'KIT', 'label': 'Interview Kits', 'icon': Icons.library_books_rounded},
+      {'id': 'COURSE', 'label': 'Certifications', 'icon': Icons.verified_rounded},
+      {'id': 'TECH', 'label': 'AI & Tech', 'icon': Icons.terminal_rounded},
     ];
 
     return SizedBox(
@@ -40,12 +39,18 @@ class BlogsScreen extends ConsumerWidget {
         itemBuilder: (context, index) {
           final cat = categories[index];
           final isSelected = selectedCategory == cat['id'];
+          final icon = cat['icon'] as IconData;
 
           return Padding(
             padding: const EdgeInsets.only(right: AppSpacing.sm),
             child: ChoiceChip(
+              avatar: Icon(
+                icon,
+                size: 14,
+                color: isSelected ? Colors.white : AppTheme.primaryNavy,
+              ),
               label: Text(
-                cat['label']!,
+                cat['label'] as String,
                 style: GoogleFonts.dmSans(
                   fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
                   fontSize: 12,
@@ -62,7 +67,7 @@ class BlogsScreen extends ConsumerWidget {
               ),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               onSelected: (_) {
-                ref.read(selectedCareerCategoryProvider.notifier).state = cat['id']!;
+                ref.read(selectedCareerCategoryProvider.notifier).state = cat['id'] as String;
               },
             ),
           );
@@ -217,22 +222,22 @@ class BlogsScreen extends ConsumerWidget {
     final allPdfs = PdfService.instance.allPdfs;
 
     final careerPdf = allPdfs.firstWhere(
-      (p) => p.id == 'pdf-career-free',
+      (p) => p.id == 'pdf-career-free' || p.id == 'pdf-cro-manual',
       orElse: () => AdminPdfItem(
         id: 'pdf-career-free',
-        title: 'B.Pharm High-Growth Career Roadmap & Industry Placement Guide',
-        subjectCode: 'CAREER',
-        subjectName: 'Placement & Career Roadmap',
+        title: 'CRO Operations Manual – PharmaCode (2026 Edition)',
+        subjectCode: 'CRO-OPS',
+        subjectName: 'Clinical Research & CRO Operations',
         semester: 8,
-        unit: 'Placement Roadmap',
-        category: 'Revision Sheet',
-        url: 'https://drive.google.com/uc?export=download&id=1xvUpn2e0zPEsm-oIkEelqqehupUhTPGK',
-        fileSize: '3.8 MB',
-        pages: 32,
+        unit: '15 Chapters & Onboarding Kit',
+        category: 'Career Guide',
+        url: SecureDocResolver.resolveSecureUrl('pdf-career-free'),
+        fileSize: '4.8 MB',
+        pages: 41,
         downloadsCount: 520,
         isPremium: false,
         priceRupees: 0,
-        description: '100% Free Complete Placement Roadmap for Top Pharma MNCs (Ad supported)',
+        description: '15-Chapter Complete CRO Ecosystem Manual: Clinical Trials, CRA, CDM, QA, GCP & 30-Day Onboarding Checklist (100% Free)',
       ),
     );
 
@@ -246,14 +251,14 @@ class BlogsScreen extends ConsumerWidget {
         semester: 8,
         unit: 'Complete Interview Kit',
         category: 'Notes',
-        url: 'https://drive.google.com/uc?export=download&id=1wQPW4zOOwC-v3LRi1OIu0eDwzK2h1Nmy',
-        fileSize: '4.5 MB',
+        url: SecureDocResolver.resolveSecureUrl('pdf-pv-guide'),
+        fileSize: '11.6 MB',
         pages: 44,
         downloadsCount: 340,
         isPremium: true,
         playProductId: PlayProducts.guidePvInterview,
         priceRupees: 49,
-        description: '44-Page PV Interview Questions & Cases (Included in ₹199 VIP Pass)',
+        description: 'PV Interview Questions & Cases (Included in ₹199 VIP Pass)',
       ),
     );
 
@@ -267,9 +272,9 @@ class BlogsScreen extends ConsumerWidget {
         semester: 7,
         unit: 'Modules 1-5 Dossier Kit',
         category: 'Notes',
-        url: 'https://drive.google.com/uc?export=download&id=1u_RkXFNVxJwTLNqIQtmcS2O3UvRUb300',
-        fileSize: '5.2 MB',
-        pages: 58,
+        url: SecureDocResolver.resolveSecureUrl('pdf-ra-guide'),
+        fileSize: '1.2 MB',
+        pages: 26,
         downloadsCount: 280,
         isPremium: true,
         playProductId: PlayProducts.guideRaDossier,
@@ -311,7 +316,7 @@ class BlogsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
-            'In-app high-resolution encrypted guides with anti-piracy protection.',
+            'High-yield career kits, verified interview question banks & industry operational manuals.',
             style: GoogleFonts.dmSans(color: AppTheme.textMuted, fontSize: 12),
           ),
           const SizedBox(height: AppSpacing.sm),
@@ -339,15 +344,11 @@ class BlogsScreen extends ConsumerWidget {
               child: InkWell(
                 borderRadius: BorderRadius.circular(16),
                 onTap: () {
-                  AdService.instance.showInterstitialAd(
-                    onDismissed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => SecurePdfReaderScreen(pdfItem: careerPdf),
-                        ),
-                      );
-                    },
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => GuideDetailScreen(guideType: 'cro', pdfItem: careerPdf),
+                    ),
                   );
                 },
                 child: Padding(
@@ -360,7 +361,7 @@ class BlogsScreen extends ConsumerWidget {
                           color: Colors.white.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Icon(Icons.school_rounded, color: Colors.white, size: 26),
+                        child: const Icon(Icons.biotech_rounded, color: Colors.white, size: 26),
                       ),
                       const SizedBox(width: 14),
                       Expanded(
@@ -376,7 +377,7 @@ class BlogsScreen extends ConsumerWidget {
                                     borderRadius: BorderRadius.circular(5),
                                   ),
                                   child: const Text(
-                                    '100% FREE · AD SUPPORTED',
+                                    '100% FREE GUIDE · AD SUPPORTED',
                                     style: TextStyle(
                                       fontFamily: 'Nunito',
                                       fontSize: 9.5,
@@ -385,21 +386,11 @@ class BlogsScreen extends ConsumerWidget {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 6),
-                                const Text(
-                                  '32 Pages',
-                                  style: TextStyle(
-                                    fontFamily: 'Nunito',
-                                    fontSize: 10.5,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white70,
-                                  ),
-                                ),
                               ],
                             ),
                             const SizedBox(height: 5),
                             const Text(
-                              'B.Pharm Placement Roadmap & Career Guide',
+                              'CRO Operations Manual (2026 Edition)',
                               style: TextStyle(
                                 fontFamily: 'Nunito',
                                 fontSize: 14.5,
@@ -410,7 +401,7 @@ class BlogsScreen extends ConsumerWidget {
                             ),
                             const SizedBox(height: 3),
                             const Text(
-                              'Top Pharma MNCs Hiring Checklist & Skill Roadmap',
+                              '15 Chapters: Clinical Trials, CRA, CDM, QA & GCP Manual',
                               style: TextStyle(
                                 fontFamily: 'Nunito',
                                 fontSize: 11,
@@ -453,16 +444,12 @@ class BlogsScreen extends ConsumerWidget {
               child: InkWell(
                 borderRadius: BorderRadius.circular(16),
                 onTap: () {
-                  if (isPvUnlocked) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => SecurePdfReaderScreen(pdfItem: pvPdf),
-                      ),
-                    );
-                  } else {
-                    GuidePurchaseSheet.show(context, pvPdf);
-                  }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => GuideDetailScreen(guideType: 'pv', pdfItem: pvPdf),
+                    ),
+                  );
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(15),
@@ -474,7 +461,7 @@ class BlogsScreen extends ConsumerWidget {
                           color: const Color(0xFFFEF2F2),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Icon(Icons.security_rounded, color: Color(0xFFDC2626), size: 24),
+                        child: const Icon(Icons.shield_rounded, color: Color(0xFFDC2626), size: 24),
                       ),
                       const SizedBox(width: 14),
                       Expanded(
@@ -493,7 +480,7 @@ class BlogsScreen extends ConsumerWidget {
                                     ),
                                   ),
                                   child: Text(
-                                    isPvUnlocked ? 'UNLOCKED' : '💎 ₹49 ONLY',
+                                    isPvUnlocked ? 'UNLOCKED' : '₹49 ONLY',
                                     style: TextStyle(
                                       fontFamily: 'Nunito',
                                       fontSize: 10,
@@ -504,7 +491,7 @@ class BlogsScreen extends ConsumerWidget {
                                 ),
                                 const SizedBox(width: 6),
                                 const Text(
-                                  '44 Pages · PV Kit',
+                                  'PV Interview Kit',
                                   style: TextStyle(
                                     fontFamily: 'Nunito',
                                     fontSize: 11,
@@ -527,7 +514,7 @@ class BlogsScreen extends ConsumerWidget {
                             ),
                             const SizedBox(height: 2),
                             const Text(
-                              'Argus Safety, MedDRA & Solved ICSR Cases',
+                              '15 Chapters: Argus Safety, MedDRA & Solved ICSR Cases',
                               style: TextStyle(
                                 fontFamily: 'Nunito',
                                 fontSize: 11,
@@ -539,9 +526,9 @@ class BlogsScreen extends ConsumerWidget {
                       ),
                       const SizedBox(width: 8),
                       Icon(
-                        isPvUnlocked ? Icons.lock_open_rounded : Icons.lock_outline_rounded,
+                        isPvUnlocked ? Icons.lock_open_rounded : Icons.arrow_forward_ios_rounded,
                         color: isPvUnlocked ? const Color(0xFF059669) : const Color(0xFFDC2626),
-                        size: 18,
+                        size: 16,
                       ),
                     ],
                   ),
@@ -573,16 +560,12 @@ class BlogsScreen extends ConsumerWidget {
               child: InkWell(
                 borderRadius: BorderRadius.circular(16),
                 onTap: () {
-                  if (isRaUnlocked) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => SecurePdfReaderScreen(pdfItem: raPdf),
-                      ),
-                    );
-                  } else {
-                    GuidePurchaseSheet.show(context, raPdf);
-                  }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => GuideDetailScreen(guideType: 'ra', pdfItem: raPdf),
+                    ),
+                  );
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(15),
@@ -594,7 +577,7 @@ class BlogsScreen extends ConsumerWidget {
                           color: const Color(0xFFEFF6FF),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Icon(Icons.assignment_rounded, color: Color(0xFF2563EB), size: 24),
+                        child: const Icon(Icons.description_rounded, color: Color(0xFF2563EB), size: 24),
                       ),
                       const SizedBox(width: 14),
                       Expanded(
@@ -613,7 +596,7 @@ class BlogsScreen extends ConsumerWidget {
                                     ),
                                   ),
                                   child: Text(
-                                    isRaUnlocked ? 'UNLOCKED' : '💎 ₹99 ONLY',
+                                    isRaUnlocked ? 'UNLOCKED' : '₹99 ONLY',
                                     style: TextStyle(
                                       fontFamily: 'Nunito',
                                       fontSize: 10,
@@ -624,7 +607,7 @@ class BlogsScreen extends ConsumerWidget {
                                 ),
                                 const SizedBox(width: 6),
                                 const Text(
-                                  '58 Pages · RA Dossier',
+                                  'RA Dossier Kit',
                                   style: TextStyle(
                                     fontFamily: 'Nunito',
                                     fontSize: 11,
@@ -647,7 +630,7 @@ class BlogsScreen extends ConsumerWidget {
                             ),
                             const SizedBox(height: 2),
                             const Text(
-                              'Modules 1-5, USFDA 21 CFR, DMF & ANDA Filing',
+                              '20 Sections: Modules 1-5, USFDA 21 CFR, DMF & ANDA',
                               style: TextStyle(
                                 fontFamily: 'Nunito',
                                 fontSize: 11,
@@ -659,9 +642,9 @@ class BlogsScreen extends ConsumerWidget {
                       ),
                       const SizedBox(width: 8),
                       Icon(
-                        isRaUnlocked ? Icons.lock_open_rounded : Icons.lock_outline_rounded,
+                        isRaUnlocked ? Icons.lock_open_rounded : Icons.arrow_forward_ios_rounded,
                         color: isRaUnlocked ? const Color(0xFF059669) : const Color(0xFF2563EB),
-                        size: 18,
+                        size: 16,
                       ),
                     ],
                   ),

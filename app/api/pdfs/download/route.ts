@@ -18,9 +18,9 @@ export async function GET(req: NextRequest) {
   let targetUrl: string | null = null;
   let targetId: string | null = null;
 
-  // 1. Direct PDF Kit by ID (from /notes/ verified cards)
+  // 1. Direct PDF Kit by ID (from /notes/ verified cards or Play Product ID)
   if (id) {
-    const target = pdfs.find((p) => p.id === id);
+    const target = pdfs.find((p) => p.id === id || p.playProductId === id);
     if (target && target.url) {
       targetUrl = target.url;
       targetId = target.id;

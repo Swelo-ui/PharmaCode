@@ -511,15 +511,25 @@ class NotificationService {
       );
 
       // Subscribe to topics for broadcast alerts (delivers reliably when app is killed/closed)
-      await messaging.subscribeToTopic('all_students');
-      await messaging.subscribeToTopic('all');
-      await messaging.subscribeToTopic('updates');
-      await messaging.subscribeToTopic('general');
-      await messaging.subscribeToTopic('announcements');
+      try {
+        await Future.wait([
+          messaging.subscribeToTopic('all_students'),
+          messaging.subscribeToTopic('all'),
+          messaging.subscribeToTopic('updates'),
+          messaging.subscribeToTopic('general'),
+          messaging.subscribeToTopic('announcements'),
+        ]).timeout(const Duration(milliseconds: 1500));
+      } catch (e) {
+        debugPrint('FCM Topic subscribe skipped/offline: $e');
+      }
 
-      // Fetch FCM Token
-      _fcmToken = await messaging.getToken();
-      debugPrint('FCM Device Registration Token: $_fcmToken');
+      // Fetch FCM Token safely with timeout
+      try {
+        _fcmToken = await messaging.getToken().timeout(const Duration(milliseconds: 1500));
+        debugPrint('FCM Device Registration Token: $_fcmToken');
+      } catch (e) {
+        debugPrint('FCM Token get skipped/offline: $e');
+      }
 
       // Listen for token refreshes
       messaging.onTokenRefresh.listen((token) {

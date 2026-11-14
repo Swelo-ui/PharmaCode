@@ -42,23 +42,59 @@ class AdminPdfItem {
   });
 
   factory AdminPdfItem.fromJson(Map<String, dynamic> json) {
+    final id = json['id']?.toString() ?? '';
+    String title = json['title']?.toString() ?? '';
+    String subjectCode = (json['subjectCode']?.toString() ?? '').toUpperCase().trim();
+    String subjectName = json['subjectName']?.toString() ?? '';
+    String unit = json['unit']?.toString() ?? '';
+    String category = json['category']?.toString() ?? 'Notes';
+    String description = json['description']?.toString() ?? '';
+
+    String fileSize = json['fileSize']?.toString() ?? '3.5 MB';
+    int pages = (json['pages'] is num) ? (json['pages'] as num).toInt() : 20;
+    int previewPages = (json['previewPages'] is num) ? (json['previewPages'] as num).toInt() : 3;
+
+    // Remove any trailing "(XX Pages)" or "(XX Pages PDF)" from title if present
+    title = title.replaceAll(RegExp(r'\s*\(\d+\s*Pages?(?:\s*PDF)?\)', caseSensitive: false), '').trim();
+
+    // Normalization for official career kits and guides
+    if (id == 'pdf-pv-guide') {
+      title = 'Pharmacovigilance (PV) Master Interview Guide & ICSR Cases';
+      fileSize = '11.6 MB';
+      pages = 44;
+    } else if (id == 'pdf-ra-guide') {
+      title = 'Regulatory Affairs (RA) Complete eCTD Dossier & Filing Guide';
+      fileSize = '1.2 MB';
+      pages = 26;
+    } else if (id == 'pdf-career-free' || id == 'pdf-cro-manual') {
+      title = 'CRO Operations Manual – PharmaCode (2026 Edition)';
+      subjectCode = 'CRO-OPS';
+      subjectName = 'Clinical Research & CRO Operations';
+      unit = '15 Chapters & Onboarding Kit';
+      category = 'Career Guide';
+      fileSize = '4.8 MB';
+      pages = 41;
+      previewPages = 41;
+      description = '15-Chapter Complete CRO Ecosystem Manual: Clinical Trials, CRA, CDM, QA, GCP & 30-Day Onboarding Checklist (100% Free)';
+    }
+
     return AdminPdfItem(
-      id: json['id']?.toString() ?? '',
-      title: json['title']?.toString() ?? '',
-      subjectCode: (json['subjectCode']?.toString() ?? '').toUpperCase().trim(),
-      subjectName: json['subjectName']?.toString() ?? '',
+      id: id,
+      title: title,
+      subjectCode: subjectCode,
+      subjectName: subjectName,
       semester: (json['semester'] is num) ? (json['semester'] as num).toInt() : 1,
-      unit: json['unit']?.toString() ?? '',
-      category: json['category']?.toString() ?? 'Notes',
+      unit: unit,
+      category: category,
       url: json['url']?.toString() ?? '',
-      fileSize: json['fileSize']?.toString() ?? '3.5 MB',
-      pages: (json['pages'] is num) ? (json['pages'] as num).toInt() : 20,
+      fileSize: fileSize,
+      pages: pages,
       downloadsCount: (json['downloadsCount'] is num) ? (json['downloadsCount'] as num).toInt() : 0,
       isPremium: json['isPremium'] == true,
       playProductId: json['playProductId']?.toString() ?? '',
       priceRupees: (json['priceRupees'] is num) ? (json['priceRupees'] as num).toInt() : 199,
-      previewPages: (json['previewPages'] is num) ? (json['previewPages'] as num).toInt() : 3,
-      description: json['description']?.toString() ?? '',
+      previewPages: previewPages,
+      description: description,
     );
   }
 
@@ -106,7 +142,14 @@ class PdfService {
       final raw = prefs.getString('cached_admin_pdfs');
       if (raw != null) {
         final List<dynamic> list = jsonDecode(raw);
-        _cachedPdfs = list.map((e) => AdminPdfItem.fromJson(e as Map<String, dynamic>)).toList();
+        _cachedPdfs = list
+            .where((e) {
+              final id = e['id']?.toString() ?? '';
+              final code = (e['subjectCode']?.toString() ?? '').toUpperCase().trim();
+              return id != 'pdf-2' && id != 'pdf-3' && code != 'BP102T' && code != 'BP604T';
+            })
+            .map((e) => AdminPdfItem.fromJson(e as Map<String, dynamic>))
+            .toList();
         _isLoaded = true;
       }
     } catch (_) {}
@@ -118,12 +161,18 @@ class PdfService {
       final res = await http.get(uri).timeout(const Duration(seconds: 6));
       if (res.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(res.body);
-        final List<dynamic> list = data['pdfs'] ?? [];
-        _cachedPdfs = list.map((e) => AdminPdfItem.fromJson(e as Map<String, dynamic>)).toList();
+        final List<dynamic> rawList = data['pdfs'] ?? [];
+        final filteredList = rawList.where((e) {
+          final id = e['id']?.toString() ?? '';
+          final code = (e['subjectCode']?.toString() ?? '').toUpperCase().trim();
+          return id != 'pdf-2' && id != 'pdf-3' && code != 'BP102T' && code != 'BP604T';
+        }).toList();
+
+        _cachedPdfs = filteredList.map((e) => AdminPdfItem.fromJson(e as Map<String, dynamic>)).toList();
         _isLoaded = true;
 
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('cached_admin_pdfs', jsonEncode(list));
+        await prefs.setString('cached_admin_pdfs', jsonEncode(filteredList));
       }
     } catch (e) {
       debugPrint('PdfService sync note (offline): $e');
