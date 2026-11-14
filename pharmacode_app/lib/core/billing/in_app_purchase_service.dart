@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -57,11 +58,12 @@ class InAppPurchaseService {
 
   InAppPurchaseService._internal();
 
-  static const String _prefKeyUnlocked = 'pref_unlocked_products';
+  static String _userPrefKey(String userId) => 'pref_unlocked_products_$userId';
   static const FlutterSecureStorage _secureStorage = FlutterSecureStorage();
 
   final InAppPurchase _iap = InAppPurchase.instance;
   StreamSubscription<List<PurchaseDetails>>? _subscription;
+  StreamSubscription<User?>? _authSubscription;
 
   bool _isAvailable = false;
   bool get isAvailable => _isAvailable;
@@ -76,6 +78,12 @@ class InAppPurchaseService {
   final ValueNotifier<String?> purchaseStatusMessage = ValueNotifier<String?>(null);
 
   Set<String> get unlockedProducts => unlockedNotifier.value;
+
+  /// Called on user sign out to ensure zero cross-account entitlement leakage (Classplus / PW standard)
+  void onUserLoggedOut() {
+    unlockedNotifier.value = {};
+    debugPrint('[InAppPurchaseService] onUserLoggedOut: Entitlements wiped from memory.');
+  }
 
   /// Check whether the user has unlocked the VIP Pre-Booking Study Pass (All Access)
   bool get isVipUnlocked {
@@ -116,6 +124,21 @@ class InAppPurchaseService {
   Future<void> init() async {
     await _loadPersistedPurchases();
 
+    // Isolated per-user entitlement lifecycle (PhysicsWallah / Classplus multi-account standard)
+    _authSubscription?.cancel();
+    _authSubscription = FirebaseAuth.instance.authStateChanges().listen((User? user) async {
+      if (user == null) {
+        // User logged out: immediately wipe all in-memory entitlements
+        unlockedNotifier.value = {};
+        debugPrint('[InAppPurchaseService] User logged out -> Entitlements cleared.');
+      } else {
+        // User logged in: load user's isolated local cache & sync from backend
+        await _loadUserPurchases(user.uid);
+        unawaited(syncUserEntitlements(user.uid, email: user.email));
+        debugPrint('[InAppPurchaseService] User logged in (${user.uid}) -> Entitlements loaded.');
+      }
+    });
+
     try {
       _isAvailable = await _iap.isAvailable();
     } catch (e) {
@@ -141,7 +164,7 @@ class InAppPurchaseService {
     // Auto-sync with cloud if user is logged in
     final currentUser = AuthService().currentUser;
     if (currentUser != null) {
-      unawaited(syncUserEntitlements(currentUser.uid));
+      unawaited(syncUserEntitlements(currentUser.uid, email: currentUser.email));
     }
   }
 
@@ -229,7 +252,7 @@ class InAppPurchaseService {
 
       final currentUser = AuthService().currentUser;
       if (currentUser != null) {
-        await syncUserEntitlements(currentUser.uid);
+        await syncUserEntitlements(currentUser.uid, email: currentUser.email);
       }
     } catch (e) {
       isPurchasingNotifier.value = false;
@@ -260,11 +283,9 @@ class InAppPurchaseService {
                 ? 'VIP Purchase restored & verified successfully! 🎉'
                 : 'Payment verified! Premium access unlocked! 🎉';
           } else {
-            // Offline fallback allowance for restored valid items if network failed
-            if (purchase.status == PurchaseStatus.restored) {
-              await _deliverProduct(purchase.productID);
-            }
-            purchaseStatusMessage.value = 'Purchase recorded. Access granted.';
+            // Anti-Theft Protection (PW / Classplus architecture):
+            // DO NOT deliver product when verification fails or token is bound to another user!
+            debugPrint('[InAppPurchaseService] Purchase delivery BLOCKED: verification failed or token claimed by another account.');
           }
 
           if (purchase.pendingCompletePurchase) {
@@ -295,7 +316,13 @@ class InAppPurchaseService {
   /// Cryptographic Server-Side Verification (Zero-Trust)
   Future<bool> _verifyPurchaseWithBackend(PurchaseDetails purchase) async {
     final user = AuthService().currentUser;
-    final userId = user?.uid ?? 'guest_${DateTime.now().millisecondsSinceEpoch}';
+    final userId = user?.uid ?? '';
+    final userEmail = user?.email ?? '';
+
+    if (userId.isEmpty) {
+      purchaseStatusMessage.value = 'Please sign in to PharmaCode to link and activate your purchase.';
+      return false;
+    }
 
     try {
       final uri = Uri.parse('https://pharmacode.vercel.app/api/purchase/verify/');
@@ -305,32 +332,53 @@ class InAppPurchaseService {
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode({
               'userId': userId,
+              'email': userEmail,
               'productId': purchase.productID,
               'purchaseToken': purchase.verificationData.serverVerificationData,
               'orderId': purchase.purchaseID,
               'packageName': 'com.pharmacode.bpharm',
-              'deviceInfo': 'Android ${user?.email ?? ""}',
+              'deviceInfo': 'Android ${userEmail.isNotEmpty ? userEmail : userId}',
             }),
           )
           .timeout(const Duration(seconds: 8));
 
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
-        return data['success'] == true;
+        if (data['success'] == true) {
+          return true;
+        } else {
+          purchaseStatusMessage.value = data['error'] ?? 'Purchase verification failed.';
+          return false;
+        }
+      } else {
+        try {
+          final data = jsonDecode(res.body);
+          purchaseStatusMessage.value = data['error'] ?? 'Verification rejected by server.';
+        } catch (_) {
+          purchaseStatusMessage.value = 'Server error verifying purchase.';
+        }
+        return false;
       }
-      return false;
     } catch (e) {
       debugPrint('[InAppPurchaseService] Backend verification connection error: $e');
-      return true; // Don't block paying student if offline network glitch occurs
+      // If offline network glitch occurs, allow ONLY if this exact user already had it securely recorded
+      final cached = await _secureStorage.read(key: 'entitlement_${userId}_${purchase.productID}');
+      return cached != null;
     }
   }
 
   /// Sync user entitlements from backend database
-  Future<void> syncUserEntitlements(String userId) async {
+  Future<void> syncUserEntitlements(String userId, {String? email}) async {
     if (userId.trim().isEmpty) return;
     try {
-      final uri = Uri.parse('https://pharmacode.vercel.app/api/purchase/entitlements/?userId=${Uri.encodeComponent(userId)}');
-      final res = await http.get(uri).timeout(const Duration(seconds: 6));
+      final user = AuthService().currentUser;
+      final targetEmail = email ?? user?.email;
+      final emailParam = (targetEmail != null && targetEmail.isNotEmpty)
+          ? '&email=${Uri.encodeComponent(targetEmail)}'
+          : '';
+      final uri = Uri.parse(
+          'https://pharmacode.vercel.app/api/purchase/entitlements/?userId=${Uri.encodeComponent(userId)}$emailParam');
+      final res = await http.get(uri).timeout(const Duration(seconds: 8));
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
         if (data['success'] == true && data['productIds'] is List) {
@@ -342,7 +390,7 @@ class InAppPurchaseService {
           unlockedNotifier.value = updated;
 
           final prefs = await SharedPreferences.getInstance();
-          await prefs.setStringList(_prefKeyUnlocked, updated.toList());
+          await prefs.setStringList(_userPrefKey(userId), updated.toList());
           await _secureStorage.write(key: 'user_entitlements_$userId', value: jsonEncode(ids));
         }
       }
@@ -352,17 +400,18 @@ class InAppPurchaseService {
   }
 
   /// Mark product as unlocked in persistent state and notify UI
-  Future<void> _deliverProduct(String productId) async {
+  Future<void> _deliverProduct(String productId, {String? userId}) async {
+    final user = AuthService().currentUser;
+    final targetUserId = userId ?? user?.uid;
+
     final updated = Set<String>.from(unlockedNotifier.value)..add(productId);
     unlockedNotifier.value = updated;
 
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList(_prefKeyUnlocked, updated.toList());
-
-    final user = AuthService().currentUser;
-    if (user != null) {
+    if (targetUserId != null && targetUserId.isNotEmpty) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setStringList(_userPrefKey(targetUserId), updated.toList());
       await _secureStorage.write(
-        key: 'entitlement_${user.uid}_$productId',
+        key: 'entitlement_${targetUserId}_$productId',
         value: DateTime.now().toIso8601String(),
       );
     }
@@ -380,25 +429,42 @@ class InAppPurchaseService {
   Future<void> resetPurchasesForTesting() async {
     if (!kDebugMode) return;
     unlockedNotifier.value = {};
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_prefKeyUnlocked);
+    final user = AuthService().currentUser;
+    if (user != null) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_userPrefKey(user.uid));
+    }
     purchaseStatusMessage.value = 'Purchases reset for testing.';
   }
 
   /// Load persisted purchases from SharedPreferences and Secure Storage
   Future<void> _loadPersistedPurchases() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final list = prefs.getStringList(_prefKeyUnlocked) ?? [];
-      unlockedNotifier.value = list.toSet();
+      final user = AuthService().currentUser;
+      if (user != null) {
+        await _loadUserPurchases(user.uid);
+      } else {
+        unlockedNotifier.value = {};
+      }
     } catch (e) {
       debugPrint('[InAppPurchaseService] Error loading persisted purchases: $e');
+    }
+  }
+
+  Future<void> _loadUserPurchases(String userId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final list = prefs.getStringList(_userPrefKey(userId)) ?? [];
+      unlockedNotifier.value = list.toSet();
+    } catch (e) {
+      debugPrint('[InAppPurchaseService] Error loading purchases for user $userId: $e');
     }
   }
 
   /// Dispose stream when terminating
   void dispose() {
     _subscription?.cancel();
+    _authSubscription?.cancel();
     unlockedNotifier.dispose();
     isPurchasingNotifier.dispose();
     purchaseStatusMessage.dispose();

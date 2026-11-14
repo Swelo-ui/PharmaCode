@@ -8,6 +8,7 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get('userId');
+    const email = searchParams.get('email');
 
     if (!userId || typeof userId !== 'string' || userId.trim() === '') {
       return NextResponse.json(
@@ -16,12 +17,13 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const entitlements = getUserEntitlements(userId.trim());
+    const entitlements = await getUserEntitlements(userId.trim(), email || undefined);
     const productIds = entitlements.map((e) => e.productId);
 
     return NextResponse.json({
       success: true,
       userId: userId.trim(),
+      email: email || null,
       productIds,
       entitlements,
       totalUnlocked: productIds.length,
@@ -38,6 +40,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const userId = body.userId;
+    const email = body.email;
 
     if (!userId || typeof userId !== 'string' || userId.trim() === '') {
       return NextResponse.json(
@@ -46,12 +49,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const entitlements = getUserEntitlements(userId.trim());
+    const entitlements = await getUserEntitlements(userId.trim(), email || undefined);
     const productIds = entitlements.map((e) => e.productId);
 
     return NextResponse.json({
       success: true,
       userId: userId.trim(),
+      email: email || null,
       productIds,
       entitlements,
       totalUnlocked: productIds.length,

@@ -45,6 +45,7 @@ export interface AdminPdf {
 export interface UserEntitlement {
   id: string;
   userId: string;
+  email?: string;
   productId: string;
   orderId?: string;
   purchaseToken: string;
@@ -246,23 +247,27 @@ const BASELINE_PDFS: AdminPdf[] = [
   },
 ];
 
-// ─── CLOUD GIST STORAGE (GUARANTEES 100% PERSISTENCE ACROSS ALL LAMBDAS) ──────
+// ─── CLOUD GIST & FIREBASE STORAGE (GUARANTEES 100% PERSISTENCE ACROSS ALL LAMBDAS) ──────
 async function fetchCloudStore(): Promise<{
   pdfs?: AdminPdf[];
   notifications?: AdminNotification[];
   config?: WebsiteConfig;
   fcmServerKey?: string;
+  entitlements?: UserEntitlement[];
 } | null> {
   return new Promise((resolve) => {
     try {
       const https = require('https');
+      const headers: Record<string, string> = {
+        'User-Agent': 'PharmaCode-App',
+      };
+      if (GITHUB_TOKEN) {
+        headers['Authorization'] = `token ${GITHUB_TOKEN}`;
+      }
       const options = {
         hostname: 'api.github.com',
         path: `/gists/${GIST_ID}`,
-        headers: {
-          Authorization: `token ${GITHUB_TOKEN}`,
-          'User-Agent': 'PharmaCode-App',
-        },
+        headers,
         timeout: 4000,
       };
       const req = https.get(options, (res: any) => {
@@ -275,6 +280,29 @@ async function fetchCloudStore(): Promise<{
               const content = JSON.parse(json.files['pharmacode_store.json'].content);
               resolve(content);
             } else {
+              // Fallback to fetch without auth token if Gist is public
+              if (res.statusCode === 401 && GITHUB_TOKEN) {
+                https.get({
+                  hostname: 'api.github.com',
+                  path: `/gists/${GIST_ID}`,
+                  headers: { 'User-Agent': 'PharmaCode-App' },
+                  timeout: 3000,
+                }, (pubRes: any) => {
+                  let pubBody = '';
+                  pubRes.on('data', (c: any) => (pubBody += c));
+                  pubRes.on('end', () => {
+                    try {
+                      if (pubRes.statusCode >= 200 && pubRes.statusCode < 300) {
+                        const pj = JSON.parse(pubBody);
+                        resolve(JSON.parse(pj.files['pharmacode_store.json'].content));
+                      } else {
+                        resolve(null);
+                      }
+                    } catch (_) { resolve(null); }
+                  });
+                }).on('error', () => resolve(null));
+                return;
+              }
               resolve(null);
             }
           } catch (_) {
@@ -426,6 +454,10 @@ function getMemoryStore(): MemoryStore {
         }
         if (cloud.fcmServerKey) {
           globalThis.__pharma_memory_store__!.fcmServerKey = cloud.fcmServerKey;
+        }
+        if (Array.isArray(cloud.entitlements)) {
+          globalThis.__pharma_memory_store__!.entitlements = cloud.entitlements;
+          globalThis.__pharma_memory_store__!.usedTokens = new Set<string>(cloud.entitlements.map((e: any) => e.purchaseToken));
         }
         globalThis.__pharma_memory_store__!.lastCloudSync = Date.now();
       }
@@ -845,18 +877,37 @@ export async function setFcmServerKey(key: string): Promise<void> {
 
 // ─── USER ENTITLEMENT & IN-APP PURCHASE VERIFICATION ──────────────────────────
 
-export function getUserEntitlements(userId: string): UserEntitlement[] {
+export async function getUserEntitlements(userId: string, email?: string): Promise<UserEntitlement[]> {
   const store = getMemoryStore();
-  return store.entitlements.filter(
-    (e) => e.userId === userId && e.status === 'ACTIVE'
-  );
+  if (store.entitlements.length === 0 || Date.now() - store.lastCloudSync > 60000) {
+    const cloud = await fetchCloudStore();
+    if (cloud && Array.isArray(cloud.entitlements)) {
+      store.entitlements = cloud.entitlements;
+      store.usedTokens = new Set<string>(cloud.entitlements.map((e: any) => e.purchaseToken));
+      store.lastCloudSync = Date.now();
+    }
+  }
+
+  const normalizedEmail = email ? email.trim().toLowerCase() : null;
+
+  return store.entitlements.filter((e) => {
+    if (e.status !== 'ACTIVE') return false;
+    if (e.userId === userId) return true;
+    if (normalizedEmail && e.email && e.email.trim().toLowerCase() === normalizedEmail) return true;
+    if (normalizedEmail && e.deviceInfo && e.deviceInfo.toLowerCase().includes(normalizedEmail)) return true;
+    return false;
+  });
 }
 
-export function isProductEntitled(userId: string, productId: string): boolean {
+export function isProductEntitled(userId: string, productId: string, email?: string): boolean {
   const store = getMemoryStore();
-  return store.entitlements.some(
-    (e) => e.userId === userId && e.productId === productId && e.status === 'ACTIVE'
-  );
+  const normalizedEmail = email ? email.trim().toLowerCase() : null;
+  return store.entitlements.some((e) => {
+    if (e.productId !== productId || e.status !== 'ACTIVE') return false;
+    if (e.userId === userId) return true;
+    if (normalizedEmail && e.email && e.email.trim().toLowerCase() === normalizedEmail) return true;
+    return false;
+  });
 }
 
 export function isPurchaseTokenUsed(purchaseToken: string): boolean {
@@ -866,6 +917,7 @@ export function isPurchaseTokenUsed(purchaseToken: string): boolean {
 
 export async function verifyAndRecordPurchase(params: {
   userId: string;
+  email?: string;
   productId: string;
   purchaseToken: string;
   packageName?: string;
@@ -878,13 +930,30 @@ export async function verifyAndRecordPurchase(params: {
     return { success: false, error: 'Missing required purchase verification parameters' };
   }
 
-  // Prevent duplicate token replay attack
+  if (store.entitlements.length === 0 || Date.now() - store.lastCloudSync > 60000) {
+    const cloud = await fetchCloudStore();
+    if (cloud && Array.isArray(cloud.entitlements)) {
+      store.entitlements = cloud.entitlements;
+      store.usedTokens = new Set<string>(cloud.entitlements.map((e: any) => e.purchaseToken));
+      store.lastCloudSync = Date.now();
+    }
+  }
+
+  const normalizedEmail = params.email ? params.email.trim().toLowerCase() : null;
+
+  // Prevent duplicate token replay / cross-account theft attack
   const existingWithToken = store.entitlements.find(
     (e) => e.purchaseToken === params.purchaseToken
   );
   if (existingWithToken) {
-    if (existingWithToken.userId !== params.userId) {
-      return { success: false, error: 'This Google Play purchase token has already been claimed by another account.' };
+    const isSameOwner = existingWithToken.userId === params.userId ||
+      (normalizedEmail && existingWithToken.email && existingWithToken.email.trim().toLowerCase() === normalizedEmail);
+
+    if (!isSameOwner) {
+      return {
+        success: false,
+        error: `This Google Play purchase is already bound to student account (${existingWithToken.email || existingWithToken.userId.slice(0, 6)}...). It cannot be transferred to a different student account.`,
+      };
     }
     // Same user restoring purchase
     return { success: true, entitlement: existingWithToken };
@@ -893,6 +962,7 @@ export async function verifyAndRecordPurchase(params: {
   const entitlement: UserEntitlement = {
     id: `ent-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
     userId: params.userId,
+    email: params.email ? params.email.trim() : undefined,
     productId: params.productId,
     orderId: params.orderId || `GPA.${Date.now()}`,
     purchaseToken: params.purchaseToken,
@@ -905,7 +975,7 @@ export async function verifyAndRecordPurchase(params: {
   store.entitlements.push(entitlement);
   store.usedTokens.add(params.purchaseToken);
 
-  addRealEvent(`VIP Purchase Verified: ${params.productId} (${params.userId.slice(0, 6)}...)`, 'Google Play Billing');
+  addRealEvent(`VIP Purchase Verified: ${params.productId} (${(params.email || params.userId).slice(0, 10)}...)`, 'Google Play Billing');
   ensureDataDir();
   try {
     fs.writeFileSync(ENTITLEMENTS_FILE, JSON.stringify(store.entitlements, null, 2), 'utf8');

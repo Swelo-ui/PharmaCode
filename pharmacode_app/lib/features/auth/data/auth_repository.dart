@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/security/secure_storage.dart';
+import '../../../core/billing/in_app_purchase_service.dart';
 import '../domain/user_entity.dart';
 
 class AuthRepository {
@@ -144,6 +145,7 @@ class AuthRepository {
   }
 
   Future<void> signOut() async {
+    InAppPurchaseService.instance.onUserLoggedOut();
     await _googleSignIn.signOut();
     await _firebaseAuth.signOut();
     await _secureStorage.clearAll();

@@ -12,7 +12,7 @@ export const revalidate = 0;
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { userId, productId, purchaseToken, packageName, orderId, deviceInfo } = body;
+    const { userId, email, productId, purchaseToken, packageName, orderId, deviceInfo } = body;
 
     if (!userId || typeof userId !== 'string' || userId.trim() === '') {
       return NextResponse.json(
@@ -50,11 +50,12 @@ export async function POST(req: NextRequest) {
     // Record verified entitlement in secure backend store
     const result = await verifyAndRecordPurchase({
       userId: userId.trim(),
+      email: typeof email === 'string' && email.trim() !== '' ? email.trim() : undefined,
       productId: productId.trim(),
       purchaseToken: purchaseToken.trim(),
       packageName: packageName || 'com.pharmacode.bpharm',
       orderId: orderId,
-      deviceInfo: deviceInfo,
+      deviceInfo: deviceInfo || (email ? `Android ${email}` : undefined),
     });
 
     if (!result.success) {

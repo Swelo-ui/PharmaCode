@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../core/billing/in_app_purchase_service.dart';
 
 class AuthService {
   static final AuthService _instance = AuthService._internal();
@@ -164,6 +165,7 @@ class AuthService {
   /// Sign Out
   Future<void> signOut() async {
     try {
+      InAppPurchaseService.instance.onUserLoggedOut();
       await Future.wait([
         _auth.signOut(),
         _googleSignIn.signOut(),
