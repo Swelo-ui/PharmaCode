@@ -26,6 +26,10 @@ class CareerHeroBanner extends StatelessWidget {
       Navigator.push(context, MaterialPageRoute(builder: (_) => const GuideDetailScreen(guideType: 'cro')));
       return;
     }
+    if (lower.contains('interview') || lower.contains('qa') || lower.contains('qc') || lower.contains('production') || lower.contains('prep')) {
+      Navigator.push(context, MaterialPageRoute(builder: (_) => const GuideDetailScreen(guideType: 'interview')));
+      return;
+    }
     if (blogs.isEmpty) return;
     final blog = blogs.firstWhere((b) => b.id == blogId, orElse: () => blogs.first);
     Navigator.push(

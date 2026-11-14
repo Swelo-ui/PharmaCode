@@ -22,6 +22,8 @@ class PlayProducts {
   /// Premium Individual Guides
   static const String guidePvInterview = 'guide_pv_interview_49';
   static const String guideRaDossier = 'guide_ra_dossier_99';
+  static const String guidePharmaInterview = 'guide_pharma_interview_149';
+  static const String guidePharmaInterviewAlias = 'pharma_interview_prep_149';
 
   static const Set<String> defaultProducts = {
     vipPreBook499,
@@ -31,6 +33,8 @@ class PlayProducts {
     vipLegacy,
     guidePvInterview,
     guideRaDossier,
+    guidePharmaInterview,
+    guidePharmaInterviewAlias,
   };
 }
 
@@ -108,7 +112,7 @@ class InAppPurchaseService {
     discountTag: '75% OFF · Lifetime Pass',
     bulletPoints: [
       '100% Ad-Free Experience (Zero Banners, Popups, or Interruptions across Entire App)',
-      'Automatically Unlocks BOTH PV Master Guide (₹49) & RA Dossier Guide (₹99) FREE',
+      'Automatically Unlocks PV Guide (₹49), RA Guide (₹99) & Pharma Interview Prep Kit (₹149) FREE',
       'All Future Semester Notes & PDFs Free (Zero extra charges forever)',
       'Unit-Wise PCI NEP 2020 Study Guides & Rapid Revision Flowcharts',
       'Real-Time 1-on-1 Student Doubt Support on WhatsApp & Email',
@@ -212,6 +216,7 @@ class InAppPurchaseService {
     if (fallback != null) return fallback;
     if (productId == PlayProducts.guidePvInterview) return '₹49';
     if (productId == PlayProducts.guideRaDossier) return '₹99';
+    if (productId == PlayProducts.guidePharmaInterview || productId == PlayProducts.guidePharmaInterviewAlias) return '₹149';
     return '₹499';
   }
 

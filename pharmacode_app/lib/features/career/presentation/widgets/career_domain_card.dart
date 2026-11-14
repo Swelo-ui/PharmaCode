@@ -198,6 +198,15 @@ class CareerDomainCard extends StatelessWidget {
                         context,
                         MaterialPageRoute(builder: (_) => const GuideDetailScreen(guideType: 'cro')),
                       );
+                    } else if (domain.id == 'quality-assurance' ||
+                        domain.id == 'quality-control' ||
+                        domain.id == 'production' ||
+                        domain.id == 'qa-qc' ||
+                        domain.id == 'pharma-interview') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const GuideDetailScreen(guideType: 'interview')),
+                      );
                     } else {
                       if (blogs.isEmpty) return;
                       final blog = blogs.firstWhere(

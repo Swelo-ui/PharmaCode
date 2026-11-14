@@ -332,7 +332,7 @@ class _GuidePurchaseSheetState extends State<GuidePurchaseSheet> {
                           ),
                         ),
                         Text(
-                          'Unlocks PV Guide (₹49) + RA Guide (₹99) + all notes & 100% ad-free forever!',
+                          'Unlocks PV (₹49) + RA (₹99) + Pharma Kit (₹149) + all notes 100% ad-free!',
                           style: TextStyle(
                             fontFamily: 'Nunito',
                             fontSize: 10.5,

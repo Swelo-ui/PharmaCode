@@ -64,6 +64,13 @@ class StudyGuidesList extends StatelessWidget {
                         context,
                         MaterialPageRoute(builder: (_) => const GuideDetailScreen(guideType: 'cro')),
                       );
+                    } else if (blog.id == 'pharma-interview-preparation-kit' ||
+                        blog.id.contains('interview-preparation') ||
+                        blog.id.contains('qa-qc-production')) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const GuideDetailScreen(guideType: 'interview')),
+                      );
                     } else {
                       Navigator.push(
                         context,

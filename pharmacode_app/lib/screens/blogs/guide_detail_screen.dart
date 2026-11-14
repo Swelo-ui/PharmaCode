@@ -37,8 +37,17 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
 
   bool get _isPv => widget.guideType.toLowerCase() == 'pv';
   bool get _isCro => widget.guideType.toLowerCase() == 'cro';
+  bool get _isInterview =>
+      widget.guideType.toLowerCase() == 'interview' ||
+      widget.guideType.toLowerCase() == 'pharma_interview' ||
+      widget.guideType.toLowerCase() == 'prep_kit';
 
-  String get _productId => _isPv ? PlayProducts.guidePvInterview : PlayProducts.guideRaDossier;
+  String get _productId {
+    if (_isPv) return PlayProducts.guidePvInterview;
+    if (_isCro) return '';
+    if (_isInterview) return PlayProducts.guidePharmaInterview;
+    return PlayProducts.guideRaDossier;
+  }
 
   AdminPdfItem get _resolvedItem {
     if (widget.pdfItem != null) return widget.pdfItem!;
@@ -48,6 +57,17 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
       return all.firstWhere(
         (p) => p.id == 'pdf-career-free' || p.id == 'pdf-cro-manual',
         orElse: () => _defaultCroItem,
+      );
+    }
+
+    if (_isInterview) {
+      return all.firstWhere(
+        (p) =>
+            p.playProductId == _productId ||
+            p.playProductId == PlayProducts.guidePharmaInterviewAlias ||
+            p.id == 'pdf-pharma-interview-guide' ||
+            p.id == 'pdf-interview-prep-guide',
+        orElse: () => _defaultInterviewItem,
       );
     }
 
@@ -112,6 +132,71 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
     previewPages: 41,
     description: 'CRO Ecosystem Manual: Clinical Trials, CRA, CDM, QA, GCP & 30-Day Onboarding Checklist (100% Free)',
   );
+
+  static final AdminPdfItem _defaultInterviewItem = AdminPdfItem(
+    id: 'pdf-pharma-interview-guide',
+    title: 'Pharma Interview Complete Preparation Kit (QA | QC | Production)',
+    subjectCode: 'INTERVIEW-KIT',
+    subjectName: 'QA | QC | Production Career Kit',
+    semester: 8,
+    unit: '11 Sections · 200+ Q&A · 58 Pages',
+    category: 'Career Kit',
+    url: SecureDocResolver.resolveSecureUrl('pdf-pharma-interview-guide'),
+    fileSize: '8.4 MB',
+    pages: 58,
+    downloadsCount: 150,
+    isPremium: true,
+    playProductId: PlayProducts.guidePharmaInterview,
+    priceRupees: 149,
+    previewPages: 6,
+    description:
+        'The complete interview handbook for B.Pharm freshers. Covers HR, Production, QA and QC questions, scenario-based answers, full forms, rapid revision and interview tips.',
+  );
+
+  static final List<Map<String, String>> _interviewPreviews = [
+    {
+      'title': 'Official Cover — QA | QC | Production',
+      'tag': 'Cover',
+      'desc': 'PharmaCode Interview Series: The complete interview handbook for B.Pharm freshers.',
+      'asset': 'assets/images/interview_prep_preview/preview-01.png',
+      'url': '',
+    },
+    {
+      'title': 'Contents & 11-Section Roadmap',
+      'tag': 'Table of Contents',
+      'desc': '11-section structured curriculum with page numbers and topic flow.',
+      'asset': 'assets/images/interview_prep_preview/preview-02.png',
+      'url': '',
+    },
+    {
+      'title': 'Production — Granulation Flow Diagrams',
+      'tag': 'Section 03',
+      'desc': 'Wet, dry and direct-compression granulation flow diagrams and critical process parameters.',
+      'asset': 'assets/images/interview_prep_preview/preview-03.png',
+      'url': '',
+    },
+    {
+      'title': 'QA — OOS Investigation & Change Control',
+      'tag': 'Section 04',
+      'desc': 'Phase 1 & Phase 2 Out of Specification investigation workflow and change control process.',
+      'asset': 'assets/images/interview_prep_preview/preview-04.png',
+      'url': '',
+    },
+    {
+      'title': 'QC — Dissolution Test & Q-Value Criteria',
+      'tag': 'Section 05',
+      'desc': 'Dissolution apparatus table (USP 1-7), calibration and Stage S1, S2, S3 acceptance criteria.',
+      'asset': 'assets/images/interview_prep_preview/preview-05.png',
+      'url': '',
+    },
+    {
+      'title': 'Scenario Answers — Step-by-Step Problem Solving',
+      'tag': 'Section 06',
+      'desc': 'Model answers to real plant situations: batch failure, contamination and low yield.',
+      'asset': 'assets/images/interview_prep_preview/preview-06.png',
+      'url': '',
+    },
+  ];
 
   // ─── VERIFIED SAMPLE PREVIEW DATA (Mirrors Official Website Previews & Curriculum) ─────────
   static final List<Map<String, String>> _raPreviews = [
@@ -308,12 +393,16 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
         ? 'https://pharmacode.vercel.app/blog/pharmacovigilance-interview-preparation-kit/'
         : _isCro
             ? 'https://pharmacode.vercel.app/career/'
-            : 'https://pharmacode.vercel.app/blog/regulatory-affairs-complete-guide/';
+            : _isInterview
+                ? 'https://pharmacode.vercel.app/blog/pharma-interview-preparation-kit/'
+                : 'https://pharmacode.vercel.app/blog/regulatory-affairs-complete-guide/';
     final title = _isPv
         ? 'Pharmacovigilance Complete Guide & Interview Preparation Kit'
         : _isCro
             ? 'CRO Operations Manual – PharmaCode (2026 Edition)'
-            : 'Regulatory Affairs (RA) Complete Guide — From Dossier to Drug Approval';
+            : _isInterview
+                ? 'Pharma Interview Complete Preparation Kit (QA | QC | Production)'
+                : 'Regulatory Affairs (RA) Complete Guide — From Dossier to Drug Approval';
 
     SharePlus.instance.share(
       ShareParams(
@@ -334,12 +423,16 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
             ? const Color(0xFFDC2626)
             : _isCro
                 ? const Color(0xFF059669)
-                : const Color(0xFF2563EB);
+                : _isInterview
+                    ? const Color(0xFF7C3AED)
+                    : const Color(0xFF2563EB);
         final gradientColors = _isPv
             ? [const Color(0xFF991B1B), const Color(0xFFDC2626)]
             : _isCro
                 ? [const Color(0xFF065F46), const Color(0xFF059669)]
-                : [const Color(0xFF1E3A8A), const Color(0xFF2563EB)];
+                : _isInterview
+                    ? [const Color(0xFF4C1D95), const Color(0xFF7C3AED)]
+                    : [const Color(0xFF1E3A8A), const Color(0xFF2563EB)];
 
         return Scaffold(
           backgroundColor: AppTheme.background,
@@ -349,7 +442,9 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
                   ? 'PV Interview Kit'
                   : _isCro
                       ? 'CRO Operations Manual'
-                      : 'RA Complete Guide',
+                      : _isInterview
+                          ? 'Pharma Interview Prep Kit'
+                          : 'RA Complete Guide',
               style: GoogleFonts.dmSans(
                 color: AppTheme.primaryNavy,
                 fontWeight: FontWeight.w900,
@@ -446,7 +541,9 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
                         ? 'OFFICIAL INTERVIEW PREP KIT'
                         : _isCro
                             ? 'CRO OPERATIONS MANUAL'
-                            : 'COMPLETE DOSSIER & REGULATORY KIT',
+                            : _isInterview
+                                ? 'INTERVIEW PREP & CAREER KIT'
+                                : 'COMPLETE DOSSIER & REGULATORY KIT',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.dmSans(
@@ -490,7 +587,9 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
                 ? 'Pharmacovigilance (PV) Master Interview Guide'
                 : _isCro
                     ? 'CRO Operations Manual (2026 Edition)'
-                    : 'Regulatory Affairs (RA) Complete eCTD Guide',
+                    : _isInterview
+                        ? 'Pharma Interview Complete Preparation Kit (QA | QC | Production)'
+                        : 'Regulatory Affairs (RA) Complete eCTD Guide',
             style: GoogleFonts.dmSans(
               color: Colors.white,
               fontSize: 21,
@@ -505,7 +604,9 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
                 ? 'The definitive handbook covering ICSR case processing, MedDRA coding, WHO-UMC causality, and 100+ solved interview questions.'
                 : _isCro
                     ? 'Comprehensive operational manual covering ICH-GCP E6(R2), clinical trial monitoring, SAE reporting, TMF management, and 50+ interview Q&As.'
-                    : 'The complete eCTD handbook covering Modules 1-5, USFDA 21 CFR, DMF, ANDA filing pathways, CDSCO regulations, and MNC interview Q&As.',
+                    : _isInterview
+                        ? 'The complete interview handbook for B.Pharm freshers. Covers HR, Production, QA and QC questions, scenario-based answers, full forms, rapid revision and interview tips, all in simple, easy English.'
+                        : 'The complete eCTD handbook covering Modules 1-5, USFDA 21 CFR, DMF, ANDA filing pathways, CDSCO regulations, and MNC interview Q&As.',
             style: GoogleFonts.dmSans(
               color: Colors.white.withValues(alpha: 0.9),
               fontSize: 12,
@@ -517,10 +618,35 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
             spacing: 6,
             runSpacing: 6,
             children: [
-              _buildWhiteTag(_isPv ? 'Interview Kit' : _isCro ? 'Free Manual' : 'eCTD Dossier'),
-              _buildWhiteTag(_isPv ? '15 Chapters' : _isCro ? '15 Chapters' : '20 Sections'),
-              _buildWhiteTag(_isPv ? 'Argus & MedDRA' : _isCro ? 'CRA & GCP Manual' : 'Modules 1-5 eCTD'),
-              _buildWhiteTag(_isCro ? '100% Free Access' : 'Offline Reading Enabled'),
+              _buildWhiteTag(_isPv
+                  ? 'Interview Kit'
+                  : _isCro
+                      ? 'Free Manual'
+                      : _isInterview
+                          ? 'Interview Kit'
+                          : 'eCTD Dossier'),
+              _buildWhiteTag(_isPv
+                  ? '15 Chapters'
+                  : _isCro
+                      ? '15 Chapters'
+                      : _isInterview
+                          ? '11 Sections'
+                          : '20 Sections'),
+              _buildWhiteTag(_isPv
+                  ? 'Argus & MedDRA'
+                  : _isCro
+                      ? 'CRA & GCP Manual'
+                      : _isInterview
+                          ? '200+ Q&A'
+                          : 'Modules 1-5 eCTD'),
+              _buildWhiteTag(_isPv
+                  ? 'Offline Reading Enabled'
+                  : _isCro
+                      ? '100% Free Access'
+                      : _isInterview
+                          ? '58 Pages'
+                          : 'Offline Reading Enabled'),
+              if (_isInterview) _buildWhiteTag('Offline Reading Enabled'),
             ],
           ),
         ],
@@ -561,7 +687,14 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
                 {'icon': Icons.assignment_turned_in_rounded, 'title': 'Real Case Scenarios', 'desc': '24hr SAE escalation, deviation logs & query tracking'},
                 {'icon': Icons.forum_rounded, 'title': 'MNC Interview Prep', 'desc': '50+ Solved scenario questions for CRA & CRC trainees'},
               ]
-            : [
+            : _isInterview
+                ? [
+                    {'icon': Icons.forum_rounded, 'title': '200+ Interview Q&A', 'desc': 'Real answers for HR, Production, QA and QC rounds'},
+                    {'icon': Icons.account_tree_rounded, 'title': '15+ Flow Diagrams', 'desc': 'Granulation, deviation, OOS, validation, HPLC & dissolution'},
+                    {'icon': Icons.text_fields_rounded, 'title': '65+ Full Forms', 'desc': 'Written-test favourites, grouped for easy memory'},
+                    {'icon': Icons.quiz_rounded, 'title': 'Practice Zone', 'desc': 'Self-test with answer key, mock interview sheet & 7-day plan'},
+                  ]
+                : [
                 {'icon': Icons.account_tree_rounded, 'title': 'eCTD 5 Modules', 'desc': 'Complete ICH M4 dossier architecture explained'},
                 {'icon': Icons.gavel_rounded, 'title': 'Global Regulations', 'desc': 'USFDA 21 CFR, EMA Centralised & CDSCO Sugam'},
                 {'icon': Icons.folder_special_rounded, 'title': 'DMF & ANDA Filings', 'desc': 'Bioequivalence criteria, SUPAC & stability'},
@@ -651,7 +784,9 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
         ? _pvPreviews
         : _isCro
             ? _croPreviews
-            : _raPreviews;
+            : _isInterview
+                ? _interviewPreviews
+                : _raPreviews;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -914,7 +1049,11 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
             ? 'Read CRO Manual (Free)'
             : (_billing.isUnlocked(_productId)
                 ? 'Read Full PDF'
-                : (_isPv ? 'Unlock Guide · ₹49' : 'Unlock Guide · ₹99')),
+                : (_isPv
+                    ? 'Unlock Guide · ₹49'
+                    : (_isInterview
+                        ? 'Unlock Kit · ₹149'
+                        : 'Unlock Guide · ₹99'))),
       ),
     );
   }
@@ -979,11 +1118,27 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
       {'ch': '20', 'title': 'Glossary — Quick Reference', 'desc': 'All key terms, abbreviations and acronyms in one clean, scannable glossary.'},
     ];
 
+    final interviewSections = [
+      {'ch': '01', 'title': 'Introduction', 'desc': 'QA vs QC vs Production, how they work together, regulators and GMP documents.'},
+      {'ch': '02', 'title': 'HR Interview Q&A', 'desc': 'Tell me about yourself, strengths, salary, shifts, plus do\'s and don\'ts.'},
+      {'ch': '03', 'title': 'Production Questions', 'desc': 'GMP, BMR, line clearance, granulation, compression, tablet defects, cleaning, HVAC, yield.'},
+      {'ch': '04', 'title': 'QA Questions', 'desc': 'Deviation, CAPA, change control, OOS/OOT, validation, audits, ALCOA, data integrity.'},
+      {'ch': '05', 'title': 'QC Questions', 'desc': 'HPLC, UV, dissolution, limit tests, stability studies, calculations.'},
+      {'ch': '06', 'title': 'Scenario-Based Questions', 'desc': 'Batch fail, contamination, low yield, calibration issue, data falsification.'},
+      {'ch': '07', 'title': 'Short Notes', 'desc': 'GMP, GLP, GDP, ALCOA, validation types, cleanroom grades, stability zones, water systems.'},
+      {'ch': '08', 'title': 'Important Full Forms (65+)', 'desc': 'Complete list with memory groups and tips for written tests.'},
+      {'ch': '09', 'title': 'Rapid Revision', 'desc': 'One-line answers and master tables for the night before.'},
+      {'ch': '10', 'title': 'Interview Tips', 'desc': 'Checklist, common mistakes, tough questions, interview-day guide, resume tips.'},
+      {'ch': '11', 'title': 'Extra Practice Zone', 'desc': '30-question self-test, mock interview sheet, 7-day study plan, glossary, rapid-fire Q&A.'},
+    ];
+
     final chapters = _isPv
         ? pvChapters
         : _isCro
             ? croChapters
-            : raSections;
+            : _isInterview
+                ? interviewSections
+                : raSections;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -998,7 +1153,9 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
                     ? '15-Chapter Curriculum'
                     : _isCro
                         ? '15-Chapter Curriculum'
-                        : '20-Section Curriculum',
+                        : _isInterview
+                            ? '11-Section Curriculum'
+                            : '20-Section Curriculum',
                 style: GoogleFonts.dmSans(
                   color: AppTheme.primaryNavy,
                   fontSize: 16,
@@ -1252,11 +1409,61 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
       },
     ];
 
+    final List<Map<String, dynamic>> interviewQuestions = [
+      {
+        'q': 'What is the core difference between QA and QC?',
+        'lead': 'In pharmaceutical manufacturing, Quality Assurance and Quality Control perform complementary but fundamentally distinct roles:',
+        'bullets': [
+          {
+            'label': 'Quality Assurance (QA)',
+            'desc': 'Proactive and process-oriented. Ensures systems, procedures, and documentation (GMP, SOPs, BMR, Validation) are properly designed and adhered to so defects are prevented before they happen.',
+          },
+          {
+            'label': 'Quality Control (QC)',
+            'desc': 'Reactive and product-oriented. Tests raw materials, in-process samples, and finished dosage forms using analytical equipment (HPLC, UV, Dissolution) to detect defects and verify compliance against finished product specifications.',
+          },
+        ],
+        'note': 'Golden Interview Tip: QA builds quality into the process; QC verifies quality in the end product.',
+      },
+      {
+        'q': 'What is CAPA and how is it executed?',
+        'lead': 'CAPA stands for Corrective Action and Preventive Action, a mandatory GMP requirement under 21 CFR 211 and ICH Q10:',
+        'bullets': [
+          {
+            'label': 'Corrective Action (CA)',
+            'desc': 'Action taken to eliminate the root cause of an existing non-conformity or defect that has already occurred, preventing its recurrence.',
+          },
+          {
+            'label': 'Preventive Action (PA)',
+            'desc': 'Proactive action taken to identify potential risk factors and eliminate root causes before a non-conformity or failure happens in similar equipment or processes.',
+          },
+        ],
+        'note': 'Always remember: Root Cause Analysis (5-Why, Ishikawa/Fishbone diagram) MUST precede CAPA initiation.',
+      },
+      {
+        'q': 'What will you do if a batch sample gives an Out of Specification (OOS) result?',
+        'lead': 'An Out of Specification (OOS) result must be handled rigorously per USFDA OOS Guidance without blind retesting:',
+        'bullets': [
+          {
+            'label': 'Phase 1: Laboratory Investigation',
+            'desc': 'Immediately preserve sample preparations. Verify calculation, instruments, column, standards, calibration, and analyst technique. Confirm or invalidate laboratory error.',
+          },
+          {
+            'label': 'Phase 2: Manufacturing Investigation',
+            'desc': 'If no laboratory error is found, initiate full batch investigation involving QA and Production: review BMR, environmental controls, raw materials, machine parameters, and operator logs. Document everything in the deviation management system.',
+          },
+        ],
+        'note': 'Critical Rule: Never retest to test into compliance without identifying and documenting assignable cause.',
+      },
+    ];
+
     final questions = _isPv
         ? pvQuestions
         : _isCro
             ? croQuestions
-            : raQuestions;
+            : _isInterview
+                ? interviewQuestions
+                : raQuestions;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -1711,7 +1918,7 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
                       Row(
                         children: [
                           Text(
-                            _isPv ? '₹49' : '₹99',
+                            _isPv ? '₹49' : (_isInterview ? '₹149' : '₹99'),
                             style: GoogleFonts.dmSans(
                               color: primaryColor,
                               fontWeight: FontWeight.w900,
@@ -1721,7 +1928,7 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
                           ),
                           const SizedBox(width: 6),
                           Text(
-                            _isPv ? '₹499' : '₹699',
+                            _isPv ? '₹499' : (_isInterview ? '₹999' : '₹699'),
                             style: GoogleFonts.dmSans(
                               color: const Color(0xFF94A3B8),
                               decoration: TextDecoration.lineThrough,
@@ -1759,7 +1966,11 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
                       label: Text(
                         isUnlocked
                             ? 'Open Full PDF Reader'
-                            : (_isPv ? 'Unlock Guide · ₹49' : 'Unlock Guide · ₹99'),
+                            : (_isPv
+                                ? 'Unlock Guide · ₹49'
+                                : (_isInterview
+                                    ? 'Unlock Kit · ₹149'
+                                    : 'Unlock Guide · ₹99')),
                         style: GoogleFonts.dmSans(
                           fontWeight: FontWeight.w900,
                           fontSize: 14,
@@ -1784,7 +1995,7 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
                   GestureDetector(
                     onTap: () => showPreBookVipSheet(context),
                     child: Text(
-                      'Or unlock BOTH + All Notes & 100% Ad-Free with ₹499 VIP Pass',
+                      'Or unlock ALL Guides + Notes & 100% Ad-Free with ₹499 VIP Pass',
                       style: GoogleFonts.dmSans(
                         fontSize: 11,
                         fontWeight: FontWeight.w800,

@@ -446,7 +446,7 @@ $userName
                             const SizedBox(height: 8),
                             Text(
                               '• 100% Ad-Free Learning Experience across entire app\n'
-                              '• PV Master Guide & RA Complete Guide permanently unlocked\n'
+                              '• PV (₹49), RA (₹99) & Pharma Interview Kit (₹149) permanently unlocked\n'
                               '• Unlimited AI Doubts & all future B.Pharm semester notes\n'
                               '• Real-time 1-on-1 student doubt resolution via WhatsApp & Email',
                               style: GoogleFonts.dmSans(color: const Color(0xFF78350F), fontSize: 12, height: 1.45),

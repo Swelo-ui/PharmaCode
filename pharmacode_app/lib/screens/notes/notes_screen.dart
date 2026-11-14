@@ -351,6 +351,14 @@ class _NotesScreenState extends State<NotesScreen> {
                       context,
                       MaterialPageRoute(builder: (_) => GuideDetailScreen(guideType: 'ra', pdfItem: pdf)),
                     );
+                  } else if (pdf.playProductId == PlayProducts.guidePharmaInterview ||
+                      pdf.playProductId == PlayProducts.guidePharmaInterviewAlias ||
+                      pdf.id == 'pdf-pharma-interview-guide' ||
+                      pdf.id == 'pdf-interview-prep-guide') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => GuideDetailScreen(guideType: 'interview', pdfItem: pdf)),
+                    );
                   } else if (pdf.id == 'pdf-career-free' || pdf.id == 'pdf-cro-manual') {
                     Navigator.push(
                       context,

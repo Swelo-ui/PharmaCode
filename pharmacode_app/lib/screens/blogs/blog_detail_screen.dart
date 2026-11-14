@@ -54,6 +54,10 @@ class _BlogDetailScreenState extends State<BlogDetailScreen> {
   bool get _isPv => widget.blog.id == 'pharmacovigilance-interview-preparation-kit';
   bool get _isRa => widget.blog.id == 'regulatory-affairs-complete-guide';
   bool get _isCro => widget.blog.id == 'cro-operations-manual' || widget.blog.id.contains('cro');
+  bool get _isInterview =>
+      widget.blog.id == 'pharma-interview-preparation-kit' ||
+      widget.blog.id.contains('interview-preparation') ||
+      widget.blog.id.contains('qa-qc-production');
 
   void _openActionUrl() {
     if (_isPv) {
@@ -74,6 +78,13 @@ class _BlogDetailScreenState extends State<BlogDetailScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (_) => const GuideDetailScreen(guideType: 'cro')),
+      );
+      return;
+    }
+    if (_isInterview) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const GuideDetailScreen(guideType: 'interview')),
       );
       return;
     }

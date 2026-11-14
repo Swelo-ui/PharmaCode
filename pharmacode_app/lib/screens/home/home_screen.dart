@@ -1018,6 +1018,24 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     description: '15-Chapter Complete CRO Ecosystem Manual: Clinical Trials, CRA, CDM, QA, GCP & 30-Day Onboarding Checklist (100% Free)',
   );
 
+  static final AdminPdfItem _defaultInterviewGuide = AdminPdfItem(
+    id: 'pdf-pharma-interview-guide',
+    title: 'Pharma Interview Complete Preparation Kit (QA | QC | Production)',
+    subjectCode: 'INTERVIEW-KIT',
+    subjectName: 'QA | QC | Production Career Kit',
+    semester: 8,
+    unit: '11 Sections · 200+ Q&A · 58 Pages',
+    category: 'Career Kit',
+    url: SecureDocResolver.resolveSecureUrl('pdf-pharma-interview-guide'),
+    fileSize: '8.4 MB',
+    pages: 58,
+    downloadsCount: 150,
+    isPremium: true,
+    playProductId: PlayProducts.guidePharmaInterview,
+    priceRupees: 149,
+    description: 'Complete Interview Handbook for B.Pharm Freshers: HR, QA, QC & Production (Included in ₹499 VIP Pass)',
+  );
+
   Widget _buildPremiumGuidesStrip(BuildContext context) {
     final allPdfs = PdfService.instance.allPdfs;
 
@@ -1036,6 +1054,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       orElse: () => _defaultCareerFreeGuide,
     );
 
+    final interviewPdf = allPdfs.firstWhere(
+      (p) =>
+          p.id == 'pdf-pharma-interview-guide' ||
+          p.id == 'pdf-interview-prep-guide' ||
+          p.playProductId == PlayProducts.guidePharmaInterview ||
+          p.playProductId == PlayProducts.guidePharmaInterviewAlias,
+      orElse: () => _defaultInterviewGuide,
+    );
+
     return ValueListenableBuilder<Set<String>>(
       valueListenable: InAppPurchaseService.instance.unlockedNotifier,
       builder: (context, unlockedSet, _) {
@@ -1043,6 +1070,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         final isVip = billing.isVipUnlocked;
         final isPvUnlocked = billing.isUnlocked(PlayProducts.guidePvInterview);
         final isRaUnlocked = billing.isUnlocked(PlayProducts.guideRaDossier);
+        final isInterviewUnlocked = billing.isUnlocked(PlayProducts.guidePharmaInterview);
 
         final items = [
           // 1. PV Guide
@@ -1087,7 +1115,28 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               );
             },
           ),
-          // 3. 100% Free CRO Operations Manual (Ad Supported)
+          // 3. Pharma Interview Prep Kit (QA | QC | Production)
+          _HomeGuideCardData(
+            tag: isInterviewUnlocked ? 'UNLOCKED' : 'INTERVIEW PREP · ₹149',
+            tagIcon: isInterviewUnlocked ? Icons.check_circle_rounded : Icons.psychology_rounded,
+            tagBg: isInterviewUnlocked ? const Color(0xFFECFDF5) : const Color(0xFFF5F3FF),
+            tagColor: isInterviewUnlocked ? const Color(0xFF059669) : const Color(0xFF7C3AED),
+            title: 'Pharma Interview Complete Preparation Kit',
+            subtitle: 'QA, QC, Production & HR: 200+ Q&A & Flowcharts',
+            chipLabel: '11 Sections · 200+ Q&A · 58 Pages',
+            chipIcon: Icons.menu_book_rounded,
+            sampleBadge: '6 Sample Previews Included',
+            sampleBadgeIcon: Icons.remove_red_eye_outlined,
+            buttonLabel: isInterviewUnlocked ? 'Read Kit' : 'Explore & Unlock · ₹149',
+            isUnlocked: isInterviewUnlocked,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => GuideDetailScreen(guideType: 'interview', pdfItem: interviewPdf)),
+              );
+            },
+          ),
+          // 4. 100% Free CRO Operations Manual (Ad Supported)
           _HomeGuideCardData(
             tag: '100% FREE GUIDE',
             tagIcon: Icons.biotech_rounded,
@@ -1108,14 +1157,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               );
             },
           ),
-          // 4. All-Access VIP Pass Banner
+          // 5. All-Access VIP Pass Banner
           _HomeGuideCardData(
             tag: isVip ? 'VIP ACTIVE · AD-FREE' : 'ALL-ACCESS PASS · ₹499',
             tagIcon: isVip ? Icons.check_circle_rounded : Icons.workspace_premium_rounded,
             tagBg: isVip ? const Color(0xFFECFDF5) : const Color(0xFFFEF3C7),
             tagColor: isVip ? const Color(0xFF059669) : const Color(0xFFD97706),
             title: 'PharmaCode VIP Study Pass',
-            subtitle: 'Unlocks BOTH PV (₹49) + RA (₹99) + All Notes & 100% Ad-Free!',
+            subtitle: 'Unlocks PV (₹49) + RA (₹99) + Interview Kit (₹149) & All Notes Ad-Free!',
             chipLabel: 'Lifetime Access · 100% Ad-Free',
             chipIcon: Icons.stars_rounded,
             sampleBadge: 'Unlocks All Present & Future Guides',

@@ -34,6 +34,8 @@ void main() {
       expect(billing.isVipUnlocked, isFalse);
       expect(billing.isUnlocked(PlayProducts.guidePvInterview), isFalse);
       expect(billing.isUnlocked(PlayProducts.guideRaDossier), isFalse);
+      expect(billing.isUnlocked(PlayProducts.guidePharmaInterview), isFalse);
+      expect(billing.isUnlocked(PlayProducts.guidePharmaInterview), isFalse);
       expect(billing.isUnlocked('pdf_unit1_pharmacology'), isFalse);
       expect(billing.isUnlocked(null), isFalse);
       expect(billing.isUnlocked(''), isFalse);
@@ -54,15 +56,27 @@ void main() {
       expect(billing.isVipUnlocked, isFalse, reason: 'VIP should NOT be unlocked when only RA is purchased');
       expect(billing.isUnlocked(PlayProducts.guideRaDossier), isTrue, reason: 'RA Guide must be unlocked');
       expect(billing.isUnlocked(PlayProducts.guidePvInterview), isFalse, reason: 'PV Guide must remain locked');
+      expect(billing.isUnlocked(PlayProducts.guidePharmaInterview), isFalse, reason: 'Pharma Interview Kit must remain locked');
       expect(billing.isUnlocked('pdf_unit1_pharmacology'), isFalse, reason: 'Notes must remain locked');
     });
 
-    test('4. VIP Pass Purchase (₹499): AUTOMATICALLY unlocks PV, RA, and ALL Notes', () {
+    test('3b. Single Purchase - Pharma Interview Kit Only (₹149): Only Interview Kit is UNLOCKED, others LOCKED', () {
+      billing.unlockedNotifier.value = {PlayProducts.guidePharmaInterview};
+
+      expect(billing.isVipUnlocked, isFalse, reason: 'VIP should NOT be unlocked when only Interview Kit is purchased');
+      expect(billing.isUnlocked(PlayProducts.guidePharmaInterview), isTrue, reason: 'Interview Kit must be unlocked');
+      expect(billing.isUnlocked(PlayProducts.guidePvInterview), isFalse, reason: 'PV Guide must remain locked');
+      expect(billing.isUnlocked(PlayProducts.guideRaDossier), isFalse, reason: 'RA Guide must remain locked');
+      expect(billing.isUnlocked('pdf_unit1_pharmacology'), isFalse, reason: 'Notes must remain locked');
+    });
+
+    test('4. VIP Pass Purchase (₹499): AUTOMATICALLY unlocks PV, RA, Pharma Interview Kit, and ALL Notes', () {
       billing.unlockedNotifier.value = {PlayProducts.vipPreBook499};
 
       expect(billing.isVipUnlocked, isTrue, reason: 'VIP Pass (₹499) must be active');
       expect(billing.isUnlocked(PlayProducts.guidePvInterview), isTrue, reason: 'PV Guide must automatically unlock with VIP');
       expect(billing.isUnlocked(PlayProducts.guideRaDossier), isTrue, reason: 'RA Guide must automatically unlock with VIP');
+      expect(billing.isUnlocked(PlayProducts.guidePharmaInterview), isTrue, reason: 'Pharma Interview Kit must automatically unlock with VIP');
       expect(billing.isUnlocked('pdf_unit1_pharmacology'), isTrue, reason: 'Semester Notes must unlock with VIP');
       expect(billing.isUnlocked('random_future_pdf_id'), isTrue, reason: 'Any future content must unlock with VIP');
     });
@@ -73,18 +87,21 @@ void main() {
       expect(billing.isVipUnlocked, isTrue);
       expect(billing.isUnlocked(PlayProducts.guidePvInterview), isTrue);
       expect(billing.isUnlocked(PlayProducts.guideRaDossier), isTrue);
+      expect(billing.isUnlocked(PlayProducts.guidePharmaInterview), isTrue);
 
       // Test Alias 2: pharmacode_prebook_vip_199
       billing.unlockedNotifier.value = {PlayProducts.vipPreBook};
       expect(billing.isVipUnlocked, isTrue);
       expect(billing.isUnlocked(PlayProducts.guidePvInterview), isTrue);
       expect(billing.isUnlocked(PlayProducts.guideRaDossier), isTrue);
+      expect(billing.isUnlocked(PlayProducts.guidePharmaInterview), isTrue);
 
       // Test Alias 3: pdf_vip_all_access
       billing.unlockedNotifier.value = {PlayProducts.vipLegacy};
       expect(billing.isVipUnlocked, isTrue);
       expect(billing.isUnlocked(PlayProducts.guidePvInterview), isTrue);
       expect(billing.isUnlocked(PlayProducts.guideRaDossier), isTrue);
+      expect(billing.isUnlocked(PlayProducts.guidePharmaInterview), isTrue);
     });
 
     test('6. Developer VIP Toggle Test: toggleVipForTesting switches between Unlocked & Locked', () async {
@@ -111,6 +128,7 @@ void main() {
       expect(billing.isVipUnlocked, isFalse);
       expect(billing.isUnlocked(PlayProducts.guidePvInterview), isFalse);
       expect(billing.isUnlocked(PlayProducts.guideRaDossier), isFalse);
+      expect(billing.isUnlocked(PlayProducts.guidePharmaInterview), isFalse);
     });
   });
 }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../core/billing/in_app_purchase_service.dart';
 
 class AdminPdfItem {
   final String id;
@@ -53,6 +54,9 @@ class AdminPdfItem {
     String fileSize = json['fileSize']?.toString() ?? '3.5 MB';
     int pages = (json['pages'] is num) ? (json['pages'] as num).toInt() : 20;
     int previewPages = (json['previewPages'] is num) ? (json['previewPages'] as num).toInt() : 3;
+    bool isPremium = json['isPremium'] == true;
+    String playProductId = json['playProductId']?.toString() ?? '';
+    int priceRupees = (json['priceRupees'] is num) ? (json['priceRupees'] as num).toInt() : 199;
 
     // Remove any trailing "(XX Pages)" or "(XX Pages PDF)" from title if present
     title = title.replaceAll(RegExp(r'\s*\(\d+\s*Pages?(?:\s*PDF)?\)', caseSensitive: false), '').trim();
@@ -62,10 +66,18 @@ class AdminPdfItem {
       title = 'Pharmacovigilance (PV) Master Interview Guide & ICSR Cases';
       fileSize = '11.6 MB';
       pages = 44;
+      previewPages = 8;
+      isPremium = true;
+      playProductId = PlayProducts.guidePvInterview;
+      priceRupees = 49;
     } else if (id == 'pdf-ra-guide') {
       title = 'Regulatory Affairs (RA) Complete eCTD Dossier & Filing Guide';
       fileSize = '1.2 MB';
       pages = 26;
+      previewPages = 6;
+      isPremium = true;
+      playProductId = PlayProducts.guideRaDossier;
+      priceRupees = 99;
     } else if (id == 'pdf-career-free' || id == 'pdf-cro-manual') {
       title = 'CRO Operations Manual – PharmaCode (2026 Edition)';
       subjectCode = 'CRO-OPS';
@@ -75,7 +87,22 @@ class AdminPdfItem {
       fileSize = '4.8 MB';
       pages = 41;
       previewPages = 41;
+      isPremium = false;
+      priceRupees = 0;
       description = '15-Chapter Complete CRO Ecosystem Manual: Clinical Trials, CRA, CDM, QA, GCP & 30-Day Onboarding Checklist (100% Free)';
+    } else if (id == 'pdf-pharma-interview-guide' || id == 'pdf-interview-prep-guide') {
+      title = 'Pharma Interview Complete Preparation Kit (QA | QC | Production)';
+      subjectCode = 'INTERVIEW-KIT';
+      subjectName = 'QA | QC | Production Career Kit';
+      unit = '11 Sections · 200+ Q&A · 58 Pages';
+      category = 'Career Kit';
+      fileSize = '8.4 MB';
+      pages = 58;
+      previewPages = 6;
+      isPremium = true;
+      playProductId = PlayProducts.guidePharmaInterview;
+      priceRupees = 149;
+      description = 'The complete interview handbook for B.Pharm freshers: HR, Production, QA and QC questions, scenario-based answers, full forms, rapid revision and tips.';
     }
 
     return AdminPdfItem(
@@ -90,9 +117,9 @@ class AdminPdfItem {
       fileSize: fileSize,
       pages: pages,
       downloadsCount: (json['downloadsCount'] is num) ? (json['downloadsCount'] as num).toInt() : 0,
-      isPremium: json['isPremium'] == true,
-      playProductId: json['playProductId']?.toString() ?? '',
-      priceRupees: (json['priceRupees'] is num) ? (json['priceRupees'] as num).toInt() : 199,
+      isPremium: isPremium,
+      playProductId: playProductId,
+      priceRupees: priceRupees,
       previewPages: previewPages,
       description: description,
     );

@@ -283,9 +283,35 @@ class BlogsScreen extends ConsumerWidget {
       ),
     );
 
+    final interviewPdf = allPdfs.firstWhere(
+      (p) =>
+          p.id == 'pdf-pharma-interview-guide' ||
+          p.id == 'pdf-interview-prep-guide' ||
+          p.playProductId == PlayProducts.guidePharmaInterview ||
+          p.playProductId == PlayProducts.guidePharmaInterviewAlias,
+      orElse: () => AdminPdfItem(
+        id: 'pdf-pharma-interview-guide',
+        title: 'Pharma Interview Complete Preparation Kit (QA | QC | Production)',
+        subjectCode: 'INTERVIEW-KIT',
+        subjectName: 'QA | QC | Production Career Kit',
+        semester: 8,
+        unit: '11 Sections · 200+ Q&A · 58 Pages',
+        category: 'Career Kit',
+        url: SecureDocResolver.resolveSecureUrl('pdf-pharma-interview-guide'),
+        fileSize: '8.4 MB',
+        pages: 58,
+        downloadsCount: 150,
+        isPremium: true,
+        playProductId: PlayProducts.guidePharmaInterview,
+        priceRupees: 149,
+        description: 'Complete Interview Handbook for B.Pharm Freshers (Included in ₹499 VIP Pass)',
+      ),
+    );
+
     final billing = InAppPurchaseService.instance;
     final isPvUnlocked = billing.isUnlocked(PlayProducts.guidePvInterview);
     final isRaUnlocked = billing.isUnlocked(PlayProducts.guideRaDossier);
+    final isInterviewUnlocked = billing.isUnlocked(PlayProducts.guidePharmaInterview);
 
     return Padding(
       padding: AppSpacing.horizontalMd,
@@ -644,6 +670,122 @@ class BlogsScreen extends ConsumerWidget {
                       Icon(
                         isRaUnlocked ? Icons.lock_open_rounded : Icons.arrow_forward_ios_rounded,
                         color: isRaUnlocked ? const Color(0xFF059669) : const Color(0xFF2563EB),
+                        size: 16,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          // 4. Pharma Interview Preparation Kit (₹149)
+          Container(
+            margin: const EdgeInsets.only(bottom: 14),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: isInterviewUnlocked ? const Color(0xFFA7F3D0) : const Color(0xFFDDD6FE),
+                width: 1.5,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.02),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(16),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => GuideDetailScreen(guideType: 'interview', pdfItem: interviewPdf),
+                    ),
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF5F3FF),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(Icons.psychology_rounded, color: Color(0xFF7C3AED), size: 24),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: isInterviewUnlocked ? const Color(0xFFECFDF5) : const Color(0xFFF5F3FF),
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(
+                                      color: isInterviewUnlocked ? const Color(0xFFA7F3D0) : const Color(0xFFDDD6FE),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    isInterviewUnlocked ? 'UNLOCKED' : '₹149 ONLY',
+                                    style: TextStyle(
+                                      fontFamily: 'Nunito',
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w900,
+                                      color: isInterviewUnlocked ? const Color(0xFF059669) : const Color(0xFF7C3AED),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                const Text(
+                                  'Interview Prep Kit',
+                                  style: TextStyle(
+                                    fontFamily: 'Nunito',
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(0xFF94A3B8),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            const Text(
+                              'Pharma Interview Complete Prep Kit (QA | QC | Production)',
+                              style: TextStyle(
+                                fontFamily: 'Nunito',
+                                fontSize: 14,
+                                fontWeight: FontWeight.w800,
+                                color: Color(0xFF0F172A),
+                                height: 1.25,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            const Text(
+                              '11 Sections: 200+ Q&A, 15+ Flow Diagrams, 65+ Full Forms',
+                              style: TextStyle(
+                                fontFamily: 'Nunito',
+                                fontSize: 11,
+                                color: Color(0xFF64748B),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Icon(
+                        isInterviewUnlocked ? Icons.lock_open_rounded : Icons.arrow_forward_ios_rounded,
+                        color: isInterviewUnlocked ? const Color(0xFF059669) : const Color(0xFF7C3AED),
                         size: 16,
                       ),
                     ],

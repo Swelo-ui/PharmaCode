@@ -21,6 +21,11 @@ class SecureDocResolver {
     // CRO Operations Manual (Free Guide): 1xvUpn2e0zPEsm-oIkEelqqehupUhTPGK
     'pdf-cro-manual': 'OBwVAh5bbEAAFzoTBhxXXVknPAZHIh8deRQWUxFZIAcTBlAFLBgKCTwEBxRZVgtxKBU8MR5CM1EPPDFSPUUOOwYkJgMVFDYNFkJlWmIQFyg=',
     'pdf-career-free': 'OBwVAh5bbEAAFzoTBhxXXVknPAZHIh8deRQWUxFZIAcTBlAFLBgKCTwEBxRZVgtxKBU8MR5CM1EPPDFSPUUOOwYkJgMVFDYNFkJlWmIQFyg=',
+
+    // Pharma Interview Complete Preparation Kit (₹149 Guide): 1fG28olthNk1_xO3RvGj7VuIt0BUGGHM0
+    'pdf-pharma-interview-guide': 'OBwVAh5bbEAAFzoTBhxXXVknPAZHIh8deRQWUxFZIAcTBlAFLBgKCTwEBxRZVgtxNiRbeR8cIgk7B0V+KCdSIBsmKVgyEBoRU3BldXEIHVM=',
+    'guide_pharma_interview_149': 'OBwVAh5bbEAAFzoTBhxXXVknPAZHIh8deRQWUxFZIAcTBlAFLBgKCTwEBxRZVgtxNiRbeR8cIgk7B0V+KCdSIBsmKVgyEBoRU3BldXEIHVM=',
+    'pharma_interview_prep_149': 'OBwVAh5bbEAAFzoTBhxXXVknPAZHIh8deRQWUxFZIAcTBlAFLBgKCTwEBxRZVgtxNiRbeR8cIgk7B0V+KCdSIBsmKVgyEBoRU3BldXEIHVM=',
   };
 
   /// Decrypts the obfuscated token into the memory-only streaming URL
