@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../services/auth_service.dart';
 import '../billing/in_app_purchase_service.dart';
 import '../theme.dart';
 
@@ -131,6 +132,23 @@ $userName
       Navigator.of(context).pop();
       return;
     }
+
+    final auth = AuthService();
+    if (!auth.isLoggedIn) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Please sign in with Google or Email first so your VIP Pass is permanently saved to your student account!',
+            style: GoogleFonts.dmSans(fontWeight: FontWeight.w600),
+          ),
+          backgroundColor: const Color(0xFF1E293B),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      final cred = await auth.signInWithGoogle();
+      if (cred == null || !mounted) return;
+    }
+
     final success = await _iapService.buyPreBookVipPass();
     if (!mounted) return;
     if (!success) {

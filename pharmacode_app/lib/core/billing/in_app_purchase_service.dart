@@ -313,7 +313,7 @@ class InAppPurchaseService {
     }
   }
 
-  /// Cryptographic Server-Side Verification (Zero-Trust)
+  /// Cryptographic Server-Side Verification (Zero-Trust) with resilient retry
   Future<bool> _verifyPurchaseWithBackend(PurchaseDetails purchase) async {
     final user = AuthService().currentUser;
     final userId = user?.uid ?? '';
@@ -324,47 +324,55 @@ class InAppPurchaseService {
       return false;
     }
 
-    try {
-      final uri = Uri.parse('https://pharmacode.vercel.app/api/purchase/verify/');
-      final res = await http
-          .post(
-            uri,
-            headers: {'Content-Type': 'application/json'},
-            body: jsonEncode({
-              'userId': userId,
-              'email': userEmail,
-              'productId': purchase.productID,
-              'purchaseToken': purchase.verificationData.serverVerificationData,
-              'orderId': purchase.purchaseID,
-              'packageName': 'com.pharmacode.bpharm',
-              'deviceInfo': 'Android ${userEmail.isNotEmpty ? userEmail : userId}',
-            }),
-          )
-          .timeout(const Duration(seconds: 8));
+    int attempts = 0;
+    while (attempts < 3) {
+      attempts++;
+      try {
+        final uri = Uri.parse('https://pharmacode.vercel.app/api/purchase/verify/');
+        final res = await http
+            .post(
+              uri,
+              headers: {'Content-Type': 'application/json'},
+              body: jsonEncode({
+                'userId': userId,
+                'email': userEmail,
+                'productId': purchase.productID,
+                'purchaseToken': purchase.verificationData.serverVerificationData,
+                'orderId': purchase.purchaseID,
+                'packageName': 'com.pharmacode.bpharm',
+                'deviceInfo': 'Android ${userEmail.isNotEmpty ? userEmail : userId}',
+              }),
+            )
+            .timeout(const Duration(seconds: 10));
 
-      if (res.statusCode == 200) {
-        final data = jsonDecode(res.body);
-        if (data['success'] == true) {
-          return true;
+        if (res.statusCode == 200) {
+          final data = jsonDecode(res.body);
+          if (data['success'] == true) {
+            return true;
+          } else {
+            purchaseStatusMessage.value = data['error'] ?? 'Purchase verification failed.';
+            return false;
+          }
         } else {
-          purchaseStatusMessage.value = data['error'] ?? 'Purchase verification failed.';
+          try {
+            final data = jsonDecode(res.body);
+            purchaseStatusMessage.value = data['error'] ?? 'Verification rejected by server.';
+          } catch (_) {
+            purchaseStatusMessage.value = 'Server error verifying purchase.';
+          }
           return false;
         }
-      } else {
-        try {
-          final data = jsonDecode(res.body);
-          purchaseStatusMessage.value = data['error'] ?? 'Verification rejected by server.';
-        } catch (_) {
-          purchaseStatusMessage.value = 'Server error verifying purchase.';
+      } catch (e) {
+        debugPrint('[InAppPurchaseService] Verification attempt $attempts failed: $e');
+        if (attempts < 3) {
+          await Future.delayed(Duration(milliseconds: attempts * 800));
         }
-        return false;
       }
-    } catch (e) {
-      debugPrint('[InAppPurchaseService] Backend verification connection error: $e');
-      // If offline network glitch occurs, allow ONLY if this exact user already had it securely recorded
-      final cached = await _secureStorage.read(key: 'entitlement_${userId}_${purchase.productID}');
-      return cached != null;
     }
+
+    // If all network attempts fail, fallback ONLY to previously verified secure cache for this exact user
+    final cached = await _secureStorage.read(key: 'entitlement_${userId}_${purchase.productID}');
+    return cached != null;
   }
 
   /// Sync user entitlements from backend database
