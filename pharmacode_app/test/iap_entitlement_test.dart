@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+// ignore: depend_on_referenced_packages
 import 'package:in_app_purchase_android/src/messages.g.dart';
 import 'package:pharmacode_app/core/billing/in_app_purchase_service.dart';
 
@@ -56,32 +57,52 @@ void main() {
       expect(billing.isUnlocked('pdf_unit1_pharmacology'), isFalse, reason: 'Notes must remain locked');
     });
 
-    test('4. VIP Pass Purchase (₹199): AUTOMATICALLY unlocks PV, RA, and ALL Notes', () {
-      billing.unlockedNotifier.value = {PlayProducts.vipPreBook};
+    test('4. VIP Pass Purchase (₹499): AUTOMATICALLY unlocks PV, RA, and ALL Notes', () {
+      billing.unlockedNotifier.value = {PlayProducts.vipPreBook499};
 
-      expect(billing.isVipUnlocked, isTrue, reason: 'VIP Pass must be active');
+      expect(billing.isVipUnlocked, isTrue, reason: 'VIP Pass (₹499) must be active');
       expect(billing.isUnlocked(PlayProducts.guidePvInterview), isTrue, reason: 'PV Guide must automatically unlock with VIP');
       expect(billing.isUnlocked(PlayProducts.guideRaDossier), isTrue, reason: 'RA Guide must automatically unlock with VIP');
       expect(billing.isUnlocked('pdf_unit1_pharmacology'), isTrue, reason: 'Semester Notes must unlock with VIP');
       expect(billing.isUnlocked('random_future_pdf_id'), isTrue, reason: 'Any future content must unlock with VIP');
     });
 
-    test('5. VIP Pass Aliases: Both vipPreBookAlias and vipLegacy unlock EVERYTHING', () {
-      // Test Alias 1: vip_prebook_199
-      billing.unlockedNotifier.value = {PlayProducts.vipPreBookAlias};
+    test('5. VIP Pass Aliases: Both vipPreBook499Alias, vipPreBook, and legacy unlock EVERYTHING', () {
+      // Test Alias 1: vip_prebook_499
+      billing.unlockedNotifier.value = {PlayProducts.vipPreBook499Alias};
       expect(billing.isVipUnlocked, isTrue);
       expect(billing.isUnlocked(PlayProducts.guidePvInterview), isTrue);
       expect(billing.isUnlocked(PlayProducts.guideRaDossier), isTrue);
 
-      // Test Alias 2: pdf_vip_all_access
+      // Test Alias 2: pharmacode_prebook_vip_199
+      billing.unlockedNotifier.value = {PlayProducts.vipPreBook};
+      expect(billing.isVipUnlocked, isTrue);
+      expect(billing.isUnlocked(PlayProducts.guidePvInterview), isTrue);
+      expect(billing.isUnlocked(PlayProducts.guideRaDossier), isTrue);
+
+      // Test Alias 3: pdf_vip_all_access
       billing.unlockedNotifier.value = {PlayProducts.vipLegacy};
       expect(billing.isVipUnlocked, isTrue);
       expect(billing.isUnlocked(PlayProducts.guidePvInterview), isTrue);
       expect(billing.isUnlocked(PlayProducts.guideRaDossier), isTrue);
     });
 
-    test('6. User Logout Hook (Zero cross-account leak): Wipes all entitlements', () {
-      billing.unlockedNotifier.value = {PlayProducts.vipPreBook, PlayProducts.guidePvInterview};
+    test('6. Developer VIP Toggle Test: toggleVipForTesting switches between Unlocked & Locked', () async {
+      billing.unlockedNotifier.value = {};
+      expect(billing.isVipUnlocked, isFalse);
+
+      final nowUnlocked = await billing.toggleVipForTesting();
+      expect(nowUnlocked, isTrue);
+      expect(billing.isVipUnlocked, isTrue);
+      expect(billing.isUnlocked(PlayProducts.guidePvInterview), isTrue);
+
+      final nowLocked = await billing.toggleVipForTesting();
+      expect(nowLocked, isFalse);
+      expect(billing.isVipUnlocked, isFalse);
+    });
+
+    test('7. User Logout Hook (Zero cross-account leak): Wipes all entitlements', () {
+      billing.unlockedNotifier.value = {PlayProducts.vipPreBook499, PlayProducts.guidePvInterview};
       expect(billing.isVipUnlocked, isTrue);
 
       billing.onUserLoggedOut();

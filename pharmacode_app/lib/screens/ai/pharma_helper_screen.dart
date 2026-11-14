@@ -3,7 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../core/ads/ad_service.dart';
+import '../../core/billing/in_app_purchase_service.dart';
+import '../../core/widgets/prebook_vip_sheet.dart';
 import '../../core/theme.dart';
 import '../../core/widgets/ad_banner_widget.dart';
 import '../../core/widgets/ai_settings_sheet.dart';
@@ -44,6 +48,167 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
   bool _webSearchEnabled = false;
   Subject? _attachedSubject;
 
+  // Free AI Questions Quota & Rewarded Video Ad Management
+  int _remainingQueries = 3;
+  static const String _prefAiQueries = 'pref_ai_helper_remaining_queries';
+
+  Future<void> _loadAiQueries() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (mounted) {
+      setState(() {
+        _remainingQueries = prefs.getInt(_prefAiQueries) ?? 3;
+      });
+    }
+  }
+
+  Future<void> _saveAiQueries(int count) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_prefAiQueries, count);
+    if (mounted) {
+      setState(() {
+        _remainingQueries = count;
+      });
+    }
+  }
+
+  void _watchRewardedAdForBonus([String? pendingQuery]) {
+    AdService.instance.showRewardedAd(
+      onUserEarnedReward: (reward) {
+        _saveAiQueries(_remainingQueries + 5);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('🎉 +5 Free AI Questions Added! Total: $_remainingQueries'),
+              backgroundColor: const Color(0xFF059669),
+            ),
+          );
+          if (pendingQuery != null && pendingQuery.isNotEmpty) {
+            _handleSendMessage(pendingQuery);
+          }
+        }
+      },
+      onFailed: () {
+        if (mounted) {
+          // Fallback: If ad failed to fill, give the student questions anyway so they aren't blocked!
+          _saveAiQueries(_remainingQueries + 3);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Sponsor video unavailable right now. +3 bonus questions granted! 🎉'),
+              backgroundColor: Color(0xFF2563EB),
+            ),
+          );
+          if (pendingQuery != null && pendingQuery.isNotEmpty) {
+            _handleSendMessage(pendingQuery);
+          }
+        }
+      },
+    );
+  }
+
+  void _showQuotaExhaustedSheet({String? pendingQuery}) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(2)),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(color: const Color(0xFFFEF3C7), borderRadius: BorderRadius.circular(12)),
+                    child: const Icon(Icons.bolt_rounded, color: Color(0xFFD97706), size: 24),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Daily AI Questions Limit Reached',
+                          style: GoogleFonts.dmSans(fontSize: 16, fontWeight: FontWeight.w900, color: const Color(0xFF0F172A)),
+                        ),
+                        Text(
+                          'Watch a short video or upgrade to VIP Study Pass',
+                          style: GoogleFonts.dmSans(fontSize: 12, color: const Color(0xFF64748B)),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              // Option 1: Rewarded Ad
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                    _watchRewardedAdForBonus(pendingQuery);
+                  },
+                  icon: const Icon(Icons.play_circle_fill_rounded, color: Colors.white, size: 20),
+                  label: const Text('Watch Short Video (+5 Questions Free)'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF059669),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              // Option 2: VIP Pass
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: OutlinedButton.icon(
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                    showPreBookVipSheet(context);
+                  },
+                  icon: const Icon(Icons.stars_rounded, color: Color(0xFFD97706), size: 18),
+                  label: const Text('Unlock Unlimited with VIP Pass (₹499)'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: const Color(0xFF92400E),
+                    side: const BorderSide(color: Color(0xFFFDE68A), width: 1.5),
+                    backgroundColor: const Color(0xFFFEF3C7),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              // 🧪 Dev Test Button (Quickly add questions for testing)
+              Center(
+                child: TextButton.icon(
+                  onPressed: () {
+                    _saveAiQueries(_remainingQueries + 10);
+                    Navigator.pop(ctx);
+                    if (pendingQuery != null) _handleSendMessage(pendingQuery);
+                  },
+                  icon: const Icon(Icons.science_outlined, size: 14, color: Color(0xFF64748B)),
+                  label: Text('🧪 Dev Test: Add +10 Free Queries', style: GoogleFonts.dmSans(fontSize: 11, color: const Color(0xFF64748B))),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   final List<String> _suggestedPrompts = [
     'Bioavailability simple Hinglish me samjhao',
     'Write a 5-mark answer on Tablet Capping & Lamination',
@@ -57,6 +222,7 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
   void initState() {
     super.initState();
     _attachedSubject = widget.attachedSubject;
+    _loadAiQueries();
 
     if (_attachedSubject != null) {
       _loadSubjectGreeting(_attachedSubject!);
@@ -184,6 +350,17 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
   Future<void> _handleSendMessage(String text) async {
     final query = text.trim();
     if (query.isEmpty || _isLoading) return;
+
+    final isVip = InAppPurchaseService.instance.isVipUnlocked;
+
+    if (!isVip && _remainingQueries <= 0) {
+      _showQuotaExhaustedSheet(pendingQuery: query);
+      return;
+    }
+
+    if (!isVip && _remainingQueries > 0) {
+      _saveAiQueries(_remainingQueries - 1);
+    }
 
     _textCtrl.clear();
     FocusScope.of(context).unfocus();
@@ -1674,7 +1851,6 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
       top: false,
       bottom: true,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         decoration: BoxDecoration(
           color: Colors.white,
           border: const Border(top: BorderSide(color: Color(0xFFE2E8F0), width: 0.8)),
@@ -1686,17 +1862,96 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
             ),
           ],
         ),
-        child: Container(
-          constraints: const BoxConstraints(minHeight: 38),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF8FAFC),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: const Color(0xFFE2E8F0), width: 0.8),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Quota / VIP Status Bar
+            ValueListenableBuilder<Set<String>>(
+              valueListenable: InAppPurchaseService.instance.unlockedNotifier,
+              builder: (context, _, unused) {
+                final isVip = InAppPurchaseService.instance.isVipUnlocked;
+                if (isVip) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+                    color: const Color(0xFFFEF3C7),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.stars_rounded, size: 14, color: Color(0xFFD97706)),
+                        const SizedBox(width: 5),
+                        Text(
+                          '👑 VIP Student · Unlimited AI Doubts & 100% Ad-Free',
+                          style: GoogleFonts.dmSans(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w800,
+                            color: const Color(0xFF92400E),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+                return Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  color: const Color(0xFFF8FAFC),
+                  child: Row(
+                    children: [
+                      Icon(Icons.bolt_rounded, size: 14, color: _remainingQueries > 0 ? const Color(0xFFD97706) : Colors.red),
+                      const SizedBox(width: 4),
+                      Text(
+                        '$_remainingQueries Free AI Questions Left',
+                        style: GoogleFonts.dmSans(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          color: _remainingQueries > 0 ? const Color(0xFF334155) : Colors.red,
+                        ),
+                      ),
+                      const Spacer(),
+                      InkWell(
+                        onTap: () => _watchRewardedAdForBonus(),
+                        borderRadius: BorderRadius.circular(12),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF10B981).withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: const Color(0xFF10B981).withValues(alpha: 0.3)),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.play_circle_fill_rounded, size: 12, color: Color(0xFF059669)),
+                              const SizedBox(width: 4),
+                              Text(
+                                '+5 via Video',
+                                style: GoogleFonts.dmSans(
+                                  fontSize: 10.5,
+                                  fontWeight: FontWeight.w800,
+                                  color: const Color(0xFF059669),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              child: Container(
+                constraints: const BoxConstraints(minHeight: 38),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF8FAFC),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: const Color(0xFFE2E8F0), width: 0.8),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
               // Web Search Toggle inside pill
               Material(
                 color: Colors.transparent,
@@ -1779,7 +2034,10 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
           ),
         ),
       ),
-    );
+    ],
+  ),
+),
+);
   }
 
   /// Unified rich formatted text rendering using PharmaMarkdownWidget

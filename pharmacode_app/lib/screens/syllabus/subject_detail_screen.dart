@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../core/ads/ad_service.dart';
+import '../../core/widgets/ad_native_card.dart';
 import '../../core/billing/in_app_purchase_service.dart';
 import '../../core/in_app_browser.dart';
 import '../../core/theme.dart';
@@ -510,7 +511,7 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                 itemCount: s.units.length,
                 itemBuilder: (context, index) {
                   final unit = s.units[index];
-                  return Container(
+                  final unitWidget = Container(
                     margin: const EdgeInsets.only(bottom: 12),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -657,6 +658,17 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                       ),
                     ),
                   );
+
+                  if (index == 1) {
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        unitWidget,
+                        const AdNativeCard(margin: EdgeInsets.only(bottom: 12)),
+                      ],
+                    );
+                  }
+                  return unitWidget;
                 },
               ),
 

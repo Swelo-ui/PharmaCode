@@ -6,6 +6,7 @@ import '../../core/billing/in_app_purchase_service.dart';
 import '../../core/security/secure_doc_resolver.dart';
 import '../../core/theme.dart';
 import '../../core/widgets/prebook_vip_sheet.dart';
+import '../../core/widgets/ad_native_card.dart';
 import '../../data/ticker_data.dart';
 import '../../data/faqs_data.dart';
 import '../../services/pdf_service.dart';
@@ -101,6 +102,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           _buildSectionHeader(context, 'Key B.Pharm Subjects', Icons.star_rounded, AppTheme.brandAmber),
           _buildFeaturedSubjects(context, svc),
 
+          // ─── 5.3 IN-FEED NATIVE AD (Zero shift on failure, 100% Ad-Free for VIP) ───
+          const AdNativeCard(),
+
           // ─── 5.5 CAREER KITS & PREMIUM GUIDES ─────────────────────────────
           _buildSectionHeader(
             context,
@@ -162,24 +166,71 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Live badge
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.white.withValues(alpha: 0.25)),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(width: 7, height: 7,
-                        decoration: const BoxDecoration(color: Color(0xFF6EE7B7), shape: BoxShape.circle)),
-                      const SizedBox(width: 6),
-                      Text('PCI NEP 2020  ·  Batch 2026–27',
-                        style: GoogleFonts.dmSans(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w700)),
-                    ],
-                  ),
+                // Live badge / Golden VIP Badge
+                ValueListenableBuilder<Set<String>>(
+                  valueListenable: InAppPurchaseService.instance.unlockedNotifier,
+                  builder: (context, _, unused) {
+                    final isVip = InAppPurchaseService.instance.isVipUnlocked;
+                    if (isVip) {
+                      return Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFFF59E0B), Color(0xFFD97706)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFFF59E0B).withValues(alpha: 0.4),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.stars_rounded, color: Colors.white, size: 14),
+                            const SizedBox(width: 5),
+                            Text(
+                              '👑 VIP MEMBER · 100% AD-FREE',
+                              style: GoogleFonts.dmSans(
+                                color: Colors.white,
+                                fontSize: 10.5,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 0.3,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                    return Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.white.withValues(alpha: 0.25)),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 7,
+                            height: 7,
+                            decoration: const BoxDecoration(color: Color(0xFF6EE7B7), shape: BoxShape.circle),
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            'PCI NEP 2020  ·  Batch 2026–27',
+                            style: GoogleFonts.dmSans(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w700),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 18),
 
@@ -929,7 +980,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     isPremium: true,
     playProductId: PlayProducts.guidePvInterview,
     priceRupees: 49,
-    description: 'PV Interview Questions, Argus & MedDRA Case Studies (Included in ₹199 VIP Pass)',
+    description: 'PV Interview Questions, Argus & MedDRA Case Studies (Included in ₹499 VIP Pass)',
   );
 
   static final AdminPdfItem _defaultRaGuide = AdminPdfItem(
@@ -947,7 +998,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     isPremium: true,
     playProductId: PlayProducts.guideRaDossier,
     priceRupees: 99,
-    description: 'eCTD Modules 1-5, USFDA 21 CFR, DMF & ANDA (Included in ₹199 VIP Pass)',
+    description: 'eCTD Modules 1-5, USFDA 21 CFR, DMF & ANDA (Included in ₹499 VIP Pass)',
   );
 
   static final AdminPdfItem _defaultCareerFreeGuide = AdminPdfItem(
@@ -1056,16 +1107,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
           // 4. All-Access VIP Pass Banner
           _HomeGuideCardData(
-            tag: isVip ? 'VIP ACTIVE' : 'ALL-ACCESS PASS · ₹199',
+            tag: isVip ? 'VIP ACTIVE · AD-FREE' : 'ALL-ACCESS PASS · ₹499',
             tagIcon: isVip ? Icons.check_circle_rounded : Icons.workspace_premium_rounded,
             tagBg: isVip ? const Color(0xFFECFDF5) : const Color(0xFFFEF3C7),
             tagColor: isVip ? const Color(0xFF059669) : const Color(0xFFD97706),
             title: 'PharmaCode VIP Study Pass',
-            subtitle: 'Unlocks BOTH PV (₹49) + RA (₹99) + All Notes Free!',
-            chipLabel: 'Lifetime Access · Offline Downloads',
+            subtitle: 'Unlocks BOTH PV (₹49) + RA (₹99) + All Notes & 100% Ad-Free!',
+            chipLabel: 'Lifetime Access · 100% Ad-Free',
             chipIcon: Icons.stars_rounded,
             sampleBadge: '★ Unlocks All Present & Future Guides',
-            buttonLabel: isVip ? 'VIP Active' : 'Get Pass · ₹199',
+            buttonLabel: isVip ? 'VIP Active' : 'Get Pass · ₹499',
             isUnlocked: isVip,
             onTap: () => showPreBookVipSheet(context),
           ),

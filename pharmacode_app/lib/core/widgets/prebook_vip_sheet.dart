@@ -71,7 +71,7 @@ class _PreBookVipSheetState extends State<PreBookVipSheet> {
 
     final message = '''👋 Hello PharmaCode Team,
 
-I have pre-booked / activated the *PharmaCode VIP Study Pass* (₹199 Lifetime Access).
+I have pre-booked / activated the *PharmaCode VIP Study Pass* (₹499 Lifetime Access).
 
 📱 *Student Account Details:*
 • Registered Account: $emailText
@@ -168,19 +168,14 @@ $userName
   @override
   Widget build(BuildContext context) {
     final plan = InAppPurchaseService.preBookPlan;
-    final liveProduct = _iapService.products[PlayProducts.vipPreBook] ??
+    final liveProduct = _iapService.products[PlayProducts.vipPreBook499] ??
+        _iapService.products[PlayProducts.vipPreBook499Alias] ??
+        _iapService.products[PlayProducts.vipPreBook] ??
         _iapService.products[PlayProducts.vipPreBookAlias] ??
         _iapService.products[PlayProducts.vipLegacy];
-    final String currentPrice;
-    if (liveProduct != null && liveProduct.price.isNotEmpty) {
-      if (liveProduct.price.contains('200')) {
-        currentPrice = liveProduct.price.replaceAll('200.00', '199').replaceAll('200', '199');
-      } else {
-        currentPrice = liveProduct.price;
-      }
-    } else {
-      currentPrice = plan.defaultPrice;
-    }
+    final String currentPrice = (liveProduct != null && liveProduct.price.isNotEmpty)
+        ? liveProduct.price
+        : plan.defaultPrice;
 
     return Container(
       decoration: const BoxDecoration(
@@ -256,15 +251,21 @@ $userName
                     Container(
                       padding: const EdgeInsets.all(18),
                       decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF0F172A), Color(0xFF1E3A8A), Color(0xFF2E1065)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
+                        gradient: isUnlocked
+                            ? const LinearGradient(
+                                colors: [Color(0xFF0F172A), Color(0xFF1E293B), Color(0xFF78350F)],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              )
+                            : const LinearGradient(
+                                colors: [Color(0xFF0F172A), Color(0xFF1E3A8A), Color(0xFF2E1065)],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF1E3A8A).withValues(alpha: 0.25),
+                            color: (isUnlocked ? const Color(0xFFD97706) : const Color(0xFF1E3A8A)).withValues(alpha: 0.25),
                             blurRadius: 14,
                             offset: const Offset(0, 4),
                           ),
@@ -295,16 +296,35 @@ $userName
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF10B981),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    'ACTIVE VIP',
-                                    style: GoogleFonts.dmSans(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w900,
-                                      fontSize: 11,
+                                    gradient: const LinearGradient(
+                                      colors: [Color(0xFFF59E0B), Color(0xFFD97706)],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
                                     ),
+                                    borderRadius: BorderRadius.circular(8),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: const Color(0xFFF59E0B).withValues(alpha: 0.4),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(Icons.stars_rounded, color: Colors.white, size: 13),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        '👑 VIP ACTIVE · 100% AD-FREE',
+                                        style: GoogleFonts.dmSans(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w900,
+                                          fontSize: 10.5,
+                                          letterSpacing: 0.2,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                             ],
@@ -374,36 +394,59 @@ $userName
 
                     const SizedBox(height: 16),
 
-                    // When Unlocked: Support Options
+                    // When Unlocked: Golden Support & Privileges Card
                     if (isUnlocked) ...[
                       Container(
-                        padding: const EdgeInsets.all(14),
+                        padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFECFDF5),
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFFFFFBEB), Color(0xFFFEF3C7)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: const Color(0xFF10B981), width: 1.5),
+                          border: Border.all(color: const Color(0xFFF59E0B), width: 1.5),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFFF59E0B).withValues(alpha: 0.15),
+                              blurRadius: 10,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               children: [
-                                const Icon(Icons.verified_rounded, color: Color(0xFF10B981), size: 22),
-                                const SizedBox(width: 8),
-                                Text(
-                                  'Your VIP Pass is Active!',
-                                  style: GoogleFonts.dmSans(
-                                    color: const Color(0xFF065F46),
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w900,
+                                Container(
+                                  padding: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFD97706),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: const Icon(Icons.workspace_premium_rounded, color: Colors.white, size: 18),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    '👑 VIP Member Privileges Active!',
+                                    style: GoogleFonts.dmSans(
+                                      color: const Color(0xFF92400E),
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w900,
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 6),
+                            const SizedBox(height: 8),
                             Text(
-                              'All present & future study materials are unlocked. Need mentor help? Reach out below:',
-                              style: GoogleFonts.dmSans(color: const Color(0xFF047857), fontSize: 12),
+                              '• 100% Ad-Free Learning Experience across entire app\n'
+                              '• PV Master Guide & RA Complete Guide permanently unlocked\n'
+                              '• Unlimited AI Doubts & all future B.Pharm semester notes\n'
+                              '• Real-time 1-on-1 student doubt resolution via WhatsApp & Email',
+                              style: GoogleFonts.dmSans(color: const Color(0xFF78350F), fontSize: 12, height: 1.45),
                             ),
                             const SizedBox(height: 12),
                             Row(
@@ -412,7 +455,7 @@ $userName
                                   child: ElevatedButton.icon(
                                     onPressed: _openWhatsAppSupport,
                                     icon: const Icon(Icons.chat_rounded, size: 16),
-                                    label: const Text('WhatsApp'),
+                                    label: const Text('WhatsApp Help'),
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: const Color(0xFF10B981),
                                       foregroundColor: Colors.white,
@@ -426,10 +469,10 @@ $userName
                                   child: OutlinedButton.icon(
                                     onPressed: _openEmailSupport,
                                     icon: const Icon(Icons.mail_rounded, size: 16),
-                                    label: const Text('Email'),
+                                    label: const Text('Email Mentors'),
                                     style: OutlinedButton.styleFrom(
-                                      foregroundColor: const Color(0xFF065F46),
-                                      side: const BorderSide(color: Color(0xFF10B981)),
+                                      foregroundColor: const Color(0xFF92400E),
+                                      side: const BorderSide(color: Color(0xFFD97706), width: 1.2),
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                                     ),
                                   ),
@@ -640,6 +683,49 @@ $userName
                         ),
                       ],
                     ),
+
+                    // ── DEVELOPER TEST BUTTON (Remove when testing is complete) ──
+                    Container(
+                      margin: const EdgeInsets.only(top: 8),
+                      child: Center(
+                        child: TextButton.icon(
+                          onPressed: () async {
+                            final nowUnlocked = await _iapService.toggleVipForTesting();
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    nowUnlocked
+                                        ? '🧪 [DEV TEST] VIP Pass UNLOCKED! (Golden theme & 100% ad-free active)'
+                                        : '🧪 [DEV TEST] VIP Pass LOCKED (Free state)',
+                                  ),
+                                  backgroundColor: nowUnlocked ? const Color(0xFFD97706) : Colors.black87,
+                                  duration: const Duration(seconds: 2),
+                                ),
+                              );
+                            }
+                          },
+                          icon: const Icon(Icons.science_outlined, size: 14, color: Color(0xFFD97706)),
+                          label: Text(
+                            isUnlocked ? '🧪 Dev Test: Toggle Lock' : '🧪 Dev Test: Toggle VIP Unlock',
+                            style: GoogleFonts.dmSans(
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFFD97706),
+                            ),
+                          ),
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                            backgroundColor: const Color(0xFFFEF3C7),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              side: const BorderSide(color: Color(0xFFFDE68A)),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    // ── END DEVELOPER TEST BUTTON ──
                   ],
                 );
               },

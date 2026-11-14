@@ -300,7 +300,7 @@ class _GuidePurchaseSheetState extends State<GuidePurchaseSheet> {
 
           const SizedBox(height: 16),
 
-          // VIP Pass Upsell Banner (Unlocks both PV + RA + all future notes for ₹199)
+          // VIP Pass Upsell Banner (Unlocks both PV + RA + all future notes + 100% Ad-Free for ₹499)
           InkWell(
             onTap: () {
               Navigator.pop(context);
@@ -323,7 +323,7 @@ class _GuidePurchaseSheetState extends State<GuidePurchaseSheet> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: const [
                         Text(
-                          '💡 Unlock ALL Guides with ₹199 VIP Pass',
+                          '💡 Unlock ALL Guides + 100% Ad-Free with ₹499 VIP Pass',
                           style: TextStyle(
                             fontFamily: 'Nunito',
                             fontSize: 12,
@@ -332,7 +332,7 @@ class _GuidePurchaseSheetState extends State<GuidePurchaseSheet> {
                           ),
                         ),
                         Text(
-                          'Unlocks PV Guide (₹49) + RA Guide (₹99) + all notes forever!',
+                          'Unlocks PV Guide (₹49) + RA Guide (₹99) + all notes & 100% ad-free forever!',
                           style: TextStyle(
                             fontFamily: 'Nunito',
                             fontSize: 10.5,

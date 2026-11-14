@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import '../billing/in_app_purchase_service.dart';
 
 /// Centralized AdMob Service for PharmaCode
 /// Manages AdMob SDK initialization, safe test/live ad unit swapping,
@@ -83,6 +84,13 @@ class AdService {
   /// Pass [force] = true to bypass the cooldown (e.g. user explicitly tapped a download link).
   /// Always calls [onDismissed] so screen navigation / action proceeds seamlessly.
   bool showInterstitialAd({VoidCallback? onDismissed, bool force = false}) {
+    // 100% Ad-Free experience for VIP Study Pass holders
+    if (InAppPurchaseService.instance.isVipUnlocked) {
+      debugPrint('Interstitial skipped: VIP Pass Active (100% Ad-Free).');
+      onDismissed?.call();
+      return false;
+    }
+
     final now = DateTime.now();
 
     // Check frequency capping (3.5 mins) unless force is true

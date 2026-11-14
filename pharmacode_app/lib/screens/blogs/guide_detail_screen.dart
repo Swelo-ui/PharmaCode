@@ -73,7 +73,7 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
     playProductId: PlayProducts.guidePvInterview,
     priceRupees: 49,
     previewPages: 8,
-    description: 'PV Interview Questions, Argus & MedDRA Case Studies (Included in ₹199 VIP Pass)',
+    description: 'PV Interview Questions, Argus & MedDRA Case Studies (Included in ₹499 VIP Pass)',
   );
 
   static final AdminPdfItem _defaultRaItem = AdminPdfItem(
@@ -92,7 +92,7 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
     playProductId: PlayProducts.guideRaDossier,
     priceRupees: 99,
     previewPages: 6,
-    description: 'eCTD Modules 1-5, USFDA 21 CFR, DMF, ANDA & CDSCO Approval Guide (Included in ₹199 VIP Pass)',
+    description: 'eCTD Modules 1-5, USFDA 21 CFR, DMF, ANDA & CDSCO Approval Guide (Included in ₹499 VIP Pass)',
   );
 
   static final AdminPdfItem _defaultCroItem = AdminPdfItem(
@@ -1602,7 +1602,7 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
             '• Permanent lifetime access bound to your Google account.\n'
             '• Read anytime inside PharmaCode with zero mobile data (offline mode).\n'
             '• Curated by industry veterans matching top pharma MNC interview standards.\n'
-            '• Also unlocked automatically for all ₹199 VIP Pass holders.',
+            '• Also unlocked automatically for all ₹499 VIP Pass holders.',
             style: GoogleFonts.dmSans(
               fontSize: 11.5,
               color: const Color(0xFF64748B),
@@ -1784,7 +1784,7 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
                   GestureDetector(
                     onTap: () => showPreBookVipSheet(context),
                     child: Text(
-                      'Or unlock BOTH + All Notes with ₹199 VIP Pass',
+                      'Or unlock BOTH + All Notes & 100% Ad-Free with ₹499 VIP Pass',
                       style: GoogleFonts.dmSans(
                         fontSize: 11,
                         fontWeight: FontWeight.w800,

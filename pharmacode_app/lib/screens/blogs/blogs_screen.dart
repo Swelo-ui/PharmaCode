@@ -258,7 +258,7 @@ class BlogsScreen extends ConsumerWidget {
         isPremium: true,
         playProductId: PlayProducts.guidePvInterview,
         priceRupees: 49,
-        description: 'PV Interview Questions & Cases (Included in ₹199 VIP Pass)',
+        description: 'PV Interview Questions & Cases (Included in ₹499 VIP Pass)',
       ),
     );
 
@@ -279,7 +279,7 @@ class BlogsScreen extends ConsumerWidget {
         isPremium: true,
         playProductId: PlayProducts.guideRaDossier,
         priceRupees: 99,
-        description: 'eCTD Modules 1-5, USFDA 21 CFR, DMF & ANDA (Included in ₹199 VIP Pass)',
+        description: 'eCTD Modules 1-5, USFDA 21 CFR, DMF & ANDA (Included in ₹499 VIP Pass)',
       ),
     );
 

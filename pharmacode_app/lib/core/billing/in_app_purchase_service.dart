@@ -10,10 +10,12 @@ import '../../services/auth_service.dart';
 
 /// Predefined Google Play One-Time Product IDs for PharmaCode Pre-Booking & VIP Access
 class PlayProducts {
-  /// Primary One-Time Product ID to create in Google Play Console
-  static const String vipPreBook = 'pharmacode_prebook_vip_199';
+  /// Primary One-Time Product ID to create in Google Play Console (₹499)
+  static const String vipPreBook499 = 'pharmacode_prebook_vip_499';
+  static const String vipPreBook499Alias = 'vip_prebook_499';
 
-  /// Compatible Aliases (supports both if user creates either in Play Console)
+  /// Compatible Aliases (supports ₹199 legacy and all previous iterations)
+  static const String vipPreBook = 'pharmacode_prebook_vip_199';
   static const String vipPreBookAlias = 'vip_prebook_199';
   static const String vipLegacy = 'pdf_vip_all_access';
 
@@ -22,6 +24,8 @@ class PlayProducts {
   static const String guideRaDossier = 'guide_ra_dossier_99';
 
   static const Set<String> defaultProducts = {
+    vipPreBook499,
+    vipPreBook499Alias,
     vipPreBook,
     vipPreBookAlias,
     vipLegacy,
@@ -30,7 +34,7 @@ class PlayProducts {
   };
 }
 
-/// Feature details for the ₹199 Pre-Booking study pass
+/// Feature details for the ₹499 Pre-Booking study pass
 class PreBookPlanInfo {
   final String id;
   final String title;
@@ -87,20 +91,23 @@ class InAppPurchaseService {
 
   /// Check whether the user has unlocked the VIP Pre-Booking Study Pass (All Access)
   bool get isVipUnlocked {
-    return unlockedProducts.contains(PlayProducts.vipPreBook) ||
+    return unlockedProducts.contains(PlayProducts.vipPreBook499) ||
+        unlockedProducts.contains(PlayProducts.vipPreBook499Alias) ||
+        unlockedProducts.contains(PlayProducts.vipPreBook) ||
         unlockedProducts.contains(PlayProducts.vipPreBookAlias) ||
         unlockedProducts.contains(PlayProducts.vipLegacy);
   }
 
   /// Official Pre-Booking Plan details
   static const PreBookPlanInfo preBookPlan = PreBookPlanInfo(
-    id: PlayProducts.vipPreBook,
-    title: 'Pre-Booking: PharmaCode VIP Study Pass',
-    subtitle: 'Get all future notes free without additional charges + Real-time WhatsApp & Email support',
-    defaultPrice: '₹199',
-    originalPrice: '₹999',
-    discountTag: '80% OFF · Early Bird',
+    id: PlayProducts.vipPreBook499,
+    title: 'PharmaCode VIP Study Pass',
+    subtitle: '100% Ad-Free learning + All present & future semester notes + Real-time WhatsApp & Email support',
+    defaultPrice: '₹499',
+    originalPrice: '₹1,999',
+    discountTag: '75% OFF · Lifetime Pass',
     bulletPoints: [
+      '🚫 100% Ad-Free Experience (Zero Banners, Popups, or Interruptions across Entire App)',
       '⭐ Automatically Unlocks BOTH PV Master Guide (₹49) & RA Dossier Guide (₹99) FREE',
       'All Future Semester Notes & PDFs Free (Zero extra charges forever)',
       'Unit-Wise PCI NEP 2020 Study Guides & Rapid Revision Flowcharts',
@@ -196,7 +203,7 @@ class InAppPurchaseService {
     return unlockedProducts.contains(productId.trim());
   }
 
-  /// Fetch localized price string (e.g. "₹199.00" or fallback)
+  /// Fetch localized price string (e.g. "₹499.00" or fallback)
   String getProductPrice(String productId, {String? fallback}) {
     final product = _products[productId];
     if (product != null && product.price.isNotEmpty) {
@@ -205,11 +212,14 @@ class InAppPurchaseService {
     if (fallback != null) return fallback;
     if (productId == PlayProducts.guidePvInterview) return '₹49';
     if (productId == PlayProducts.guideRaDossier) return '₹99';
-    return '₹199';
+    return '₹499';
   }
 
   /// Launch Google Play purchase flow for Pre-Booking VIP Pass
   Future<bool> buyPreBookVipPass() async {
+    if (_products.containsKey(PlayProducts.vipPreBook499)) {
+      return buyProductById(PlayProducts.vipPreBook499);
+    }
     return buyProductById(PlayProducts.vipPreBook);
   }
 
@@ -469,16 +479,47 @@ class InAppPurchaseService {
     purchaseStatusMessage.value = 'Test Simulation: Product ($id) unlocked! 🎉';
   }
 
-  /// Reset purchases for testing lock/unlock state (Debug Only)
-  Future<void> resetPurchasesForTesting() async {
-    if (!kDebugMode) return;
-    unlockedNotifier.value = {};
-    final user = AuthService().currentUser;
-    if (user != null) {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove(_userPrefKey(user.uid));
+  /// Developer Test Toggle: Quickly test VIP unlock/lock on device without Google Play billing
+  /// (Easily removable for final store build)
+  Future<bool> toggleVipForTesting() async {
+    String userId = 'test_user';
+    try {
+      final user = AuthService().currentUser;
+      if (user != null && user.uid.isNotEmpty) {
+        userId = user.uid;
+      }
+    } catch (_) {}
+
+    final isCurrentlyVip = isVipUnlocked;
+
+    if (isCurrentlyVip) {
+      // Lock VIP
+      final updated = Set<String>.from(unlockedNotifier.value)
+        ..remove(PlayProducts.vipPreBook499)
+        ..remove(PlayProducts.vipPreBook499Alias)
+        ..remove(PlayProducts.vipPreBook)
+        ..remove(PlayProducts.vipPreBookAlias)
+        ..remove(PlayProducts.vipLegacy);
+      unlockedNotifier.value = updated;
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setStringList(_userPrefKey(userId), updated.toList());
+      } catch (_) {}
+      debugPrint('[InAppPurchaseService] Dev Test: VIP Locked');
+      return false;
+    } else {
+      // Unlock VIP
+      final updated = Set<String>.from(unlockedNotifier.value)
+        ..add(PlayProducts.vipPreBook499)
+        ..add(PlayProducts.vipPreBook);
+      unlockedNotifier.value = updated;
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setStringList(_userPrefKey(userId), updated.toList());
+      } catch (_) {}
+      debugPrint('[InAppPurchaseService] Dev Test: VIP Unlocked');
+      return true;
     }
-    purchaseStatusMessage.value = 'Purchases reset for testing.';
   }
 
   /// Load persisted purchases from SharedPreferences and Secure Storage

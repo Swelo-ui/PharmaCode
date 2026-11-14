@@ -304,7 +304,7 @@ class _SecurePdfReaderScreenState extends State<SecurePdfReaderScreen> with Widg
                   SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'Offline storage is exclusively available for VIP Guides (PV, RA & ₹199 VIP Pass).',
+                      'Offline storage is exclusively available for VIP Guides (PV, RA & ₹499 VIP Pass).',
                       style: TextStyle(
                         fontFamily: 'Nunito',
                         fontSize: 11.5,

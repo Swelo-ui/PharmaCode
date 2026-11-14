@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../ads/ad_service.dart';
+import '../billing/in_app_purchase_service.dart';
 import '../constants/app_colors.dart';
 
 /// Material 3 styled Native Ad card for in-feed integration in Syllabus and Career feeds.
@@ -31,6 +32,7 @@ class _AdNativeCardState extends State<AdNativeCard> {
   }
 
   void _loadNativeAd() {
+    if (InAppPurchaseService.instance.isVipUnlocked) return;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     _nativeAd = NativeAd(
@@ -93,6 +95,11 @@ class _AdNativeCardState extends State<AdNativeCard> {
 
   @override
   Widget build(BuildContext context) {
+    // 100% Ad-Free for VIP Pass holders
+    if (InAppPurchaseService.instance.isVipUnlocked) {
+      return const SizedBox.shrink();
+    }
+
     if (!_isLoaded || _nativeAd == null) {
       return const SizedBox.shrink();
     }

@@ -166,7 +166,7 @@ class _NotesScreenState extends State<NotesScreen> {
                   },
                   icon: const Icon(Icons.workspace_premium_rounded, color: Color(0xFFD97706), size: 18),
                   label: Text(
-                    'Pre-Book Study Material Pass @ ₹199 (VIP)',
+                    'PharmaCode VIP Study Pass @ ₹499 (100% Ad-Free)',
                     style: GoogleFonts.dmSans(fontWeight: FontWeight.w800, fontSize: 12, color: AppTheme.brandBlue),
                   ),
                 ),
@@ -240,7 +240,7 @@ class _NotesScreenState extends State<NotesScreen> {
                               borderRadius: BorderRadius.circular(5),
                             ),
                             child: Text(
-                              isVip ? 'ACTIVE' : '₹199 ONLY',
+                              isVip ? 'ACTIVE · AD-FREE' : '₹499 ONLY',
                               style: GoogleFonts.dmSans(
                                 color: isVip ? Colors.white : const Color(0xFF0F172A),
                                 fontWeight: FontWeight.w900,
