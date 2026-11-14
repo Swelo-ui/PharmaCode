@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../core/ads/ad_service.dart';
+import '../core/billing/in_app_purchase_service.dart';
 import '../core/theme.dart';
 import '../core/tour/guided_tour_service.dart';
 import '../services/syllabus_service.dart';
@@ -136,7 +137,8 @@ class _SplashScreenState extends State<SplashScreen>
   Future<void> _initCoreServices() async {
     try {
       // Background message handler is already registered in main()
-      // Run push notifications, PDF sync and AdMob in background without delaying splash
+      // Run push notifications, IAP, PDF sync and AdMob in background without delaying splash
+      unawaited(InAppPurchaseService.instance.init());
       unawaited(NotificationService().initialize());
       unawaited(PdfService.instance.initialize());
       unawaited(AdService.instance.initialize());

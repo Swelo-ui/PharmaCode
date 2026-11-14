@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +15,15 @@ final themeModeProvider = Provider<ThemeMode>((ref) => ThemeMode.light);
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Haptic touch settings
-  await AppHaptics.init();
+  // Set status bar styling early
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: Colors.white,
+      systemNavigationBarIconBrightness: Brightness.dark,
+    ),
+  );
 
   // ✅ CRITICAL: Firebase MUST be initialized before any Firebase plugin usage
   try {
@@ -26,38 +34,17 @@ void main() async {
     debugPrint('Firebase initialization error: $e');
   }
 
-  // Set status bar styling
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarColor: Colors.white,
-      systemNavigationBarIconBrightness: Brightness.dark,
-    ),
-  );
-
-  // Initialize In-App Purchases (Google Play Billing)
-  try {
-    await InAppPurchaseService.instance.init();
-  } catch (e) {
-    debugPrint('InAppPurchaseService initialization error: $e');
-  }
-
-  // Initialize Notification Service (loads saved notifications, read IDs & deleted IDs)
-  try {
-    await NotificationService().initialize().timeout(
-      const Duration(milliseconds: 1500),
-      onTimeout: () => debugPrint('NotificationService init timed out in main (offline)'),
-    );
-  } catch (e) {
-    debugPrint('NotificationService initialization error: $e');
-  }
-
+  // 🚀 Fast-boot: Run Flutter app immediately so SplashScreen appears with zero lag
   runApp(
     const ProviderScope(
       child: PharmaCodeApp(),
     ),
   );
+
+  // Non-blocking initialization of core background services during splash animation
+  unawaited(AppHaptics.init());
+  unawaited(InAppPurchaseService.instance.init());
+  unawaited(NotificationService().initialize());
 }
 
 class PharmaCodeApp extends StatelessWidget {
