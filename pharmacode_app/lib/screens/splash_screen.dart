@@ -190,7 +190,7 @@ class _SplashScreenState extends State<SplashScreen>
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(18),
                     child: Image.asset(
-                      'assets/images/app_icon.png',
+                      'assets/images/apk_icon_android.png',
                       fit: BoxFit.contain,
                       filterQuality: FilterQuality.high,
                       isAntiAlias: true,

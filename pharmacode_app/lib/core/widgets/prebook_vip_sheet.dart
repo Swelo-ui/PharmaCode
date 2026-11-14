@@ -173,9 +173,12 @@ $userName
         _iapService.products[PlayProducts.vipPreBook] ??
         _iapService.products[PlayProducts.vipPreBookAlias] ??
         _iapService.products[PlayProducts.vipLegacy];
-    final String currentPrice = (liveProduct != null && liveProduct.price.isNotEmpty)
+    String currentPrice = (liveProduct != null && liveProduct.price.isNotEmpty)
         ? liveProduct.price
         : plan.defaultPrice;
+    if (currentPrice.contains('500')) {
+      currentPrice = currentPrice.replaceAll('500.00', '499.00').replaceAll('500', '499');
+    }
 
     return Container(
       decoration: const BoxDecoration(

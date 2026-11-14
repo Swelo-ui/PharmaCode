@@ -211,6 +211,9 @@ class InAppPurchaseService {
   String getProductPrice(String productId, {String? fallback}) {
     final product = _products[productId];
     if (product != null && product.price.isNotEmpty) {
+      if (productId.contains('vip') && product.price.contains('500')) {
+        return product.price.replaceAll('500.00', '499.00').replaceAll('500', '499');
+      }
       return product.price;
     }
     if (fallback != null) return fallback;

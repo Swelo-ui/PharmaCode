@@ -128,7 +128,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
                       child: Image.asset(
-                        'assets/images/app_icon.png',
+                        'assets/images/apk_icon_android.png',
                         fit: BoxFit.contain,
                         filterQuality: FilterQuality.high,
                       ),

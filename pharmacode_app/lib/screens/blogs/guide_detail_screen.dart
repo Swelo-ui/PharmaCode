@@ -1988,49 +1988,55 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
               ],
             ),
             if (!isUnlocked) ...[
-              const SizedBox(height: 8),
-              InkWell(
-                onTap: () => showPreBookVipSheet(context),
-                borderRadius: BorderRadius.circular(6),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.auto_awesome_rounded, size: 13, color: Color(0xFFD97706)),
-                      const SizedBox(width: 5),
-                      Flexible(
-                        child: Text(
-                          'Unlock ALL Guides + Notes (100% Ad-Free) with ₹499 VIP Pass',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.dmSans(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w800,
-                            color: const Color(0xFFB45309),
-                            decoration: TextDecoration.underline,
+              const SizedBox(height: 6),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () => showPreBookVipSheet(context),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.auto_awesome_rounded, size: 12, color: Color(0xFFD97706)),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Or unlock All Guides with ₹499 VIP',
+                            style: GoogleFonts.dmSans(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w800,
+                              color: const Color(0xFFB45309),
+                              decoration: TextDecoration.underline,
+                            ),
                           ),
+                        ],
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      child: Text(
+                        '•',
+                        style: TextStyle(
+                          color: Color(0xFFCBD5E1),
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 3),
-              GestureDetector(
-                onTap: () => _billing.restorePurchases(),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  child: Text(
-                    'Already purchased? Restore Purchases',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.dmSans(
-                      fontSize: 10.5,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
-                      decoration: TextDecoration.underline,
                     ),
-                  ),
+                    GestureDetector(
+                      onTap: () => _billing.restorePurchases(),
+                      child: Text(
+                        'Restore Purchases',
+                        style: GoogleFonts.dmSans(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          color: const Color(0xFF64748B),
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

@@ -1,7 +1,7 @@
 name: pharmacode_app
 description: "PharmaCode — Complete B.Pharm NEP 2020 Study Companion"
 publish_to: 'none'
-version: 1.0.38+41
+version: 1.0.39+42
 
 environment:
   sdk: ^3.12.2
