@@ -247,6 +247,31 @@ const BASELINE_PDFS: AdminPdf[] = [
   },
 ];
 
+async function syncFirebaseRTDB(entitlements: UserEntitlement[]): Promise<boolean> {
+  try {
+    const res = await fetch('https://pharmacode-f95c9-default-rtdb.asia-southeast1.firebasedatabase.app/entitlements.json', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(entitlements),
+    });
+    return res.ok;
+  } catch (_) {
+    return false;
+  }
+}
+
+async function fetchFirebaseRTDB(): Promise<UserEntitlement[] | null> {
+  try {
+    const res = await fetch('https://pharmacode-f95c9-default-rtdb.asia-southeast1.firebasedatabase.app/entitlements.json');
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data)) return data;
+      if (data && typeof data === 'object') return Object.values(data);
+    }
+  } catch (_) {}
+  return null;
+}
+
 // ─── CLOUD GIST & FIREBASE STORAGE (GUARANTEES 100% PERSISTENCE ACROSS ALL LAMBDAS) ──────
 async function fetchCloudStore(): Promise<{
   pdfs?: AdminPdf[];
@@ -273,11 +298,15 @@ async function fetchCloudStore(): Promise<{
       const req = https.get(options, (res: any) => {
         let body = '';
         res.on('data', (chunk: any) => (body += chunk));
-        res.on('end', () => {
+        res.on('end', async () => {
           try {
             if (res.statusCode >= 200 && res.statusCode < 300) {
               const json = JSON.parse(body);
               const content = JSON.parse(json.files['pharmacode_store.json'].content);
+              if (!content.entitlements || content.entitlements.length === 0) {
+                const rtdb = await fetchFirebaseRTDB();
+                if (rtdb) content.entitlements = rtdb;
+              }
               resolve(content);
             } else {
               // Fallback to fetch without auth token if Gist is public
@@ -290,20 +319,27 @@ async function fetchCloudStore(): Promise<{
                 }, (pubRes: any) => {
                   let pubBody = '';
                   pubRes.on('data', (c: any) => (pubBody += c));
-                  pubRes.on('end', () => {
+                  pubRes.on('end', async () => {
                     try {
                       if (pubRes.statusCode >= 200 && pubRes.statusCode < 300) {
                         const pj = JSON.parse(pubBody);
-                        resolve(JSON.parse(pj.files['pharmacode_store.json'].content));
+                        const c = JSON.parse(pj.files['pharmacode_store.json'].content);
+                        if (!c.entitlements || c.entitlements.length === 0) {
+                          const rtdb = await fetchFirebaseRTDB();
+                          if (rtdb) c.entitlements = rtdb;
+                        }
+                        resolve(c);
                       } else {
-                        resolve(null);
+                        const rtdb = await fetchFirebaseRTDB();
+                        resolve(rtdb ? { entitlements: rtdb } : null);
                       }
                     } catch (_) { resolve(null); }
                   });
                 }).on('error', () => resolve(null));
                 return;
               }
-              resolve(null);
+              const rtdb = await fetchFirebaseRTDB();
+              resolve(rtdb ? { entitlements: rtdb } : null);
             }
           } catch (_) {
             resolve(null);
@@ -328,6 +364,9 @@ async function pushCloudStore(data: {
   fcmServerKey?: string;
   entitlements?: UserEntitlement[];
 }): Promise<boolean> {
+  if (data.entitlements && Array.isArray(data.entitlements)) {
+    syncFirebaseRTDB(data.entitlements);
+  }
   return new Promise((resolve) => {
     try {
       const https = require('https');

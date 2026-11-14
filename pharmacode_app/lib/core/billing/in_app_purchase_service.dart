@@ -402,6 +402,28 @@ class InAppPurchaseService {
           await _secureStorage.write(key: 'user_entitlements_$userId', value: jsonEncode(ids));
         }
       }
+
+      // Secondary Realtime Cloud Sync via Firebase RTDB (Zero-latency fallback)
+      if (user != null) {
+        try {
+          final idToken = await user.getIdToken();
+          final rtdbUri = Uri.parse(
+              'https://pharmacode-f95c9-default-rtdb.asia-southeast1.firebasedatabase.app/users/${user.uid}/entitlements.json?auth=$idToken');
+          final rtdbRes = await http.get(rtdbUri).timeout(const Duration(seconds: 4));
+          if (rtdbRes.statusCode == 200 && rtdbRes.body != 'null') {
+            final dynamic rtdbData = jsonDecode(rtdbRes.body);
+            if (rtdbData is List) {
+              final updated = Set<String>.from(unlockedNotifier.value);
+              for (final id in rtdbData) {
+                updated.add(id.toString());
+              }
+              unlockedNotifier.value = updated;
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.setStringList(_userPrefKey(userId), updated.toList());
+            }
+          }
+        } catch (_) {}
+      }
     } catch (e) {
       debugPrint('[InAppPurchaseService] Error syncing entitlements: $e');
     }
@@ -422,6 +444,20 @@ class InAppPurchaseService {
         key: 'entitlement_${targetUserId}_$productId',
         value: DateTime.now().toIso8601String(),
       );
+
+      // Persist to user's private Firebase RTDB node
+      if (user != null && user.uid == targetUserId) {
+        try {
+          final idToken = await user.getIdToken();
+          final rtdbUri = Uri.parse(
+              'https://pharmacode-f95c9-default-rtdb.asia-southeast1.firebasedatabase.app/users/${user.uid}/entitlements.json?auth=$idToken');
+          await http.put(
+            rtdbUri,
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode(updated.toList()),
+          ).timeout(const Duration(seconds: 4));
+        } catch (_) {}
+      }
     }
   }
 
