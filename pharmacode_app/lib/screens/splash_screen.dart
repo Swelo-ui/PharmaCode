@@ -193,6 +193,7 @@ class _SplashScreenState extends State<SplashScreen>
                       'assets/images/app_icon.png',
                       fit: BoxFit.contain,
                       filterQuality: FilterQuality.high,
+                      isAntiAlias: true,
                     ),
                   ),
                 ),

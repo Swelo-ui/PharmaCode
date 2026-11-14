@@ -1533,13 +1533,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   child: const Icon(Icons.workspace_premium_rounded, color: Color(0xFFB45309), size: 20),
                 ),
                 title: Text(
-                  'Pre-Book Study Pass (VIP)',
+                  'VIP All-Access Study Pass (₹499)',
                   style: GoogleFonts.dmSans(fontWeight: FontWeight.w800, fontSize: 14),
                 ),
                 subtitle: Text(
                   isVip
-                      ? 'VIP Study Pass Active · WhatsApp Support Unlocked'
-                      : 'All future notes free + WhatsApp & Email support',
+                      ? 'VIP Active · 100% Ad-Free · All Guides Unlocked'
+                      : 'All Guides + Notes & 100% Ad-Free for ₹499',
                   style: GoogleFonts.dmSans(
                     color: isVip ? const Color(0xFF10B981) : AppTheme.textMuted,
                     fontSize: 12,

@@ -11,10 +11,15 @@ class TickerItem {
 }
 
 const List<TickerItem> tickerItems = [
+  TickerItem(tag: "Interview Kit", text: "Pharma Interview Prep Kit: 200+ QA, QC & Production Q&A, 15+ flow diagrams & 65+ full forms", colorHex: "#7C3AED"),
   TickerItem(tag: "NEP 2020", text: "B.Pharm syllabus now integrates Python, ML and AI from Semester 1 onwards", colorHex: "#3B82F6"),
+  TickerItem(tag: "PV Master Guide", text: "Pharmacovigilance Interview Kit: ICSR case processing, MedDRA coding & Argus Safety workflows", colorHex: "#DC2626"),
   TickerItem(tag: "Study Tip", text: "Master unit headings first — over 60% of GPAT questions are framed from unit titles", colorHex: "#10B981"),
+  TickerItem(tag: "RA Dossier Guide", text: "Regulatory Affairs Dossier Kit: eCTD Modules 1-5, USFDA 21 CFR, DMF filing & ICH standards", colorHex: "#0D9488"),
   TickerItem(tag: "New Subject", text: "BP604T AI Applications in Pharmaceutical Sciences — Semester 6 key subject with QSAR and drug discovery", colorHex: "#EF4444"),
+  TickerItem(tag: "CRO Handbook", text: "Clinical Research Operations Manual: ICH-GCP E6(R2), trial phases & monitoring — 100% Free", colorHex: "#059669"),
   TickerItem(tag: "Free Notes", text: "Unit-wise PDF notes for all 8 semesters available on PharmaCode — no login, no paywall", colorHex: "#F59E0B"),
+  TickerItem(tag: "QA & QC Prep", text: "Master CAPA, OOS investigations, HPLC, dissolution & GMP scenarios for fresher interviews", colorHex: "#6366F1"),
   TickerItem(tag: "Syllabus Change", text: "PCI NEP 2020 replaces old B.Pharm curriculum — new subjects include Biostatistics, ML, AI Ethics and Startups", colorHex: "#8B5CF6"),
   TickerItem(tag: "Study Tip", text: "Pharmacovigilance BP705T carries high weightage in exit exams and pharma job interviews", colorHex: "#10B981"),
   TickerItem(tag: "New Subject", text: "BP101T Python Programming — mandatory for all B.Pharm students, covers Pandas, Matplotlib and NumPy", colorHex: "#EF4444"),

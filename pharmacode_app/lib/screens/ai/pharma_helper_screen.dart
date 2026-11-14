@@ -189,19 +189,6 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
-              // [DEV TEST] Button (Quickly add questions for testing)
-              Center(
-                child: TextButton.icon(
-                  onPressed: () {
-                    _saveAiQueries(_remainingQueries + 10);
-                    Navigator.pop(ctx);
-                    if (pendingQuery != null) _handleSendMessage(pendingQuery);
-                  },
-                  icon: const Icon(Icons.science_outlined, size: 14, color: Color(0xFF64748B)),
-                  label: Text('Dev Test: Add +10 Free Queries', style: GoogleFonts.dmSans(fontSize: 11, color: const Color(0xFF64748B))),
-                ),
-              ),
             ],
           ),
         ),

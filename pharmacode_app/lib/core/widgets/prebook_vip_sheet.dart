@@ -686,49 +686,6 @@ $userName
                         ),
                       ],
                     ),
-
-                    // ── DEVELOPER TEST BUTTON (Remove when testing is complete) ──
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      child: Center(
-                        child: TextButton.icon(
-                          onPressed: () async {
-                            final nowUnlocked = await _iapService.toggleVipForTesting();
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    nowUnlocked
-                                        ? '[DEV TEST] VIP Pass UNLOCKED (Golden theme & 100% ad-free active)'
-                                        : '[DEV TEST] VIP Pass LOCKED (Free state)',
-                                  ),
-                                  backgroundColor: nowUnlocked ? const Color(0xFFD97706) : Colors.black87,
-                                  duration: const Duration(seconds: 2),
-                                ),
-                              );
-                            }
-                          },
-                          icon: const Icon(Icons.science_outlined, size: 14, color: Color(0xFFD97706)),
-                          label: Text(
-                            isUnlocked ? 'Dev Test: Toggle Lock' : 'Dev Test: Toggle VIP Unlock',
-                            style: GoogleFonts.dmSans(
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                              color: const Color(0xFFD97706),
-                            ),
-                          ),
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                            backgroundColor: const Color(0xFFFEF3C7),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              side: const BorderSide(color: Color(0xFFFDE68A)),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    // ── END DEVELOPER TEST BUTTON ──
                   ],
                 );
               },
