@@ -78,7 +78,7 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('🎉 +5 Free AI Questions Added! Total: $_remainingQueries'),
+              content: Text('+5 Free AI Questions Added! Total: $_remainingQueries'),
               backgroundColor: const Color(0xFF059669),
             ),
           );
@@ -93,7 +93,7 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
           _saveAiQueries(_remainingQueries + 3);
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Sponsor video unavailable right now. +3 bonus questions granted! 🎉'),
+              content: Text('Sponsor video unavailable right now. +3 bonus questions granted!'),
               backgroundColor: Color(0xFF2563EB),
             ),
           );
@@ -190,7 +190,7 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              // 🧪 Dev Test Button (Quickly add questions for testing)
+              // [DEV TEST] Button (Quickly add questions for testing)
               Center(
                 child: TextButton.icon(
                   onPressed: () {
@@ -199,7 +199,7 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                     if (pendingQuery != null) _handleSendMessage(pendingQuery);
                   },
                   icon: const Icon(Icons.science_outlined, size: 14, color: Color(0xFF64748B)),
-                  label: Text('🧪 Dev Test: Add +10 Free Queries', style: GoogleFonts.dmSans(fontSize: 11, color: const Color(0xFF64748B))),
+                  label: Text('Dev Test: Add +10 Free Queries', style: GoogleFonts.dmSans(fontSize: 11, color: const Color(0xFF64748B))),
                 ),
               ),
             ],
@@ -1879,12 +1879,16 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                       children: [
                         const Icon(Icons.stars_rounded, size: 14, color: Color(0xFFD97706)),
                         const SizedBox(width: 5),
-                        Text(
-                          '👑 VIP Student · Unlimited AI Doubts & 100% Ad-Free',
-                          style: GoogleFonts.dmSans(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w800,
-                            color: const Color(0xFF92400E),
+                        Flexible(
+                          child: Text(
+                            'VIP Student · Unlimited AI Doubts & 100% Ad-Free',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.dmSans(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w800,
+                              color: const Color(0xFF92400E),
+                            ),
                           ),
                         ),
                       ],
@@ -1898,15 +1902,19 @@ class _PharmaHelperScreenState extends State<PharmaHelperScreen> {
                     children: [
                       Icon(Icons.bolt_rounded, size: 14, color: _remainingQueries > 0 ? const Color(0xFFD97706) : Colors.red),
                       const SizedBox(width: 4),
-                      Text(
-                        '$_remainingQueries Free AI Questions Left',
-                        style: GoogleFonts.dmSans(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          color: _remainingQueries > 0 ? const Color(0xFF334155) : Colors.red,
+                      Flexible(
+                        child: Text(
+                          '$_remainingQueries Free AI Questions Left',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.dmSans(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                            color: _remainingQueries > 0 ? const Color(0xFF334155) : Colors.red,
+                          ),
                         ),
                       ),
-                      const Spacer(),
+                      const SizedBox(width: 6),
                       InkWell(
                         onTap: () => _watchRewardedAdForBonus(),
                         borderRadius: BorderRadius.circular(12),

@@ -195,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             const Icon(Icons.stars_rounded, color: Colors.white, size: 14),
                             const SizedBox(width: 5),
                             Text(
-                              '👑 VIP MEMBER · 100% AD-FREE',
+                              'VIP MEMBER · 100% AD-FREE',
                               style: GoogleFonts.dmSans(
                                 color: Colors.white,
                                 fontSize: 10.5,
@@ -1055,7 +1055,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             subtitle: 'ICSR Cases, Argus Safety & WHO-UMC Causality',
             chipLabel: '15 Chapters · MedDRA & Argus Safety',
             chipIcon: Icons.medical_services_rounded,
-            sampleBadge: '👀 8 Sample Previews Included',
+            sampleBadge: '8 Sample Previews Included',
+            sampleBadgeIcon: Icons.remove_red_eye_outlined,
             buttonLabel: isPvUnlocked ? 'Read Kit' : 'Explore & Unlock · ₹49',
             isUnlocked: isPvUnlocked,
             onTap: () {
@@ -1075,7 +1076,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             subtitle: 'Modules 1-5, USFDA 21 CFR, DMF & ANDA',
             chipLabel: '20 Sections · CTD Triangle & CDSCO',
             chipIcon: Icons.policy_rounded,
-            sampleBadge: '👀 6 Sample Previews Included',
+            sampleBadge: '6 Sample Previews Included',
+            sampleBadgeIcon: Icons.remove_red_eye_outlined,
             buttonLabel: isRaUnlocked ? 'Read Guide' : 'Explore & Unlock · ₹99',
             isUnlocked: isRaUnlocked,
             onTap: () {
@@ -1095,7 +1097,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             subtitle: 'Complete Clinical Research & Trial Ops',
             chipLabel: '15 Chapters · CRA, CDM, QA & GCP Manual',
             chipIcon: Icons.verified_rounded,
-            sampleBadge: '👀 5 Sample Previews Included',
+            sampleBadge: '5 Sample Previews Included',
+            sampleBadgeIcon: Icons.remove_red_eye_outlined,
             buttonLabel: 'Explore & Read Free',
             isUnlocked: true,
             onTap: () {
@@ -1115,7 +1118,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             subtitle: 'Unlocks BOTH PV (₹49) + RA (₹99) + All Notes & 100% Ad-Free!',
             chipLabel: 'Lifetime Access · 100% Ad-Free',
             chipIcon: Icons.stars_rounded,
-            sampleBadge: '★ Unlocks All Present & Future Guides',
+            sampleBadge: 'Unlocks All Present & Future Guides',
+            sampleBadgeIcon: Icons.auto_awesome_rounded,
             buttonLabel: isVip ? 'VIP Active' : 'Get Pass · ₹499',
             isUnlocked: isVip,
             onTap: () => showPreBookVipSheet(context),
@@ -1253,7 +1257,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                     padding: const EdgeInsets.only(top: 4),
                                     child: Row(
                                       children: [
-                                        Icon(Icons.remove_red_eye_rounded, size: 11, color: item.tagColor),
+                                        Icon(item.sampleBadgeIcon ?? Icons.remove_red_eye_rounded, size: 11, color: item.tagColor),
                                         const SizedBox(width: 4),
                                         Text(
                                           item.sampleBadge!,
@@ -1444,6 +1448,7 @@ class _HomeGuideCardData {
   final String chipLabel;
   final IconData chipIcon;
   final String? sampleBadge;
+  final IconData? sampleBadgeIcon;
   final String buttonLabel;
   final bool isUnlocked;
   final VoidCallback onTap;
@@ -1458,6 +1463,7 @@ class _HomeGuideCardData {
     required this.chipLabel,
     required this.chipIcon,
     this.sampleBadge,
+    this.sampleBadgeIcon,
     required this.buttonLabel,
     required this.isUnlocked,
     required this.onTap,

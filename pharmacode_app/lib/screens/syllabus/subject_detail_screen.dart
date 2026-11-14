@@ -45,7 +45,7 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
   void _shareSubject() {
     SharePlus.instance.share(
       ShareParams(
-        text: '📚 ${widget.subject.code}: ${widget.subject.name}\n'
+        text: '${widget.subject.code}: ${widget.subject.name}\n'
             'PCI B.Pharm NEP 2020 Syllabus · ${widget.subject.credits} Credits · ${widget.subject.units.length} Units\n\n'
             'Explore on PharmaCode: https://pharmacode.vercel.app/syllabus/',
         subject: '${widget.subject.code} Syllabus - PharmaCode',

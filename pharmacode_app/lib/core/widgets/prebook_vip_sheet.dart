@@ -69,11 +69,11 @@ class _PreBookVipSheetState extends State<PreBookVipSheet> {
         ? user.email!
         : (user?.displayName != null && user!.displayName!.isNotEmpty ? user.displayName! : 'Registered Student');
 
-    final message = '''👋 Hello PharmaCode Team,
+    final message = '''Hello PharmaCode Team,
 
 I have pre-booked / activated the *PharmaCode VIP Study Pass* (₹499 Lifetime Access).
 
-📱 *Student Account Details:*
+*Student Account Details:*
 • Registered Account: $emailText
 • App: PharmaCode B.Pharm NEP 2020
 
@@ -274,8 +274,11 @@ $userName
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          Wrap(
+                            alignment: WrapAlignment.spaceBetween,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            spacing: 8,
+                            runSpacing: 6,
                             children: [
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -316,7 +319,7 @@ $userName
                                       const Icon(Icons.stars_rounded, color: Colors.white, size: 13),
                                       const SizedBox(width: 4),
                                       Text(
-                                        '👑 VIP ACTIVE · 100% AD-FREE',
+                                        'VIP ACTIVE · 100% AD-FREE',
                                         style: GoogleFonts.dmSans(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w900,
@@ -430,7 +433,7 @@ $userName
                                 const SizedBox(width: 10),
                                 Expanded(
                                   child: Text(
-                                    '👑 VIP Member Privileges Active!',
+                                    'VIP Member Privileges Active!',
                                     style: GoogleFonts.dmSans(
                                       color: const Color(0xFF92400E),
                                       fontSize: 15,
@@ -696,8 +699,8 @@ $userName
                                 SnackBar(
                                   content: Text(
                                     nowUnlocked
-                                        ? '🧪 [DEV TEST] VIP Pass UNLOCKED! (Golden theme & 100% ad-free active)'
-                                        : '🧪 [DEV TEST] VIP Pass LOCKED (Free state)',
+                                        ? '[DEV TEST] VIP Pass UNLOCKED (Golden theme & 100% ad-free active)'
+                                        : '[DEV TEST] VIP Pass LOCKED (Free state)',
                                   ),
                                   backgroundColor: nowUnlocked ? const Color(0xFFD97706) : Colors.black87,
                                   duration: const Duration(seconds: 2),
@@ -707,7 +710,7 @@ $userName
                           },
                           icon: const Icon(Icons.science_outlined, size: 14, color: Color(0xFFD97706)),
                           label: Text(
-                            isUnlocked ? '🧪 Dev Test: Toggle Lock' : '🧪 Dev Test: Toggle VIP Unlock',
+                            isUnlocked ? 'Dev Test: Toggle Lock' : 'Dev Test: Toggle VIP Unlock',
                             style: GoogleFonts.dmSans(
                               fontSize: 11,
                               fontWeight: FontWeight.bold,

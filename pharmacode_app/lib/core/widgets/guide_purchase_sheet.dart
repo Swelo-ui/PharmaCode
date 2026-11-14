@@ -323,7 +323,7 @@ class _GuidePurchaseSheetState extends State<GuidePurchaseSheet> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: const [
                         Text(
-                          '💡 Unlock ALL Guides + 100% Ad-Free with ₹499 VIP Pass',
+                          'Unlock ALL Guides + 100% Ad-Free with ₹499 VIP Pass',
                           style: TextStyle(
                             fontFamily: 'Nunito',
                             fontSize: 12,

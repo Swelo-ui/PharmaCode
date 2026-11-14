@@ -107,8 +107,8 @@ class InAppPurchaseService {
     originalPrice: '₹1,999',
     discountTag: '75% OFF · Lifetime Pass',
     bulletPoints: [
-      '🚫 100% Ad-Free Experience (Zero Banners, Popups, or Interruptions across Entire App)',
-      '⭐ Automatically Unlocks BOTH PV Master Guide (₹49) & RA Dossier Guide (₹99) FREE',
+      '100% Ad-Free Experience (Zero Banners, Popups, or Interruptions across Entire App)',
+      'Automatically Unlocks BOTH PV Master Guide (₹49) & RA Dossier Guide (₹99) FREE',
       'All Future Semester Notes & PDFs Free (Zero extra charges forever)',
       'Unit-Wise PCI NEP 2020 Study Guides & Rapid Revision Flowcharts',
       'Real-Time 1-on-1 Student Doubt Support on WhatsApp & Email',
@@ -290,8 +290,8 @@ class InAppPurchaseService {
           if (verified) {
             await _deliverProduct(purchase.productID);
             purchaseStatusMessage.value = purchase.status == PurchaseStatus.restored
-                ? 'VIP Purchase restored & verified successfully! 🎉'
-                : 'Payment verified! Premium access unlocked! 🎉';
+                ? 'VIP Purchase restored & verified successfully!'
+                : 'Payment verified! Premium access unlocked!';
           } else {
             // Anti-Theft Protection (PW / Classplus architecture):
             // DO NOT deliver product when verification fails or token is bound to another user!
@@ -476,7 +476,7 @@ class InAppPurchaseService {
     if (!kDebugMode) return;
     final id = productId ?? PlayProducts.vipPreBook;
     await _deliverProduct(id);
-    purchaseStatusMessage.value = 'Test Simulation: Product ($id) unlocked! 🎉';
+    purchaseStatusMessage.value = 'Test Simulation: Product ($id) unlocked!';
   }
 
   /// Developer Test Toggle: Quickly test VIP unlock/lock on device without Google Play billing

@@ -1538,7 +1538,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 ),
                 subtitle: Text(
                   isVip
-                      ? 'VIP Study Pass Active ✨ · WhatsApp Support Unlocked'
+                      ? 'VIP Study Pass Active · WhatsApp Support Unlocked'
                       : 'All future notes free + WhatsApp & Email support',
                   style: GoogleFonts.dmSans(
                     color: isVip ? const Color(0xFF10B981) : AppTheme.textMuted,
